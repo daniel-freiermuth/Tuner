@@ -117,7 +117,6 @@ class FrequencyDetectionResultCollector(
 
         val previousResults = previousResultsBuffer.tryReceive().getOrNull()
         copyPreviousResultsToNewResults(previousResults?.memory, collectedResults.memory)
-        previousResults?.decRef() // don't need this anymore in the following
 
         copySampleDataToTimeSeries(sampleData.memory, collectedResults.memory.timeSeries)
         collectedResults.memory.timeSeriesStandardDeviation =
@@ -128,6 +127,21 @@ class FrequencyDetectionResultCollector(
             collectedResults.memory.autoCorrelation,
             collectedResults.memory.frequencySpectrum
         )
+        val correlationSimilarity =
+            if (previousResults?.memory?.autoCorrelation != null) {
+                computeCorrelationSimilarity(
+                    collectedResults.memory.autoCorrelation, previousResults.memory.autoCorrelation
+                )
+            } else {
+                0f
+            }
+        val previousStandardDeviationTimeSeries =
+            previousResults?.memory?.timeSeriesStandardDeviation ?: 0f
+
+        val previousCorrelationBasedFrequency =
+            previousResults?.memory?.correlationBasedFrequency?.frequency ?: 0f
+
+        previousResults?.decRef() // don't need this anymore in the following
 
         collectedResults.memory.noise = 1f - collectedResults.memory.autoCorrelation[1] / collectedResults.memory.autoCorrelation[0]
 
@@ -138,40 +152,74 @@ class FrequencyDetectionResultCollector(
             collectedResults.memory.timeSeries.dt * (collectedResults.memory.timeSeries.framePosition - collectedResults.memory.previousFramePosition)
         // Log.v("Tuner", "CollectedResults.collectResults: frameShift at frame ${collectedResults.memory.timeSeries.framePosition} = ${collectedResults.memory.timeSeries.framePosition - collectedResults.memory.previousFramePosition}")
 
-        findCorrelationBasedFrequency(
-            collectedResults.memory.correlationBasedFrequency,
-            collectedResults.memory.autoCorrelation,
-            frequencyMin,
-            frequencyMax,
-            subharmonicsTolerance = subharmonicsTolerance,
-            subharmonicPeakRatio = subharmonicsPeakRatio
-        )
-//        Log.v("Tuner", "CollectedResults.collectResults: correlationBased frequency = ${collectedResults.memory.correlationBasedFrequency}")
-        if (collectedResults.memory.correlationBasedFrequency.frequency != 0f) {
-            collectedResults.memory.harmonics.findBestMatchingHarmonics(
+        // note: similarity is 0f if there is no previous result, so it is save to use info from
+        // previous results inside this if
+        // FIRST WAY: If signal is very similar to previous one, we simply "recalibrate"
+        //   by finding the next local max in the correlation and then using this as base
+        //   frequency. However, we just do this "shortcut" when the signal is getting quieter to
+        //   avoid unwanted lock-ins to wrong frequency. Idea is that e.g. for guitars the signal
+        //   gets quieter with time, and in this phase we want to keep the frequency. This e.g.
+        //   helps if the fundamental frequency content fades very fast and just leaves the higher
+        //   harmonics.
+        if (correlationSimilarity > 0.95f
+            && collectedResults.memory.timeSeriesStandardDeviation < previousStandardDeviationTimeSeries) {
+            findCorrelationBasedFrequencySimple(
                 collectedResults.memory.correlationBasedFrequency,
                 collectedResults.memory.autoCorrelation,
                 frequencyMin,
                 frequencyMax,
-                collectedResults.memory.frequencySpectrum,
-                collectedResults.memory.accuratePeakFrequency,
-                harmonicTolerance = harmonicTolerance,
-                minimumFactorOverLocalMean = minimumFactorOverLocalMean,
-                maxNumFail = maxGapBetweenHarmonics,
-                relativePeakThreshold = 5e-3f
+                previousCorrelationBasedFrequency
             )
 
-//            findHarmonicsFromSpectrum(
-//                collectedResults.memory.harmonics,
-//                collectedResults.memory.correlationBasedFrequency.frequency,
-//                frequencyMin,
-//                frequencyMax,
-//                collectedResults.memory.frequencySpectrum,
-//                collectedResults.memory.accuratePeakFrequency,
-//                harmonicTolerance = harmonicTolerance,
-//                minimumFactorOverLocalMean = minimumFactorOverLocalMean,
-//                maxNumFail = maxGapBetweenHarmonics,
-//            )
+            if (collectedResults.memory.correlationBasedFrequency.frequency != 0f) {
+//                 Log.v("Tuner", "FrequencyDetectionCollectedResults: using hint based tuning, correlationSimilarity=$correlationSimilarity")
+                collectedResults.memory.harmonics.findHarmonics(
+                    collectedResults.memory.correlationBasedFrequency.frequency,
+                    frequencyMin,
+                    frequencyMax,
+                    collectedResults.memory.frequencySpectrum,
+                    collectedResults.memory.accuratePeakFrequency,
+                    harmonicTolerance = harmonicTolerance,
+                    minimumFactorOverLocalMean = minimumFactorOverLocalMean,
+                    maxNumFail = maxGapBetweenHarmonics,
+                    relativePeakThreshold = 5e-3f
+                )
+            } else {
+                collectedResults.memory.harmonics.clear()
+                collectedResults.memory.harmonicStatistics.clear()
+                collectedResults.memory.inharmonicity = 0f
+            }
+        } else {
+  //           Log.v("Tuner", "FrequencyDetectionCollectedResults: no hint based tuning, correlationSimilarity=$correlationSimilarity")
+            findCorrelationBasedFrequency(
+                collectedResults.memory.correlationBasedFrequency,
+                collectedResults.memory.autoCorrelation,
+                frequencyMin,
+                frequencyMax,
+                subharmonicsTolerance = subharmonicsTolerance,
+                subharmonicPeakRatio = subharmonicsPeakRatio
+            )
+            if (collectedResults.memory.correlationBasedFrequency.frequency != 0f) {
+                collectedResults.memory.harmonics.findBestMatchingHarmonics(
+                    collectedResults.memory.correlationBasedFrequency,
+                    collectedResults.memory.autoCorrelation,
+                    frequencyMin,
+                    frequencyMax,
+                    collectedResults.memory.frequencySpectrum,
+                    collectedResults.memory.accuratePeakFrequency,
+                    harmonicTolerance = harmonicTolerance,
+                    minimumFactorOverLocalMean = minimumFactorOverLocalMean,
+                    maxNumFail = maxGapBetweenHarmonics,
+                    relativePeakThreshold = 5e-3f
+                )
+            } else {
+                collectedResults.memory.harmonics.clear()
+                collectedResults.memory.harmonicStatistics.clear()
+                collectedResults.memory.inharmonicity = 0f
+            }
+        }
+
+        if (collectedResults.memory.harmonics.size > 0) {
             collectedResults.memory.harmonics.sort()
 
             collectedResults.memory.harmonicStatistics.evaluate(
@@ -193,10 +241,6 @@ class FrequencyDetectionResultCollector(
                 acousticWeighting
             )
             inharmonicityDetector.decRef()
-        } else {
-            collectedResults.memory.harmonics.clear()
-            collectedResults.memory.harmonicStatistics.clear()
-            collectedResults.memory.inharmonicity = 0f
         }
 
         if (collectedResults.incRef()) // increment ref count to avoid recycling while its in the previousResultsBuffer
@@ -229,6 +273,24 @@ class FrequencyDetectionResultCollector(
         require(sampleData.data.size == timeSeries.size)
         timeSeries.framePosition = sampleData.framePosition
         sampleData.data.copyInto(timeSeries.values)
+    }
+
+    private fun computeCorrelationSimilarity(
+        correlation1: AutoCorrelation, correlation2: AutoCorrelation
+    ): Float {
+        return if (correlation1.size == 0 || correlation1.size != correlation2.size) {
+            0f
+        } else {
+            var d = 0f
+            var n1 = 0f
+            var n2 = 0f
+            for (i in 0 until correlation1.size) {
+                d += correlation1[i] * correlation2[i]
+                n1 += correlation1[i].pow(2)
+                n2 += correlation2[i].pow(2)
+            }
+            d / sqrt(n1 * n2)
+        }
     }
 
     private suspend fun computeSpectrumAndCorrelation(

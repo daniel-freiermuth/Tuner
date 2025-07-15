@@ -348,87 +348,87 @@ fun findSuitableSpectrumPeak(
 }
 
 
-/** Extract harmonics from a spectrum
- *
- * @param harmonics Harmonics class to which we add the single harmonics.
- * @param frequency Fundamental frequency. This can e.g. found by auto correlation.
- * @param frequencyMin Lowest frequency which is considered.
- * @param frequencyMax Highest frequency which is considered.
- * @param spectrum Frequency spectrum on which we find the harmonics.
- * @param accurateSpectrumPeakFrequency Object for improving the accuracy beyond the resolution
- *   given in the spectrum.
- * @param harmonicTolerance Allowed tolerance for a spectrum peak being allowed to be a harmonic.
- *   This is given as relative value of the base frequency. So harmonicTolerance * baseFrequency
- *   is the frequency search radius.
- * @param minimumFactorOverLocalMean  We compute the mean of the search_radius range around a
- *   potentially found maximum (the maximum itself is excluded during the mean computation). The
- *   maximum is only considered as a maximum if it is higher than
- *     minimum_factor_over_mean * average.
- * @param maxNumFail We start searching from the harmonic of the peak in the frequency searching
- *   for harmonics. If we don't find successive expected harmonics for the given number, we stop
- *   searching for more harmonics.
- */
-fun findHarmonicsFromSpectrum(
-    harmonics: Harmonics,
-    frequency: Float,
-    frequencyMin: Float,
-    frequencyMax: Float,
-    spectrum: FrequencySpectrum,
-    accurateSpectrumPeakFrequency: AccurateSpectrumPeakFrequency,
-    harmonicTolerance: Float = 0.1f,
-    minimumFactorOverLocalMean: Float = 5f,
-    maxNumFail: Int = 2
-) {
-    harmonics.clear()
-
-    val df = spectrum.df
-    val ampSpecSqr = spectrum.amplitudeSpectrumSquared
-    // the second condition avoids that when rounding the harmonic later on, that we get the harmonic 0
-    val indexBegin = max(ceil(frequencyMin / df).toInt(), ceil(0.5f * frequency / df).toInt())
-    val indexEnd = min(ampSpecSqr.size, floor(frequencyMax / df).toInt() + 1)
-    val globalMaximumIndex = findGlobalMaximumIndex(indexBegin, indexEnd, ampSpecSqr)
-
-    if (globalMaximumIndex < 1)
-        return
-
-    val frequencyOfGlobalMax = accurateSpectrumPeakFrequency[globalMaximumIndex]
-    val harmonicOfGlobalMax = (frequencyOfGlobalMax / frequency).roundToInt()
-
-    if (harmonicOfGlobalMax == 0)
-        return
-
-    harmonics.addHarmonic(harmonicOfGlobalMax, frequencyOfGlobalMax, globalMaximumIndex, ampSpecSqr[globalMaximumIndex])
-
-    val searchRadius = harmonicTolerance * globalMaximumIndex / harmonicOfGlobalMax
-    val meanRadius = max(1, (globalMaximumIndex / (2f * harmonicOfGlobalMax)).roundToInt())
-
-    for (increment in -1 .. 1 step 2) { // this just means, do it once for -1 and once for 1
-        var previouslyFoundHarmonicResult = harmonics[0] // this is the global maximum
-        var probableHarmonicNumber = previouslyFoundHarmonicResult.harmonicNumber + increment
-        var numFail = 0
-
-        while (numFail < maxNumFail && probableHarmonicNumber > 0) {
-            val freq1 = previouslyFoundHarmonicResult.frequency / previouslyFoundHarmonicResult.harmonicNumber
-            val freqX = freq1 * probableHarmonicNumber
-            val centerIndexFloat = freqX / df
-
-            val maximumIndex = findLocalMaximumIndex(ampSpecSqr, centerIndexFloat, searchRadius, minimumFactorOverLocalMean, meanRadius)
-            if (maximumIndex > 0 && maximumIndex != previouslyFoundHarmonicResult.spectrumIndex) {
-                val actualFreqX = accurateSpectrumPeakFrequency[maximumIndex]
-                if (actualFreqX < frequencyMin || actualFreqX > frequencyMax)
-                    break
-                harmonics.addHarmonic(probableHarmonicNumber, actualFreqX, maximumIndex, ampSpecSqr[maximumIndex])
-                previouslyFoundHarmonicResult = harmonics[harmonics.size - 1]
-                numFail = 0
-            } else if (freqX < frequencyMin || freqX > frequencyMax) {
-                break
-            } else {
-                ++numFail
-            }
-            probableHarmonicNumber += increment
-        }
-    }
-}
+// /** Extract harmonics from a spectrum
+//  *
+//  * @param harmonics Harmonics class to which we add the single harmonics.
+//  * @param frequency Fundamental frequency. This can e.g. found by auto correlation.
+//  * @param frequencyMin Lowest frequency which is considered.
+//  * @param frequencyMax Highest frequency which is considered.
+//  * @param spectrum Frequency spectrum on which we find the harmonics.
+//  * @param accurateSpectrumPeakFrequency Object for improving the accuracy beyond the resolution
+//  *   given in the spectrum.
+//  * @param harmonicTolerance Allowed tolerance for a spectrum peak being allowed to be a harmonic.
+//  *   This is given as relative value of the base frequency. So harmonicTolerance * baseFrequency
+//  *   is the frequency search radius.
+//  * @param minimumFactorOverLocalMean  We compute the mean of the search_radius range around a
+//  *   potentially found maximum (the maximum itself is excluded during the mean computation). The
+//  *   maximum is only considered as a maximum if it is higher than
+//  *     minimum_factor_over_mean * average.
+//  * @param maxNumFail We start searching from the harmonic of the peak in the frequency searching
+//  *   for harmonics. If we don't find successive expected harmonics for the given number, we stop
+//  *   searching for more harmonics.
+//  */
+// fun findHarmonicsFromSpectrum(
+//     harmonics: Harmonics,
+//     frequency: Float,
+//     frequencyMin: Float,
+//     frequencyMax: Float,
+//     spectrum: FrequencySpectrum,
+//     accurateSpectrumPeakFrequency: AccurateSpectrumPeakFrequency,
+//     harmonicTolerance: Float = 0.1f,
+//     minimumFactorOverLocalMean: Float = 5f,
+//     maxNumFail: Int = 2
+// ) {
+//     harmonics.clear()
+//
+//     val df = spectrum.df
+//     val ampSpecSqr = spectrum.amplitudeSpectrumSquared
+//     // the second condition avoids that when rounding the harmonic later on, that we get the harmonic 0
+//     val indexBegin = max(ceil(frequencyMin / df).toInt(), ceil(0.5f * frequency / df).toInt())
+//     val indexEnd = min(ampSpecSqr.size, floor(frequencyMax / df).toInt() + 1)
+//     val globalMaximumIndex = findGlobalMaximumIndex(indexBegin, indexEnd, ampSpecSqr)
+//
+//     if (globalMaximumIndex < 1)
+//         return
+//
+//     val frequencyOfGlobalMax = accurateSpectrumPeakFrequency[globalMaximumIndex]
+//     val harmonicOfGlobalMax = (frequencyOfGlobalMax / frequency).roundToInt()
+//
+//     if (harmonicOfGlobalMax == 0)
+//         return
+//
+//     harmonics.addHarmonic(harmonicOfGlobalMax, frequencyOfGlobalMax, globalMaximumIndex, ampSpecSqr[globalMaximumIndex])
+//
+//     val searchRadius = harmonicTolerance * globalMaximumIndex / harmonicOfGlobalMax
+//     val meanRadius = max(1, (globalMaximumIndex / (2f * harmonicOfGlobalMax)).roundToInt())
+//
+//     for (increment in -1 .. 1 step 2) { // this just means, do it once for -1 and once for 1
+//         var previouslyFoundHarmonicResult = harmonics[0] // this is the global maximum
+//         var probableHarmonicNumber = previouslyFoundHarmonicResult.harmonicNumber + increment
+//         var numFail = 0
+//
+//         while (numFail < maxNumFail && probableHarmonicNumber > 0) {
+//             val freq1 = previouslyFoundHarmonicResult.frequency / previouslyFoundHarmonicResult.harmonicNumber
+//             val freqX = freq1 * probableHarmonicNumber
+//             val centerIndexFloat = freqX / df
+//
+//             val maximumIndex = findLocalMaximumIndex(ampSpecSqr, centerIndexFloat, searchRadius, minimumFactorOverLocalMean, meanRadius)
+//             if (maximumIndex > 0 && maximumIndex != previouslyFoundHarmonicResult.spectrumIndex) {
+//                 val actualFreqX = accurateSpectrumPeakFrequency[maximumIndex]
+//                 if (actualFreqX < frequencyMin || actualFreqX > frequencyMax)
+//                     break
+//                 harmonics.addHarmonic(probableHarmonicNumber, actualFreqX, maximumIndex, ampSpecSqr[maximumIndex])
+//                 previouslyFoundHarmonicResult = harmonics[harmonics.size - 1]
+//                 numFail = 0
+//             } else if (freqX < frequencyMin || freqX > frequencyMax) {
+//                 break
+//             } else {
+//                 ++numFail
+//             }
+//             probableHarmonicNumber += increment
+//         }
+//     }
+// }
 
 /** Extract harmonics from a spectrum.
  *
@@ -539,6 +539,95 @@ fun Harmonics.findHarmonicsFromSpectrum2(
     }
 }
 
+/** Find harmonics with a base frequency given.
+ * @param baseFrequency Base frequency.
+ * @param frequencyMin Minimum allowed frequency.
+ * @param frequencyMax Maximum allowed frequency.
+ * @param spectrum Fourier transform of time signal.
+ * @param accurateSpectrumPeakFrequency Object for improving the accuracy beyond the resolution
+ *   given in the spectrum.
+ * @param harmonicTolerance Allowed tolerance for a spectrum peak being allowed to be a harmonic.
+ *   This is given as relative value of the base frequency. So harmonicTolerance * baseFrequency
+ *   is the frequency search radius.
+ * @param minimumFactorOverLocalMean  We compute the mean of the search_radius range around a
+ *   potentially found maximum (the maximum itself is excluded during the mean computation). The
+ *   maximum is only considered as a maximum if it is higher than
+ *     minimum_factor_over_mean * average.
+ * @param maxNumFail We start searching from the harmonic of the peak in the frequency searching
+ *   for harmonics. If we don't find successive expected harmonics for the given number, we stop
+ *   searching for more harmonics.
+ * @param relativePeakThreshold A local maximum is only considered a real peak if its value is
+ *   higher than the global maximum times this value.
+ */
+fun Harmonics.findHarmonics(
+    baseFrequency: Float,
+    frequencyMin: Float,
+    frequencyMax: Float,
+    spectrum: FrequencySpectrum,
+    accurateSpectrumPeakFrequency: AccurateSpectrumPeakFrequency,
+    harmonicTolerance: Float = 0.1f,
+    minimumFactorOverLocalMean: Float = 5f,
+    maxNumFail: Int = 2,
+    relativePeakThreshold: Float = 5e-3f
+) {
+    clear()
+    val globalMaximumIndex = findGlobalMaximumIndex(
+        indexBegin = ceil(frequencyMin / spectrum.df).toInt(),
+        indexEnd = min(spectrum.size, floor(frequencyMax / spectrum.df).toInt() + 1),
+        values = spectrum.amplitudeSpectrumSquared
+    )
+    if (globalMaximumIndex <= 0)
+        return
+
+    val initialHarmonic = findSuitableSpectrumPeak(
+        frequencyBase = baseFrequency,
+        frequencyMax = frequencyMax,
+        spectrum = spectrum,
+        globalMaximumIndex = globalMaximumIndex,
+        accurateSpectrumPeakFrequency = accurateSpectrumPeakFrequency,
+        relativePeakThreshold = relativePeakThreshold
+    )
+
+    if (initialHarmonic != null) {
+        findHarmonicsFromSpectrum2(
+            initialHarmonic = initialHarmonic,
+            frequencyMin = frequencyMin,
+            frequencyMax = frequencyMax,
+            spectrum = spectrum,
+            globalMaximumIndex = globalMaximumIndex,
+            accurateSpectrumPeakFrequency = accurateSpectrumPeakFrequency,
+            harmonicTolerance = harmonicTolerance,
+            minimumFactorOverLocalMean = minimumFactorOverLocalMean,
+            maxNumFail = maxNumFail,
+            relativePeakThreshold = relativePeakThreshold
+        )
+    }
+}
+
+/** Find best matching harmonics, starting from a frequency, which points to one harmonic.
+ * This will assume that the input frequency can either be the base frequency, a higher harmonic
+ * or a subharmonic.
+ * @param correlationBasedFrequency Frequency, which can be either subharmonic, base frequency or
+ *   higher harmonic.
+ * @param correlation Autocorrelation of signal.
+ * @param frequencyMin Minimum allowed frequency.
+ * @param frequencyMax Maximum allowed frequency.
+ * @param spectrum Fourier transform of time signal.
+ * @param accurateSpectrumPeakFrequency Object for improving the accuracy beyond the resolution
+ *   given in the spectrum.
+ * @param harmonicTolerance Allowed tolerance for a spectrum peak being allowed to be a harmonic.
+ *   This is given as relative value of the base frequency. So harmonicTolerance * baseFrequency
+ *   is the frequency search radius.
+ * @param minimumFactorOverLocalMean  We compute the mean of the search_radius range around a
+ *   potentially found maximum (the maximum itself is excluded during the mean computation). The
+ *   maximum is only considered as a maximum if it is higher than
+ *     minimum_factor_over_mean * average.
+ * @param maxNumFail We start searching from the harmonic of the peak in the frequency searching
+ *   for harmonics. If we don't find successive expected harmonics for the given number, we stop
+ *   searching for more harmonics.
+ * @param relativePeakThreshold A local maximum is only considered a real peak if its value is
+ *   higher than the global maximum times this value.
+ */
 fun Harmonics.findBestMatchingHarmonics(
     correlationBasedFrequency: CorrelationBasedFrequency,
     correlation: AutoCorrelation,

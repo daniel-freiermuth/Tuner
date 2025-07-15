@@ -104,7 +104,6 @@ fun findCorrelationBasedFrequency(
     subharmonicsTolerance: Float = 0.05f,
     subharmonicPeakRatio: Float = 0.8f
 ) {
-
     // functor for local maximum check
     val isLocalMax = {i: Int, data: AutoCorrelation -> data[i] >= data[i-1] && data[i] >= data[i+1]}
 
@@ -191,3 +190,65 @@ fun findCorrelationBasedFrequency(
     )
     return
 }
+
+
+/** Very simple frequency finding by search for next local maximum.
+ * @param results Inhere we store the results.
+ * @param correlation Array with correlation values.
+ * @param frequencyMin Minimum frequency, which is allowed to be detected.
+ * @param frequencyMax Maximum frequency, which is allowed to be detected.
+ * @param frequencyPrevious Previously use frequency, which is used as the search start.
+ * @return (Index in correlation for the most probable time shift,
+ *   peak of polynomial fit at the given index)
+ */
+fun findCorrelationBasedFrequencySimple(
+    results: CorrelationBasedFrequency,
+    correlation: AutoCorrelation,
+    frequencyMin: Float = 0f,
+    frequencyMax: Float = 0f,
+    frequencyPrevious: Float
+) {
+    val globalIndexEnd = if (frequencyMin > 0f) {
+        val indexShiftFrequencyMin = (1.0 / (correlation.dt * frequencyMin)).toInt() + 1
+        min(correlation.size - 1, indexShiftFrequencyMin)
+    } else {
+        correlation.size - 1
+    }
+
+    val  firstLocalMinimum = findFirstMinimum(correlation.values)
+
+    val globalIndexBegin = if (frequencyMax > 0f ) {
+        val indexShiftFrequencyMax = ceil(1.0 / (correlation.dt * frequencyMax)).toInt()
+        max(indexShiftFrequencyMax, firstLocalMinimum)
+    } else {
+        1
+    }
+
+    if (globalIndexBegin >= globalIndexEnd) {
+        results.set(0f, 0f, 0f)
+        return
+    }
+
+    val searchIndexStart = (1.0 / (correlation.dt * frequencyPrevious))
+        .roundToInt()
+        .coerceIn(globalIndexBegin,  globalIndexEnd)
+
+    var i = searchIndexStart
+    while (i < globalIndexEnd && correlation[i+1] > correlation[i])
+        i += 1
+
+    while (i > globalIndexBegin && correlation[i-1] > correlation[i])
+        i -= 1
+
+    val (fittedMaximumIndex, fittedPeak) = getPeakOfPolynomialFitArray(
+        i, correlation.values
+    )
+
+    results.set(
+        1.0f / (fittedMaximumIndex * correlation.dt),
+        fittedMaximumIndex * correlation.dt,
+        fittedPeak
+    )
+    return
+}
+
