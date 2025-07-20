@@ -37,7 +37,7 @@
         <item quantity="other">Średnia z %d wyników dźwięku</item>
     </plurals>
     <string name="about">O aplikacji</string>
-    <string name="about_message">Aplikacja Tuner\nWersja: %s\nLicencja: GPLv3\nhttps://github.com/thetwom/Tuner</string>
+    <string name="about_message">Aplikacja Tuner\nWersja: %s\nLicencja: GPLv3\nhttps://codeberg.org/thetwom/Tuner</string>
     <string name="reset_all_settings">Przywróć wszystkie ustawienia</string>
     <string name="reset_settings_prompt">Czy na pewno chcesz przywrócić wszystkie ustawienia?</string>
     <string name="yes">Tak</string>

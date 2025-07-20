@@ -37,7 +37,7 @@
         <item quantity="other">Average over %d pitch results</item>
     </plurals>
     <string name="about">About</string>
-    <string name="about_message">Tuner app\nVersion: %s\nLicense: GPLv3\nhttps://github.com/thetwom/Tuner</string>
+    <string name="about_message">Tuner app\nVersion: %s\nLicense: GPLv3\nhttps://codeberg.org/thetwom/Tuner</string>
     <string name="reset_all_settings">Reset all settings</string>
     <string name="reset_settings_prompt">Do you really want to reset all settings?</string>
     <string name="yes">Yes</string>

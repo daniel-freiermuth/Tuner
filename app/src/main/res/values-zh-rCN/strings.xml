@@ -14,7 +14,7 @@
     <string name="pitch_history_num_faulty_values">跳转到新的音高</string>
     <string name="num_moving_average">移动平均</string>
     <string name="about">关于</string>
-    <string name="about_message">Tuner app\n版本：%s\n许可证：GPLv3\nhttps://github.com/thetwom/Tuner</string>
+    <string name="about_message">Tuner app\n版本：%s\n许可证：GPLv3\nhttps://codeberg.org/thetwom/Tuner</string>
     <string name="reset_all_settings">重置所有设置</string>
     <string name="reset_settings_prompt">你确定要重置所有设置吗？</string>
     <string name="yes">是</string>
