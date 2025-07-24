@@ -104,16 +104,18 @@ class LineCoordinates(
 }
 
 private fun findCoordinateIndexBegin(xMin: Float, coordinates: List<Offset>): Int {
-    var iMin = coordinates.binarySearchBy(xMin) { it.x }
-    if (iMin < 0)
-        iMin = max(0, -iMin - 2)
-    return iMin
+    val iMin = coordinates.binarySearchBy(xMin) { it.x }
+    return if (iMin < 0)
+        max(0, -iMin - 2)
+    else
+        iMin
 }
 private fun findCoordinateIndexEnd(xMax: Float, coordinates: List<Offset>): Int {
-    var iMax = coordinates.binarySearchBy(xMax) { it.x }
-    if (iMax < 0)
-        iMax = -iMax-1
-    return iMax
+    val iMax = coordinates.binarySearchBy(xMax) { it.x }
+    return if (iMax < 0)
+        -iMax-1
+    else
+        iMax + 1
 }
 
 private data class LineCache(

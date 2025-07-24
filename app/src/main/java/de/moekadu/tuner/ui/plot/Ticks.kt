@@ -19,6 +19,7 @@
 package de.moekadu.tuner.ui.plot
 
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.absoluteValue
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -82,6 +83,7 @@ class TickLevelExplicitRanges(
 class TickLevelDeltaBased(
     private val deltas: ImmutableList<Float>
 ) : TickLevel {
+    constructor(vararg deltas: Float) : this(deltas.toList().toImmutableList())
 
     override fun getTicksRange(
         startValue: Float,
