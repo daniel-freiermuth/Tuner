@@ -56,11 +56,22 @@ import kotlinx.coroutines.launch
 import kotlin.math.max
 import kotlin.math.min
 
-
+/** Plot scope where a plot defines its different elements.
+ * @param clipped Defines if the plot scope is clipped or not. This is just for internal use, with
+ *   some details which have to be known. E.g. Lines and points are only drawn in the clipped scope,
+ *   but ticks can be either drawn in clipped or in unclipped state.
+ * @param transformation Transformation rule between screen coordinate system and plot coordinate
+ *   system.
+ */
 class PlotScope(
     private val clipped: Boolean,
     private val transformation: () -> Transformation
 ) {
+    /** Add a line.
+     * @param data Line coordinates, normally created by LineCoordinates.create(...).
+     * @param lineColor Line color.
+     * @param lineWidth Line width.
+     */
     @Composable
     fun Line(
         data: LineCoordinates,
@@ -71,6 +82,10 @@ class PlotScope(
             Line(data, lineColor, lineWidth, transformation)
     }
 
+    /** Add a point.
+     * @param position Point position.
+     * @param shape In the given scope, the shape of the point must be drawn.
+     */
     @Composable
     fun Point(
         position: Offset,
@@ -80,6 +95,12 @@ class PlotScope(
             Point(position, shape, transformation)
     }
 
+    /** Add vertical lines.
+     * @param positions Vertical line positions where to add lines. Normally created with
+     *   VerticalLinePositions.create()
+     * @param color Color of lines.
+     * @param lineWidth Line width.
+     */
     @Composable
     fun VerticalLines(
         positions: VerticalLinesPositions,
@@ -90,6 +111,12 @@ class PlotScope(
             VerticalLines(positions, color, lineWidth, transformation)
     }
 
+    /** Add horizontal lines.
+     * @param positions Horizontal line positions where to add lines. Normally created with
+     *   HorizontalLinePositions.create()
+     * @param color Color of lines.
+     * @param lineWidth Line width.
+     */
     @Composable
     fun HorizontalLines(
         positions: HorizontalLinesPositions,
@@ -100,6 +127,13 @@ class PlotScope(
             HorizontalLines(positions, color, lineWidth, transformation)
     }
 
+    /** Add horizontal marks (horizontal line with label).
+     * @param marks List of horizontal marks.
+     * @param sameSizeLabels If true,the labels will have the same size (the one of the largest
+     *   mark). If false, each label will be sized individually.
+     * @param clipLabelsToWindow If true, the labels will be clipped to the plot window, if false
+     *   label can be drawn outside.
+     */
     @Composable
     fun HorizontalMarks(
         marks: ImmutableList<HorizontalMark>,
@@ -115,6 +149,13 @@ class PlotScope(
         )
     }
 
+    /** Add vertical marks (vertical line with label).
+     * @param marks List of vertical marks.
+     * @param sameSizeLabels If true,the labels will have the same size (the one of the largest
+     *   mark). If false, each label will be sized individually.
+     * @param clipLabelsToWindow If true, the labels will be clipped to the plot window, if false
+     *   label can be drawn outside.
+     */
     @Composable
     fun VerticalMarks(
         marks: ImmutableList<VerticalMark>,
@@ -130,6 +171,13 @@ class PlotScope(
         )
     }
 
+    /** Add marks.
+     * @param marks List of marks.
+     * @param sameSizeLabels If true,the labels will have the same size (the one of the largest
+     *   mark). If false, each label will be sized individually.
+     * @param clipLabelsToWindow If true, the labels will be clipped to the plot window, if false
+     *   label can be drawn outside.
+     */
     @Composable
     fun PointMarks(
         marks: ImmutableList<PointMark>,
@@ -145,6 +193,25 @@ class PlotScope(
         )
     }
 
+    /** Add x-ticks.
+     * @param tickLevel Where to draw the ticks. There a different ways to define this, e.g.
+     *   by TickLevelDeltaBased or TickLevelExplicitRanges.
+     * @param maxLabelWidth Maximum expected label width.
+     * @param anchor Label anchor (where to place relative to the position).
+     * @param verticalLabelPosition Where to place the label (0f is bottom, 1f is top).
+     * @param lineWidth Line width.
+     * @param lineColor Line color.
+     * @param screenOffset Shift the label by the given amount along the screen.
+     * @param maxNumLabels Maximum number of labels to be shown at the same time. This is used
+     *   to choose a suitable level from the tickLevel. Depending on the given tick levels, it
+     *   might not be possible to fulfill this requirement. Use -1 to autodetect a suitable value.
+     * @param clipLabelToPlotWindow True to clip labels to plot window, else false.
+     * @param label Composable to draw the label with the following arguments provided:
+     *   - modifier -> Modifier which as to be passed to the tick composable.
+     *   - level -> The tick level index which is used.
+     *   - index -> The index within the given tick level.
+     *   - x -> x-value of tick in raw coordinates.
+     */
     @Composable
     fun XTicks(
         tickLevel: TickLevel,
@@ -174,6 +241,25 @@ class PlotScope(
         )
     }
 
+    /** Add y-ticks.
+     * @param tickLevel Where to draw the ticks. There a different ways to define this, e.g.
+     *   by TickLevelDeltaBased or TickLevelExplicitRanges.
+     * @param maxLabelHeight Maximum expected label height.
+     * @param anchor Label anchor (where to place relative to the position).
+     * @param horizontalLabelPosition Where to place the label (0f is left, 1f is right).
+     * @param lineWidth Line width.
+     * @param lineColor Line color.
+     * @param screenOffset Shift the label by the given amount along the screen.
+     * @param maxNumLabels Maximum number of labels to be shown at the same time. This is used
+     *   to choose a suitable level from the tickLevel. Depending on the given tick levels, it
+     *   might not be possible to fulfill this requirement. Use -1 to autodetect a suitable value.
+     * @param clipLabelToPlotWindow True to clip labels to plot window, else false.
+     * @param label Composable to draw the label with the following arguments provided:
+     *   - modifier -> Modifier which as to be passed to the tick composable.
+     *   - level -> The tick level index which is used.
+     *   - index -> The index within the given tick level.
+     *   - y -> y-value of tick in raw coordinates.
+     */
     @Composable
     fun YTicks(
         tickLevel: TickLevel,
@@ -204,6 +290,19 @@ class PlotScope(
     }
 }
 
+/** Create a plot.
+ * @param modifier Modifier.
+ * @param viewPort This defines the plot limits in raw coordinates (the coordinates, how you also
+ *   define points, lines, ...).
+ * @param viewPortGestureLimits Limits if dragging the view with gestures is allowed.
+ * @param gestureBasedViewPort Viewport defined by gestures. This overrides the viewPort.
+ * @param plotWindowPadding Padding outside the plot window. If you draw ticks or marks outside the
+ *   window the padding must be large enough to include these ticks or marks.
+ * @param plotWindowOutline Definition of outlines which is drawn around the window.
+ * @param lockX True to not allow changing the x-limits by gestures.
+ * @param lockY True to not allow changing the y-limits by gestures.
+ * @param content PlotScope where the content like lines, points, ticks, marks are defined.
+ */
 @Composable
 fun Plot(
     modifier: Modifier,

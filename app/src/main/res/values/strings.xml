@@ -44,6 +44,7 @@
     <string name="spectrum">spectrum</string>
     <string name="cent" translatable="false">%+d ¢</string>
     <string name="cent_nosign" translatable="false">%d ¢</string>
+    <string name="cent_1f" translatable="false">%+.1f ¢</string>
     <string name="keep_screen_on">Keep screen on</string>
     <string name="display_on_lock_screen">Display on lock screen</string>
     <string name="samples">samples</string>
