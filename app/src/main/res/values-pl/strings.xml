@@ -1,23 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tuner</string>
-
     <!--    <string name="percent">%d&#x200A;\%</string>-->
-    <string name="percent" translatable="false">%d&#x200A;%%</string>
-    <string name="hertz" translatable="false">%.0f&#x200A;Hz</string>
-    <string name="hertz_1f" translatable="false">%.1f&#x200A;Hz</string>
-    <string name="hertz_str" translatable="false">%s&#x200A;Hz</string>
-    <string name="seconds" translatable="false">%.2f&#x200A;s</string>
-
+    <string name="percent" translatable="false">%d %%</string>
+    <string name="hertz" translatable="false">%.0f Hz</string>
+    <string name="hertz_1f" translatable="false">%.1f Hz</string>
+    <string name="hertz_str" translatable="false">%s Hz</string>
+    <string name="seconds" translatable="false">%.2f s</string>
     <string name="windowing_function">Funkcja okienkowania</string>
     <string name="window_hamming">Okno Hamminga</string>
     <string name="window_hann">Okno Hanna</string>
     <string name="no_window">Brak funkcji okienkowania</string>
-
     <string name="appearance">Wygląd</string>
     <string name="dark_appearance">Ciemny wygląd</string>
     <string name="light_appearance">Jasny wygląd</string>
     <string name="system_appearance">Zgodnie z ustawieniami systemu</string>
-
     <string name="dark_appearance_short">Ciemny</string>
     <string name="light_appearance_short">Jasny</string>
     <string name="system_appearance_short">Auto</string>
@@ -45,32 +42,30 @@
     <string name="autocorrelation">autokorelacja</string>
     <string name="pitch_history">historia dźwięku</string>
     <string name="spectrum">widmo</string>
-    <string name="cent" translatable="false">%+d&#x200A;&#162;</string>
-    <string name="cent_nosign" translatable="false">%d&#x200A;&#162;</string>
+    <string name="cent" translatable="false">%+d ¢</string>
+    <string name="cent_nosign" translatable="false">%d ¢</string>
     <string name="keep_screen_on">Nie wygaszaj ekranu</string>
     <string name="samples">próbki</string>
     <string name="scientific_mode">Tryb naukowy</string>
     <string name="tolerance_in_cents">Tolerancja</string>
-    <string name="tolerance_summary" translatable="false">&#177;%d&#x200A;&#162;</string>
+    <string name="tolerance_summary" translatable="false">±%d ¢</string>
     <string name="expert">Zaawansowane</string>
     <string name="basic">Podstawowe</string>
     <string name="others">Inne</string>
-
     <string name="chromatic">Chromatyczny</string>
     <string name="guitar_eadgbe">Gitara 6-strunowa</string>
     <string name="bass_eadg">Bas 4-strunowy</string>
     <string name="bass_beadg">Bas 5-strunowy</string>
     <string name="ukulele_gcea">Ukulele</string>
-
     <string name="c_note_name">C</string>
     <string name="d_note_name">D</string>
     <string name="e_note_name">E</string>
     <string name="f_note_name">F</string>
     <string name="g_note_name">G</string>
     <string name="a_note_name">A</string>
-    <string name="b_note_name">H</string> <!-- We use "H" in Polish notation-->
+    <string name="b_note_name">H</string>
+    <!-- We use "H" in Polish notation-->
     <string name="bflat_note_name">-</string>
-
     <string name="c_solfege">Do</string>
     <string name="d_solfege">Re</string>
     <string name="e_solfege">Mi</string>
@@ -78,7 +73,6 @@
     <string name="g_solfege">Sol</string>
     <string name="a_solfege">La</string>
     <string name="b_solfege">Si</string>
-
     <string name="c_note_international" translatable="false">C</string>
     <string name="d_note_international" translatable="false">D</string>
     <string name="e_note_international" translatable="false">E</string>
@@ -86,12 +80,10 @@
     <string name="g_note_international" translatable="false">G</string>
     <string name="a_note_international" translatable="false">A</string>
     <string name="b_note_international" translatable="false">B</string>
-
     <string name="notation">Notacja</string>
     <string name="notation_standard">Domyślna (A-B-C-…)</string>
     <string name="notation_solfege">Solfeż</string>
     <string name="notation_international">Międzynarodowa (A-B-C-…)</string>
-
     <string name="violin_gdae">Skrzypce</string>
     <string name="abort">Anuluj</string>
     <string name="instrument_name">Nazwa instrumentu</string>
@@ -142,7 +134,7 @@
     <string name="equal_temperament_12">Strój równomiernie temperowany</string>
     <string name="equal_temperament_12_desc">12 dźwięków na oktawę</string>
     <string name="equal_temperament_12_abbr">EDO 12</string>
-<!--    <string name="equal_temperament_17">Equal temperament 17</string>-->
+    <!--    <string name="equal_temperament_17">Equal temperament 17</string>-->
 <!--    <string name="equal_temperament_17_desc">17 notes per octave</string>-->
 <!--    <string name="equal_temperament_17_abbr">EDO 17</string>-->
 <!--    <string name="equal_temperament_19">Equal temperament 19</string>-->
@@ -226,9 +218,9 @@
     <string name="root_note">Dźwięk podstawowy</string>
     <string name="test_tuning">Test strojenia</string>
     <string name="details">Szczegóły</string>
-    <string name="pythagorean_comma">%d\u2044%d&#x200A;pC</string>
-    <string name="syntonic_comma">%d\u2044%d&#x200A;sC</string>
-    <string name="schisma">%d\u2044%d&#x200A;sch</string>
+    <string name="pythagorean_comma">%d\u2044%d pC</string>
+    <string name="syntonic_comma">%d\u2044%d sC</string>
+    <string name="schisma">%d\u2044%d sch</string>
     <string name="plus_correction" translatable="false">" + "</string>
     <string name="minus_correction" translatable="false">" - "</string>
     <string name="pythagorean_comma_desc">pC: Koma pitagorejska, 531441\u2044524288\nsC: Koma syntoniczna, 81\u204480\nsch: Schizma, 32805\u204432768</string>
@@ -242,7 +234,7 @@
     <string name="new_temperament_requires_adapting_reference_note">Nowe strojenie wymaga dostosowania dźwięku odniesienia!</string>
     <string name="comma_separator">,\ </string>
     <string name="capture">Nagrywaj</string>
-    <string name="capture_duration">Czas nagrania: %d&#x200A;s</string>
+    <string name="capture_duration">Czas nagrania: %d s</string>
     <string name="no_capture_duration">Wyłącz nagrywanie</string>
     <string name="sa_carnatic">Sa</string>
     <string name="ri1_carnatic" translatable="false">Ri₁</string>
@@ -270,7 +262,6 @@
     <string name="ni1_hindustani" translatable="false">Ni₁</string>
     <string name="ni2_hindustani" translatable="false">Ni₂</string>
     <string name="notation_hindustani">Hindustańska</string>
-
     <string name="ni_byzantine" translatable="false">Νη</string>
     <string name="pa_byzantine" translatable="false">Πα</string>
     <string name="vou_byzantine" translatable="false">Βου</string>
@@ -279,8 +270,6 @@
     <string name="ke_byzantine" translatable="false">Κε</string>
     <string name="zo_byzantine" translatable="false">Ζω</string>
     <string name="notation_byzantine">Bizantyjska</string>
-
-
     <string name="helmholtz_notation">Notacja Helmholtza (C, … c\')</string>
     <string name="extended_quarter_comma_mean_tone">Rozszerzona temperacja średniotonowa ¼-komowa</string>
     <string name="extended_quarter_comma_mean_tone_desc">Czyste tercje wielkie, 15 dźwięków</string>
@@ -314,4 +303,15 @@
     <string name="edo_temperaments">Temperacje równomiernie temperowane</string>
     <string name="other_temperaments">Inne temperacje</string>
     <string name="custom_temperaments">Własne temperacje</string>
+    <string name="display_on_lock_screen">Wyświetlaj na zablokowanym ekranie</string>
+    <string name="notation_vietnamese">Wietnamski</string>
+    <string name="c_note_vietnamese">Hò</string>
+    <string name="d_note_vietnamese">Xư</string>
+    <string name="e_note_vietnamese">Y</string>
+    <string name="f_note_vietnamese">Xang</string>
+    <string name="g_note_vietnamese">Xê</string>
+    <string name="a_note_vietnamese">Công</string>
+    <string name="b_note_vietnamese">Phan</string>
+    <string name="use_default">Użyj domyślnych</string>
+    <string name="detect_frequency">Wykryj częstotliwość</string>
 </resources>
