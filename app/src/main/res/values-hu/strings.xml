@@ -1,16 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tuner</string>
-
     <string name="windowing_function">Ablakozási függvény</string>
     <string name="window_hamming">Hamming ablak</string>
     <string name="window_hann">Hann ablak</string>
     <string name="no_window">Nincs ablakozási függvény</string>
-
     <string name="appearance">Megjelenés</string>
     <string name="dark_appearance">Sötét megjelenés</string>
     <string name="light_appearance">Világos megjelenés</string>
     <string name="system_appearance">Rendszert követő megjelenés</string>
-
     <string name="dark_appearance_short">Sötét</string>
     <string name="light_appearance_short">Világos</string>
     <string name="system_appearance_short">Automatikus</string>
@@ -38,23 +36,21 @@
     <string name="autocorrelation">autokorreláció</string>
     <string name="pitch_history">hangmagasság-előzmények</string>
     <string name="spectrum">spektrum</string>
-    <string name="cent" translatable="false">%+d&#x200A;&#162;</string>
-    <string name="cent_nosign" translatable="false">%d&#x200A;&#162;</string>
+    <string name="cent" translatable="false">%+d ¢</string>
+    <string name="cent_nosign" translatable="false">%d ¢</string>
     <string name="keep_screen_on">Képernyő bekapcsolva tartása</string>
     <string name="samples">minták</string>
     <string name="scientific_mode">Tudományos mód</string>
     <string name="tolerance_in_cents">Tűrés</string>
-    <string name="tolerance_summary" translatable="false">&#177;%d&#x200A;&#162;</string>
+    <string name="tolerance_summary" translatable="false">±%d ¢</string>
     <string name="expert">Szakértő</string>
     <string name="basic">Alapvetők</string>
     <string name="others">Egyebek</string>
-
     <string name="chromatic">Kromatikus</string>
     <string name="guitar_eadgbe">6 húros gitár</string>
     <string name="bass_eadg">4 húros basszusgitár</string>
     <string name="bass_beadg">5 húros basszusgitár</string>
     <string name="ukulele_gcea">Ukulele</string>
-
     <string name="c_note_name">C</string>
     <string name="d_note_name">D</string>
     <string name="e_note_name">E</string>
@@ -63,7 +59,6 @@
     <string name="a_note_name">A</string>
     <string name="b_note_name">H</string>
     <string name="bflat_note_name">B</string>
-
     <string name="c_solfege">dó</string>
     <string name="d_solfege">ré</string>
     <string name="e_solfege">mi</string>
@@ -71,7 +66,6 @@
     <string name="g_solfege">szó</string>
     <string name="a_solfege">lá</string>
     <string name="b_solfege">ti</string>
-
     <string name="c_note_international" translatable="false">C</string>
     <string name="d_note_international" translatable="false">D</string>
     <string name="e_note_international" translatable="false">E</string>
@@ -79,12 +73,10 @@
     <string name="g_note_international" translatable="false">G</string>
     <string name="a_note_international" translatable="false">A</string>
     <string name="b_note_international" translatable="false">B</string>
-
     <string name="notation">Jelölés</string>
     <string name="notation_standard">Alapértelmezett (A-H-C-…)</string>
     <string name="notation_solfege">Szolfézs</string>
     <string name="notation_international">Nemzetközi (A-B-C-…)</string>
-
     <string name="violin_gdae">Hegedű</string>
     <string name="abort">Megszakítás</string>
     <string name="instrument_name">Hangszer neve</string>
@@ -132,13 +124,12 @@
     <string name="viola_cgda">Brácsa</string>
     <string name="cello_cgda">Cselló</string>
     <string name="double_bass_eadg">Nagybőgő</string>
-<!--    <string name="equal_temperament_12">Kiegyenlített hangolás</string>-->
+    <!--    <string name="equal_temperament_12">Kiegyenlített hangolás</string>-->
 <!--    <string name="equal_temperament_12_desc">12 hangjegy oktávonként</string>-->
 <!--    <string name="equal_temperament_12_abbr">EDO 12</string>-->
     <string name="equal_temperament_x">%d hangjegyes kiegyenlített hangolás</string>
     <string name="equal_temperament_x_desc">%d hangjegy oktávonként</string>
     <string name="equal_temperament_x_abbr">EDO %d</string>
-
     <!--    <string name="equal_temperament_17">17 hangjegyes kiegyenlített hangolás</string>-->
 <!--    <string name="equal_temperament_17_desc">17 hangjegy oktávonként</string>-->
 <!--    <string name="equal_temperament_17_abbr">EDO 17</string>-->
@@ -210,8 +201,8 @@
     <string name="neidhardt3">Neidhardt 3</string>
     <string name="neidhardt3_desc">Nagyvároshoz, 1732</string>
     <string name="neidhardt3_abbr">Neidhardt 3</string>
-    <string name="valotti">Valotti</string>
-    <string name="valotti_abbr">Valotti</string>
+    <string name="valotti">Vallotti</string>
+    <string name="valotti_abbr">Vallotti</string>
     <string name="young2">Young 2</string>
     <string name="young2_abbr">Young 2</string>
     <string name="reference_frequency">Referenciafrekvencia</string>
@@ -220,9 +211,9 @@
     <string name="root_note">Kulcshangjegy</string>
     <string name="test_tuning">Teszthangolás</string>
     <string name="details">Részletek</string>
-    <string name="pythagorean_comma">%d\u2044%d&#x200A;pC</string>
-    <string name="syntonic_comma">%d\u2044%d&#x200A;sC</string>
-    <string name="schisma">%d\u2044%d&#x200A;sch</string>
+    <string name="pythagorean_comma">%d\u2044%d pC</string>
+    <string name="syntonic_comma">%d\u2044%d sC</string>
+    <string name="schisma">%d\u2044%d sch</string>
     <string name="plus_correction" translatable="false">" + "</string>
     <string name="minus_correction" translatable="false">" - "</string>
     <string name="pythagorean_comma_desc">pC: püthagoraszi komma, 531441\u2044524288\nsC: szintonikus komma, 81\u204480\nsch: szkizma, 32805\u204432768</string>
@@ -236,7 +227,7 @@
     <string name="new_temperament_requires_adapting_reference_note">Az új hangoláshoz a referenciahang módosítása szükséges!</string>
     <string name="comma_separator">,\ </string>
     <string name="capture">Felvétel</string>
-    <string name="capture_duration">Felvétel hossza: %d&#x200A;s</string>
+    <string name="capture_duration">Felvétel hossza: %d s</string>
     <string name="no_capture_duration">Felvétel letiltása</string>
     <string name="sa_carnatic">Sza</string>
     <string name="ri1_carnatic" translatable="false">Ri₁</string>
@@ -264,7 +255,6 @@
     <string name="ni1_hindustani" translatable="false">Ni₁</string>
     <string name="ni2_hindustani" translatable="false">Ni₂</string>
     <string name="notation_hindustani">Hindusztáni</string>
-
     <string name="ni_byzantine" translatable="false">Νη</string>
     <string name="pa_byzantine" translatable="false">Πα</string>
     <string name="vou_byzantine" translatable="false">Βου</string>
@@ -273,8 +263,6 @@
     <string name="ke_byzantine" translatable="false">Κε</string>
     <string name="zo_byzantine" translatable="false">Ζω</string>
     <string name="notation_byzantine">Bizánci</string>
-
-
     <string name="helmholtz_notation">Helmholtz jelölés (C, … c\')</string>
     <string name="extended_quarter_comma_mean_tone">Bővített ¼ kommás középhang</string>
     <string name="extended_quarter_comma_mean_tone_desc">Tiszta nagytercek, 15 hangjegy</string>
