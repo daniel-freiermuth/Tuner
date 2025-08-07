@@ -1,23 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tuner</string>
-
     <!--    <string name="percent">%d&#x200A;\%</string>-->
-    <string name="percent" translatable="false">%d&#x200A;%%</string>
-    <string name="hertz" translatable="false">%.0f&#x200A;Hz</string>
-    <string name="hertz_1f" translatable="false">%.1f&#x200A;Hz</string>
-    <string name="hertz_str" translatable="false">%s&#x200A;Hz</string>
-    <string name="seconds" translatable="false">%.2f&#x200A;s</string>
-
+    <string name="percent" translatable="false">%d %%</string>
+    <string name="hertz" translatable="false">%.0f Hz</string>
+    <string name="hertz_1f" translatable="false">%.1f Hz</string>
+    <string name="hertz_str" translatable="false">%s Hz</string>
+    <string name="seconds" translatable="false">%.2f s</string>
     <string name="windowing_function">Windowing function</string>
     <string name="window_hamming">Hamming window</string>
     <string name="window_hann">Hann window</string>
     <string name="no_window">No windowing function</string>
-
     <string name="appearance">Appearance</string>
     <string name="dark_appearance">Dark appearance</string>
     <string name="light_appearance">Light appearance</string>
     <string name="system_appearance">Appearance follows system settings</string>
-
     <string name="dark_appearance_short">Dark</string>
     <string name="light_appearance_short">Light</string>
     <string name="system_appearance_short">Auto</string>
@@ -45,24 +42,22 @@
     <string name="autocorrelation">autocorrelation</string>
     <string name="pitch_history">pitch history</string>
     <string name="spectrum">spectrum</string>
-    <string name="cent" translatable="false">%+d&#x200A;&#162;</string>
-    <string name="cent_nosign" translatable="false">%d&#x200A;&#162;</string>
+    <string name="cent" translatable="false">%+d ¢</string>
+    <string name="cent_nosign" translatable="false">%d ¢</string>
     <string name="keep_screen_on">Keep screen on</string>
     <string name="display_on_lock_screen">Display on lock screen</string>
     <string name="samples">samples</string>
     <string name="scientific_mode">Scientific mode</string>
     <string name="tolerance_in_cents">Tolerance</string>
-    <string name="tolerance_summary" translatable="false">&#177;%d&#x200A;&#162;</string>
+    <string name="tolerance_summary" translatable="false">±%d ¢</string>
     <string name="expert">Expert</string>
     <string name="basic">Basic</string>
     <string name="others">Others</string>
-
     <string name="chromatic">Chromatic</string>
     <string name="guitar_eadgbe">6-string guitar</string>
     <string name="bass_eadg">4-string bass</string>
     <string name="bass_beadg">5-string bass</string>
     <string name="ukulele_gcea">Ukulele</string>
-
     <string name="c_note_name">C</string>
     <string name="d_note_name">D</string>
     <string name="e_note_name">E</string>
@@ -71,7 +66,6 @@
     <string name="a_note_name">A</string>
     <string name="b_note_name">B</string>
     <string name="bflat_note_name">-</string>
-
     <string name="c_solfege">Do</string>
     <string name="d_solfege">Re</string>
     <string name="e_solfege">Mi</string>
@@ -79,7 +73,6 @@
     <string name="g_solfege">Sol</string>
     <string name="a_solfege">La</string>
     <string name="b_solfege">Si</string>
-
     <string name="c_note_international" translatable="false">C</string>
     <string name="d_note_international" translatable="false">D</string>
     <string name="e_note_international" translatable="false">E</string>
@@ -87,12 +80,10 @@
     <string name="g_note_international" translatable="false">G</string>
     <string name="a_note_international" translatable="false">A</string>
     <string name="b_note_international" translatable="false">B</string>
-
     <string name="notation">Notation</string>
     <string name="notation_standard">Default (A-B-C-…)</string>
     <string name="notation_solfege">Solfège</string>
     <string name="notation_international">International (A-B-C-…)</string>
-
     <string name="violin_gdae">Violin</string>
     <string name="abort">Abort</string>
     <string name="instrument_name">Instrument name</string>
@@ -143,7 +134,7 @@
     <string name="equal_temperament_12" translatable="false">Equal temperament</string>
     <string name="equal_temperament_12_desc" translatable="false">12 notes per octave</string>
     <string name="equal_temperament_12_abbr" translatable="false">EDO 12</string>
-<!--    <string name="equal_temperament_17">Equal temperament 17</string>-->
+    <!--    <string name="equal_temperament_17">Equal temperament 17</string>-->
 <!--    <string name="equal_temperament_17_desc">17 notes per octave</string>-->
 <!--    <string name="equal_temperament_17_abbr">EDO 17</string>-->
 <!--    <string name="equal_temperament_19">Equal temperament 19</string>-->
@@ -218,7 +209,7 @@
     <string name="neidhardt3_desc">For a big city, 1732</string>
     <string name="neidhardt3_abbr">Neidhardt 3</string>
     <string name="valotti">Valotti</string>
-    <string name="valotti_abbr">Valotti</string>
+    <string name="valotti_abbr">Vallotti</string>
     <string name="young2">Young 2</string>
     <string name="young2_abbr">Young 2</string>
     <string name="reference_frequency">Reference frequency</string>
@@ -227,9 +218,9 @@
     <string name="root_note">Key note</string>
     <string name="test_tuning">Test tuning</string>
     <string name="details">Details</string>
-    <string name="pythagorean_comma">%d\u2044%d&#x200A;pC</string>
-    <string name="syntonic_comma">%d\u2044%d&#x200A;sC</string>
-    <string name="schisma">%d\u2044%d&#x200A;sch</string>
+    <string name="pythagorean_comma">%d\u2044%d pC</string>
+    <string name="syntonic_comma">%d\u2044%d sC</string>
+    <string name="schisma">%d\u2044%d sch</string>
     <string name="plus_correction" translatable="false">" + "</string>
     <string name="minus_correction" translatable="false">" - "</string>
     <string name="pythagorean_comma_desc">pC: Pythagorean Comma, 531441\u2044524288\nsC: Syntonic Comma, 81\u204480\nsch: Schisma, 32805\u204432768</string>
@@ -243,7 +234,7 @@
     <string name="new_temperament_requires_adapting_reference_note">New temperament requires adapting the reference note!</string>
     <string name="comma_separator">,\ </string>
     <string name="capture">Capture</string>
-    <string name="capture_duration">Capture duration: %d&#x200A;s</string>
+    <string name="capture_duration">Capture duration: %d s</string>
     <string name="no_capture_duration">Disable capturing</string>
     <string name="sa_carnatic">Sa</string>
     <string name="ri1_carnatic" translatable="false">Ri₁</string>
@@ -271,7 +262,6 @@
     <string name="ni1_hindustani" translatable="false">Ni₁</string>
     <string name="ni2_hindustani" translatable="false">Ni₂</string>
     <string name="notation_hindustani">Hindustani</string>
-
     <string name="ni_byzantine" translatable="false">Νη</string>
     <string name="pa_byzantine" translatable="false">Πα</string>
     <string name="vou_byzantine" translatable="false">Βου</string>
@@ -280,8 +270,6 @@
     <string name="ke_byzantine" translatable="false">Κε</string>
     <string name="zo_byzantine" translatable="false">Ζω</string>
     <string name="notation_byzantine">Byzantine</string>
-
-
     <string name="helmholtz_notation">Helmholtz notation (C, … c\')</string>
     <string name="extended_quarter_comma_mean_tone">Extended ¼ comma meantone</string>
     <string name="extended_quarter_comma_mean_tone_desc">Pure major 3rds, 15 notes</string>
