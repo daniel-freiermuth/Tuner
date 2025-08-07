@@ -191,4 +191,8 @@
         <item quantity="many">Переходити після %d подібних результатів</item>
         <item quantity="other">Переходити після %d подібних результатів</item>
     </plurals>
+    <string name="sa_carnatic">Sa</string>
+    <string name="notation_hindustani">Гіндустані</string>
+    <string name="notation_carnatic">Карнатична</string>
+    <string name="octave_offset">Зміщення октави</string>
 </resources>
