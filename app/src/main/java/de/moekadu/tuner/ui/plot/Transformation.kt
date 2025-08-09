@@ -30,11 +30,17 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.toRect
 
+/** Transformation class to transform coordinates between screen and raw coordinate systems.
+ * @param viewPortScreen Box with screen coordinates (left, top, bottom right).
+ * @param viewPortRaw Box with corresponding raw coordinates.
+ * @param viewPortCornerRadius Corner radius of used view port.
+ */
 data class Transformation(
     val viewPortScreen: IntRect,
     val viewPortRaw: Rect,
     val viewPortCornerRadius: Float = 0f
 ) {
+    /** Transformation matrix to transform a raw coordinate to a screen coordinate. */
     val matrixRawToScreen = Matrix().apply {
         translate(viewPortScreen.left.toFloat(), viewPortScreen.center.y.toFloat())
         scale(viewPortScreen.width / viewPortRaw.width, viewPortScreen.height / viewPortRaw.height)
@@ -50,22 +56,49 @@ data class Transformation(
 //        setRectToRect(viewPortRaw, viewPortScreenFloat, Matrix.ScaleToFit.FILL)
 //        postScale(1f, -1f, 0f, viewPortScreenFloat.centerY())
 //    }
+    /** Transformation matrix to transform a screen coordinate to a raw coordinate. */
     val matrixScreenToRaw = Matrix().apply {
         setFrom(matrixRawToScreen)
         invert()
     }
 
+    /** Transform a rectangle to screen coordinates.
+     * @param rect Rectangle in raw coordinates.
+     * @return Rectangle in screen coordinates.
+     */
     fun toScreen(rect: Rect) = matrixRawToScreen.map(rect)
+
+    /** Transform a rectangle to screen coordinates.
+     * @param point Point in raw coordinates.
+     * @return Point in screen coordinates.
+     */
     fun toScreen(point: Offset) = matrixRawToScreen.map(point)
 
+    /** Transform a rectangle to raw coordinates.
+     * @param rect Rectangle in screen coordinates.
+     * @return Rectangle in raw coordinates.
+     */
     fun toRaw(rect: Rect) = matrixScreenToRaw.map(rect)
+
+    /** Transform a point to raw coordinates.
+     * @param point Point in screen coordinates.
+     * @return Point in raw coordinates.
+     */
     fun toRaw(point: Offset) = matrixScreenToRaw.map(point)
 
+    /** Transform a velocity to raw coordinates.
+     * @note This is similar to transforming a point, but it dies not apply the offset.
+     * @param velocity Velocity in screen coordinates.
+     * @return Velocity in raw coordinates.
+     */
     fun toRaw(velocity: Velocity): Velocity {
         val result = (toRaw(Offset.Zero) - toRaw(Offset(velocity.x, velocity.y)))
         return Velocity(result.x, result.y)
     }
 
+    /** Return the clip shape of the view port.
+     * @note This essentially returns that shape with the given rounded corners.
+     */
     @Composable
     fun rememberClipShape() = remember(viewPortScreen, viewPortCornerRadius) {
         GenericShape { _, _ ->

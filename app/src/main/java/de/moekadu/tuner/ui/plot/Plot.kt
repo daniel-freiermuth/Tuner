@@ -82,6 +82,27 @@ class PlotScope(
             Line(data, lineColor, lineWidth, transformation)
     }
 
+    /** Add multiple point of same style.
+     * @param data Point coordinates, normally created by LineCoordinates.create(...). Note that
+     *   even though the function is call Point, we use LineCoordinates here since it provides
+     *   the required information.
+     * @param shape In the given scope. the shape of the point must be drawn. You can use presets
+     *   like `PointShape.circle(...)` or other shapes in `PointShape`.
+     * @param maxPointSize Maximum point size measured from actual point position to its maximum
+     *   extent in x or y direction. If this value is smaller than the actual point, points closely
+     *   outside the viewport will not be drawn anymore even though parts of it would theoretically
+     *   should be visible.
+     */
+    @Composable
+    fun Points(
+        data: LineCoordinates,
+        shape: DrawScope.() -> Unit,
+        maxPointSize: Dp = 0.dp
+    ) {
+        if (clipped)
+            Points(data, shape, maxPointSize, transformation)
+    }
+
     /** Add a point.
      * @param position Point position.
      * @param shape In the given scope, the shape of the point must be drawn.

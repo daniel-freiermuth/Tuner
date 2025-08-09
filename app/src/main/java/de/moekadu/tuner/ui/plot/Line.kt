@@ -113,7 +113,7 @@ private fun findCoordinateIndexBegin(xMin: Float, coordinates: List<Offset>): In
 private fun findCoordinateIndexEnd(xMax: Float, coordinates: List<Offset>): Int {
     val iMax = coordinates.binarySearchBy(xMax) { it.x }
     return if (iMax < 0)
-        -iMax-1
+        min(coordinates.size, -iMax)
     else
         iMax + 1
 }
@@ -166,6 +166,7 @@ private data class LineCache(
         return coordinatesScreen.subList(0, numCoordinates)
     }
 }
+
 @Composable
 fun Line(
     data: LineCoordinates,

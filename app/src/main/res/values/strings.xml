@@ -314,4 +314,6 @@
     <string name="b_note_vietnamese">Phan</string>
     <string name="use_default">Use default</string>
     <string name="detect_frequency">Detect frequency</string>
+    <string name="stretch">Stretch</string>
+    <string name="stretch_tuning">Stretch tuning</string>
 </resources>

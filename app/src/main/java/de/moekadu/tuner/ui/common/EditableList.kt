@@ -18,6 +18,7 @@
 */
 package de.moekadu.tuner.ui.common
 
+import android.os.Parcelable
 import androidx.activity.compose.BackHandler
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
@@ -70,6 +71,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.parcelize.Parcelize
 import kotlin.math.max
 import kotlin.math.min
 
@@ -377,6 +379,9 @@ private const val CONTENT_TYPE_SECTION = 1
 private const val CONTENT_TYPE_EMPTY_MESSAGE = 2
 private const val CONTENT_TYPE_ITEM = 3
 
+@Parcelize
+@JvmInline
+private value class SectionKey(val count: Int) : Parcelable
 
 @Composable
 fun <T>EditableList(
@@ -464,9 +469,9 @@ fun <T>EditableList(
                         state.numNonEmptyPredefinedLists > 1
                 )
         if (editableItems.isEmpty() && state.numNonEmptyPredefinedLists == 0 && noItemsMessage != null) {
-            item(contentType = CONTENT_TYPE_EMPTY_MESSAGE) {
+            item(contentType = CONTENT_TYPE_EMPTY_MESSAGE, key = SectionKey(-1)) {
                 Box(
-                    Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    Modifier.fillMaxWidth().padding(vertical = 8.dp).animateItem(),
                     contentAlignment = Alignment.Center
                 ) {
                     noItemsMessage()
@@ -476,10 +481,11 @@ fun <T>EditableList(
 
         if (editableItems.size > 0) {
             if (showSections) {
-                item(contentType = CONTENT_TYPE_SECTION) {
+                item(contentType = CONTENT_TYPE_SECTION, key = SectionKey(1)) {
                     EditableListSection(
                         title = stringResource(id = state.editableItemsSectionResId),
-                        expanded = editableItemsExpanded
+                        expanded = editableItemsExpanded,
+                        modifier = Modifier.animateItem()
                     ) {
                         state.toggleEditableItemsExpanded(it)
                     }
@@ -530,10 +536,11 @@ fun <T>EditableList(
 
         state.predefinedItemSections.forEachIndexed { predefinedListIndex, predefinedList ->
             if (showSections && predefinedList.size > 0) {
-                item(contentType = CONTENT_TYPE_SECTION) {
+                item(contentType = CONTENT_TYPE_SECTION, key = SectionKey(1000 + predefinedListIndex)) {
                     EditableListSection(
                         title = stringResource(id = predefinedList.sectionStringResourceId),
-                        expanded = predefinedExpanded[predefinedListIndex]
+                        expanded = predefinedExpanded[predefinedListIndex],
+                        modifier = Modifier.animateItem()
                     ) {
                         predefinedList.toggleExpanded(it)
                     }

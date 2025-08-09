@@ -47,7 +47,7 @@ fun centsToRatio(cents: Float): Float {
     return (2.0.pow(cents / 1200.0)).toFloat()
 }
 
-private fun centsToRatio(cents: Double): Double {
+fun centsToRatio(cents: Double): Double {
     return (2.0.pow(cents / 1200.0))
 }
 

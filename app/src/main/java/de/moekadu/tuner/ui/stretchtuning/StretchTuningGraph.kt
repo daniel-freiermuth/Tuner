@@ -1,5 +1,7 @@
 package de.moekadu.tuner.ui.stretchtuning
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -7,9 +9,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PointMode.Companion.Points
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -18,25 +23,32 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
+import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.stretchtuning.StretchTuningData
 import de.moekadu.tuner.temperaments.centsToFrequency
 import de.moekadu.tuner.temperaments.ratioToCents
 import de.moekadu.tuner.ui.plot.Anchor
+import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.plot.HorizontalLinesPositions
 import de.moekadu.tuner.ui.plot.LineCoordinates
 import de.moekadu.tuner.ui.plot.Plot
 import de.moekadu.tuner.ui.plot.PlotWindowOutline
+import de.moekadu.tuner.ui.plot.PointShape
 import de.moekadu.tuner.ui.plot.TickLevelDeltaBased
+import de.moekadu.tuner.ui.plot.VerticalLinesPositions
 import de.moekadu.tuner.ui.plot.rememberTextLabelHeight
 import de.moekadu.tuner.ui.plot.rememberTextLabelWidth
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
 fun StretchTuningGraph(
     stretchTuningData: StretchTuningData,
     modifier: Modifier = Modifier,
+    gestureBasedViewPort: GestureBasedViewPort = remember { GestureBasedViewPort() },
+    selectedKey: Int = -1,
     // line properties
     lineWidth: Dp = 2.dp,
     lineColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -51,17 +63,38 @@ fun StretchTuningGraph(
     referenceFrequency: Float = 440f
 ) {
     val viewPort = remember(stretchTuningData, referenceFrequency) {
+        val marginRelative = 0.04f
         val fmin = stretchTuningData.unstretchedFrequencies.min()
         val fmax = stretchTuningData.unstretchedFrequencies.max()
+        val fminCents = ratioToCents(fmin / referenceFrequency.toDouble()).toFloat()
+        val fmaxCents = ratioToCents(fmax / referenceFrequency.toDouble()).toFloat()
+        val fCentsMargin = (fmaxCents - fminCents) * marginRelative
         val cmin = stretchTuningData.cents.min()
         val cmax = stretchTuningData.cents.max()
+        val cMargin = (cmax - cmin) * marginRelative
         Rect(
-            left = ratioToCents(fmin / referenceFrequency.toDouble()).toFloat(),
-            top = cmax.toFloat(),
-            right = ratioToCents(fmax / referenceFrequency.toDouble()).toFloat(),
-            bottom = cmin.toFloat()
+            left = fminCents - fCentsMargin,
+            top = (cmax + cMargin).toFloat(),
+            right = fmaxCents + fCentsMargin,
+            bottom = (cmin - cMargin).toFloat()
         )
     }
+
+    val viewPortGestureLimits = remember(stretchTuningData, referenceFrequency) {
+        val marginRelative = 2
+        val fmax = stretchTuningData.unstretchedFrequencies.max()
+        val fmaxCents = ratioToCents(fmax / referenceFrequency.toDouble()).toFloat()
+        val cmin = stretchTuningData.cents.min()
+        val cmax = stretchTuningData.cents.max()
+        val cMargin = (cmax - cmin) * marginRelative
+        Rect(
+            left = ratioToCents(1.0 / referenceFrequency.toDouble()).toFloat(),
+            top = (cmax + cMargin).toFloat(),
+            right = 4 * fmaxCents,
+            bottom = (cmax - cMargin).toFloat(),
+        )
+    }
+
     val maxLabelWidth = rememberTextLabelWidth(
         stringResource(R.string.cent, 500),
         style = tickLabelStyle
@@ -71,19 +104,32 @@ fun StretchTuningGraph(
     val maxLabelHeight = rememberTextLabelHeight(tickLabelStyle)
     val maxLabelHeightDp = with(LocalDensity.current) { maxLabelHeight.toDp() + 2.dp}
 
+    val scope = rememberCoroutineScope()
+
     Plot(
-        modifier = modifier,
+        modifier = modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                scope.launch { gestureBasedViewPort.finish() }
+            },
         viewPort = viewPort,
+        viewPortGestureLimits = viewPortGestureLimits,
+        gestureBasedViewPort = gestureBasedViewPort,
         plotWindowPadding = DpRect(
             left = 0.dp,
             top = 0.dp,
             right = maxLabelWidthDp,
             bottom = maxLabelHeightDp
         ),
-        plotWindowOutline = plotWindowOutline
+        plotWindowOutline = plotWindowOutline,
     ) {
         val horizontalLinePositions = remember {
             HorizontalLinesPositions.create(floatArrayOf(0f))
+        }
+        val verticalLinePositions = remember {
+            VerticalLinesPositions.create(floatArrayOf(0f))
         }
         val line = remember(stretchTuningData, referenceFrequency) {
             LineCoordinates.create(
@@ -91,6 +137,17 @@ fun StretchTuningGraph(
                 { ratioToCents(stretchTuningData.unstretchedFrequencies[it] / referenceFrequency.toDouble()).toFloat() },
                 { stretchTuningData.cents[it].toFloat() }
             )
+        }
+        val highlightedPoint = remember(selectedKey, stretchTuningData, referenceFrequency) {
+            val index = stretchTuningData.keys.indexOfFirst { it == selectedKey }
+            if (index < 0) {
+                null
+            } else {
+                Offset(
+                    ratioToCents(stretchTuningData.unstretchedFrequencies[index] / referenceFrequency.toDouble()).toFloat(),
+                    stretchTuningData.cents[index].toFloat()
+                )
+            }
         }
         val tickLevelX = remember {
             TickLevelDeltaBased(600f, 1200f, 2400f)
@@ -135,13 +192,29 @@ fun StretchTuningGraph(
             )
         }
         HorizontalLines(
-            positions = horizontalLinePositions
+            positions = horizontalLinePositions,
+            lineWidth = 2.dp
+        )
+        VerticalLines(
+            positions = verticalLinePositions,
+            lineWidth = 2.dp
         )
         Line(
             data = line,
             lineColor = lineColor,
             lineWidth = lineWidth
         )
+        Points(
+            data = line,
+            shape = PointShape.circle(size = 6.dp),
+            maxPointSize = 3.dp // radius is relevant here
+        )
+        if (highlightedPoint != null) {
+            Point(
+                position = highlightedPoint,
+                shape = PointShape.circle(size = 12.dp, color = MaterialTheme.colorScheme.error)
+            )
+        }
     }
 }
 
@@ -151,12 +224,15 @@ private fun StretchTuningGraphPreview() {
     TunerTheme {
         Surface {
             val stretchTuningData = remember {StretchTuningData(
-                persistentListOf(100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1200.0),
-                persistentListOf( 97.0, 199.0, 297.0, 400.0, 502.0, 606.0, 708.0, 807.0, 913.0, 1220.0)
+                GetTextFromString("Test"),
+                GetTextFromString("Test stretch description"),
+                doubleArrayOf(100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1200.0),
+                doubleArrayOf( 97.0, 199.0, 297.0, 400.0, 502.0, 606.0, 708.0, 807.0, 913.0, 1220.0)
             )}
             StretchTuningGraph(
                 stretchTuningData = stretchTuningData,
-                modifier = Modifier.fillMaxSize().padding(8.dp)
+                modifier = Modifier.fillMaxSize().padding(8.dp),
+                selectedKey = 2
             )
         }
     }

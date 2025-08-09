@@ -7,18 +7,35 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -28,14 +45,21 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
+import de.moekadu.tuner.misc.GetTextFromString
+import de.moekadu.tuner.stretchtuning.StretchTuningData
+import de.moekadu.tuner.ui.common.OverflowMenuCallbacks
 import de.moekadu.tuner.ui.theme.TunerTheme
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
-data class StretchTuningTableLineState(
-    val frequencyUnstretched: Double,
-    val stretchInCents: Double,
-    val key: Long
-)
-
+/** Get the width of a table column.
+ * @param testString Test string based on which we compute the width. This should e.g. be the
+ *   longest expected string of the table column.
+ * @param style Text style of content.
+ * @param density Text density of content.
+ * @param textMeasurer Text measurer which does the measuring.
+ * @return Width of table column.
+ */
 @Composable
 fun rememberTableColumnWidth(
     testString: String,
@@ -51,19 +75,73 @@ fun rememberTableColumnWidth(
 }
 
 @Composable
+private fun OverflowMenu(
+    onDeleteClicked: () -> Unit,
+    onEditClicked: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    Box(modifier = modifier) {
+        IconButton(onClick = {
+            expanded = !expanded
+        }) {
+            Icon(Icons.Default.MoreVert, contentDescription = "menu")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(id = R.string.edit)) },
+                leadingIcon = { Icon(Icons.Default.Edit, contentDescription = "edit") },
+                onClick = {
+                    onEditClicked()
+                    expanded = false
+                }
+            )
+            HorizontalDivider()
+            DropdownMenuItem(
+                text = { Text(stringResource(id = R.string.delete)) },
+                leadingIcon = { Icon(Icons.Default.Delete, contentDescription = "delete") },
+                onClick = {
+                    onDeleteClicked()
+                    expanded = false
+                }
+            )
+        }
+   }
+}
+
+/** Line of stretch tuning table.
+ * @param column1 Content of first column.
+ * @param column2 Content of second column.
+ * @param column1Width Minimum column width of first column. Can be computed with
+ *   with `rememberTableColumnWidth()`.
+ *  @param column2Width Minimum column width of second column. Can be computed with
+ *   with `rememberTableColumnWidth()`.
+ * @param modifier Modifier.
+ * @param isSelected If true, the line will be highlighted.
+ * @param textStyle Text style used.
+ */
+@Composable
 fun StretchTuningTableLine(
-    state: StretchTuningTableLineState,
-    frequencyWidth: Dp,
-    centCorrectionWidth: Dp,
+    column1: String,
+    column2: String,
+    column1Width: Dp,
+    column2Width: Dp,
     modifier: Modifier = Modifier,
+    onEditClicked: () -> Unit = {},
+    onDeleteClicked: () -> Unit = {},
     isSelected: Boolean = false,
-    textStyle: TextStyle = LocalTextStyle.current
+    textStyle: TextStyle = LocalTextStyle.current,
+    textAlign: TextAlign = TextAlign.End,
+    showOverflowMenu: Boolean = true
 ) {
     Surface(
         color = if (isSelected)
-            MaterialTheme.colorScheme.surface
-        else
             MaterialTheme.colorScheme.secondaryContainer
+        else
+            MaterialTheme.colorScheme.surface
     ) {
         Column(
             modifier = modifier
@@ -75,20 +153,33 @@ fun StretchTuningTableLine(
                     .heightIn(min = 52.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Spacer(modifier = Modifier.weight(2f))
                 Text(
-                    stringResource(R.string.hertz_1f, state.frequencyUnstretched),
-                    modifier = Modifier.width(frequencyWidth),
+                    column1,
+                    modifier = Modifier.padding(start=16.dp).width(column1Width),
                     maxLines = 1,
                     style = textStyle,
-                    textAlign = TextAlign.End
+                    textAlign = textAlign
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(32.dp))
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    stringResource(R.string.cent_1f, state.stretchInCents),
-                    modifier = Modifier.width(centCorrectionWidth),
+                    column2,
+                    modifier = Modifier.padding(end=16.dp).width(column2Width),
                     style = textStyle,
-                    textAlign = TextAlign.End
+                    textAlign = textAlign
                 )
+                Spacer(modifier = Modifier.weight(2f))
+                if (showOverflowMenu) {
+                    OverflowMenu(
+                        onEditClicked = onEditClicked,
+                        onDeleteClicked = onDeleteClicked,
+                        modifier = Modifier.size(48.dp)
+                    )
+                } else {
+                    Spacer(Modifier.size(48.dp))
+                }
             }
             HorizontalDivider()
         }
@@ -102,18 +193,12 @@ private fun  StretchTuningTableLinePreview() {
         Surface {
             Box {
                 Column {
-                    val states = remember {
-                        listOf(
-                            StretchTuningTableLineState(
-                                frequencyUnstretched = 440.0,
-                                stretchInCents = 0.0,
-                                key = 1L
-                            ),
-                            StretchTuningTableLineState(
-                                frequencyUnstretched = 540.0,
-                                stretchInCents = 7.0,
-                                key = 2L
-                            )
+                    val stretchTuningData = remember {
+                        StretchTuningData(
+                            name = GetTextFromString("Test"),
+                            description = GetTextFromString("Stretch tuning description."),
+                            unstretchedFrequencies = doubleArrayOf(320.0, 440.0, 540.0),
+                            stretchedFrequencies = doubleArrayOf(318.0, 440.0, 553.0)
                         )
                     }
                     val style = MaterialTheme.typography.bodyLarge
@@ -126,12 +211,13 @@ private fun  StretchTuningTableLinePreview() {
                         style = style
                     )
 
-                    states.forEachIndexed { index, state ->
+                    stretchTuningData.unstretchedFrequencies.forEachIndexed { index, unstretchedFrequency ->
                         StretchTuningTableLine(
-                            state = state,
-                            isSelected = (index == 0),
-                            frequencyWidth = frequencyWidth,
-                            centCorrectionWidth = centCorrectionWidth,
+                            column1 = stringResource(R.string.hertz_1f, unstretchedFrequency),
+                            column2 = stringResource(R.string.cent_1f, stretchTuningData.cents[index]),
+                            isSelected = (index == 1),
+                            column1Width = frequencyWidth,
+                            column2Width = centCorrectionWidth,
                             textStyle = style
                         )
                     }
