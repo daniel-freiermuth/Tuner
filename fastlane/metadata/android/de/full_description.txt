@@ -1,4 +1,4 @@
-    Stimmgerät mit Funktionen wie:
+Stimmgerät mit Funktionen wie:
     * Bestimmung des Tons anhand von Autokorrelation und FFT Spektrum.
     * Genauigkeitsverbesserung durch Auswerten der Phaseninformation und Verwendung von Polynominterpolation.
     * Anzeigen des Verlaufs der Tonhöhe über der Zeit.
