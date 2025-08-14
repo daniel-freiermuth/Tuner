@@ -1,37 +1,15 @@
-/*
-* Copyright 2024 Michael Moessner
-*
-* This file is part of Tuner.
-*
-* Tuner is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* Tuner is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Tuner.  If not, see <http://www.gnu.org/licenses/>.
-*/
 package de.moekadu.tuner.instruments
 
-import android.util.Log
 import android.content.Context
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.moekadu.tuner.hilt.ApplicationScope
-import de.moekadu.tuner.misc.ResourcesDataStoreBase
+import de.moekadu.tuner.resources.ResourcesBase
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,62 +19,37 @@ import kotlin.random.Random
 class InstrumentResources @Inject constructor(
     @ApplicationContext context: Context,
     @ApplicationScope val applicationScope: CoroutineScope
-) {
-    val store = ResourcesDataStoreBase(context, "instruments")
+) : ResourcesBase("instruments", context, applicationScope) {
 
     val predefinedInstruments = instrumentDatabase.toImmutableList()
 
-//    val currentInstrument = store.getSerializablePreferenceFlow(
-//        CURRENT_INSTRUMENT_KEY, predefinedInstruments[0]
-//    )
-
-    val currentInstrument = store.getTransformablePreferenceFlow(
-        CURRENT_INSTRUMENT_KEY, predefinedInstruments[0]
-    ) {
-        try {
-            val instrument = Json.decodeFromString<Instrument>(it)
-            if (instrument.isPredefined()) {
-                reloadPredefinedInstrumentIfNeeded(instrument, predefinedInstruments)
-            } else {
-                instrument
-            }
-        } catch(ex: IllegalArgumentException) {
-            try {
+    private val currentInstrumentPref = createSerializablePreference(
+        "current instrument", predefinedInstruments[0],
+        verifyAfterReading = { instrument ->
+            reloadPredefinedInstrumentIfNeeded(instrument, predefinedInstruments)
+        },
+        onDeserializationFailure = {
+           try {
                 Json.decodeFromString<InstrumentOld>(it).toNew()
-            } catch (ex2: Exception ){
+            } catch (_: Exception ){
                 predefinedInstruments[0]
             }
-        } catch(ex: Exception) {
-            instrumentDatabase[0]
         }
-    }
+    )
+    val currentInstrument = currentInstrumentPref.asStateFlow()
 
     fun writeCurrentInstrument(instrument: Instrument) {
-        applicationScope.launch {
-            store.writeSerializablePreference(CURRENT_INSTRUMENT_KEY, instrument)
-        }
+        currentInstrumentPref.set(instrument)
     }
 
-    // Reading custom instruments is currently a bit difficult, since serialization
-    // of persistentLists is not directly possible
-    //    val customInstruments = store.getSerializablePreferenceFlow(
-    //        CUSTOM_INSTRUMENTS_KEY, CustomInstrumentsDefault
-    //    )
-    val customInstruments = store.getTransformablePreferenceFlow(
-        CUSTOM_INSTRUMENTS_KEY, CustomInstrumentsDefault
-    ) {
-        try {
-            Json.decodeFromString<Array<Instrument>>(it).toList().toPersistentList()
+    private val customInstrumentsPref = createTransformablePreference(
+        "custom instruments", persistentListOf<Instrument>(),
+        { it.toTypedArray() }, { it.toPersistentList() }
+    )
 
-        } catch(ex: Exception) {
-            CustomInstrumentsDefault
-        }
-    }
-//
-//    suspend fun writeCustomInstruments(instruments: ImmutableList<Instrument>) {
-//        store.writeSerializablePreference(CUSTOM_INSTRUMENTS_KEY, ImmutableListWrapper(instruments))
-//    }
-    fun writeCustomInstruments(instruments: List<Instrument>) {
+    val customInstruments = customInstrumentsPref.asStateFlow()
+
+    fun writeCustomInstruments(instruments: PersistentList<Instrument>) {
         // if current instrument did change, update this also
         val currentInstrumentId = currentInstrument.value.stableId
         val modifiedCurrentInstrument = instruments.firstOrNull {
@@ -104,27 +57,23 @@ class InstrumentResources @Inject constructor(
         }
         if (modifiedCurrentInstrument != null)
             writeCurrentInstrument(modifiedCurrentInstrument)
-        applicationScope.launch {
-            store.writeSerializablePreference(CUSTOM_INSTRUMENTS_KEY, instruments.toTypedArray())
-        }
+        customInstrumentsPref.set(instruments)
     }
 
-    val customInstrumentsExpanded = store.getPreferenceFlow(
-        CUSTOM_INSTRUMENTS_EXPANDED_KEY, CustomInstrumentExpandedDefault
-    )
+    private val customInstrumentsExpandedPref =
+        createPreference("custom instruments expanded", true)
+    val customInstrumentsExpanded = customInstrumentsExpandedPref.asStateFlow()
+
     fun writeCustomInstrumentsExpanded(expanded: Boolean) {
-        applicationScope.launch {
-            store.writePreference(CUSTOM_INSTRUMENTS_EXPANDED_KEY, expanded)
-        }
+        customInstrumentsExpandedPref.set(expanded)
     }
 
-    val predefinedInstrumentsExpanded = store.getPreferenceFlow(
-        PREDEFINED_INSTRUMENTS_EXPANDED_KEY, PredefinedInstrumentExpandedDefault
-    )
+    private val predefinedInstrumentsExpandedPref =
+        createPreference("predefined instruments expanded", true)
+    val predefinedInstrumentsExpanded = predefinedInstrumentsExpandedPref.asStateFlow()
+
     fun writePredefinedInstrumentsExpanded(expanded: Boolean) {
-        applicationScope.launch {
-            store.writePreference(PREDEFINED_INSTRUMENTS_EXPANDED_KEY, expanded)
-        }
+        predefinedInstrumentsExpandedPref.set(expanded)
     }
 
     /** Add instrument if stable id does not exist, else replace it.*/
@@ -156,30 +105,6 @@ class InstrumentResources @Inject constructor(
         writeCustomInstruments(newInstrumentList)
     }
 
-//    fun prependInstruments(instruments: List<Instrument>) {
-//        val current = this.customInstruments.value
-//        val newInstrumentList = current.mutate { modified ->
-//            instruments.forEachIndexed { index, instrument ->
-//                val newKey = getNewStableId(modified)
-//                modified.add(index, instrument.copy(stableId = newKey))
-//            }
-//        }
-//        writeCustomInstruments(newInstrumentList)
-//    }
-
-//    fun replaceInstruments(instruments: List<Instrument>) {
-//        var key = 0L
-//        val currentKey = currentInstrument.value.stableId
-//        val newInstrumentList = instruments.map {
-//            ++key
-//            if (key == currentKey)
-//                ++key
-//            it.copy(stableId = key)
-//        }
-//
-//        writeCustomInstruments(newInstrumentList)
-//    }
-
     private fun getNewStableId(existingInstruments: List<Instrument> = customInstruments.value): Long {
         val currentKey = currentInstrument.value.stableId
         while (true) {
@@ -189,31 +114,17 @@ class InstrumentResources @Inject constructor(
         }
     }
 
-    companion object {
-        private val CustomInstrumentsDefault = persistentListOf<Instrument>()
-        private const val CustomInstrumentExpandedDefault = true
-        private const val PredefinedInstrumentExpandedDefault = true
 
-        private val CURRENT_INSTRUMENT_KEY = stringPreferencesKey("current instrument")
-        private val CUSTOM_INSTRUMENTS_KEY = stringPreferencesKey("custom instruments")
-        private val CUSTOM_INSTRUMENTS_EXPANDED_KEY = booleanPreferencesKey(
-            "custom instruments expanded"
-        )
-
-        private val PREDEFINED_INSTRUMENTS_EXPANDED_KEY = booleanPreferencesKey(
-            "predefined instruments expanded"
-        )
-    }
 }
 
 private fun reloadPredefinedInstrumentIfNeeded(
-    instrument: Instrument,
+    instrument: Instrument?,
     predefinedInstruments: List<Instrument>
-): Instrument {
+): Instrument? {
     // if null, we get the string, not the id-based string, for predefined instruments, this
     // string is a unique identifier.
-    val name = instrument.getNameString(null)
-    return if (name == "") {
+    val name = instrument?.getNameString(null)
+    return if (name == null || name == "") {
         instrument
     } else {
         predefinedInstruments.firstOrNull {

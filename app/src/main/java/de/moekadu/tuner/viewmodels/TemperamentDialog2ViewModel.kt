@@ -15,6 +15,7 @@ import de.moekadu.tuner.ui.common.EditableListData
 import de.moekadu.tuner.ui.common.EditableListPredefinedSectionImmutable
 import de.moekadu.tuner.ui.temperaments.TemperamentsDialog2Data
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,7 +48,7 @@ class TemperamentDialog2ViewModel @Inject constructor(
         activeItem = activeTemperament,
         setNewItems = {
             val newTemperaments = it.filterIsInstance<Temperament3Custom>()
-            pref.writeCustomTemperaments(newTemperaments)
+            pref.writeCustomTemperaments(newTemperaments.toPersistentList())
         },
         toggleEditableItemsExpanded = { pref.writeCustomTemperamentsExpanded(it) }
     )

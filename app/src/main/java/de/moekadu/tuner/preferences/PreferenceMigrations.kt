@@ -22,6 +22,7 @@ import android.content.Context
 import de.moekadu.tuner.instruments.InstrumentResources
 import de.moekadu.tuner.instruments.InstrumentResourcesOld
 import de.moekadu.tuner.temperaments.TemperamentResources
+import kotlinx.collections.immutable.toPersistentList
 import kotlin.math.roundToInt
 
 fun migrateFromV6(
@@ -82,7 +83,7 @@ fun migrateFromV6(
         newInstrumentResources.writePredefinedInstrumentsExpanded(it)
     }
     fromInstruments.customInstruments?.let {
-        newInstrumentResources.writeCustomInstruments(it)
+        newInstrumentResources.writeCustomInstruments(it.toPersistentList())
     }
     fromInstruments.currentInstrument?.let {
         newInstrumentResources.writeCurrentInstrument(it)
