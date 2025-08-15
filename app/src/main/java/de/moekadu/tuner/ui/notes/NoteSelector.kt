@@ -130,13 +130,14 @@ private fun NoteSelectorBase(
 
         LazyRow(
             modifier = Modifier.nestedScroll(nestedScrollConnection),
-            contentPadding = PaddingValues(horizontal = (maxWidth - singleNoteSize.width) / 2),
+            contentPadding = PaddingValues(
+                horizontal = (maxWidth - singleNoteSize.width).coerceAtLeast(0.dp) / 2
+            ),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             state = state,
             flingBehavior = rememberSnapFlingBehavior(lazyListState = state),
             content = content
         )
-
     }
 }
 
