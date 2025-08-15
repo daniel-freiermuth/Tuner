@@ -1,0 +1,194 @@
+package de.moekadu.tuner.preferences
+
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import de.moekadu.tuner.hilt.ApplicationScope
+import de.moekadu.tuner.notedetection.WindowingFunction
+import de.moekadu.tuner.resources.ResourcesBase
+import de.moekadu.tuner.ui.notes.NotePrintOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.serialization.Serializable
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.math.pow
+import kotlin.math.roundToInt
+
+@Singleton
+class PreferenceResources @Inject constructor(
+    @ApplicationContext context: Context,
+    @ApplicationScope val applicationScope: CoroutineScope
+): ResourcesBase("settings", context, applicationScope) {
+    @Serializable
+    data class Appearance(
+        val mode: NightMode = NightMode.Auto,
+        val blackNightEnabled: Boolean = false,
+        val useSystemColorAccents: Boolean = true
+    )
+
+    val sampleRate = 44100
+
+    // migrations
+    private val migrationsFromV6CompletePref = createPreference(
+        "migrations_complete", false
+    )
+    val migrationsFromV6Complete = migrationsFromV6CompletePref.asStateFlow()
+    fun writeMigrationsFromV6Complete() {
+        migrationsFromV6CompletePref.set(true)
+    }
+
+    // appearance
+    private val appearancePref = createSerializablePreference(
+        "appearance", Appearance()
+    )
+    val appearance = appearancePref.asStateFlow()
+    fun writeAppearance(appearance: Appearance) {
+        appearancePref.set(appearance)
+    }
+
+    // keep screen on
+    private val screenAlwaysOnPref = createPreference("screenon", false)
+    val screenAlwaysOn = screenAlwaysOnPref.asStateFlow()
+    fun writeScreenAlwaysOn(screenAlwaysOn: Boolean) {
+        screenAlwaysOnPref.set(screenAlwaysOn)
+    }
+
+    // display on lock screen
+    private val displayOnLockScreenPref = createPreference("onlockscreen", false)
+    val displayOnLockScreen = displayOnLockScreenPref.asStateFlow()
+    fun writeDisplayOnLockScreen(displayOnLockScreen: Boolean) {
+        displayOnLockScreenPref.set(displayOnLockScreen)
+    }
+
+    // note print options
+    private val notePrintOptionsPref = createSerializablePreference(
+        "note_print_options", NotePrintOptions()
+    )
+    val notePrintOptions = notePrintOptionsPref.asStateFlow()
+    fun writeNotePrintOptions(notePrintOptions: NotePrintOptions) {
+        notePrintOptionsPref.set(notePrintOptions)
+    }
+
+    fun switchEnharmonicPreference() {
+        val currentUseEnharmonic = notePrintOptions.value.useEnharmonic
+        writeNotePrintOptions(
+            notePrintOptions.value.copy(
+                useEnharmonic = !currentUseEnharmonic
+            )
+        )
+    }
+
+    // scientific mode
+    private val scientificModePref = createPreference("scientific_mode", false)
+    val scientificMode = scientificModePref.asStateFlow()
+    fun writeScientificMode(scientificMode: Boolean) {
+        scientificModePref.set(scientificMode)
+    }
+
+    // windowing
+    private val windowingPref = createTransformablePreference(
+        "windowing",
+        default = WindowingFunction.Tophat,
+        makeSerializable = { it.name },
+        fromSerializable = { WindowingFunction.valueOf(it) },
+        onDeserializationFailure = {
+            // old style of storing did not use serialization, but directly store the string. we catch this
+            try {
+                WindowingFunction.valueOf(it)
+            } catch (_: IllegalArgumentException) {
+                null
+            }
+        }
+    )
+    val windowing = windowingPref.asStateFlow()
+    fun writeWindowing(windowing: WindowingFunction) {
+        windowingPref.set(windowing)
+    }
+
+    // overlap
+    private val overlapPref = createPreference("overlap", default = 75f / 100f)
+    val overlap = overlapPref.asStateFlow()
+    fun writeOverlap(overlapPercent: Int) {
+        overlapPref.set(overlapPercent.toFloat() / 100f)
+    }
+
+    // window size
+    private val windowSizeExponentPref = createPreference("window_size_exponent", 12)
+    val windowSizeExponent = windowSizeExponentPref.asStateFlow()
+    val windowSize = windowSizeExponent
+        .drop(1) // not sure if this is needed, but it basically drops the initial value, which is ok, since the window size exponent will always provide the next value
+        .map { 2f.pow(it).roundToInt() }
+        .stateIn(applicationScope, SharingStarted.Eagerly, 2f.pow(12).roundToInt())
+
+    fun writeWindowSize(windowSizeExponent: Int) {
+        windowSizeExponentPref.set(windowSizeExponent)
+    }
+
+    // pitch history duration
+    private val pitchHistoryDurationPref = createPreference(
+        "pitch_history_duration", 1.5f
+    )
+    val pitchHistoryDuration = pitchHistoryDurationPref.asStateFlow()
+    fun writePitchHistoryDuration(pitchHistoryDuration: Float) {
+        pitchHistoryDurationPref.set(pitchHistoryDuration)
+    }
+
+    private val pitchHistoryNumFaultyVauluesPref = createPreference(
+        "pitch_history_num_faulty_values", 3
+    )
+    val pitchHistoryNumFaultyValues = pitchHistoryNumFaultyVauluesPref.asStateFlow()
+    fun writePitchHistoryNumFaultyValues(pitchHistoryNumFaultyValues: Int) {
+        pitchHistoryNumFaultyVauluesPref.set(pitchHistoryNumFaultyValues)
+    }
+
+    private val numMovingAveragePref = createPreference("num_moving_average", 5)
+    val numMovingAverage = numMovingAveragePref.asStateFlow()
+    fun writeNumMovingAverage(numMovingAverage: Int) {
+        numMovingAveragePref.set(numMovingAverage)
+    }
+
+    private val maxNoisePref = createPreference("max_noise", 0.1f)
+    val maxNoise = maxNoisePref.asStateFlow()
+    fun writeMaxNoise(maxNoisePercent: Int) {
+        maxNoisePref.set(maxNoisePercent.toFloat() / 100f)
+    }
+
+    private val minHarmonicEnergyContentPref = createPreference(
+        "min_harmonic_energy_content", 0.1f
+    )
+    val minHarmonicEnergyContent = minHarmonicEnergyContentPref.asStateFlow()
+    fun writeMinHarmonicEnergyContent(minHarmonicEnergyContentPercent: Int) {
+        minHarmonicEnergyContentPref.set(minHarmonicEnergyContentPercent.toFloat() / 100f)
+    }
+
+    private val sensitivityPref = createPreference("sensitivity", 90)
+    val sensitivity = sensitivityPref.asStateFlow()
+    fun writeSensitivity(sensitivity: Int) {
+        sensitivityPref.set(sensitivity)
+    }
+
+    private val toleranceInCentsPref = createPreference("tolerance_in_cents", 5)
+    val toleranceInCents = toleranceInCentsPref.asStateFlow()
+    fun writeToleranceInCents(toleranceInCents: Int) {
+        toleranceInCentsPref.set(toleranceInCents)
+    }
+
+    private val waveWriterDurationInSecondsPref = createPreference(
+        "wave_writer_duration_in_seconds", 0
+    )
+    val waveWriterDurationInSeconds = waveWriterDurationInSecondsPref.asStateFlow()
+    fun writeWaveWriterDurationInSeconds(waveWriterDurationInSeconds: Int) {
+        waveWriterDurationInSecondsPref.set(waveWriterDurationInSeconds)
+    }
+
+    fun resetAllSettings() {
+        resetAllPreferences()
+    }
+
+    companion object {
+        const val ReferenceFrequencyDefault = 440f
+    }
+}

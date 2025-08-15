@@ -71,13 +71,14 @@ open class ResourcesBase(
             return try {
                 prefs[key]?.let { serialized ->
                     try {
-                        val r = fromSerializable(Json.decodeFromString(serializer, serialized))
+                        val deserialized = Json.decodeFromString(serializer, serialized)
+                        val r = fromSerializable(deserialized)
                         verifyAfterReading(r)
                     } catch (_: IllegalArgumentException) {
                         onDeserializationFailure(serialized)
                     } catch (_: Exception) { null }
                 }
-            } catch (ex: ClassCastException) {
+            } catch (_: ClassCastException) {
                 null
             }
         }
