@@ -35,9 +35,9 @@ private fun BufferedWriter.writeLine(line: String) {
 }
 
 object TemperamentIO {
-    data class TemperamentAndFileCheckResult(
+    data class TemperamentsAndFileCheckResult(
         val fileCheck: FileCheck,
-        val instruments: List<EditableTemperament>
+        val temperaments: List<EditableTemperament>
     )
 
     fun temperamentsListToString(context: Context, temperaments: List<Temperament3>)
@@ -105,13 +105,13 @@ object TemperamentIO {
         }
     }
 
-    fun readTemperamentsFromFile(context: Context, uri: Uri): TemperamentAndFileCheckResult {
+    fun readTemperamentsFromFile(context: Context, uri: Uri): TemperamentsAndFileCheckResult {
         return context.contentResolver?.openInputStream(uri)?.use { reader ->
             parseTemperaments(reader.bufferedReader())
-        } ?: TemperamentAndFileCheckResult(FileCheck.Invalid, listOf())
+        } ?: TemperamentsAndFileCheckResult(FileCheck.Invalid, listOf())
     }
 
-    fun parseTemperaments(reader: BufferedReader): TemperamentAndFileCheckResult {
+    fun parseTemperaments(reader: BufferedReader): TemperamentsAndFileCheckResult {
         val collectedTemperaments = ArrayList<EditableTemperament>()
 
         var version: String? = null
@@ -122,8 +122,16 @@ object TemperamentIO {
 
         val noteLines = ArrayList<EditableTemperament.NoteLineContents?>()
         var fileCheckResult = FileCheck.Ok
+        var lineCount = 0
+        reader.forEachLine { lineRaw ->
+            // skip byte order mark at beginning of file if necessary
+            val line = if (lineCount == 0 && lineRaw.getOrNull(0) == '\ufeff') {
+                lineRaw.substring(1)
+            } else {
+                lineRaw
+            }
+            lineCount += 1
 
-        reader.forEachLine { line ->
             if (isCommentLine(line)) {
                 val (key, value) = parseCommentLine(line)
                 when (key) {
@@ -190,14 +198,14 @@ object TemperamentIO {
         }
 
         return when{
-            fileCheckResult == FileCheck.Ok && collectedTemperaments.size == 0 -> {
-                TemperamentAndFileCheckResult(FileCheck.Empty, collectedTemperaments)
+            fileCheckResult == FileCheck.Ok && collectedTemperaments.isEmpty() -> {
+                TemperamentsAndFileCheckResult(FileCheck.Empty, collectedTemperaments)
             }
             fileCheckResult == FileCheck.Ok -> {
-                TemperamentAndFileCheckResult(FileCheck.Ok, collectedTemperaments)
+                TemperamentsAndFileCheckResult(FileCheck.Ok, collectedTemperaments)
             }
             else -> {
-                TemperamentAndFileCheckResult(FileCheck.Invalid, listOf())
+                TemperamentsAndFileCheckResult(FileCheck.Invalid, listOf())
             }
         }
     }
@@ -430,8 +438,8 @@ object TemperamentIO {
         .map { noteModifierToString(it) }
         .sortedByDescending { it.length }
 
-    const val VERSION_KEY = "version"
-    const val ABBREVIATION_KEY = "abbreviation"
-    const val DESCRIPTION_KEY = "description"
-    const val NOTE_KEY = "note"
+    private const val VERSION_KEY = "version"
+    private const val ABBREVIATION_KEY = "abbreviation"
+    private const val DESCRIPTION_KEY = "description"
+    private const val NOTE_KEY = "note"
 }

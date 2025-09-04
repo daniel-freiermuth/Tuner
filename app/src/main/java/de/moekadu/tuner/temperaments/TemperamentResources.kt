@@ -28,6 +28,7 @@ import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.resources.ResourcesBase
 import de.moekadu.tuner.stretchtuning.StretchTuning
+import de.moekadu.tuner.stretchtuning.predefinedStretchTunings
 import de.moekadu.tuner.ui.common.EditableListPredefinedSection
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.mutate
@@ -40,13 +41,29 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
 
-
 @Singleton
 class TemperamentResources @Inject constructor(
     @ApplicationContext context: Context,
     @ApplicationScope val applicationScope: CoroutineScope
 ) : ResourcesBase("temperaments", context, applicationScope) {
+    // -----------------------------------------------------------------------------------
+    // temperament resources
+    // -----------------------------------------------------------------------------------
+
+    /** Predefined temperaments. */
     val predefinedTemperaments = predefinedTemperaments().toImmutableList()
+
+    // preference: predefined temperaments expanded:
+    private val predefinedTemperamentsExpandedPref = createPreference(
+        "predefined temperaments expanded", true
+    )
+    val predefinedTemperamentsExpanded  = predefinedTemperamentsExpandedPref.asStateFlow()
+    fun writePredefinedTemperamentsExpanded(expanded: Boolean) {
+        predefinedTemperamentsExpandedPref.set(expanded)
+    }
+
+    // preference: edo temperaments expanded (must come before edo temperament itself since
+    //   we need this for the definition)
 
     private val edoTemperamentsExpandedPref = createPreference(
         "edo temperaments expanded", true
@@ -56,6 +73,7 @@ class TemperamentResources @Inject constructor(
         edoTemperamentsExpandedPref.set(expanded)
     }
 
+    // preference: edo temperaments
     val edoTemperaments = object : EditableListPredefinedSection<Temperament3> {
         private val minEdo = 5
         private val maxEdo = 72
@@ -73,9 +91,7 @@ class TemperamentResources @Inject constructor(
         }
     }
 
-    val defaultTemperament = predefinedTemperaments.first {
-        it.equalOctaveDivision() == 12
-    }
+    // preference: custom temperaments
 
     private val customTemperamentsPref = createTransformablePreference(
         "custom temperaments", persistentListOf(),
@@ -106,6 +122,184 @@ class TemperamentResources @Inject constructor(
         customTemperamentsPref.set(temperaments)
     }
 
+    // preference: custom temperaments expanded
+    private val customTemperamentsExpandedPref = createPreference(
+        "custom temperaments expanded", true
+    )
+
+    val customTemperamentsExpanded = customTemperamentsExpandedPref.asStateFlow()
+
+    fun writeCustomTemperamentsExpanded(expanded: Boolean) {
+        customTemperamentsExpandedPref.set(expanded)
+    }
+
+    // not really a reference, but this is the default temperament
+    val defaultTemperament = predefinedTemperaments.first {
+        it.equalOctaveDivision() == 12
+    }
+
+    // modification of custom temperaments list
+
+   /** Add temperament if stable id does not exist, else replace it.*/
+    fun addNewOrReplaceTemperament(temperament: Temperament3Custom) {
+        val newTemperament = if (temperament.stableId == Temperament3.NO_STABLE_ID) {
+            temperament.copy(stableId = getNewTemperamentStableId())
+        } else {
+            temperament
+        }
+
+        val oldTemperaments = customTemperaments.value
+        val newTemperaments = oldTemperaments.mutate { mutated ->
+            val index = oldTemperaments.indexOfFirst { it.stableId == temperament.stableId }
+//            Log.v("Tuner", "TemperamentResource.addNewOrReplaceTemperament: Writing temperament to index $index")
+            if (index >= 0)
+                mutated[index] = newTemperament
+            else
+                mutated.add(newTemperament)
+        }
+        writeCustomTemperaments(newTemperaments)
+    }
+
+    fun appendTemperaments(temperaments: List<Temperament3Custom>) {
+        val current = this.customTemperaments.value
+        val newTemperamentsList = current.mutate { modified ->
+            temperaments.forEach {
+                val newKey = getNewTemperamentStableId(modified)
+                modified.add(it.copy(stableId = newKey))
+            }
+        }
+//        Log.v("Tuner", "TemperamentResources.appendTemperaments: size=${temperaments.size}")
+        writeCustomTemperaments(newTemperamentsList)
+    }
+
+    fun prependTemperaments(temperaments: List<Temperament3Custom>) {
+        val current = this.customTemperaments.value
+        val newTemperamentsList = current.mutate { modified ->
+            temperaments.forEachIndexed { index, temperament ->
+                val newKey = getNewTemperamentStableId(modified)
+                modified.add(index, temperament.copy(stableId = newKey))
+            }
+        }
+        writeCustomTemperaments(newTemperamentsList)
+    }
+
+    fun replaceTemperaments(temperaments: List<Temperament3Custom>) {
+        var key = 0L
+        val currentKey = musicalScale.value.temperament.stableId
+        val newTemperamentsList = temperaments.map {
+            ++key
+            if (key == currentKey)
+                ++key
+            it.copy(stableId = key)
+        }.toPersistentList()
+        writeCustomTemperaments(newTemperamentsList)
+    }
+
+    private fun getNewTemperamentStableId(
+        existingTemperaments: List<Temperament3> = customTemperaments.value
+    ): Long {
+        val currentKey = musicalScale.value.temperament.stableId
+        while (true) {
+            val stableId = Random.nextLong(0, Long.MAX_VALUE - 1)
+            if ((currentKey != stableId) && (existingTemperaments.firstOrNull {it.stableId == stableId} == null))
+                return stableId
+        }
+    }
+
+    // -----------------------------------------------------------------------------------
+    // stretch tuning resources
+    // -----------------------------------------------------------------------------------
+
+    // preference: predefined stretch tunings
+    val predefinedStretchTunings = predefinedStretchTunings().toImmutableList()
+
+    val defaultStretchTuning = predefinedStretchTunings[0] // this is "no stretch tuning"
+
+    // preference: predefined stretch tunings expanded
+
+    private val predefinedStretchTuningsExpandedPref = createPreference(
+        "predefined stretch tunings expanded", true
+    )
+    val predefinedStretchTuningsExpanded = predefinedStretchTuningsExpandedPref.asStateFlow()
+    fun writePredefinedStretchTuningsExpanded(expanded: Boolean) {
+        predefinedStretchTuningsExpandedPref.set(expanded)
+    }
+
+    //private val currentStretchTuningPref = createSerializablePreference(
+    //    "current stretch tuning", predefinedStretchTunings[0]
+    //)
+    //val currentStretchTuning = currentStretchTuningPref.asStateFlow()
+
+    // preference: custom stretch tunings
+    private val customStretchTuningsPref = createTransformablePreference(
+        "custom stretch tunings", persistentListOf<StretchTuning>(),
+        makeSerializable = { it.toTypedArray() },
+        fromSerializable = { it.toList().toPersistentList() }
+    )
+    val customStretchTunings = customStretchTuningsPref.asStateFlow()
+    fun writeCustomStretchTunings(newStretchTunings: PersistentList<StretchTuning>) {
+        customStretchTuningsPref.set(newStretchTunings)
+    }
+
+    // preference: custom stretch tunings expanded
+    private val customStretchTuningsExpandedPref = createPreference(
+        "custom stretch tunings expanded", true
+    )
+    val customStretchTuningsExpanded = customStretchTuningsExpandedPref.asStateFlow()
+    fun writeCustomStretchTuningsExpanded(expanded: Boolean) {
+        customStretchTuningsExpandedPref.set(expanded)
+    }
+
+    /** Add stretch tuning if stable id does not exist, else replace it.*/
+    fun addNewOrReplaceStretchTuning(stretchTuning: StretchTuning) {
+        val newStretchTuning = if (stretchTuning.stableId == StretchTuning.NO_STABLE_ID) {
+            stretchTuning.copy(stableId = getNewStretchTuningStableId())
+        } else {
+            stretchTuning
+        }
+
+        val oldStretchTunings = customStretchTunings.value
+        val newStretchTunings = oldStretchTunings.mutate { mutated ->
+            val index = oldStretchTunings.indexOfFirst { it.stableId == stretchTuning.stableId }
+            if (index >= 0)
+                mutated[index] = newStretchTuning
+            else
+                mutated.add(newStretchTuning)
+        }
+        writeCustomStretchTunings(newStretchTunings)
+    }
+
+    private fun getNewStretchTuningStableId(
+        existingStretchTunings: List<StretchTuning> = customStretchTunings.value
+    ): Long {
+        val currentKey = musicalScale.value.stretchTuning.stableId
+        while (true) {
+            // Only positive values allowed, since negative values are reserved for predefined
+            // stretch tunings
+            val stableId = Random.nextLong(0, Long.MAX_VALUE - 1)
+            if ((currentKey != stableId) && (existingStretchTunings.firstOrNull {it.stableId == stableId} == null))
+                return stableId
+        }
+    }
+
+    fun appendStretchTunings(stretchTunings: List<StretchTuning>) {
+        val current = this.customStretchTunings.value
+        val newStretchTuningsList = current.mutate { modified ->
+            stretchTunings.forEach {
+                val newKey = getNewStretchTuningStableId(modified)
+                modified.add(it.copy(stableId = newKey))
+            }
+        }
+//        Log.v("Tuner", "TemperamentResources.appendTemperaments: size=${temperaments.size}")
+        writeCustomStretchTunings(newStretchTuningsList)
+    }
+
+
+
+    // -----------------------------------------------------------------------------------
+    // musical scale
+    // -----------------------------------------------------------------------------------
+
     private val musicalScaleDefault = MusicalScale2(
         temperament = defaultTemperament,
         _rootNote = null,
@@ -113,22 +307,30 @@ class TemperamentResources @Inject constructor(
         referenceFrequency = DefaultValues.REFERENCE_FREQUENCY,
         frequencyMin = DefaultValues.FREQUENCY_MIN,
         frequencyMax = DefaultValues.FREQUENCY_MAX,
-        _stretchTuning = null
+        _stretchTuning = defaultStretchTuning
     )
 
     private val musicalScalePref = createSerializablePreference(
         "musical scale", musicalScaleDefault,
         verifyAfterReading = { scale ->
-            reloadPredefinedTemperamentIfNeeded(
+            val scale2 = reloadPredefinedTemperamentIfNeeded(
                 musicalScale = scale,
                 predefinedTemperaments = predefinedTemperaments
+            )
+            reloadPredefinedStretchTuningIfNecessary(
+                musicalScale = scale2,
+                predefinedStretchTunings = predefinedStretchTunings
             )
         },
         onDeserializationFailure = { serialized ->
             try {
-                reloadPredefinedTemperamentIfNeeded(
+                val scale2 = reloadPredefinedTemperamentIfNeeded(
                     musicalScale = Json.decodeFromString<MusicalScale>(serialized).toNew(),
                     predefinedTemperaments = predefinedTemperaments
+                )
+                reloadPredefinedStretchTuningIfNecessary(
+                    musicalScale = scale2,
+                    predefinedStretchTunings = predefinedStretchTunings
                 )
             } catch (_: Exception) {
                 musicalScaleDefault
@@ -186,24 +388,6 @@ class TemperamentResources @Inject constructor(
         musicalScalePref.set(newMusicalScale)
     }
 
-    private val customTemperamentsExpandedPref = createPreference(
-        "custom temperaments expanded", true
-    )
-
-    val customTemperamentsExpanded = customTemperamentsExpandedPref.asStateFlow()
-
-    fun writeCustomTemperamentsExpanded(expanded: Boolean) {
-        customTemperamentsExpandedPref.set(expanded)
-    }
-
-    private val predefinedTemperamentsExpandedPref = createPreference(
-        "predefined temperaments expanded", true
-    )
-    val predefinedTemperamentsExpanded  = predefinedTemperamentsExpandedPref.asStateFlow()
-
-    fun writePredefinedTemperamentsExpanded(expanded: Boolean) {
-        predefinedTemperamentsExpandedPref.set(expanded)
-    }
 
     fun resetAllSettings() {
         val noteNames = defaultTemperament.noteNames(null)
@@ -212,74 +396,8 @@ class TemperamentResources @Inject constructor(
             referenceNote = noteNames.defaultReferenceNote,
             rootNote = noteNames[0],
             referenceFrequency = DefaultValues.REFERENCE_FREQUENCY,
-            stretchTuning = StretchTuning()
+            stretchTuning = defaultStretchTuning
         )
-    }
-
-    /** Add temperament if stable id does not exist, else replace it.*/
-    fun addNewOrReplaceTemperament(temperament: Temperament3Custom) {
-        val newTemperament = if (temperament.stableId == Temperament3.NO_STABLE_ID) {
-            temperament.copy(stableId = getNewStableId())
-        } else {
-            temperament
-        }
-
-        val oldTemperaments = customTemperaments.value
-        val newTemperaments = oldTemperaments.mutate { mutated ->
-            val index = oldTemperaments.indexOfFirst { it.stableId == temperament.stableId }
-//            Log.v("Tuner", "TemperamentResource.addNewOrReplaceTemperament: Writing temperament to index $index")
-            if (index >= 0)
-                mutated[index] = newTemperament
-            else
-                mutated.add(newTemperament)
-        }
-        writeCustomTemperaments(newTemperaments)
-    }
-
-    fun appendTemperaments(temperaments: List<Temperament3Custom>) {
-        val current = this.customTemperaments.value
-        val newTemperamentsList = current.mutate { modified ->
-            temperaments.forEach {
-                val newKey = getNewStableId(modified)
-                modified.add(it.copy(stableId = newKey))
-            }
-        }
-//        Log.v("Tuner", "TemperamentResources.appendTemperaments: size=${temperaments.size}")
-        writeCustomTemperaments(newTemperamentsList)
-    }
-
-    fun prependTemperaments(temperaments: List<Temperament3Custom>) {
-        val current = this.customTemperaments.value
-        val newTemperamentsList = current.mutate { modified ->
-            temperaments.forEachIndexed { index, temperament ->
-                val newKey = getNewStableId(modified)
-                modified.add(index, temperament.copy(stableId = newKey))
-            }
-        }
-        writeCustomTemperaments(newTemperamentsList)
-    }
-
-    fun replaceTemperaments(temperaments: List<Temperament3Custom>) {
-        var key = 0L
-        val currentKey = musicalScale.value.temperament.stableId
-        val newTemperamentsList = temperaments.map {
-            ++key
-            if (key == currentKey)
-                ++key
-            it.copy(stableId = key)
-        }.toPersistentList()
-        writeCustomTemperaments(newTemperamentsList)
-    }
-
-    private fun getNewStableId(
-        existingTemperaments: List<Temperament3> = customTemperaments.value
-    ): Long {
-        val currentKey = musicalScale.value.temperament.stableId
-        while (true) {
-            val stableId = Random.nextLong(0, Long.MAX_VALUE - 1)
-            if ((currentKey != stableId) && (existingTemperaments.firstOrNull {it.stableId == stableId} == null))
-                return stableId
-        }
     }
 }
 
@@ -313,4 +431,29 @@ private fun reloadPredefinedTemperamentIfNeeded(
     } else {
         musicalScale
     }
+}
+
+/** In case the the musical scale uses a predefined stretch tuning, load the tuning from scratch.
+ * @note predefined stretch tunings are detected by negative stable ids.
+ * This basically helps fixes in predefined stretch tunings are used without manual reloading the
+ *   stretch tuning. Even more important, it updates string resources, which itself are not very
+ *   stable.
+ */
+private fun reloadPredefinedStretchTuningIfNecessary(
+    musicalScale: MusicalScale2?,
+    predefinedStretchTunings: List<StretchTuning>
+): MusicalScale2? {
+    if (musicalScale == null)
+        return null
+
+    val stableId = musicalScale.stretchTuning.stableId
+    if (stableId >= 0)
+        return musicalScale
+
+    val stretchTuning = predefinedStretchTunings.firstOrNull { it.stableId == stableId }
+
+    if (stretchTuning == null)
+        return musicalScale
+
+    return musicalScale.copy(_stretchTuning = stretchTuning)
 }

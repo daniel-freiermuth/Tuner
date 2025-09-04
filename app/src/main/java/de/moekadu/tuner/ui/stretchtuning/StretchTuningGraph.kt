@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PointMode.Companion.Points
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.GetTextFromString
-import de.moekadu.tuner.stretchtuning.StretchTuningData
+import de.moekadu.tuner.stretchtuning.StretchTuning
 import de.moekadu.tuner.temperaments.centsToFrequency
 import de.moekadu.tuner.temperaments.ratioToCents
 import de.moekadu.tuner.ui.plot.Anchor
@@ -39,13 +38,15 @@ import de.moekadu.tuner.ui.plot.VerticalLinesPositions
 import de.moekadu.tuner.ui.plot.rememberTextLabelHeight
 import de.moekadu.tuner.ui.plot.rememberTextLabelWidth
 import de.moekadu.tuner.ui.theme.TunerTheme
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 @Composable
 fun StretchTuningGraph(
-    stretchTuningData: StretchTuningData,
+    stretchTuningData: StretchTuning,
     modifier: Modifier = Modifier,
     gestureBasedViewPort: GestureBasedViewPort = remember { GestureBasedViewPort() },
     selectedKey: Int = -1,
@@ -64,13 +65,31 @@ fun StretchTuningGraph(
 ) {
     val viewPort = remember(stretchTuningData, referenceFrequency) {
         val marginRelative = 0.04f
-        val fmin = stretchTuningData.unstretchedFrequencies.min()
-        val fmax = stretchTuningData.unstretchedFrequencies.max()
+        val fmin = when(stretchTuningData.size) {
+            0 -> 0.5 * referenceFrequency
+            1 -> 0.5 * stretchTuningData.unstretchedFrequencies[0]
+            else -> stretchTuningData.unstretchedFrequencies.min()
+        }
+        val fmax = when(stretchTuningData.size) {
+            0 -> 2.0 * referenceFrequency
+            1 -> 2.0 * stretchTuningData.unstretchedFrequencies[0]
+            else -> stretchTuningData.unstretchedFrequencies.max()
+        }
         val fminCents = ratioToCents(fmin / referenceFrequency.toDouble()).toFloat()
         val fmaxCents = ratioToCents(fmax / referenceFrequency.toDouble()).toFloat()
         val fCentsMargin = (fmaxCents - fminCents) * marginRelative
-        val cmin = stretchTuningData.cents.min()
-        val cmax = stretchTuningData.cents.max()
+        val cminInit = when(stretchTuningData.size) {
+            0 -> -12.0
+            1 -> min(-5.0, stretchTuningData.stretchInCents[0])
+            else -> stretchTuningData.stretchInCents.min()
+        }
+        val cmaxInit = when(stretchTuningData.size) {
+            0 -> 12.0
+            1 -> max(5.0, stretchTuningData.stretchInCents[0])
+            else -> stretchTuningData.stretchInCents.max()
+        }
+        val cmin = if ((cminInit - cmaxInit).absoluteValue < 0.5) cminInit - 1 else cminInit
+        val cmax = if ((cminInit - cmaxInit).absoluteValue < 0.5) cmaxInit + 1 else cmaxInit
         val cMargin = (cmax - cmin) * marginRelative
         Rect(
             left = fminCents - fCentsMargin,
@@ -82,10 +101,25 @@ fun StretchTuningGraph(
 
     val viewPortGestureLimits = remember(stretchTuningData, referenceFrequency) {
         val marginRelative = 2
-        val fmax = stretchTuningData.unstretchedFrequencies.max()
+        val fmax = when(stretchTuningData.size) {
+            0 -> 2.0 * referenceFrequency
+            1 -> 2.0 * stretchTuningData.unstretchedFrequencies[0]
+            else -> stretchTuningData.unstretchedFrequencies.max()
+        }
         val fmaxCents = ratioToCents(fmax / referenceFrequency.toDouble()).toFloat()
-        val cmin = stretchTuningData.cents.min()
-        val cmax = stretchTuningData.cents.max()
+        val cminInit = when(stretchTuningData.size) {
+            0 -> -12.0
+            1 -> min(-5.0, stretchTuningData.stretchInCents[0])
+            else -> stretchTuningData.stretchInCents.min()
+        }
+        val cmaxInit = when(stretchTuningData.size) {
+            0 -> 12.0
+            1 -> max(5.0, stretchTuningData.stretchInCents[0])
+            else -> stretchTuningData.stretchInCents.max()
+        }
+        val cmin = if ((cminInit - cmaxInit).absoluteValue < 0.5) cminInit - 1 else cminInit
+        val cmax = if ((cminInit - cmaxInit).absoluteValue < 0.5) cmaxInit + 1 else cmaxInit
+
         val cMargin = (cmax - cmin) * marginRelative
         Rect(
             left = ratioToCents(1.0 / referenceFrequency.toDouble()).toFloat(),
@@ -135,7 +169,7 @@ fun StretchTuningGraph(
             LineCoordinates.create(
                 stretchTuningData.size,
                 { ratioToCents(stretchTuningData.unstretchedFrequencies[it] / referenceFrequency.toDouble()).toFloat() },
-                { stretchTuningData.cents[it].toFloat() }
+                { stretchTuningData.stretchInCents[it].toFloat() }
             )
         }
         val highlightedPoint = remember(selectedKey, stretchTuningData, referenceFrequency) {
@@ -145,7 +179,7 @@ fun StretchTuningGraph(
             } else {
                 Offset(
                     ratioToCents(stretchTuningData.unstretchedFrequencies[index] / referenceFrequency.toDouble()).toFloat(),
-                    stretchTuningData.cents[index].toFloat()
+                    stretchTuningData.stretchInCents[index].toFloat()
                 )
             }
         }
@@ -223,7 +257,7 @@ fun StretchTuningGraph(
 private fun StretchTuningGraphPreview() {
     TunerTheme {
         Surface {
-            val stretchTuningData = remember {StretchTuningData(
+            val stretchTuningData = remember {StretchTuning(
                 GetTextFromString("Test"),
                 GetTextFromString("Test stretch description"),
                 doubleArrayOf(100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1200.0),

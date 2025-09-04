@@ -118,6 +118,10 @@
         <item quantity="one">Loading %d temperament</item>
         <item quantity="other">Loading %d temperaments</item>
     </plurals>
+    <plurals name="load_stretch_tunings">
+        <item quantity="one">Loading %d stretch tuning</item>
+        <item quantity="other">Loading %d stretch tunings</item>
+    </plurals>
     <string name="replace_current_list">Replace current list</string>
     <string name="prepend_current_list">Prepend to current list</string>
     <string name="append_current_list">Append to current list</string>
@@ -316,4 +320,19 @@
     <string name="detect_frequency">Detect frequency</string>
     <string name="stretch">Stretch</string>
     <string name="stretch_tuning">Stretch tuning</string>
+    <string name="no_stretch_tuning">No stretch tuning</string>
+    <string name="stretch_tuning_off">Stretch tuning is turned off.</string>
+    <string name="railsback">Railsback</string>
+    <string name="railsback_description">Railsback data (average)</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="stretch_tuning_editor">Edit stretch tuning</string>
+    <string name="stretch_tuning_info">Stretch tuning info</string>
+    <string name="stretched_frequency">Stretched frequency</string>
+    <string name="input_is_no_number">Input is not valid number.</string>
+    <string name="value_must_be_larger_zero">Value must be larger than zero.</string>
+    <string name="cent_symbol">¢</string>
+    <string name="cent_2f">%+.2f ¢</string>
+    <string name="hertz_2f">%.2f Hz</string>
+    <string name="stretched_frequencies_must_be_strictly_increasing">Stretched frequencies must be strictly increasing (previous value: %1$.2f Hz, this value: %2$.2f Hz).</string>
 </resources>

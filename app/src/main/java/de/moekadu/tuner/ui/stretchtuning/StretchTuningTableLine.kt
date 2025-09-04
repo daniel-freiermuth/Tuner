@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -46,7 +47,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.GetTextFromString
-import de.moekadu.tuner.stretchtuning.StretchTuningData
+import de.moekadu.tuner.stretchtuning.StretchTuning
 import de.moekadu.tuner.ui.common.OverflowMenuCallbacks
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlinx.collections.immutable.toImmutableList
@@ -122,6 +123,12 @@ private fun OverflowMenu(
  * @param modifier Modifier.
  * @param isSelected If true, the line will be highlighted.
  * @param textStyle Text style used.
+ * @param textAlign How to align the text in the columns.
+ * @param showOverflowMenu True to show the overflow menu at the end.
+ * @param reserveSpaceForOverflowMenu Whether we should reserve space for the overflow menu, when
+ *    it is not shown. So when you have several lines, where some show an overflow menu and some not
+ *    you might want to still reserve space for the lines without overflow menu, such that different
+ *    lines are aligned.
  */
 @Composable
 fun StretchTuningTableLine(
@@ -135,23 +142,27 @@ fun StretchTuningTableLine(
     isSelected: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
     textAlign: TextAlign = TextAlign.End,
-    showOverflowMenu: Boolean = true
+    showOverflowMenu: Boolean = true,
+    reserveSpaceForOverflowMenu: Boolean = true,
+    errorMessage: String? = null
 ) {
     Surface(
-        color = if (isSelected)
+        modifier = modifier,
+        color = if (errorMessage != null) {
+            MaterialTheme.colorScheme.errorContainer
+        } else if (isSelected)
             MaterialTheme.colorScheme.secondaryContainer
         else
             MaterialTheme.colorScheme.surface
     ) {
         Column(
-            modifier = modifier
-                .width(IntrinsicSize.Max)
+            modifier = Modifier
+                .width(IntrinsicSize.Min)
                 .padding(horizontal = 8.dp)
         ) {
             Row(
-                modifier = Modifier
-                    .heightIn(min = 52.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.heightIn(min = 52.dp)
             ) {
                 Spacer(modifier = Modifier.weight(2f))
                 Text(
@@ -177,10 +188,21 @@ fun StretchTuningTableLine(
                         onDeleteClicked = onDeleteClicked,
                         modifier = Modifier.size(48.dp)
                     )
-                } else {
+                } else if (reserveSpaceForOverflowMenu) {
                     Spacer(Modifier.size(48.dp))
                 }
             }
+
+            if (errorMessage != null) {
+                Text(
+                    errorMessage,
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
+                )
+            }
+
             HorizontalDivider()
         }
     }
@@ -194,31 +216,32 @@ private fun  StretchTuningTableLinePreview() {
             Box {
                 Column {
                     val stretchTuningData = remember {
-                        StretchTuningData(
+                        StretchTuning(
                             name = GetTextFromString("Test"),
                             description = GetTextFromString("Stretch tuning description."),
                             unstretchedFrequencies = doubleArrayOf(320.0, 440.0, 540.0),
-                            stretchedFrequencies = doubleArrayOf(318.0, 440.0, 553.0)
+                            stretchInCents = doubleArrayOf(-3.0, 0.0, 4.0)
                         )
                     }
                     val style = MaterialTheme.typography.bodyLarge
                     val frequencyWidth = rememberTableColumnWidth(
-                        stringResource(R.string.hertz_1f, 10000f),
+                        stringResource(R.string.hertz_2f, 10000f),
                         style = style
                     )
                     val centCorrectionWidth = rememberTableColumnWidth(
-                        stringResource(R.string.cent_1f, 10f),
+                        stringResource(R.string.cent_2f, 10f),
                         style = style
                     )
 
                     stretchTuningData.unstretchedFrequencies.forEachIndexed { index, unstretchedFrequency ->
                         StretchTuningTableLine(
                             column1 = stringResource(R.string.hertz_1f, unstretchedFrequency),
-                            column2 = stringResource(R.string.cent_1f, stretchTuningData.cents[index]),
+                            column2 = stringResource(R.string.cent_1f, stretchTuningData.stretchInCents[index]),
                             isSelected = (index == 1),
                             column1Width = frequencyWidth,
                             column2Width = centCorrectionWidth,
-                            textStyle = style
+                            textStyle = style,
+                            errorMessage = if (index == 1) "This is an error message, and it is very long, to show what happens when the line breaks" else null
                         )
                     }
                 }

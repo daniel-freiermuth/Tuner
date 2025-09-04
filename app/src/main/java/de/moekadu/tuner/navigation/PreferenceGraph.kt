@@ -63,6 +63,7 @@ fun NavGraphBuilder.preferenceGraph(
                 onNotationClicked = { controller.navigate(NotationDialogRoute) },
                 onTemperamentClicked = { controller.navigate(TemperamentDialogRoute) },
                 onWindowingFunctionClicked = { controller.navigate(WindowingFunctionDialogRoute) },
+                onStretchTuningClicked = {controller.navigate(StretchTuningOverviewRoute) },
                 onResetClicked = { controller.navigate(ResetDialogRoute) },
                 onAboutClicked = { controller.navigate(AboutDialogRoute) }
             )
@@ -77,8 +78,9 @@ fun NavGraphBuilder.preferenceGraph(
             )
         }
         dialog<NotationDialogRoute> {
+            val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
             NotationDialog(
-                notePrintOptions = preferences.notePrintOptions.value,
+                notePrintOptions = notePrintOptions,
                 onNotationChange = { notation, helmholtz ->
                     val newNotePrintOptions = preferences.notePrintOptions.value.copy(
                         notationType = notation, helmholtzNotation = helmholtz
@@ -90,8 +92,9 @@ fun NavGraphBuilder.preferenceGraph(
             )
         }
         dialog<WindowingFunctionDialogRoute> {
+            val windowing by preferences.windowing.collectAsStateWithLifecycle()
             WindowingFunctionDialog(
-                initialWindowingFunction = preferences.windowing.value,
+                initialWindowingFunction = windowing,
                 onWindowingFunctionChanged = {
                     preferences.writeWindowing(it)
                     controller.navigateUp()

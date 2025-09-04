@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -19,25 +21,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.max
 import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.GetTextFromString
-import de.moekadu.tuner.stretchtuning.StretchTuningData
+import de.moekadu.tuner.stretchtuning.StretchTuning
 import de.moekadu.tuner.ui.theme.TunerTheme
-import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun StretchTuningTable(
-    stretchTuningData: StretchTuningData,
+    stretchTuningData: StretchTuning,
     selectedKey: Int,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     onLineClicked: (key: Int) -> Unit = {},
     onEditLineClicked: (key: Int) -> Unit = {},
-    onDeleteLineClicked: (key: Int) -> Unit = {}
+    onDeleteLineClicked: (key: Int) -> Unit = {},
+    lazyListState: LazyListState = rememberLazyListState(),
+    showOverflowMenu: Boolean = true
 ) {
     val bodyStyle = MaterialTheme.typography.bodyLarge
     val headlineStyle = MaterialTheme.typography.labelLarge
 
     val minimumFrequencyColumnWidth = rememberTableColumnWidth(
-        stringResource(R.string.hertz_1f, 10000.0),
+        stringResource(R.string.hertz_2f, 10000.0),
         style = bodyStyle
     )
     val minimumFrequencyHeadlineWidth = rememberTableColumnWidth(
@@ -46,7 +49,7 @@ fun StretchTuningTable(
     )
 
     val minimumCentsColumnWidth = rememberTableColumnWidth(
-        stringResource(R.string.cent_1f, 100.0),
+        stringResource(R.string.cent_2f, 100.0),
         style = bodyStyle
     )
     val minimumCentHeadlineWidth = rememberTableColumnWidth(
@@ -65,11 +68,13 @@ fun StretchTuningTable(
             textStyle = headlineStyle,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
-            showOverflowMenu = false
+            showOverflowMenu = false,
+            reserveSpaceForOverflowMenu = showOverflowMenu
         )
 
         LazyColumn(
-            contentPadding = contentPadding
+            contentPadding = contentPadding,
+            state = lazyListState
         ) {
             items(
                 stretchTuningData.size,
@@ -77,10 +82,12 @@ fun StretchTuningTable(
                 contentType = { 1 }) {
                 StretchTuningTableLine(
                     column1 = stringResource(
-                        R.string.hertz_1f,
+                        R.string.hertz_2f,
                         stretchTuningData.unstretchedFrequencies[it]
                     ),
-                    column2 = stringResource(R.string.cent_1f, stretchTuningData.cents[it]),
+                    column2 = stringResource(
+                        R.string.cent_2f, stretchTuningData.stretchInCents[it]
+                    ),
                     column1Width = max(minimumFrequencyColumnWidth, minimumFrequencyHeadlineWidth),
                     column2Width = max(minimumCentsColumnWidth, minimumCentHeadlineWidth),
                     isSelected = stretchTuningData.keys[it] == selectedKey,
@@ -91,7 +98,17 @@ fun StretchTuningTable(
                         .animateItem()
                         .clickable { onLineClicked(stretchTuningData.keys[it]) },
                     onEditClicked = { onEditLineClicked(stretchTuningData.keys[it]) },
-                    onDeleteClicked = { onDeleteLineClicked(stretchTuningData.keys[it]) }
+                    onDeleteClicked = { onDeleteLineClicked(stretchTuningData.keys[it]) },
+                    showOverflowMenu = showOverflowMenu,
+                    reserveSpaceForOverflowMenu = showOverflowMenu,
+                    errorMessage = if (it > 0 && stretchTuningData.stretchedFrequencies[it] <= stretchTuningData.stretchedFrequencies[it - 1]) {
+                        stringResource(R.string.stretched_frequencies_must_be_strictly_increasing,
+                            stretchTuningData.stretchedFrequencies[it - 1],
+                            stretchTuningData.stretchedFrequencies[it],
+                            )
+                    } else {
+                        null
+                    }
                 )
             }
         }
@@ -102,11 +119,11 @@ fun StretchTuningTable(
 @Composable
 private fun StretchTuningTablePreview() {
     TunerTheme {
-        val data = StretchTuningData(
+        val data = StretchTuning(
             name = GetTextFromString("Test"),
             description = GetTextFromString("Stretch tuning description."),
             unstretchedFrequencies = doubleArrayOf(320.0, 440.0, 540.0, 1023.4, 3000.0, 12310.0),
-            stretchedFrequencies = doubleArrayOf(318.0, 440.0, 541.0, 1025.0, 3010.0, 12330.0)
+            stretchInCents = doubleArrayOf(-4.0, 0.0, 1.9, 4.0, 5.0, 8.9)
         )
         var selectedKey by remember { mutableIntStateOf(4) }
         Box {

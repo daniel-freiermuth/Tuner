@@ -44,6 +44,12 @@ class NumberFormatter(
         decimalFormat.maximumFractionDigits = numFractionDigits
         return decimalFormat.format(number)
     }
+
+    fun format(number: Double): String {
+        val numFractionDigits = max(0, precision - floor(log10(number)).toInt())
+        decimalFormat.maximumFractionDigits = numFractionDigits
+        return decimalFormat.format(number)
+    }
 }
 
 @Composable

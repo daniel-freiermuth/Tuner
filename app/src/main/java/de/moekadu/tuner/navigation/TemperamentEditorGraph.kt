@@ -36,11 +36,10 @@ import de.moekadu.tuner.ui.temperaments.TemperamentEditor
 import de.moekadu.tuner.ui.temperaments.NumberOfNotesDialog
 import de.moekadu.tuner.viewmodels.TemperamentEditorViewModel
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
-private fun createViewModel(controller: NavController, backStackEntry: NavBackStackEntry)
+private fun createStretchTuningEditorViewModel(controller: NavController, backStackEntry: NavBackStackEntry)
         : TemperamentEditorViewModel {
     val parentEntry = remember(backStackEntry) {
         controller.getBackStackEntry<TemperamentEditorGraphRoute>()
@@ -60,7 +59,7 @@ fun NavGraphBuilder.temperamentEditorGraph(
         startDestination = TemperamentEditorRoute
     ) {
         composable<TemperamentEditorRoute> {
-            val viewModel = createViewModel(controller = controller, backStackEntry = it)
+            val viewModel = createStretchTuningEditorViewModel(controller = controller, backStackEntry = it)
             val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
 
             TemperamentEditor(
@@ -76,7 +75,7 @@ fun NavGraphBuilder.temperamentEditorGraph(
         }
 
         dialog<NumberOfNotesDialogRoute> {
-            val viewModel = createViewModel(controller = controller, backStackEntry = it)
+            val viewModel = createStretchTuningEditorViewModel(controller = controller, backStackEntry = it)
             NumberOfNotesDialog(
                 initialNumberOfNotes = viewModel.numberOfValues.value,
                 onDismiss = { controller.navigateUp() },

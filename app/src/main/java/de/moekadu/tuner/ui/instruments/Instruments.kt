@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -250,7 +251,11 @@ fun Instruments(
             snackbarHostState = snackbarHostState
         ) { item ,itemInfo, itemModifier ->
             EditableListItem(
-                title = { Text(item.getNameString(context)) },
+                title = { Text(
+                    item.getNameString(context),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                ) },
                 description = {
                     val style = LocalTextStyle.current
                     val stringsString = remember(context, style, item, notePrintOptions) {
@@ -261,7 +266,11 @@ fun Instruments(
                             fontWeight = style.fontWeight
                         )
                     }
-                    Text(stringsString)
+                    Text(
+                        stringsString,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 },
                 icon = {
                     Icon(

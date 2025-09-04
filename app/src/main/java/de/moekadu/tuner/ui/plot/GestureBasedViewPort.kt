@@ -21,11 +21,16 @@ package de.moekadu.tuner.ui.plot
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.exponentialDecay
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.unit.Velocity
+import kotlinx.serialization.Serializable
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
@@ -65,11 +70,12 @@ private fun restrictViewPortToLimits(viewPort: Rect, viewPortLimits: Rect?): Rec
     }
 }
 
-class GestureBasedViewPort {
-    var isActive: Boolean by mutableStateOf(false)
+class GestureBasedViewPort(initialIsActive: Boolean = false, initialViewPort: Rect = Rect.Zero) {
+    var isActive: Boolean by mutableStateOf(initialIsActive)
         private set
-    var viewPort: Rect by mutableStateOf(Rect.Zero)
+    var viewPort: Rect by mutableStateOf(initialViewPort)
         private set
+
     private val animationDecay = exponentialDecay<Rect>(1f)
     private val viewPortRawAnimation = Animatable(viewPort, Rect.VectorConverter)
 
@@ -92,4 +98,30 @@ class GestureBasedViewPort {
             viewPort = targetInLimits
         }
     }
+
+    companion object {
+        val saver: Saver<GestureBasedViewPort, *> = listSaver(
+            save = {
+                listOf(
+                    if (it.isActive) 1f else 0f,
+                    it.viewPort.left,
+                    it.viewPort.top,
+                    it.viewPort.right,
+                    it.viewPort.bottom
+                )
+            },
+            restore = {
+                GestureBasedViewPort(
+                    it[0] != 0f,
+                    Rect(left = it[1], top = it[2], right = it[3], bottom = it[4])
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun rememberGestureBasedViewPort(): GestureBasedViewPort
+        = rememberSaveable(saver = GestureBasedViewPort.saver) {
+    GestureBasedViewPort()
 }

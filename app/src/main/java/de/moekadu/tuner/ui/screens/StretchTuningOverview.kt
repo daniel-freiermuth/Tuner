@@ -2,6 +2,7 @@ package de.moekadu.tuner.ui.screens
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,8 +45,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -53,7 +56,9 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.misc.ShareData
 import de.moekadu.tuner.misc.getFilenameFromUri
-import de.moekadu.tuner.stretchtuning.StretchTuningData
+import de.moekadu.tuner.misc.toastPotentialFileCheckError
+import de.moekadu.tuner.stretchtuning.StretchTuning
+import de.moekadu.tuner.stretchtuning.StretchTuningIO
 import de.moekadu.tuner.ui.common.EditableList
 import de.moekadu.tuner.ui.common.EditableListData
 import de.moekadu.tuner.ui.common.EditableListItem
@@ -68,16 +73,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 interface StretchTuningOverviewState {
-    val listData: EditableListData<StretchTuningData>
-    fun saveStretchTunings(context: Context, uri: Uri, stretchTunings: List<StretchTuningData>)
+    val defaultStretchTuning: StretchTuning
+    val listData: EditableListData<StretchTuning>
+    fun saveStretchTunings(context: Context, uri: Uri, stretchTunings: List<StretchTuning>)
 }
 
 @Composable
 private fun rememberImportExportCallbacks(
     state: StretchTuningOverviewState,
-    onLoadStretchTunings: (stretchTunings: List<StretchTuningData>) -> Unit
+    onLoadStretchTunings: (stretchTunings: List<StretchTuning>) -> Unit
 ): OverflowMenuCallbacks {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val stateUpdated by rememberUpdatedState(newValue = state)
     val onLoadStretchTuningsUpdated by rememberUpdatedState(newValue = onLoadStretchTunings)
 
@@ -93,7 +100,7 @@ private fun rememberImportExportCallbacks(
             val filename = getFilenameFromUri(context, uri)
             Toast.makeText(
                 context,
-                context.resources.getQuantityString(
+                resources.getQuantityString(
                     R.plurals.database_num_saved,
                     stretchTunings.size,
                     stretchTunings.size,
@@ -119,13 +126,12 @@ private fun rememberImportExportCallbacks(
 //            val cR = context.contentResolver
 //            Log.v("Tuner", "Temperaments import temperament file, mimetype=${cR.getType(uri)}")
 
-            // TODO: enable the next lines again
-            //val (readState, stretchTunings = StretchTuningsIO.readStretchTuningsFromFile(context, uri)
-            //readState.toastPotentialFileCheckError(context, uri)
-            //if (stretchTunings.isNotEmpty()) {
-            //    onLoadStretchTuningsUpdated(stretchTunings)
-            //    state.listData.clearSelectedItems()
-            //}
+            val (readState, stretchTunings) = StretchTuningIO.readStretchTuningsFromFile(context, uri)
+            readState.toastPotentialFileCheckError(context, uri)
+            if (stretchTunings.isNotEmpty()) {
+                onLoadStretchTuningsUpdated(stretchTunings)
+                state.listData.clearSelectedItems()
+            }
         }
     }
     return remember(context) {
@@ -141,14 +147,13 @@ private fun rememberImportExportCallbacks(
                 if (stretchTunings.isEmpty()) {
                     Toast.makeText(context, R.string.database_empty_share, Toast.LENGTH_LONG).show()
                 } else {
-                    // TODO: enable the next lines again
-                    //val intent = ShareData.createShareDataIntent(
-                    //    context,
-                    //    "tuner-stretch-tunings.txt",
-                    //    StretchTuningsIO.stretchTuningsToString(context, stretchTunings),
-                    //    stretchTunings.size
-                    //)
-                    //shareStretchTuningsLauncher.launch(intent)
+                    val intent = ShareData.createShareDataIntent(
+                        context,
+                        "tuner-stretch-tunings.txt",
+                        StretchTuningIO.stretchTuningsToString(context, stretchTunings),
+                        stretchTunings.size
+                    )
+                    shareStretchTuningsLauncher.launch(intent)
                 }
             }
             override fun onExportClicked() {
@@ -174,10 +179,10 @@ fun StretchTuningOverview(
     modifier: Modifier = Modifier,
     canNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit = {},
-    onStretchTuningClicked: (StretchTuningData) -> Unit = {},
-    onEditStretchTuningClicked: (StretchTuningData, copy: Boolean) -> Unit = {_,_->},
-    onStretchTuningInfoClicked: (StretchTuningData) -> Unit = {},
-    onLoadStretchTunings: (List<StretchTuningData>) -> Unit = {}
+    onStretchTuningClicked: (StretchTuning) -> Unit = {},
+    onEditStretchTuningClicked: (StretchTuning, copy: Boolean) -> Unit = {_,_->},
+    onStretchTuningInfoClicked: (StretchTuning) -> Unit = {},
+    onLoadStretchTunings: (List<StretchTuning>) -> Unit = {}
 ) {
     val context = LocalContext.current
     val selectedStretchTunings by state.listData.selectedItems.collectAsStateWithLifecycle()
@@ -236,7 +241,7 @@ fun StretchTuningOverview(
                     contentDescription = "move down"
                 )
             }
-           //OverflowMenu(overflowCallbacks, showSettings = false)
+           OverflowMenu(overflowCallbacks, showSettings = false)
         },
         onActionModeFinishedClicked = {
             state.listData.clearSelectedItems()
@@ -248,9 +253,7 @@ fun StretchTuningOverview(
             Row {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        //onStretchTuningClicked(
-                        //    state.defaultTemperament,
-                        //)
+                        onStretchTuningClicked(state.defaultStretchTuning)
                     },
                     containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                     elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
@@ -266,11 +269,11 @@ fun StretchTuningOverview(
                 FloatingActionButton(
                     onClick = {
                         onEditStretchTuningClicked(
-                            StretchTuningData(
+                            StretchTuning(
                                 name = GetTextFromString(""),
                                 description = GetTextFromString(""),
                                 unstretchedFrequencies = doubleArrayOf(),
-                                stretchedFrequencies = doubleArrayOf()
+                                stretchInCents = doubleArrayOf()
                             ),
                             true
                         )
@@ -301,8 +304,16 @@ fun StretchTuningOverview(
             snackbarHostState = snackbarHostState
        ) { item, itemInfo, itemModifier ->
             EditableListItem(
-                title = { Text(item.name.value(context)) },
-                description = { Text(item.description.value(context)) },
+                title = { Text(
+                    item.name.value(context),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                ) },
+                description = { Text(
+                    item.description.value(context),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                ) },
                 icon = {
                     Surface(
                         shape = CircleShape,
@@ -314,6 +325,7 @@ fun StretchTuningOverview(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
+                            // Log.v("Tuner", "StretchTuningOverview: name=${item.name.value(context)}, 0=${item.name.value(context).getOrNull(0)?.code}")
                             Text(
                                 text = "${item.name.value(context).getOrNull(0) ?: ""}",
                                 fontSize = iconTextSize
@@ -348,29 +360,32 @@ private class StretchTuningOverviewTestState : StretchTuningOverviewState {
 
     private val editableItems = MutableStateFlow(
         persistentListOf(
-            StretchTuningData(
+            StretchTuning(
                 name = GetTextFromString("Stretch 1"),
                 description = GetTextFromString("Description stretch 1"),
                 unstretchedFrequencies = doubleArrayOf(100.0, 400.0, 600.0),
-                stretchedFrequencies = doubleArrayOf(98.0, 401.0, 601.0),
+                stretchInCents = doubleArrayOf(-3.0, 1.0, 2.0),
                 stableId = 1L
             ),
-            StretchTuningData(
+            StretchTuning(
                 name = GetTextFromString("Stretch 2"),
                 description = GetTextFromString("Description stretch 2"),
                 unstretchedFrequencies = doubleArrayOf(100.0, 400.0, 600.0),
-                stretchedFrequencies = doubleArrayOf(98.0, 401.0, 601.0),
+                stretchInCents = doubleArrayOf(-2.0, 1.0, 2.0),
                 stableId = 2L
             ),
-            StretchTuningData(
+            StretchTuning(
                 name = GetTextFromString("Stretch 3"),
                 description = GetTextFromString("Description stretch 3"),
                 unstretchedFrequencies = doubleArrayOf(100.0, 400.0, 600.0),
-                stretchedFrequencies = doubleArrayOf(98.0, 401.0, 601.0),
+                stretchInCents = doubleArrayOf(-5.0, 4.0, 9.0),
                 stableId = 3L
             )
         )
     )
+
+    override val defaultStretchTuning get() = editableItems.value[0]
+
     private val editableItemsExpanded = MutableStateFlow(true)
 
     private val activeItem = MutableStateFlow(editableItems.value[1])
@@ -389,7 +404,7 @@ private class StretchTuningOverviewTestState : StretchTuningOverviewState {
     override fun saveStretchTunings(
         context: Context,
         uri: Uri,
-        stretchTunings: List<StretchTuningData>
+        stretchTunings: List<StretchTuning>
     ) {
 
     }

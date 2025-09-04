@@ -18,6 +18,7 @@
 */
 package de.moekadu.tuner.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,6 +57,11 @@ import de.moekadu.tuner.viewmodels.ScientificTunerViewModel
 import de.moekadu.tuner.viewmodels.TemperamentDialog2ViewModel
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import androidx.compose.ui.platform.LocalResources
+import de.moekadu.tuner.misc.GetTextFromString
+import de.moekadu.tuner.stretchtuning.StretchTuning
+import de.moekadu.tuner.ui.screens.StretchTuningOverview
+import de.moekadu.tuner.viewmodels.StretchTuningOverviewViewModel
 
 @Composable
 private fun createTemperamentDialogViewModel(
@@ -64,7 +70,7 @@ private fun createTemperamentDialogViewModel(
     val parentEntry = remember(backStackEntry) {
         try {
             controller.getBackStackEntry<TemperamentDialogRoute>()
-        } catch (ex: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             null
         }
     }
@@ -81,7 +87,8 @@ fun NavGraphBuilder.mainGraph(
     preferences: PreferenceResources,
     temperamentResources: TemperamentResources,
     onLoadInstruments: (List<Instrument>) -> Unit,
-    onLoadTemperaments: (List<EditableTemperament>) -> Unit
+    onLoadTemperaments: (List<EditableTemperament>) -> Unit,
+    onLoadStretchTunings: (List<StretchTuning>) -> Unit
 ) {
     composable<TunerRoute> {
         val isScientificTuner by preferences.scientificMode.collectAsStateWithLifecycle()
@@ -102,7 +109,8 @@ fun NavGraphBuilder.mainGraph(
                         )
                     )
                 },
-                onTemperamentClicked = { controller.navigate(TemperamentDialogRoute) }
+                onTemperamentClicked = { controller.navigate(TemperamentDialogRoute) },
+                onStretchTuningClicked = { controller.navigate(StretchTuningOverviewRoute)}
             )
         } else {
             val viewModel: InstrumentTunerViewModel = hiltViewModel()
@@ -121,6 +129,9 @@ fun NavGraphBuilder.mainGraph(
                 },
                 onTemperamentClicked = { controller.navigate(TemperamentDialogRoute) },
                 onInstrumentButtonClicked = { controller.navigate(InstrumentsRoute) },
+                onStretchTuningClicked = {
+                    controller.navigate(StretchTuningOverviewRoute)
+                },
                 data = viewModel
             )
         }
@@ -199,7 +210,7 @@ fun NavGraphBuilder.mainGraph(
     }
 
     composable<TemperamentDialogRoute> { route ->
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
         val viewModel: TemperamentDialog2ViewModel = createTemperamentDialogViewModel(
             controller = controller,
             backStackEntry = route
@@ -253,7 +264,7 @@ fun NavGraphBuilder.mainGraph(
     dialog<RootNoteDialogRoute> {
         val data = it.toRoute<RootNoteDialogRoute>()
         val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
 
         RootNoteDialog(
             data.rootNote,
@@ -296,6 +307,43 @@ fun NavGraphBuilder.mainGraph(
         )
     }
 
+    composable<StretchTuningOverviewRoute> {
+        val viewModel: StretchTuningOverviewViewModel = hiltViewModel()
+        val context = LocalContext.current
+        val resources = LocalResources.current
+
+        StretchTuningOverview(
+            viewModel,
+            onStretchTuningClicked = {
+                temperamentResources.writeMusicalScale(stretchTuning = it)
+                controller.navigateUp()
+            },
+            onEditStretchTuningClicked = { stretchTuning, copy ->
+                val name = stretchTuning.name.value(context)
+                controller.navigate(
+                    StretchTuningEditorGraphRoute(
+                        stretchTuning.copy(
+                            GetTextFromString(when {
+                                copy && name == "" -> ""
+                                copy -> "$name (${resources.getString(R.string.copy_)})"
+                                else -> name
+                            }),
+                            stableId = if (copy) StretchTuning.NO_STABLE_ID else stretchTuning.stableId
+                        )
+                    )
+                )
+            },
+            onStretchTuningInfoClicked = {
+                controller.navigate(
+                    StretchTuningInfoGraphRoute(stretchTuning = it)
+                )
+            },
+            onNavigateUp = {
+                controller.navigateUp()
+            },
+            onLoadStretchTunings = onLoadStretchTunings
+        )
+    }
 //    dialog<TestRoute>(
 //        deepLinks = listOf(
 //            navDeepLink<TestRoute>(
@@ -358,5 +406,8 @@ data class RootNoteDialogRoute(
     val temperament get() = Json.decodeFromString<Temperament3>(serializedTemperament)
     val rootNote get() = Json.decodeFromString<MusicalNote>(serializedRootNote)
 }
+
+@Serializable
+data object StretchTuningOverviewRoute
 //@Serializable
 //data object TestRoute

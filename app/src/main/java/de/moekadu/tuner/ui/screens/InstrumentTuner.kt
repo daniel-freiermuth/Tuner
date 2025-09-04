@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -134,6 +135,7 @@ fun InstrumentTuner(
     onSharpFlatClicked: () -> Unit,
     onReferenceNoteClicked: () -> Unit,
     onTemperamentClicked: () -> Unit,
+    onStretchTuningClicked: () -> Unit,
     onInstrumentButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     tunerPlotStyle: TunerPlotStyle = TunerPlotStyle.create()
@@ -160,6 +162,7 @@ fun InstrumentTuner(
         onSharpFlatClicked = onSharpFlatClicked,
         onReferenceNoteClicked = onReferenceNoteClicked,
         onTemperamentClicked = onTemperamentClicked,
+        onStretchTuningClicked = onStretchTuningClicked,
         musicalScale = musicalScale,
         notePrintOptions = notePrintOptions,
         snackbarHost = {
@@ -591,8 +594,10 @@ class TestInstrumentTunerData : InstrumentTunerData {
 @Composable
 private fun InstrumentTunerPreview() {
     TunerTheme {
-        val data = remember { TestInstrumentTunerData() }
-        InstrumentTunerPortrait(data = data)
+        Surface {
+            val data = remember { TestInstrumentTunerData() }
+            InstrumentTunerPortrait(data = data)
+        }
     }
 }
 
@@ -600,7 +605,9 @@ private fun InstrumentTunerPreview() {
 @Composable
 private fun ScientificTunerLandscapePreview() {
     TunerTheme {
-        val data = remember { TestInstrumentTunerData() }
-        InstrumentTunerLandscape(data = data)
+        Surface {
+            val data = remember { TestInstrumentTunerData() }
+            InstrumentTunerLandscape(data = data)
+        }
     }
 }

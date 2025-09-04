@@ -38,6 +38,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -129,6 +130,7 @@ fun ScientificTuner(
     onSharpFlatClicked: () -> Unit,
     onReferenceNoteClicked: () -> Unit,
     onTemperamentClicked: () -> Unit,
+    onStretchTuningClicked: () -> Unit,
     modifier: Modifier = Modifier,
     tunerPlotStyle: TunerPlotStyle = TunerPlotStyle.create()
 ) {
@@ -169,6 +171,7 @@ fun ScientificTuner(
         onSharpFlatClicked = onSharpFlatClicked,
         onReferenceNoteClicked = onReferenceNoteClicked,
         onTemperamentClicked = onTemperamentClicked,
+        onStretchTuningClicked = onStretchTuningClicked,
         musicalScale = musicalScale,
         notePrintOptions = notePrintOptions,
         snackbarHost = {
@@ -643,8 +646,10 @@ class TestScientificTunerData : ScientificTunerData {
 @Composable
 private fun ScientificTunerPreview() {
     TunerTheme {
-        val data = remember { TestScientificTunerData() }
-        ScientificTunerPortrait(data = data)
+        Surface {
+            val data = remember { TestScientificTunerData() }
+            ScientificTunerPortrait(data = data)
+        }
     }
 }
 
@@ -652,7 +657,9 @@ private fun ScientificTunerPreview() {
 @Composable
 private fun ScientificTunerLandscapePreview() {
     TunerTheme {
-        val data = remember { TestScientificTunerData() }
-        ScientificTunerLandscape(data = data)
+        Surface {
+            val data = remember { TestScientificTunerData() }
+            ScientificTunerLandscape(data = data)
+        }
     }
 }

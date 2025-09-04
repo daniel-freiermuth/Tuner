@@ -170,7 +170,12 @@ class MusicalScaleFrequencies(
             var indexWithinOfOctave = referenceIndexWithinOctave
             val higherFrequencies = ArrayList<Double>()
             var globalIndexOfReferenceHigh = 0
-            var currentFrequency = stretchTuning.getStretchedFrequency(referenceFrequency.toDouble())
+            // stretching the reference frequency should always give the reference frequency
+            //   but we do still do it for consistency
+            var currentFrequency = stretchTuning.getStretchedFrequency(
+                referenceFrequency.toDouble(),
+                referenceFrequency.toDouble()
+            )
             while (currentFrequency < frequencyMax) {
 //                Log.v("Tuner", "MusicalScaleFrequencies.create: current f=$currentFrequency, max freq=$frequencyMax")
                 // condition is needed when reference frequency is outside min/max
@@ -187,7 +192,10 @@ class MusicalScaleFrequencies(
                 val centsNext =
                     octaveWiseCentCounter + cents[indexWithinOfOctave] - centsReference
                 val frequency = centsToFrequency(centsNext, referenceFrequency.toDouble())
-                currentFrequency = stretchTuning.getStretchedFrequency(frequency)
+                currentFrequency = stretchTuning.getStretchedFrequency(
+                    frequency,
+                    referenceFrequency.toDouble()
+                )
             }
 
             // second collect all frequencies starting from reference down to lowest frequency
@@ -195,7 +203,12 @@ class MusicalScaleFrequencies(
             indexWithinOfOctave = referenceIndexWithinOctave
             val lowerFrequencies = ArrayList<Double>()
             var globalIndexOfReferenceLow = 0
-            currentFrequency = stretchTuning.getStretchedFrequency(referenceFrequency.toDouble())
+            // stretching the reference frequency should always give the reference frequency
+            //   but we do still do it for consistency
+            currentFrequency = stretchTuning.getStretchedFrequency(
+                referenceFrequency.toDouble(),
+                referenceFrequency.toDouble()
+            )
             while (currentFrequency > frequencyMin) {
 //                Log.v("Tuner", "MusicalScaleFrequencies.create: current f=$currentFrequency, min freq=$frequencyMin")
                 // condition is needed when reference frequency is outside min/max
@@ -212,16 +225,19 @@ class MusicalScaleFrequencies(
                 val centsNext =
                     octaveWiseCentCounter + cents[indexWithinOfOctave] - centsReference
                 val frequency = centsToFrequency(centsNext, referenceFrequency.toDouble())
-                currentFrequency = stretchTuning.getStretchedFrequency(frequency)
+                currentFrequency = stretchTuning.getStretchedFrequency(
+                    frequency,
+                    referenceFrequency.toDouble()
+                    )
             }
 
             // store all frequencies in a common array and track index of reference frequency
-            val scaleFrequencies = if (higherFrequencies.size == 0) {
+            val scaleFrequencies = if (higherFrequencies.isEmpty()) {
                 MusicalScaleFrequencies(
                     lowerFrequencies.reversed().map { it.toFloat() }.toFloatArray(),
                     lowerFrequencies.size - 1 - globalIndexOfReferenceLow
                 )
-            } else if (lowerFrequencies.size == 0) {
+            } else if (lowerFrequencies.isEmpty()) {
                 MusicalScaleFrequencies(
                     higherFrequencies.map { it.toFloat() }.toFloatArray(),
                     globalIndexOfReferenceHigh

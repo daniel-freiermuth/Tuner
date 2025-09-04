@@ -40,10 +40,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import de.moekadu.tuner.R
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.stretchtuning.predefinedStretchTunings
 import de.moekadu.tuner.ui.notes.Note
 import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.theme.TunerTheme
@@ -55,7 +58,8 @@ fun QuickSettingsBar(
     modifier: Modifier = Modifier,
     onSharpFlatClicked: () -> Unit = {},
     onTemperamentClicked: () -> Unit = {},
-    onReferenceNoteClicked: () -> Unit = {}
+    onReferenceNoteClicked: () -> Unit = {},
+    onStretchTuningClicked: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val decimalFormat = rememberNumberFormatter()
@@ -108,7 +112,9 @@ fun QuickSettingsBar(
                 abbreviation,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
@@ -131,6 +137,24 @@ fun QuickSettingsBar(
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
+        if (musicalScale.stretchTuning.size > 0) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+                    .clickable { onStretchTuningClicked() },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    musicalScale.stretchTuning.name.value(context),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
     }
 }
 
@@ -140,6 +164,28 @@ private fun QuickSettingsBarPreview() {
     TunerTheme {
         var notePrintOptions by remember { mutableStateOf(NotePrintOptions()) }
         val musicalScale = remember { MusicalScale2.createTestEdo12() }
+
+        QuickSettingsBar(
+            musicalScale = musicalScale,
+            notePrintOptions = notePrintOptions,
+            onSharpFlatClicked = {
+                notePrintOptions = notePrintOptions.copy(
+                    useEnharmonic = !notePrintOptions.useEnharmonic
+                )
+            }
+        )
+    }
+}
+
+@Preview(widthDp = 300, heightDp = 48)
+@Composable
+private fun QuickSettingsBar2Preview() {
+    TunerTheme {
+        var notePrintOptions by remember { mutableStateOf(NotePrintOptions()) }
+        val musicalScale = remember {
+            MusicalScale2.createTestEdo12()
+                .copy(_stretchTuning = predefinedStretchTunings()[1])
+        }
 
         QuickSettingsBar(
             musicalScale = musicalScale,

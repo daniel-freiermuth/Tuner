@@ -2,7 +2,6 @@ package de.moekadu.tuner.ui.temperaments
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Space
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,6 +46,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -311,8 +311,16 @@ fun TemperamentsDialog2(
             snackbarHostState = snackbarHostState
         ) { item, itemInfo, itemModifier ->
             EditableListItem(
-                title = { Text(item.name.value(context)) },
-                description = { Text(item.description.value(context)) },
+                title = { Text(
+                    item.name.value(context),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                ) },
+                description = { Text(
+                    item.description.value(context),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                ) },
                 icon = {
                     Surface(
                         shape = CircleShape,

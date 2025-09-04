@@ -47,6 +47,7 @@ import de.moekadu.tuner.instruments.InstrumentResources
 import de.moekadu.tuner.misc.FileCheck
 import de.moekadu.tuner.misc.toastPotentialFileCheckError
 import de.moekadu.tuner.navigation.InstrumentsRoute
+import de.moekadu.tuner.navigation.StretchTuningOverviewRoute
 import de.moekadu.tuner.navigation.TemperamentDialogRoute
 import de.moekadu.tuner.navigation.TunerRoute
 import de.moekadu.tuner.navigation.instrumentEditorGraph
@@ -54,9 +55,12 @@ import de.moekadu.tuner.navigation.preferenceGraph
 import de.moekadu.tuner.navigation.mainGraph
 import de.moekadu.tuner.navigation.temperamentEditorGraph
 import de.moekadu.tuner.navigation.TemperamentEditorGraphRoute
+import de.moekadu.tuner.navigation.stretchTuningEditorGraph
 import de.moekadu.tuner.preferences.NightMode
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.preferences.migrateFromV6
+import de.moekadu.tuner.stretchtuning.StretchTuning
+import de.moekadu.tuner.stretchtuning.StretchTuningIO
 import de.moekadu.tuner.temperaments.EditableTemperament
 import de.moekadu.tuner.temperaments.TemperamentIO
 import de.moekadu.tuner.temperaments.TemperamentResources
@@ -82,6 +86,8 @@ class MainActivity : ComponentActivity() {
 
     private val loadInstrumentIntentChannel = Channel<List<Instrument>>(Channel.CONFLATED)
     private val loadTemperamentIntentChannel = Channel<List<EditableTemperament>>(Channel.CONFLATED)
+
+    private val loadStretchTuningsIntentChannel = Channel<List< StretchTuning>>(Channel.CONFLATED)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -141,6 +147,19 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
+                // handle incoming intents for loading stretch tunings
+                LaunchedEffect(loadStretchTuningsIntentChannel, controller) {
+                    for (stretchTuningsList in loadStretchTuningsIntentChannel) {
+//                        Log.v("Tuner", "MainActivity2: Loading file ...")
+                        controller.popBackStack(TunerRoute, inclusive = false)
+                        controller.navigate(StretchTuningOverviewRoute)
+//                         controller.navigate(TemperamentsManagerRoute(temperaments.musicalScale.value.temperament.stableId))
+                        loadStretchTunings(
+                            stretchTuningsList, temperaments, this@MainActivity
+                        )
+                    }
+                }
+
                 DisposableEffect(controller) {
                     val listener = NavController.OnDestinationChangedListener { _, _, _ ->
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
@@ -174,6 +193,11 @@ class MainActivity : ComponentActivity() {
                             loadTemperaments(
                                 controller, temperamentList, temperaments, this@MainActivity
                             )
+                        },
+                        onLoadStretchTunings = { stretchTuningsList ->
+                            loadStretchTunings(
+                                stretchTuningsList, temperaments, this@MainActivity
+                            )
                         }
                     )
                     preferenceGraph(
@@ -191,6 +215,11 @@ class MainActivity : ComponentActivity() {
                     )
 
                     temperamentEditorGraph(
+                        controller = controller,
+                        preferences = pref
+                    )
+
+                    stretchTuningEditorGraph(
                         controller = controller,
                         preferences = pref
                     )
@@ -218,6 +247,9 @@ class MainActivity : ComponentActivity() {
             val (stateTemperaments, temperaments) = TemperamentIO.readTemperamentsFromFile(
                 this, uri
             )
+            val (stateStretchTunings, stretchTunings) = StretchTuningIO.readStretchTuningsFromFile(
+                this, uri
+            )
             when {
                 stateInstruments == FileCheck.Ok && instruments.isNotEmpty() -> {
                     loadInstrumentIntentChannel.trySend(instruments)
@@ -225,7 +257,10 @@ class MainActivity : ComponentActivity() {
                 stateTemperaments == FileCheck.Ok && temperaments.isNotEmpty() -> {
                     loadTemperamentIntentChannel.trySend(temperaments)
                 }
-                stateInstruments == FileCheck.Empty || stateTemperaments == FileCheck.Empty -> {
+                stateStretchTunings == FileCheck.Ok && stretchTunings.isNotEmpty() -> {
+                    loadStretchTuningsIntentChannel.trySend(stretchTunings)
+                }
+                stateInstruments == FileCheck.Empty || stateTemperaments == FileCheck.Empty || stateStretchTunings == FileCheck.Empty -> {
                     FileCheck.Empty.toastPotentialFileCheckError(this, uri)
                 }
                 else -> {
@@ -262,6 +297,24 @@ private fun loadTemperaments(
     // TODO: else branches:
     //  - if several temperaments, where there are errors -> launch dialog telling this
     //    maybe with options to load the correct ones?
+}
+
+private fun loadStretchTunings(
+    stretchTuningsList: List<StretchTuning>,
+    temperamentResources: TemperamentResources,
+    context: Context
+) {
+    Toast.makeText(
+        context,
+        context.resources.getQuantityString(
+            R.plurals.load_stretch_tunings,
+            stretchTuningsList.size,
+            stretchTuningsList.size
+        ),
+        Toast.LENGTH_LONG
+    ).show()
+
+    temperamentResources.appendStretchTunings(stretchTuningsList)
 }
 
 private fun loadInstruments(

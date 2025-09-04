@@ -96,7 +96,8 @@ class ChainOfFifthsTest {
             unsorted.mapIndexed { index, us ->
                 val i = sorted.indexOfFirst { us == it }
                 println ("$i: $us =? ${sorted[i]}, c=${ratioToCents(us)}, m?=${chain.fifths.getOrNull(index)==null}, name=${notes[i].base} ${notes[i].modifier}")
-                Fifth(notes[i], chain.fifths.getOrNull(index))
+                Fifth(notes[i], chain.fifths.getOrNull(index),
+                    isRoot = false, drawNoteLight = false, drawModificationLight = true)
             }.toTypedArray()
         }
     }

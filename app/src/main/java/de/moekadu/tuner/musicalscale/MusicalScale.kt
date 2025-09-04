@@ -19,6 +19,8 @@
 package de.moekadu.tuner.musicalscale
 
 import androidx.compose.runtime.Immutable
+import de.moekadu.tuner.misc.GetTextFromResId
+import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteNames
 import de.moekadu.tuner.stretchtuning.StretchTuning
@@ -87,7 +89,10 @@ data class MusicalScale2(
     val referenceNote get() = noteNameScale.referenceNote
 
     @Transient
-    val stretchTuning = _stretchTuning ?: StretchTuning()
+    val stretchTuning = _stretchTuning ?: StretchTuning(
+        GetTextFromString(""), GetTextFromString(""),
+        doubleArrayOf(), doubleArrayOf()
+    )
 
     @Transient
     private val musicalScaleFrequencies = MusicalScaleFrequencies.create(

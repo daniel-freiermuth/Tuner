@@ -71,6 +71,7 @@ fun TunerScaffold(
     onSharpFlatClicked: () -> Unit = {},
     onTemperamentClicked: () -> Unit = {},
     onReferenceNoteClicked: () -> Unit = {},
+    onStretchTuningClicked: () -> Unit = {},
     musicalScale: MusicalScale2 = MusicalScale2.createTestEdo12(),
     notePrintOptions: NotePrintOptions = NotePrintOptions(),
     floatingActionButton: @Composable () -> Unit = {},
@@ -129,7 +130,8 @@ fun TunerScaffold(
                     notePrintOptions = notePrintOptions,
                     onSharpFlatClicked = onSharpFlatClicked,
                     onTemperamentClicked = onTemperamentClicked,
-                    onReferenceNoteClicked = onReferenceNoteClicked
+                    onReferenceNoteClicked = onReferenceNoteClicked,
+                    onStretchTuningClicked = onStretchTuningClicked
                 )
             }
         },

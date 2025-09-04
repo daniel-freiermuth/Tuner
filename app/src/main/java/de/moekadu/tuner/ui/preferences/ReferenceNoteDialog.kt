@@ -20,7 +20,6 @@ package de.moekadu.tuner.ui.preferences
 
 import android.Manifest
 import android.os.Build
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,9 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.FloatState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -142,8 +139,11 @@ fun ReferenceNoteDialog(
     val numberFormat = remember(locale) {
         NumberFormat.getNumberInstance(locale) as DecimalFormat
     }
-    val validFrequency by remember { derivedStateOf {
+    val validFrequencyString by remember { derivedStateOf {
         numberFormat.toFloatOrNull(frequencyAsString) != null
+    }}
+    val validFrequencyPositive by remember { derivedStateOf {
+        (numberFormat.toFloatOrNull(frequencyAsString) ?: 1.0f) > 0.0f
     }}
     var frequencyDetectorStarted by rememberSaveable { mutableStateOf(false) }
     val permission = rememberPermissionState(permission = Manifest.permission.RECORD_AUDIO)
@@ -169,7 +169,7 @@ fun ReferenceNoteDialog(
                         )
                     )
                 },
-                enabled = validFrequency
+                enabled = validFrequencyString && validFrequencyPositive
             ) {
                 Text(stringResource(id = R.string.done))
             }
@@ -218,9 +218,16 @@ fun ReferenceNoteDialog(
                     onValueChange = { frequencyAsString = it },
                     label = { Text(stringResource(id = R.string.frequency))},
                     suffix = { Text(stringResource(id = R.string.hertz_str, ""))},
-                    isError = !validFrequency,
+                    isError = !(validFrequencyString && validFrequencyPositive),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    supportingText = if (!validFrequencyString) {
+                        { Text(stringResource(R.string.input_is_no_number))}
+                    } else if (!validFrequencyPositive) {
+                        { Text(stringResource(R.string.value_must_be_larger_zero))}
+                    } else {
+                        null
+                    }
                 )
                 if (permissionGranted) {
                     Spacer(modifier = Modifier.height(8.dp))
@@ -286,7 +293,7 @@ private class TestReferenceNoteDialogFrequencyDetector : ReferenceNoteDialogFreq
 
 @Preview(widthDp = 300, heightDp = 500)
 @Composable
-private fun AppearanceDialogTest() {
+private fun ReferenceNoteDialogTest() {
     TunerTheme {
         val state = remember { MusicalScale2.createTestEdo12() }
         val notePrintOptions = remember { NotePrintOptions() }

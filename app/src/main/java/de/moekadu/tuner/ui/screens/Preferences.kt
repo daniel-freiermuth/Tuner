@@ -49,6 +49,7 @@ import de.moekadu.tuner.ui.theme.TunerTheme
 import de.moekadu.tuner.viewmodels.PreferencesViewModel
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import androidx.compose.ui.platform.LocalResources
 
 private fun appearanceSummary(mode: NightMode, context: Context) = when (mode) {
     NightMode.Auto -> context.getString(R.string.system_appearance)
@@ -66,6 +67,7 @@ fun Preferences(
     onNotationClicked: () -> Unit = {},
     onTemperamentClicked: () -> Unit = {},
     onWindowingFunctionClicked: () -> Unit = {},
+    onStretchTuningClicked: () -> Unit = {},
     onResetClicked: () -> Unit = {},
     onAboutClicked: () -> Unit = {}
 ) {
@@ -150,7 +152,7 @@ fun Preferences(
                 SimplePreference(
                     name = stringResource(id = R.string.temperament),
                     supporting = {
-                        val resources = LocalContext.current.resources
+                        val resources = LocalResources.current
                         val textStyle = LocalTextStyle.current
                         val summary = remember(musicalScale, resources, textStyle) {
                             buildAnnotatedString {
@@ -250,9 +252,19 @@ fun Preferences(
                 )
             }
             item {
+                SimplePreference(
+                    name = stringResource(id = R.string.stretch_tuning),
+                    iconId = R.drawable.ic_stretch,
+                    supporting = {
+                        Text(musicalScale.stretchTuning.name.value(context))
+                    },
+                    modifier = Modifier.clickable { onStretchTuningClicked() }
+                )
+            }
+            item {
                 val windowSizeExponent by pref.windowSizeExponent.collectAsStateWithLifecycle()
                 val windowSize = 2f.pow(windowSizeExponent).roundToInt()
-                val resources = LocalContext.current.resources
+                val resources = LocalResources.current
                 val summary = remember(windowSize, resources) {
                     "$windowSize " + resources.getString(R.string.samples) +
                             " (" + resources.getString(R.string.minimum_frequency) +

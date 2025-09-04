@@ -41,11 +41,10 @@ import de.moekadu.tuner.ui.instruments.InstrumentIconPicker
 import de.moekadu.tuner.ui.misc.rememberTunerAudioPermission
 import de.moekadu.tuner.viewmodels.InstrumentEditorViewModel
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
-private fun createViewModel(controller: NavController, backStackEntry: NavBackStackEntry)
+private fun createStretchTuningEditorViewModel(controller: NavController, backStackEntry: NavBackStackEntry)
 : InstrumentEditorViewModel {
     val parentEntry = remember(backStackEntry) {
         controller.getBackStackEntry<InstrumentEditorGraphRoute>()
@@ -68,7 +67,7 @@ fun NavGraphBuilder.instrumentEditorGraph(
         startDestination = InstrumentEditorRoute
     ) {
         composable<InstrumentEditorRoute> {
-            val viewModel = createViewModel(controller = controller, backStackEntry = it)
+            val viewModel = createStretchTuningEditorViewModel(controller = controller, backStackEntry = it)
 
             val musicalScale by temperaments.musicalScale.collectAsStateWithLifecycle()
             val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
@@ -96,7 +95,7 @@ fun NavGraphBuilder.instrumentEditorGraph(
             )
         }
         dialog<IconPickerRoute> {
-            val viewModel = createViewModel(controller = controller, backStackEntry = it)
+            val viewModel = createStretchTuningEditorViewModel(controller = controller, backStackEntry = it)
             InstrumentIconPicker(
                 onDismiss = { controller.navigateUp() },
                 onIconSelected = { icon ->

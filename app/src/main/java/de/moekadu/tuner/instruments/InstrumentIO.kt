@@ -51,10 +51,16 @@ object InstrumentIO {
     fun readInstrumentsFromFile(context: Context, uri: Uri): InstrumentsAndFileCheckResult  {
 //        val filename = getFilenameFromUri(context, uri)
 //            Log.v("Tuner", "InstrumentArchiving.loadInstruments: $filename")
-        val instrumentsString = context.contentResolver?.openInputStream(uri)?.use { stream ->
+        val instrumentsStringRaw = context.contentResolver?.openInputStream(uri)?.use { stream ->
             stream.reader().use {
                 it.readText()
             }
+        }
+        // skip byte order mark if necessary
+        val instrumentsString = if (instrumentsStringRaw?.getOrNull(0) == '\ufeff') {
+            instrumentsStringRaw.substring(1)
+        } else {
+            instrumentsStringRaw
         }
         return if (instrumentsString == null) {
             InstrumentsAndFileCheckResult(FileCheck.Invalid, listOf())
@@ -268,7 +274,9 @@ object InstrumentIO {
             val musicalNoteArrayAsString = string.substring(posStart + 1, pos - 1)
             return try {
                 musicalNoteArrayAsString.split(";").map { MusicalNote.fromString(it.trim()) }.toTypedArray()
-            } catch (e: NumberFormatException) {
+            } catch (_: NumberFormatException) {
+                null
+            } catch (_: IllegalArgumentException) {
                 null
             }
         }
