@@ -219,4 +219,11 @@
     <string name="werckmeister_vi_abbr">Веркмейстер VI</string>
     <string name="young2">Юнг 2</string>
     <string name="young2_abbr">Юнг 2</string>
+    <string name="name">Назва</string>
+    <string name="value_must_be_larger_zero">Значення повинно бути більше нуля.</string>
+    <string name="railsback">Рейлсбек</string>
+    <string name="description">Опис</string>
+    <string name="hertz_2f">%.2f Гц</string>
+    <string name="input_is_no_number">Уведене число не є дійсним.</string>
+    <string name="railsback_description">Дані Рейлсбека (середні)</string>
 </resources>
