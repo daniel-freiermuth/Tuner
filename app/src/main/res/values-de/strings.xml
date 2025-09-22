@@ -265,4 +265,25 @@
     <string name="g_note_vietnamese">Xê</string>
     <string name="a_note_vietnamese">Công</string>
     <string name="b_note_vietnamese">Phan</string>
+    <plurals name="load_stretch_tunings">
+        <item quantity="one">Lade %d Spreizung</item>
+        <item quantity="other">Lade%d Spreizungen</item>
+    </plurals>
+    <string name="stretch">Spreizung</string>
+    <string name="stretch_tuning">Spreizung</string>
+    <string name="no_stretch_tuning">Keine Spreizung</string>
+    <string name="stretch_tuning_off">Spreizung ist nicht aktiv.</string>
+    <string name="railsback">Railsback</string>
+    <string name="railsback_description">Railsback-Daten (gemittelt)</string>
+    <string name="name">Name</string>
+    <string name="description">Beschreibung</string>
+    <string name="stretch_tuning_editor">Spreizung bearbeiten</string>
+    <string name="stretch_tuning_info">Spreizung Info</string>
+    <string name="stretched_frequency">Gespreizte Frequenz</string>
+    <string name="input_is_no_number">Eingabe ist keine gültige Zahl.</string>
+    <string name="value_must_be_larger_zero">Wert muss größer als null sein.</string>
+    <string name="cent_symbol">¢</string>
+    <string name="cent_2f">%+.2f ¢</string>
+    <string name="hertz_2f">%.2f Hz</string>
+    <string name="stretched_frequencies_must_be_strictly_increasing">Gespreizte Frequenzen müssen monoton anwachsen (voriger Wert: %1$.2f Hz, dieser Wert: %2$.2f Hz).</string>
 </resources>
