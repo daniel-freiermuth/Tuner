@@ -329,7 +329,7 @@
     <string name="stretch_tuning_editor">Edit stretch tuning</string>
     <string name="stretch_tuning_info">Stretch tuning info</string>
     <string name="stretched_frequency">Stretched frequency</string>
-    <string name="input_is_no_number">Input is not valid number.</string>
+    <string name="input_is_no_number">Input is no valid number.</string>
     <string name="value_must_be_larger_zero">Value must be larger than zero.</string>
     <string name="cent_symbol">¢</string>
     <string name="cent_2f">%+.2f ¢</string>
