@@ -267,7 +267,7 @@
     <string name="b_note_vietnamese">Phan</string>
     <plurals name="load_stretch_tunings">
         <item quantity="one">Lade %d Spreizung</item>
-        <item quantity="other">Lade%d Spreizungen</item>
+        <item quantity="other">Lade %d Spreizungen</item>
     </plurals>
     <string name="stretch">Spreizung</string>
     <string name="stretch_tuning">Spreizung</string>
