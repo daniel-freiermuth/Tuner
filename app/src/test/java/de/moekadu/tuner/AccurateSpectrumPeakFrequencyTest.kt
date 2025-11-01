@@ -1,6 +1,6 @@
 package de.moekadu.tuner
 
-import de.moekadu.tuner.notedetection.RealFFT
+import de.moekadu.tuner.notedetection.FFT
 import de.moekadu.tuner.notedetection.AccurateSpectrumPeakFrequency
 import de.moekadu.tuner.notedetection.FrequencySpectrum
 import org.junit.Assert
@@ -49,9 +49,9 @@ class AccurateSpectrumPeakFrequencyTest {
         val spec1 = FrequencySpectrum(numSamples / 2 + 1, df)
         val spec2 = FrequencySpectrum(numSamples / 2 + 1, df)
 
-        val fft = RealFFT(numSamples)
-        fft.fft(values1, spec1.spectrum)
-        fft.fft(values2, spec2.spectrum)
+        val fft = FFT(numSamples)
+        fft.fftReal(values1, spec1.spectrum)
+        fft.fftReal(values2, spec2.spectrum)
 
         val spectrumPeakFrequency = AccurateSpectrumPeakFrequency(spec1, spec2, timeShift)
         val frequencyHighAccuracy = spectrumPeakFrequency[frequencyIndex]

@@ -42,7 +42,7 @@ class FrequencyDetectionCollectedResults(val sizeOfTimeSeries: Int, val sampleRa
      */
     val frequencySpectrum = FrequencySpectrum(
         (sizeOfTimeSeries + 1),
-        RealFFT.getFrequency(1, 2 * sizeOfTimeSeries, timeSeries.dt)) // factor 2 since we will zero-pad input
+        FFT.getFrequencyReal(1, 2 * sizeOfTimeSeries, timeSeries.dt)) // factor 2 since we will zero-pad input
 
     /** Frame position on which the previousSpectrum is based on. -1 if there is not previous spectrum.n*/
     var previousFramePosition = -1
@@ -56,7 +56,7 @@ class FrequencyDetectionCollectedResults(val sizeOfTimeSeries: Int, val sampleRa
     val accuratePeakFrequency = AccurateSpectrumPeakFrequency(previousSpectrum, frequencySpectrum, 0f)
 
     /** Auto correlation of the time series. */
-    val autoCorrelation = AutoCorrelation(sizeOfTimeSeries + 1, timeSeries.dt)
+    val autoCorrelation = AutoCorrelation(sizeOfTimeSeries, timeSeries.dt)
 
     /** Relative noise in the signal (1->high noise, 0 -> low noise) */
     var noise = 0.0f

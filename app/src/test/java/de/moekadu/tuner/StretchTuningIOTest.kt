@@ -18,12 +18,12 @@ Stretch M: Gb4 -2 -1,5 -1 -0,5 0 0 0 0 0 0 0 0,35 0,7 1,05 1,4 1,75 2,1
 
 Stretch L: A0  -8,67 -8 -7,33 -6,67 -4 -3,33 0 0 0 0 0 0,5 1  8 8,5 9 9,5 13,5  17 17,5 18
 """
-        val tunings = StretchTuningIO.decode(string)
-        println("Number of tunings = ${tunings.size}")
-        for (t in tunings) {
-            println((t.name as GetTextFromString).string)
-            for (i in 0 until t.size)
-                println("${t.unstretchedFrequencies[i]} ${t.stretchInCents[i]}")
-        }
+//        val tunings = StretchTuningIO.parseStretchTunings(string)
+//        println("Number of tunings = ${tunings.size}")
+//        for (t in tunings) {
+//            println((t.name as GetTextFromString).string)
+//            for (i in 0 until t.size)
+//                println("${t.unstretchedFrequencies[i]} ${t.stretchInCents[i]}")
+//        }
     }
 }

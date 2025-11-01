@@ -8,7 +8,6 @@ import de.moekadu.tuner.resources.ResourcesBase
 import de.moekadu.tuner.ui.notes.NotePrintOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
@@ -119,7 +118,6 @@ class PreferenceResources @Inject constructor(
     private val windowSizeExponentPref = createPreference("window_size_exponent", 12)
     val windowSizeExponent = windowSizeExponentPref.asStateFlow()
     val windowSize = windowSizeExponent
-        .drop(1) // not sure if this is needed, but it basically drops the initial value, which is ok, since the window size exponent will always provide the next value
         .map { 2f.pow(it).roundToInt() }
         .stateIn(applicationScope, SharingStarted.Eagerly, 2f.pow(12).roundToInt())
 
@@ -136,12 +134,12 @@ class PreferenceResources @Inject constructor(
         pitchHistoryDurationPref.set(pitchHistoryDuration)
     }
 
-    private val pitchHistoryNumFaultyVauluesPref = createPreference(
+    private val pitchHistoryNumFaultyValuesPref = createPreference(
         "pitch_history_num_faulty_values", 3
     )
-    val pitchHistoryNumFaultyValues = pitchHistoryNumFaultyVauluesPref.asStateFlow()
+    val pitchHistoryNumFaultyValues = pitchHistoryNumFaultyValuesPref.asStateFlow()
     fun writePitchHistoryNumFaultyValues(pitchHistoryNumFaultyValues: Int) {
-        pitchHistoryNumFaultyVauluesPref.set(pitchHistoryNumFaultyValues)
+        pitchHistoryNumFaultyValuesPref.set(pitchHistoryNumFaultyValues)
     }
 
     private val numMovingAveragePref = createPreference("num_moving_average", 5)

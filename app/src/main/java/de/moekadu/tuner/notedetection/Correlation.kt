@@ -27,10 +27,10 @@ import kotlin.math.pow
  * @param windowType Type of windowing to apply for FFT (first step of computing auto correlation).
  *   WindowingFunction.Tophat disables the windowing.
  */
-class Correlation (val size : Int, val windowType : WindowingFunction = WindowingFunction.Tophat) {
+class Correlation(val size : Int, val windowType : WindowingFunction = WindowingFunction.Tophat) {
 
-  private val fft = RealFFT(2 * size)
-  private val inputBitreversed = FloatArray(2 * size + 2)
+  private val fft = FFT(2 * size)
+  private val inputBitReversed = FloatArray(2 * size + 2)
   private val window = FloatArray(size)
 
   init {
@@ -39,7 +39,7 @@ class Correlation (val size : Int, val windowType : WindowingFunction = Windowin
 
   /** Auto correlation of input.
    * @param input Input data which should be correlated (required size: size)
-   * @param output Output array where we store the autocorrelation, (required size: size+1)
+   * @param output Output array where we store the autocorrelation, (required size: size)
    * @param disableWindow if true, we disable windowing, even when it is defined in the constructor.
    * @param spectrum If a non-null array is given, we will store here to spectrum of zero-padded input (input is
    *   zero-padded to become twice the size, before we start correlating). If it is null, we will use the internal class
@@ -47,11 +47,11 @@ class Correlation (val size : Int, val windowType : WindowingFunction = Windowin
    */
   fun correlate(input : FloatArray, output : FloatArray, disableWindow : Boolean = false, spectrum : FloatArray? = null) {
     require(input.size == size) {"input size must be equal to the size of the correlation size"}
-    require(output.size - 1 == size) {"output  size must be correlation size + 1"}
+    require(output.size == size) {"output  size must be correlation size"}
     if(spectrum != null) {
       require(spectrum.size == 2 * size + 2) { "output spectrum size must be 2*size+2" }
     }
-    val spectrumStorage = spectrum ?: inputBitreversed
+    val spectrumStorage = spectrum ?: inputBitReversed
 
     if(windowType == WindowingFunction.Tophat || disableWindow) {
       for (i in 0 until size) {
@@ -77,38 +77,22 @@ class Correlation (val size : Int, val windowType : WindowingFunction = Windowin
         }
       }
     }
-    fft.fftBitreversed(spectrumStorage)
+    fft.fftBitReversed(spectrumStorage)
+    fft.combineFFTResultForRealFFT(spectrumStorage)
 
-    // compute amplitudes, we have to be careful here since spectrumStorage and inputBitreversed can be the same storage!
-    val ampMaxFreq = spectrumStorage[1]
-    inputBitreversed[1] = 0f
-    for(i in 0 until size) {
-      inputBitreversed[i] = spectrumStorage[2*i].pow(2) + spectrumStorage[2*i+1].pow(2)
+    for (i in 0 .. size) {
+      inputBitReversed[2*i] = spectrumStorage[2*i].pow(2) + spectrumStorage[2*i+1].pow(2)
+      inputBitReversed[2*i+1] = 0f
     }
-    inputBitreversed[size] = ampMaxFreq
-    // copy amplitudes
-    for(i in 1 until size)
-      inputBitreversed[size + i] = inputBitreversed[size - i]
 
-    for (i in 0 until size) {
-      val ir2 = 2 * fft.bitReverseTable[i]
-      val i2 = 2 * i
-      if (i2 > ir2) {
-        val tmp1 = inputBitreversed[i2]
-        inputBitreversed[i2] = inputBitreversed[ir2]
-        inputBitreversed[ir2] = tmp1
-        val tmp2 = inputBitreversed[i2 + 1]
-        inputBitreversed[i2 + 1] = inputBitreversed[ir2 + 1]
-        inputBitreversed[ir2 + 1] = tmp2
-      }
-    }
-    fft.fftBitreversed(inputBitreversed)
+    // it is allowed to pass the same variable here to do the ifft inplace
+    fft.ifftReal(inputBitReversed, inputBitReversed)
 
     for(i in 0 until size)
-      output[i] = inputBitreversed[2*i]
-    output[size] = inputBitreversed[1]
+      output[i] = inputBitReversed[i]
   }
 }
+
 
 class MemoryPoolCorrelation {
   private val pool = MemoryPool<Correlation>()

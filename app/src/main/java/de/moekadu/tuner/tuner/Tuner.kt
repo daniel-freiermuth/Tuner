@@ -203,6 +203,8 @@ class Tuner(
                 onUndeliveredElement = { launch { it.decRef() } }
         )
 
+        // Log.v("Tuner", "Tuner: overlap=${pref.overlap.value}, windowSize=${pref.windowSize.value}")
+        // Log.v("Tuner", "Tuner: samplerate=${pref.sampleRate}, windowing=${pref.windowing.value}")
         val soundSourceJobAndChannel = launchSoundSourceJob(
             overlap = pref.overlap.value,
             windowSize = pref.windowSize.value,
@@ -237,6 +239,9 @@ class Tuner(
             }
         }
 
+        // Log.v("Tuner", "Tuner: movingAvg=${pref.numMovingAverage.value}, tolerance=${pref.toleranceInCents.value}")
+        // Log.v("Tuner", "Tuner: numFaulty=${pref.pitchHistoryNumFaultyValues.value}, maxNoise=${pref.maxNoise.value}")
+        // Log.v("Tuner", "Tuner: minHarmonicEnergy=${pref.minHarmonicEnergyContent.value}, sensitivity=${pref.sensitivity.value}")
         launch(Dispatchers.Main) {
             val freqEvaluator = FrequencyEvaluator(
                 pref.numMovingAverage.value,
