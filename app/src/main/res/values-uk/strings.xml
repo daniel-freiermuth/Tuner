@@ -82,7 +82,7 @@
         <item quantity="many">Надсилання %d елементів</item>
         <item quantity="other">Надсилання %d елементів</item>
     </plurals>
-    <string name="notation_international">Міжнародна (A-B-C-…)</string>
+    <string name="notation_international">Міжнародна</string>
     <plurals name="load_instruments">
         <item quantity="one">Завантаження %d інструмента</item>
         <item quantity="few">Завантаження %d інструментів</item>
@@ -94,7 +94,7 @@
     <string name="append_current_list">Додати в кінець списку</string>
     <string name="b_note_name">H</string>
     <string name="bflat_note_name">B</string>
-    <string name="notation_regional">Стандартна (A-H-C-…)</string>
+    <string name="notation_regional">Стандартна</string>
     <string name="predefined_items">Попередньо налаштовані</string>
     <string name="pick_icon">Вибрати значок</string>
     <plurals name="load_temperaments">
@@ -226,4 +226,24 @@
     <string name="hertz_2f">%.2f Гц</string>
     <string name="input_is_no_number">Уведене число не є дійсним.</string>
     <string name="railsback_description">Дані Рейлсбека (середні)</string>
+    <string name="notation_regional_description">C-D-E-…-H</string>
+    <string name="notation_solfege_description">до-ре-мі-…-сі</string>
+    <string name="notation_international_description">C-D-E-…-B</string>
+    <string name="octave_notation_scientific">Наукова</string>
+    <string name="octave_notation_helmholtz">Гельмгольц</string>
+    <string name="octave_notation_helmholtz_description">… C, C c c\' …</string>
+    <string name="octave_notation_helmholtz_numbered">Гельмгольц із цифрами</string>
+    <string name="octave_notation_helmholtz_numbered_description">… C₁ C c c¹ …</string>
+    <string name="octave_notation_scientific_description">… C¹ C² C³ C⁴ …</string>
+    <string name="notation_hindustani_description">Sa-Re₁-Re₂-…-Ni₂</string>
+    <string name="notation_byzantine_description">Νη-Πα-Βου-…-Ζω</string>
+    <string name="notation_carnatic_description">Sa-Ri₁-Ri₂-…-Ni₂</string>
+    <string name="notation_vietnamese_description">Hò-Xư-Y-…-Phan</string>
+    <string name="c_note_vietnamese">Hò</string>
+    <string name="d_note_vietnamese">Xư</string>
+    <string name="e_note_vietnamese">Y</string>
+    <string name="f_note_vietnamese">Xang</string>
+    <string name="g_note_vietnamese">Xê</string>
+    <string name="a_note_vietnamese">Công</string>
+    <string name="b_note_vietnamese">Phan</string>
 </resources>
