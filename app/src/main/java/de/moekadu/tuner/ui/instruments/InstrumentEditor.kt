@@ -64,6 +64,7 @@ import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.ui.notes.NoteDetector
 import de.moekadu.tuner.ui.notes.NoteDetectorState
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.NoteSelector
 import de.moekadu.tuner.ui.screens.TunerPlotStyle
 import de.moekadu.tuner.ui.theme.TunerTheme
@@ -106,7 +107,7 @@ fun InstrumentEditor(
     state: InstrumentEditorData,
     musicalScale: MusicalScale2,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     tunerPlotStyle: TunerPlotStyle = TunerPlotStyle.create(),
     onIconButtonClicked: () -> Unit = {},
     onNavigateUpClicked: () -> Unit = {},
@@ -163,7 +164,7 @@ fun InstrumentEditorPortrait(
     state: InstrumentEditorData,
     musicalScale: MusicalScale2,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     tunerPlotStyle: TunerPlotStyle = TunerPlotStyle.create(),
     onIconButtonClicked: () -> Unit = {}
 ) {
@@ -305,7 +306,7 @@ fun InstrumentEditorLandscape(
     state: InstrumentEditorData,
     musicalScale: MusicalScale2,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     tunerPlotStyle: TunerPlotStyle = TunerPlotStyle.create(),
     onIconButtonClicked: () -> Unit = {}
 ) {

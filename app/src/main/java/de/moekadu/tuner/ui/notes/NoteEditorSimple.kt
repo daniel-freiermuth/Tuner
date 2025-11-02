@@ -35,7 +35,7 @@ fun NoteEditorSimple(
     noteModifier: NoteModifier,
     octaveOffset: Int,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     onNoteChange: (BaseNote, NoteModifier, octaveOffset: Int) -> Unit = { _, _, _ ->}
 ) {
 //    Log.v("Tuner ", "NoteEditorSimple: base=$base, modifier = $noteModifier")
@@ -141,7 +141,7 @@ private fun NoteEditorSimplePreview() {
                 noteModifier = m
                 octaveOffset = o
             },
-            notePrintOptions = NotePrintOptions(notationType = NotationType.Standard)
+            notePrintOptions = NotePrintOptions2(notationType = NotationType.Standard)
         )
     }
 }

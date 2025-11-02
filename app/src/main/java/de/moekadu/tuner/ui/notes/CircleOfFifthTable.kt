@@ -22,12 +22,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,7 +37,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.temperaments.FifthModification
 import de.moekadu.tuner.temperaments.Temperament3
@@ -136,7 +131,7 @@ private fun rememberChain(temperament: Temperament3, rootNote: MusicalNote?): Ar
 fun CircleOfFifthTable(
     temperament: Temperament3,
     rootNote: MusicalNote?,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     modifier: Modifier = Modifier,
     horizontalContentPadding: Dp = 16.dp
 ) {
@@ -222,8 +217,8 @@ fun CircleOfFifthTable(
 private fun CircleOfFifthTable2Preview() {
     TunerTheme {
         val notePrintOptions = remember {
-            NotePrintOptions(
-                helmholtzNotation = false,
+            NotePrintOptions2(
+                octaveNotation = OctaveNotation.Scientific,
                 notationType = NotationType.Standard
             )
         }

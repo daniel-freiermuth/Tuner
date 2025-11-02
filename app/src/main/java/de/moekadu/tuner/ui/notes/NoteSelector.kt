@@ -155,7 +155,7 @@ private fun NoteSelectorBase(
 fun NoteSelector(
     selectedIndex: Int,
     notes: Array<MusicalNote>,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
     textStyle: TextStyle? = MaterialTheme.typography.labelLarge,
@@ -224,7 +224,7 @@ fun NoteSelector(
 fun NoteSelector(
     selectedIndex: Int,
     musicalScale: MusicalScale2,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
     textStyle: TextStyle? = MaterialTheme.typography.labelLarge,
@@ -296,8 +296,8 @@ private fun NoteSelectorPreview() {
         val noteNameScale = remember { NoteNamesEDOGenerator.getNoteNames(53, null) }
 
         val notePrintOptions = remember {
-            NotePrintOptions(
-                helmholtzNotation = false,
+            NotePrintOptions2(
+                octaveNotation = OctaveNotation.Scientific,
                 notationType = NotationType.Standard
             )
         }
@@ -325,8 +325,8 @@ private fun NoteSelector2Preview() {
         val musicalScale = remember { MusicalScale2.createTestEdo12() }
 
         val notePrintOptions = remember {
-            NotePrintOptions(
-                helmholtzNotation = false,
+            NotePrintOptions2(
+                octaveNotation = OctaveNotation.Scientific,
                 notationType = NotationType.Standard
             )
         }

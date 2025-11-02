@@ -154,7 +154,7 @@ fun Preferences(
                     supporting = {
                         val resources = LocalResources.current
                         val textStyle = LocalTextStyle.current
-                        val summary = remember(musicalScale, resources, textStyle) {
+                        val summary = remember(musicalScale, resources, textStyle, notePrintOptions) {
                             buildAnnotatedString {
                                 //append(resources.getString(getTuningNameResourceId(musicalScale.temperamentType)))
                                 append(musicalScale.temperament.name.value(context))
@@ -192,9 +192,11 @@ fun Preferences(
             item {
                 SwitchPreference(
                     name = stringResource(id = R.string.prefer_flat),
-                    checked = notePrintOptions.useEnharmonic,
+                    checked = notePrintOptions.enharmonicVariant == 1,
                     onCheckChange = {
-                        val newNotePrintOptions = notePrintOptions.copy(useEnharmonic = it)
+                        val newNotePrintOptions = notePrintOptions.copy(
+                            enharmonicVariant = if (it) 1 else 0
+                        )
                         pref.writeNotePrintOptions(newNotePrintOptions)
                     },
                     iconId = R.drawable.ic_prefer_flat
@@ -203,7 +205,12 @@ fun Preferences(
             item {
                 SimplePreference(
                     name = stringResource(id = R.string.notation),
-                    supporting = stringResource(id = notePrintOptions.notationType.stringResourceId),
+                    supporting = {
+                        val summary = remember(notePrintOptions, context) {
+                            "${context.getString(notePrintOptions.notationType.stringResourceId)}, ${context.getString(notePrintOptions.octaveNotation.stringResourceId)}"
+                        }
+                        Text(summary)
+                    },
                     iconId = R.drawable.ic_solfege,
                     modifier = Modifier.clickable { onNotationClicked() }
                 )

@@ -114,7 +114,7 @@ fun NoteDetector(
     fontSize: TextUnit = TextUnit.Unspecified,
     textStyle: TextStyle? = MaterialTheme.typography.labelLarge,
     textColor: Color = Color.Unspecified,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     onNoteClicked: (note: MusicalNote) -> Unit = {}
 ) {
     val fontSizeResolved = fontSize.takeOrElse {

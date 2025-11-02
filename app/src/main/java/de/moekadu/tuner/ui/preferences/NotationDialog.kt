@@ -19,14 +19,22 @@
 package de.moekadu.tuner.ui.preferences
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,27 +45,30 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
 import de.moekadu.tuner.ui.notes.NotationType
-import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
+import de.moekadu.tuner.ui.notes.OctaveNotation
 import de.moekadu.tuner.ui.theme.TunerTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotationDialog(
-    notePrintOptions: NotePrintOptions,
-    onNotationChange: (notation: NotationType, isHelmholtz: Boolean) -> Unit,
+    notePrintOptions: NotePrintOptions2,
+    onNotationChange: (notation: NotationType, octaveNotation: OctaveNotation) -> Unit,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {}
 ) {
     var notationType by remember { mutableStateOf(notePrintOptions.notationType) }
-    var helmholtz by remember { mutableStateOf(notePrintOptions.helmholtzNotation) }
+    var octaveNotation by remember { mutableStateOf(notePrintOptions.octaveNotation) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 onClick = {
-                    onNotationChange(notationType, helmholtz)
+                    onNotationChange(notationType, octaveNotation)
                 }
             ) {
                 Text(stringResource(id = R.string.done))
@@ -82,36 +93,107 @@ fun NotationDialog(
         },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                Column(Modifier.selectableGroup()) {
-                    for (n in NotationType.entries) {
-                        RadioButtonLine(
-                            selected = notationType == n,
-                            stringRes = n.stringResourceId,
-                            onClick = { notationType = n }
-                        )
+                var isNotationExpanded by remember { mutableStateOf(false) }
+                var isOctaveNotationExpanded by remember { mutableStateOf(false) }
+
+                ExposedDropdownMenuBox(
+                    expanded = isNotationExpanded,
+                    onExpandedChange = { isNotationExpanded = it }
+                ) {
+                    TextField(
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        value = stringResource(notationType.stringResourceId),
+                        onValueChange = {},
+                        label = { Text(stringResource(R.string.notation)) },
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isNotationExpanded) },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = isNotationExpanded,
+                        onDismissRequest = { isNotationExpanded = false },
+                    ) {
+                        for (n in NotationType.entries) {
+                            DropdownMenuItem(
+                                text = {
+                                    Column {
+                                        Text(
+                                            stringResource(n.stringResourceId),
+                                            modifier = Modifier.padding(bottom = 2.dp)
+                                        )
+                                        Text(
+                                            stringResource(n.descriptionResId),
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    notationType = n
+                                    isNotationExpanded = false
+                                }
+                            )
+                        }
                     }
                 }
-                HorizontalDivider()
-                CheckedButtonLine(
-                    checked = helmholtz,
-                    stringRes = R.string.helmholtz_notation,
-                    onClick = { helmholtz = it }
-                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+                ExposedDropdownMenuBox(
+                    expanded = isOctaveNotationExpanded,
+                    onExpandedChange = { isOctaveNotationExpanded = it }
+                ) {
+                    // Log.v("Tuner", "NotationDialog: octave expanded: $isOctaveNotationExpanded")
+                    TextField(
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                        value = stringResource(octaveNotation.stringResourceId),
+                        onValueChange = {},
+                        label = { Text(stringResource(R.string.octave_representation)) },
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isOctaveNotationExpanded) },
+                        colors = ExposedDropdownMenuDefaults.textFieldColors()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = isOctaveNotationExpanded,
+                        onDismissRequest = { isOctaveNotationExpanded = false },
+                    ) {
+                        for (n in OctaveNotation.entries) {
+                            DropdownMenuItem(
+                                text = {
+                                    Column {
+                                        Text(
+                                            stringResource(n.stringResourceId),
+                                            modifier = Modifier.padding(bottom = 2.dp)
+                                        )
+                                        Text(
+                                            stringResource(n.descriptionResId),
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                },
+                                onClick = {
+                                    octaveNotation = n
+                                    isOctaveNotationExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
             }
         }
     )
 }
 
-@Preview(widthDp = 300, heightDp = 500)
+@Preview(widthDp = 300, heightDp = 500, showBackground = true)
 @Composable
 private fun NotationDialogTest() {
     TunerTheme {
-        var notePrintOptions by remember { mutableStateOf(NotePrintOptions()) }
+        var notePrintOptions by remember { mutableStateOf(NotePrintOptions2()) }
         NotationDialog(
             notePrintOptions = notePrintOptions,
             onNotationChange = { n, h ->
                 notePrintOptions = notePrintOptions.copy(
-                    notationType = n, helmholtzNotation = h
+                    notationType = n, octaveNotation = h
                 )
             }
         )

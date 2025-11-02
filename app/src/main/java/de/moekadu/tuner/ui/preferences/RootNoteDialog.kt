@@ -62,6 +62,7 @@ import de.moekadu.tuner.ui.misc.rememberNumberFormatter
 import de.moekadu.tuner.ui.notes.CentAndRatioTable
 import de.moekadu.tuner.ui.notes.CircleOfFifthTable
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.NoteSelector
 import de.moekadu.tuner.ui.theme.TunerTheme
 import java.text.DecimalFormat
@@ -73,7 +74,7 @@ fun RootNoteDialog(
     initialRootNote: MusicalNote,
     temperament: Temperament3,
     onDone: (rootNote: MusicalNote) -> Unit,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     modifier: Modifier = Modifier,
     warning: String? = null,
     onDismiss: () -> Unit = {}
@@ -219,7 +220,7 @@ fun RootNoteDialog(
 private fun RootNoteDialogTest() {
     TunerTheme {
         val state = remember { MusicalScale2.createTestEdo12() }
-        val notePrintOptions = remember { NotePrintOptions() }
+        val notePrintOptions = remember { NotePrintOptions2() }
         RootNoteDialog(
             state.rootNote,
             state.temperament,

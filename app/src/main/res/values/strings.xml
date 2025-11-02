@@ -82,9 +82,12 @@
     <string name="a_note_international" translatable="false">A</string>
     <string name="b_note_international" translatable="false">B</string>
     <string name="notation">Notation</string>
-    <string name="notation_standard">Default (A-B-C-…)</string>
+    <string name="notation_regional">Regional</string>
+    <string name="notation_regional_description">C-D-E-…-B</string>
     <string name="notation_solfege">Solfège</string>
-    <string name="notation_international">International (A-B-C-…)</string>
+    <string name="notation_solfege_description">Do-Re-Mi-…-Si</string>
+    <string name="notation_international">International</string>
+    <string name="notation_international_description">C-D-E-…-B</string>
     <string name="violin_gdae">Violin</string>
     <string name="abort">Abort</string>
     <string name="instrument_name">Instrument name</string>
@@ -254,6 +257,7 @@
     <string name="ni1_carnatic" translatable="false">Ni₁</string>
     <string name="ni2_carnatic" translatable="false">Ni₂</string>
     <string name="notation_carnatic">Carnatic</string>
+    <string name="notation_carnatic_description">Sa-Ri₁-Ri₂-…-Ni₂</string>
     <string name="sa_hindustani" translatable="false">Sa</string>
     <string name="re1_hindustani" translatable="false">Re₁</string>
     <string name="re2_hindustani" translatable="false">Re₂</string>
@@ -267,6 +271,7 @@
     <string name="ni1_hindustani" translatable="false">Ni₁</string>
     <string name="ni2_hindustani" translatable="false">Ni₂</string>
     <string name="notation_hindustani">Hindustani</string>
+    <string name="notation_hindustani_description">Sa-Re₁-Re₂-…-Ni₂</string>
     <string name="ni_byzantine" translatable="false">Νη</string>
     <string name="pa_byzantine" translatable="false">Πα</string>
     <string name="vou_byzantine" translatable="false">Βου</string>
@@ -275,6 +280,7 @@
     <string name="ke_byzantine" translatable="false">Κε</string>
     <string name="zo_byzantine" translatable="false">Ζω</string>
     <string name="notation_byzantine">Byzantine</string>
+    <string name="notation_byzantine_description">Νη-Πα-Βου-…-Ζω</string>
     <string name="helmholtz_notation">Helmholtz notation (C, … c\')</string>
     <string name="extended_quarter_comma_mean_tone">Extended ¼ comma meantone</string>
     <string name="extended_quarter_comma_mean_tone_desc">Pure major 3rds, 15 notes</string>
@@ -309,6 +315,7 @@
     <string name="other_temperaments">Other temperaments</string>
     <string name="custom_temperaments">Custom temperaments</string>
     <string name="notation_vietnamese">Vietnamese</string>
+    <string name="notation_vietnamese_description">Hò-Xư-Y-…-Phan</string>
     <string name="c_note_vietnamese">Hò</string>
     <string name="d_note_vietnamese">Xư</string>
     <string name="e_note_vietnamese">Y</string>
@@ -335,4 +342,11 @@
     <string name="cent_2f">%+.2f ¢</string>
     <string name="hertz_2f">%.2f Hz</string>
     <string name="stretched_frequencies_must_be_strictly_increasing">Stretched frequencies must be strictly increasing (previous value: %1$.2f Hz, this value: %2$.2f Hz).</string>
+    <string name="octave_notation_scientific">Scientific</string>
+    <string name="octave_notation_scientific_description">… C¹ C² C³ C⁴ …</string>
+    <string name="octave_notation_helmholtz">Helmholtz</string>
+    <string name="octave_notation_helmholtz_description">… C, C c c\' …</string>
+    <string name="octave_notation_helmholtz_numbered">Helmholtz numbered</string>
+    <string name="octave_notation_helmholtz_numbered_description">… C₁ C c c¹ …</string>
+    <string name="octave_representation">Octave representation</string>
 </resources>

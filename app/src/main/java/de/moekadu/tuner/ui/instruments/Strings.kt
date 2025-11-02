@@ -72,6 +72,7 @@ import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.rememberMaxNoteSize
 import de.moekadu.tuner.ui.plot.PlotWindowOutline
 import de.moekadu.tuner.ui.theme.TunerTheme
@@ -323,7 +324,7 @@ fun Strings(
     tuningState: TuningState = TuningState.Unknown,
     highlightedNoteKey: Int? = null,
     highlightedNote: MusicalNote? = null,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     defaultColor: Color = MaterialTheme.colorScheme.inverseSurface,
     onDefaultColor: Color = MaterialTheme.colorScheme.inverseOnSurface,
     inTuneColor: Color = MaterialTheme.tunerColors.positive,
@@ -624,7 +625,7 @@ private fun StringsPreview() {
                 StringWithInfo(note, index) //, musicalScale.getNoteIndex(note))
             }.toPersistentList()
         }
-        val notePrintOptions = NotePrintOptions()
+        val notePrintOptions = NotePrintOptions2()
         var highlightedNote by remember { mutableStateOf(strings.getOrNull(2)?.note) }
         Column {
             Strings(
@@ -673,7 +674,7 @@ private fun StringsPreview2() {
                 StringWithInfo(note, index) //, musicalScale.getNoteIndex(note))
             }.toPersistentList()
         }
-        val notePrintOptions = NotePrintOptions()
+        val notePrintOptions = NotePrintOptions2()
         var highlightedNote by remember { mutableStateOf(strings.getOrNull(2)?.note) }
         Column {
             Strings(

@@ -48,6 +48,7 @@ import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.common.Label
 import de.moekadu.tuner.ui.notes.Note
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.rememberMaxNoteSize
 import de.moekadu.tuner.ui.plot.Anchor
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
@@ -157,7 +158,7 @@ class PitchHistoryState(
 fun PitchHistory(
     state: PitchHistoryState,
     musicalScale: MusicalScale2,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     modifier: Modifier = Modifier,
     gestureBasedViewPort: GestureBasedViewPort = remember { GestureBasedViewPort() },
     plotWindowPadding: DpRect = DpRect(0.dp, 0.dp, 0.dp, 0.dp),
@@ -447,7 +448,7 @@ fun PitchHistory(
 fun PitchHistory2Preview() {
     TunerTheme {
         val notePrintOptions = remember {
-            NotePrintOptions()
+            NotePrintOptions2()
         }
         val musicalScale = remember { MusicalScale2.createTestEdo12() }
         val state = remember {

@@ -71,6 +71,7 @@ import de.moekadu.tuner.ui.notes.NotationType
 import de.moekadu.tuner.ui.notes.Note
 import de.moekadu.tuner.ui.notes.NoteEditorSimple
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlin.math.roundToInt
 
@@ -211,7 +212,7 @@ private fun ClickableNote(
     note: MusicalNote?,
     selected: Boolean,
     onClick: () -> Unit,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     maximumNoteWidth: Dp,
     modifier: Modifier = Modifier,
     isError: Boolean = false,
@@ -239,8 +240,8 @@ private fun ClickableNote(
                 else -> LocalContentColor.current
             }
             if (note != null && (
-                 (note.base != BaseNote.None && !notePrintOptions.useEnharmonic) ||
-                 (note.enharmonicBase != BaseNote.None && notePrintOptions.useEnharmonic)
+                 (note.base != BaseNote.None && notePrintOptions.enharmonicVariant == 0) ||
+                 (note.enharmonicBase != BaseNote.None && notePrintOptions.enharmonicVariant == 1)
               ))
             {
                 Note(
@@ -267,17 +268,17 @@ fun TemperamentTableLine(
     lineNumber: Int,
     state: TemperamentTableLineState,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     onValueChange: (value: String) -> Unit = {},
     onNoteNameClicked: (enharmonic: Boolean) -> Unit = {},
     onNoteEditorCloseClicked: () -> Unit = {},
     onChangeNote: (MusicalNote?) -> Unit = {}
 ) {
     val notePrintOptionsDefault = remember(notePrintOptions) {
-        notePrintOptions.copy(useEnharmonic = false)
+        notePrintOptions.copy(enharmonicVariant = 0)
     }
     val notePrintOptionsEnharmonic = remember(notePrintOptions) {
-        notePrintOptions.copy(useEnharmonic = true)
+        notePrintOptions.copy(enharmonicVariant = 1)
     }
 
     val density = LocalDensity.current
@@ -543,7 +544,7 @@ private fun TemperamentTableLinePreview() {
                 TemperamentTableLine(
                     index,
                     state,
-                    notePrintOptions = NotePrintOptions(notationType = NotationType.Solfege),
+                    notePrintOptions = NotePrintOptions2(notationType = NotationType.Solfege),
                     onValueChange = { state.changeCentOrRatio(it) },
                     onNoteNameClicked = { enharmonic ->
                         if ((!enharmonic && state.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard)

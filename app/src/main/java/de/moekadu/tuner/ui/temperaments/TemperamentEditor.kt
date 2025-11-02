@@ -59,6 +59,7 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteNamesEDOGenerator
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
@@ -85,7 +86,7 @@ interface TemperamentEditorState {
 fun TemperamentEditor(
     state: TemperamentEditorState,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     onAbortClicked: () -> Unit = {},
     onSaveClicked: () -> Unit = {},
     onNumberOfNotesClicked: () -> Unit = {}

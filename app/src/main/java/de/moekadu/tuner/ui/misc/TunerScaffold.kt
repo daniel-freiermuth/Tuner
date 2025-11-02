@@ -47,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import de.moekadu.tuner.R
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 
 private enum class NavigationIconState{
@@ -73,7 +74,7 @@ fun TunerScaffold(
     onReferenceNoteClicked: () -> Unit = {},
     onStretchTuningClicked: () -> Unit = {},
     musicalScale: MusicalScale2 = MusicalScale2.createTestEdo12(),
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionBarPosition: FabPosition = FabPosition.End,
     snackbarHost: @Composable () -> Unit = {},

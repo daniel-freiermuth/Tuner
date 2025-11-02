@@ -24,14 +24,45 @@ import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.NoteModifier
 
 /** Available note notation types. */
-enum class NotationType(@StringRes val stringResourceId: Int) {
-    Standard(R.string.notation_standard), /**< Default C, D, E, ....*/
-    International(R.string.notation_international),  /**< C, D, E, ..., but using a B and never a H. */
-    Solfege(R.string.notation_solfege), /**< Solfege. */
-    Carnatic(R.string.notation_carnatic), /**< Carnatic Indian notation. */
-    Hindustani(R.string.notation_hindustani), /**< Hindustani Indian notation. */
-    Byzantine(R.string.notation_byzantine), /**< Byzantine notation system. */
-    Vietnamese(R.string.notation_vietnamese)
+enum class NotationType(
+    @StringRes val stringResourceId: Int,
+    @StringRes val descriptionResId: Int,
+    ) {
+    /** Default C, D, E, ....*/
+    Standard(
+        R.string.notation_regional,
+        R.string.notation_regional_description
+    ),
+    /** C, D, E, ..., but using a B and never a H. */
+    International(
+        R.string.notation_international,
+        R.string.notation_international_description
+        ),
+    /** Solfege. */
+    Solfege(
+        R.string.notation_solfege,
+        R.string.notation_solfege_description
+        ),
+    /** Carnatic Indian notation. */
+    Carnatic(
+        R.string.notation_carnatic,
+        R.string.notation_carnatic_description
+        ),
+    /** Hindustani Indian notation. */
+    Hindustani(
+        R.string.notation_hindustani,
+        R.string.notation_hindustani_description,
+        ),
+    /** Byzantine notation system. */
+    Byzantine(
+        R.string.notation_byzantine,
+        R.string.notation_byzantine_description,
+        ),
+    /** Vietnamese notation system. */
+    Vietnamese(
+        R.string.notation_vietnamese,
+        R.string.notation_vietnamese_description
+    )
 }
 
 fun NotationType.resourceIds(): Map<NoteNameStem, Int> {

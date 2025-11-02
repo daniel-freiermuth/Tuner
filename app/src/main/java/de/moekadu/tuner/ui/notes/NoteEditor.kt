@@ -27,7 +27,7 @@ import de.moekadu.tuner.notenames.NoteModifier
 
 @Composable
 private fun rememberMaxNoteSizeForNoteEditor(
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     fontSize: TextUnit
 ) : DpSize {
     val baseNotes = remember {
@@ -77,7 +77,7 @@ fun NoteEditor(
     base: BaseNote,
     noteModifier: NoteModifier,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     onNoteChange: (BaseNote, NoteModifier) -> Unit = { _, _ ->}
 ) {
     val baseNotes = remember {
@@ -212,7 +212,7 @@ private fun NoteEditorPreview() {
                 baseNote = n
                 noteModifier = m
             },
-            notePrintOptions = NotePrintOptions(notationType = NotationType.Standard)
+            notePrintOptions = NotePrintOptions2(notationType = NotationType.Standard)
         )
     }
 }

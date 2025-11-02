@@ -19,12 +19,9 @@
 package de.moekadu.tuner.ui.notes
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,7 +40,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
-import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.temperaments.Temperament3
 import de.moekadu.tuner.temperaments.predefinedTemperamentWerckmeisterVI
@@ -61,7 +57,7 @@ import kotlin.math.roundToInt
 fun CentAndRatioTable(
     temperament: Temperament3,
     rootNote: MusicalNote?,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     modifier: Modifier = Modifier,
     horizontalContentPadding: Dp = 16.dp
     ) {
@@ -135,8 +131,8 @@ private fun CentTablePreview() {
 //        val temperamentType = TemperamentType.WerckmeisterVI
 //        val noteNameScale = NoteNameScaleFactory.create(temperamentType)
 //        val rootNote = noteNameScale.notes[6]
-        val notePrintOptions = NotePrintOptions(
-            helmholtzNotation = false,
+        val notePrintOptions = NotePrintOptions2(
+            octaveNotation = OctaveNotation.Scientific,
             notationType = NotationType.Standard
         )
         val temperament = remember{ predefinedTemperamentWerckmeisterVI(0L) }

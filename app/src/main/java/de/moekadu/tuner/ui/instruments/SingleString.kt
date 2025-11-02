@@ -42,6 +42,7 @@ import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.ui.common.Label
 import de.moekadu.tuner.ui.notes.Note
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlin.math.roundToInt
 
@@ -71,7 +72,7 @@ fun SingleString(
     outerPadding: Dp = 0.dp,
     color: Color = Color.Unspecified,
     contentColor: Color = Color.Unspecified,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     stringLineWidth: Dp = 2.dp,
     labelSize: DpSize = DpSize.Unspecified,
     fontSize: TextUnit = TextUnit.Unspecified,
@@ -143,7 +144,7 @@ fun SingleString(
 private fun SingleStringPreview() {
     TunerTheme {
         val note = MusicalNote(BaseNote.A, NoteModifier.Sharp, octave = 4)
-        val notePrintOptions = NotePrintOptions()
+        val notePrintOptions = NotePrintOptions2()
 
         Column {
 

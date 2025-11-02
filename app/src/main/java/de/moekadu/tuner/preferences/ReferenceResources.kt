@@ -6,11 +6,14 @@ import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.notedetection.WindowingFunction
 import de.moekadu.tuner.resources.ResourcesBase
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
+import de.moekadu.tuner.ui.notes.OctaveNotation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.pow
@@ -63,19 +66,36 @@ class PreferenceResources @Inject constructor(
     }
 
     // note print options
+//    private val notePrintOptionsPref = createSerializablePreference(
+//        "note_print_options", NotePrintOptions()
+//    )
     private val notePrintOptionsPref = createSerializablePreference(
-        "note_print_options", NotePrintOptions()
+        "note_print_options",
+        default = NotePrintOptions2(),
+        onDeserializationFailure = {
+            try {
+                val old = Json.decodeFromString<NotePrintOptions>(it)
+                NotePrintOptions2(
+                    enharmonicVariant = if (old.useEnharmonic) 1 else 0,
+                    octaveNotation = if (old.helmholtzNotation) OctaveNotation.Helmholtz else OctaveNotation.Scientific,
+                    notationType = old.notationType
+                )
+            } catch (_: Exception) {
+                NotePrintOptions2()
+            }
+        }
     )
+
     val notePrintOptions = notePrintOptionsPref.asStateFlow()
-    fun writeNotePrintOptions(notePrintOptions: NotePrintOptions) {
+    fun writeNotePrintOptions(notePrintOptions: NotePrintOptions2) {
         notePrintOptionsPref.set(notePrintOptions)
     }
 
     fun switchEnharmonicPreference() {
-        val currentUseEnharmonic = notePrintOptions.value.useEnharmonic
+        val currentEnharmonicVariant = notePrintOptions.value.enharmonicVariant
         writeNotePrintOptions(
             notePrintOptions.value.copy(
-                useEnharmonic = !currentUseEnharmonic
+                enharmonicVariant = if (currentEnharmonicVariant == 0) 1 else 0,
             )
         )
     }

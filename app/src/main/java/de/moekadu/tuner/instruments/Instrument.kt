@@ -31,6 +31,7 @@ import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.asAnnotatedString
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -81,7 +82,7 @@ data class Instrument(
      */
     fun getStringsString(
         context: Context,
-        notePrintOptions: NotePrintOptions,
+        notePrintOptions: NotePrintOptions2,
         fontSize: TextUnit,
         fontWeight: FontWeight? = null
         ): AnnotatedString {

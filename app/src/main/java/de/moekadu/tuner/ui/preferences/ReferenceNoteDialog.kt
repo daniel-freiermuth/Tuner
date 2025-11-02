@@ -66,6 +66,7 @@ import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.misc.rememberNumberFormatter
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.NoteSelector
 import de.moekadu.tuner.ui.theme.TunerTheme
 import java.text.DecimalFormat
@@ -118,7 +119,7 @@ interface ReferenceNoteDialogFrequencyDetector {
 fun ReferenceNoteDialog(
     initialState: MusicalScale2,
     onReferenceNoteChange: (modifiedState: MusicalScale2) -> Unit,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     frequencyDetector: ReferenceNoteDialogFrequencyDetector,
     modifier: Modifier = Modifier,
     warning: String? = null,
@@ -296,7 +297,7 @@ private class TestReferenceNoteDialogFrequencyDetector : ReferenceNoteDialogFreq
 private fun ReferenceNoteDialogTest() {
     TunerTheme {
         val state = remember { MusicalScale2.createTestEdo12() }
-        val notePrintOptions = remember { NotePrintOptions() }
+        val notePrintOptions = remember { NotePrintOptions2() }
         ReferenceNoteDialog(
             state,
             notePrintOptions = notePrintOptions,

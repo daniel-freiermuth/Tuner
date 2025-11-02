@@ -27,13 +27,11 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -57,9 +55,8 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlin.math.max
+import androidx.compose.ui.platform.LocalResources
 
 private val modifierPostfixStrings = mapOf(
     NoteModifier.None to "",
@@ -187,12 +184,12 @@ private data class ResolvedNoteProperties(
 
 private fun resolveNoteProperties(
     note: MusicalNote,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     resources: Resources
 ): ResolvedNoteProperties {
     return if (
-        (!notePrintOptions.useEnharmonic && note.base != BaseNote.None) ||
-        (notePrintOptions.useEnharmonic && note.enharmonicBase == BaseNote.None)
+        (notePrintOptions.enharmonicVariant == 0 && note.base != BaseNote.None) ||
+        (notePrintOptions.enharmonicVariant == 1 && note.enharmonicBase == BaseNote.None)
         ) {
         resolveNoteProperties(note, resources = resources, useEnharmonic = false
         ) { notePrintOptions.resourceId(it) }
@@ -201,81 +198,6 @@ private fun resolveNoteProperties(
         ) { notePrintOptions.resourceId(it) }
     }
 }
-
-//private fun resolveNoteProperties(
-//    note: MusicalNote,
-//    notePrintOptions: NotePrintOptions,
-//    resources: Resources
-//    ): ResolvedNoteProperties {
-//    return if (notePrintOptions.useEnharmonic && note.enharmonicBase != BaseNote.None) {
-//        resolveNotePropertiesWithoutEnharmonicCheck(
-//            note.switchEnharmonic(switchAlsoForBaseNone = true),
-//            resources = resources,
-//        ) { notePrintOptions.resourceId(it) }
-//    } else {
-//        resolveNotePropertiesWithoutEnharmonicCheck(
-//            note,
-//            resources = resources,
-//        ) { notePrintOptions.resourceId(it) }
-//    }
-//}
-
-//private fun resolveNotePropertiesWithoutEnharmonicCheck(
-//    note: MusicalNote,
-//    resources: Resources,
-//    resourceIdOfStem: (NoteNameStem) -> Int?
-//    ): ResolvedNoteProperties {
-//    // check if we can directly resolve the note
-//    val stem = NoteNameStem(note)
-//    val noteName = resourceIdOfStem(stem)?.let {resources.getText(it)}
-//    if (noteName != null && noteName != "" && noteName != "-") {
-//        return ResolvedNoteProperties(
-//            baseName = noteName,
-//            modifier = NoteModifier.None,
-//            octave = if (note.octave == Int.MAX_VALUE) Int.MAX_VALUE else note.octave + note.octaveOffset
-//        )
-//    }
-//
-//    // check if we can directly resolve the enharmonic
-//    val noteEnharmonic = note.switchEnharmonic(switchAlsoForBaseNone = true)
-//    val stemEnharmonic = NoteNameStem(noteEnharmonic)
-//    val noteNameEnharmonic = resourceIdOfStem(stemEnharmonic)?.let { resources.getText(it) }
-//
-//    if (noteNameEnharmonic != null && noteNameEnharmonic != "" && noteNameEnharmonic != "-") {
-//        return ResolvedNoteProperties(
-//            baseName = noteNameEnharmonic,
-//            modifier = NoteModifier.None,
-//            octave = if (note.octave == Int.MAX_VALUE) Int.MAX_VALUE else noteEnharmonic.octave + noteEnharmonic.octaveOffset
-//        )
-//    }
-//
-//    // try to resolve note by base name + modifier
-//    val stemBase = NoteNameStem(
-//        note.base, NoteModifier.None, BaseNote.None, NoteModifier.None
-//    )
-//    val noteNameBase = resourceIdOfStem(stemBase)?.let { resources.getText(it) }
-//    if (noteNameBase != null && noteNameBase != "" && noteNameBase != "-") {
-//        return ResolvedNoteProperties(
-//            baseName = noteNameBase,
-//            modifier = note.modifier,
-//            octave = if (note.octave == Int.MAX_VALUE) Int.MAX_VALUE else note.octave + note.octaveOffset
-//        )
-//    }
-//
-//    // try to resolve note by enharmonic base name + modifier
-//    val stemEnharmonicBase = NoteNameStem(
-//        noteEnharmonic.base, NoteModifier.None, BaseNote.None, NoteModifier.None
-//    )
-//    val noteNameEnharmonicBase = resourceIdOfStem(stemEnharmonicBase)?.let { resources.getText(it) }
-//    if (noteNameEnharmonicBase != null && noteNameEnharmonicBase != "" && noteNameEnharmonicBase != "-") {
-//        return ResolvedNoteProperties(
-//            baseName = noteNameEnharmonicBase,
-//            modifier = noteEnharmonic.modifier,
-//            octave = if (note.octave == Int.MAX_VALUE) Int.MAX_VALUE else noteEnharmonic.octave + noteEnharmonic.octaveOffset
-//        )
-//    }
-//    return ResolvedNoteProperties("O", note.modifier, note.octave)
-//}
 
 private fun resolveNoteProperties(
     note: MusicalNote,
@@ -316,30 +238,11 @@ private fun resolveNoteProperties(
     )
 }
 
-/** Options for note printing.
- * @param useEnharmonic Tells if the enharmonic should be used for printing.
- * @param helmholtzNotation Set this to true, to use Helmholtz notation (this uses small letters
- *   for higher octaves and capital letters for lower octaves. Also for octaves around 2 and 3, no
- *   octaves numbers are printed but instead , and '.
- * @param notationType Notation type used for printing.
- */
-@Serializable
-@Stable
-data class NotePrintOptions(
-    val useEnharmonic: Boolean = false,
-    val helmholtzNotation: Boolean = false,
-    val notationType: NotationType = NotationType.Standard
-) {
-    @Transient
-    private val resourceIds = notationType.resourceIds()
-    fun resourceId(noteNameStem: NoteNameStem) = resourceIds[noteNameStem]
-}
-
 private val musicalSymbolFont = FontFamily(Font(R.font.gonville))
 
 private fun createAnnotatedStringOfNote(
     properties: ResolvedNoteProperties,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     fontSize: TextUnit,
     fontWeight: FontWeight?,
     withOctave: Boolean
@@ -364,8 +267,15 @@ private fun createAnnotatedStringOfNote(
                 fontWeight = fontWeight
             )
         ) {
+            val showOctaveLowercase = withOctave && properties.octave >= 3 && (
+                    when (notePrintOptions.octaveNotation) {
+                        OctaveNotation.Helmholtz, OctaveNotation.HelmholtzNumbered -> true
+                        OctaveNotation.Scientific -> false
+                    }
+                    )
             append(
-                if (notePrintOptions.helmholtzNotation && withOctave && properties.octave >= 3)
+                //if (notePrintOptions.helmholtzNotation && withOctave && properties.octave >= 3)
+                if (showOctaveLowercase)
                     properties.baseName.toString().lowercase()
                 else
                     properties.baseName
@@ -402,58 +312,84 @@ private fun createAnnotatedStringOfNote(
         }
 
         if (withOctave && properties.octave != Int.MAX_VALUE) {
-            if (notePrintOptions.helmholtzNotation) {
-                when {
-                    properties.octave <= -1 -> {
-                        withStyle(SpanStyle(fontSize = fontSize * 0.7f)) {
-                            withStyle(SpanStyle(baselineShift = BaselineShift(-0.2f))) {
-                                append((-properties.octave + 2).toString())
+            when (notePrintOptions.octaveNotation) {
+                OctaveNotation.Helmholtz -> {
+                    when {
+                        properties.octave <= -1 -> {
+                            withStyle(SpanStyle(fontSize = fontSize * 0.7f)) {
+                                withStyle(SpanStyle(baselineShift = BaselineShift(-0.2f))) {
+                                    append((-properties.octave + 2).toString())
+                                }
                             }
                         }
-                    }
 
-                    properties.octave == 0 -> {
-                        withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
-                            append(",,")
+                        properties.octave == 0 -> {
+                            withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
+                                append(",,")
+                            }
                         }
-                    }
 
-                    properties.octave == 1 -> {
-                        withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
-                            append(",")
+                        properties.octave == 1 -> {
+                            withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
+                                append(",")
+                            }
                         }
-                    }
 
-                    properties.octave == 2 || properties.octave == 3 -> {
-                        withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
-                            append("")
+                        properties.octave == 2 || properties.octave == 3 -> {
+                            withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
+                                append("")
+                            }
                         }
-                    }
 
-                    properties.octave == 4 -> {
-                        withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
-                            append("'")
+                        properties.octave == 4 -> {
+                            withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
+                                append("'")
+                            }
                         }
-                    }
 
-                    properties.octave == 5 -> {
-                        withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
-                            append("''")
+                        properties.octave == 5 -> {
+                            withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
+                                append("''")
+                            }
                         }
-                    }
 
-                    else -> {  // -> octave >= 6
-                        withStyle(SpanStyle(fontSize = fontSize * 0.7f, fontWeight = fontWeight)) {
-                            withStyle(SpanStyle(baselineShift = BaselineShift(0.5f))) {
-                                append((properties.octave - 3).toString())
+                        else -> {  // -> octave >= 6
+                            withStyle(SpanStyle(fontSize = fontSize * 0.7f, fontWeight = fontWeight)) {
+                                withStyle(SpanStyle(baselineShift = BaselineShift(0.5f))) {
+                                    append((properties.octave - 3).toString())
+                                }
                             }
                         }
                     }
                 }
-            } else {
-                withStyle(SpanStyle(fontSize = fontSize * 0.7f, fontWeight = fontWeight)) {
-                    withStyle(SpanStyle(baselineShift = BaselineShift(0.5f))) {
-                        append(properties.octave.toString())
+                OctaveNotation.HelmholtzNumbered -> {
+                    when {
+                        properties.octave == 2 || properties.octave == 3 -> {
+                            withStyle(SpanStyle(fontSize = fontSize, fontWeight = fontWeight)) {
+                                append("")
+                            }
+                        }
+                        properties.octave <= 1 -> {
+                            withStyle(SpanStyle(fontSize = fontSize * 0.7f, fontWeight = fontWeight)) {
+                                withStyle(SpanStyle(baselineShift = BaselineShift(-0.2f))) {
+                                    append((-properties.octave + 2).toString())
+                                }
+                            }
+                        }
+                        else -> { // i.e. octave >= 4
+                            withStyle(SpanStyle(fontSize = fontSize * 0.7f, fontWeight = fontWeight)) {
+                                withStyle(SpanStyle(baselineShift = BaselineShift(0.5f))) {
+                                    append((properties.octave - 3).toString())
+                                }
+                            }
+                        }
+                    }
+                }
+                OctaveNotation.Scientific -> {
+                    withStyle(SpanStyle(fontSize = fontSize * 0.7f, fontWeight = fontWeight)) {
+                        withStyle(SpanStyle(baselineShift = BaselineShift(0.5f))) {
+                            append(properties.octave.toString())
+                        }
                     }
                 }
             }
@@ -462,7 +398,7 @@ private fun createAnnotatedStringOfNote(
 }
 
 fun MusicalNote.asAnnotatedString(
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     fontSize: TextUnit,
     fontWeight: FontWeight?,
     withOctave: Boolean,
@@ -487,14 +423,14 @@ fun MusicalNote.asAnnotatedString(
 fun Note(
     musicalNote: MusicalNote,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     withOctave: Boolean = true,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontWeight: FontWeight? = null,
     color: Color = Color.Unspecified,
     style: TextStyle? = null
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val fontSizeResolved = fontSize.takeOrElse {
         (style?.fontSize ?: TextUnit.Unspecified).takeOrElse {
             LocalTextStyle.current.fontSize.takeOrElse { 12.sp }
@@ -531,14 +467,14 @@ fun Note(
 fun NoteWithEnharmonic(
     musicalNote: MusicalNote,
     modifier: Modifier = Modifier,
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     withOctave: Boolean = true,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontWeight: FontWeight? = null,
     color: Color = Color.Unspecified,
     style: TextStyle? = null
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val fontSizeResolved = fontSize.takeOrElse {
         (style?.fontSize ?: TextUnit.Unspecified).takeOrElse {
             LocalTextStyle.current.fontSize.takeOrElse { 12.sp }
@@ -637,7 +573,7 @@ fun NoteWithEnharmonic(
  */
 fun computeMaxNoteSize(
     notes: Array<MusicalNote>,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     fontSize: TextUnit,
     fontWeight: FontWeight?,
     octaveRange: IntRange?,
@@ -695,21 +631,21 @@ fun computeMaxNoteSize(
 @Composable
 fun rememberMaxNoteSize(
     notes: Array<MusicalNote>,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     fontSize: TextUnit,
     octaveRange: IntRange?,
     fontWeight: FontWeight? = null,
     textMeasurer: TextMeasurer = rememberTextMeasurer()
 ): DpSize {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val density = LocalDensity.current
     return remember(notes, notePrintOptions, fontSize, octaveRange, textMeasurer, resources, density) {
         val sizePx1 = computeMaxNoteSize(
-            notes, notePrintOptions.copy(useEnharmonic = false),
+            notes, notePrintOptions.copy(enharmonicVariant = 0),
             fontSize, fontWeight, octaveRange, textMeasurer, resources
         )
         val sizePx2 = computeMaxNoteSize(
-            notes, notePrintOptions.copy(useEnharmonic = true),
+            notes, notePrintOptions.copy(enharmonicVariant = 1),
             fontSize, fontWeight, octaveRange, textMeasurer, resources
         )
         val sizePx = IntSize(
@@ -727,10 +663,10 @@ private fun NotePreview() {
     val fontSize = 100.sp
     val fontWeight = null // FontWeight.Bold
     val notePrintOptions = remember {
-        NotePrintOptions(
-            useEnharmonic = false,
-            helmholtzNotation = false,
-            notationType = NotationType.Solfege
+        NotePrintOptions2(
+            enharmonicVariant = 0,
+            octaveNotation = OctaveNotation.Scientific,
+            notationType = NotationType.International
         )
     }
     val maxLabelSize = rememberMaxNoteSize(
@@ -747,8 +683,16 @@ private fun NotePreview() {
 //        Box(
 //            modifier = Modifier.size(maxLabelSize).background(MaterialTheme.colorScheme.surfaceVariant),
 //        ) {
+        Note(
+            MusicalNote(BaseNote.A, NoteModifier.NaturalUp, octave = -1),
+            withOctave = true,
+            notePrintOptions = notePrintOptions,
+            fontSize = fontSize,
+            fontWeight = fontWeight,
+            //style = MaterialTheme.typography.displayLarge
+        )
             Note(
-                MusicalNote(BaseNote.A, NoteModifier.NaturalUp),
+                MusicalNote(BaseNote.A, NoteModifier.NaturalUp, octave = 0),
                 withOctave = true,
                 notePrintOptions = notePrintOptions,
                 fontSize = fontSize,
@@ -756,7 +700,7 @@ private fun NotePreview() {
                 //style = MaterialTheme.typography.displayLarge
             )
         Note(
-            MusicalNote(BaseNote.A, NoteModifier.FlatDown),
+            MusicalNote(BaseNote.A, NoteModifier.FlatDown, octave = 1),
             withOctave = true,
             notePrintOptions = notePrintOptions,
             fontSize = fontSize,
@@ -764,7 +708,7 @@ private fun NotePreview() {
             //style = MaterialTheme.typography.displayLarge
         )
         Note(
-            MusicalNote(BaseNote.A, NoteModifier.FlatDownDown),
+            MusicalNote(BaseNote.A, NoteModifier.FlatDownDown, octave = 2),
             withOctave = true,
             notePrintOptions = notePrintOptions,
             fontSize = fontSize,
@@ -772,7 +716,7 @@ private fun NotePreview() {
             //style = MaterialTheme.typography.displayLarge
         )
         Note(
-            MusicalNote(BaseNote.A, NoteModifier.SharpUp),
+            MusicalNote(BaseNote.A, NoteModifier.SharpUp, octave = 3),
             withOctave = true,
             notePrintOptions = notePrintOptions,
             fontSize = fontSize,
@@ -780,7 +724,7 @@ private fun NotePreview() {
             //style = MaterialTheme.typography.displayLarge
         )
         Note(
-            MusicalNote(BaseNote.A, NoteModifier.SharpSharpSharpUpUp),
+            MusicalNote(BaseNote.A, NoteModifier.SharpSharpSharpUpUp, octave = 4),
             withOctave = true,
             notePrintOptions = notePrintOptions,
             fontSize = fontSize,
@@ -788,7 +732,7 @@ private fun NotePreview() {
             //style = MaterialTheme.typography.displayLarge
         )
         Note(
-            MusicalNote(BaseNote.A, NoteModifier.SharpSharpUpUpUp),
+            MusicalNote(BaseNote.A, NoteModifier.SharpSharpUpUpUp, octave = 5),
             withOctave = true,
             notePrintOptions = notePrintOptions,
             fontSize = fontSize,
@@ -796,7 +740,7 @@ private fun NotePreview() {
             //style = MaterialTheme.typography.displayLarge
         )
         NoteWithEnharmonic(
-            MusicalNote(BaseNote.A, NoteModifier.FlatFlatDownDownDown),
+            MusicalNote(BaseNote.A, NoteModifier.FlatFlatDownDownDown, octave = 6),
             withOctave = true,
             notePrintOptions = notePrintOptions,
             fontSize = fontSize,
@@ -808,7 +752,9 @@ private fun NotePreview() {
             MusicalNote(
                 BaseNote.A, NoteModifier.FlatFlatFlatDownDown,
                 enharmonicBase = BaseNote.G,
-                enharmonicModifier = NoteModifier.FlatDown),
+                enharmonicModifier = NoteModifier.FlatDown,
+                octave = 7
+            ),
             withOctave = true,
             notePrintOptions = notePrintOptions,
             fontSize = fontSize,

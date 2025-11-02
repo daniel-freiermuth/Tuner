@@ -71,6 +71,7 @@ import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.misc.TunerScaffold
 import de.moekadu.tuner.ui.misc.rememberTunerAudioPermission
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.rememberMaxNoteSize
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.plot.LineCoordinates
@@ -87,7 +88,7 @@ import kotlinx.coroutines.launch
 
 interface ScientificTunerData {
     val musicalScale: StateFlow<MusicalScale2>
-    val notePrintOptions: StateFlow<NotePrintOptions>
+    val notePrintOptions: StateFlow<NotePrintOptions2>
     val toleranceInCents: StateFlow<Int>
     val sampleRate: Int
 
@@ -584,8 +585,8 @@ class TestScientificTunerData : ScientificTunerData {
     override val musicalScale: StateFlow<MusicalScale2>
             = MutableStateFlow(MusicalScale2.createTestEdo12())
 
-    override val notePrintOptions: StateFlow<NotePrintOptions>
-        = MutableStateFlow(NotePrintOptions())
+    override val notePrintOptions: StateFlow<NotePrintOptions2>
+        = MutableStateFlow(NotePrintOptions2())
 
     override val sampleRate = 44100
 

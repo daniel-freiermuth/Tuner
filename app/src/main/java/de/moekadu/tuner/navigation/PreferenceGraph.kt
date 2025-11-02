@@ -81,9 +81,9 @@ fun NavGraphBuilder.preferenceGraph(
             val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
             NotationDialog(
                 notePrintOptions = notePrintOptions,
-                onNotationChange = { notation, helmholtz ->
+                onNotationChange = { notation, octaveNotation ->
                     val newNotePrintOptions = preferences.notePrintOptions.value.copy(
-                        notationType = notation, helmholtzNotation = helmholtz
+                        notationType = notation, octaveNotation = octaveNotation,
                     )
                     preferences.writeNotePrintOptions(newNotePrintOptions)
                     controller.navigateUp()

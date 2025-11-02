@@ -51,7 +51,7 @@ fun NoteLockedButton(
     note: MusicalNote,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    notePrintOptions: NotePrintOptions = NotePrintOptions(),
+    notePrintOptions: NotePrintOptions2 = NotePrintOptions2(),
     fontSize: TextUnit = MaterialTheme.tunerTypography.plotLarge.fontSize
 ) {
     val iconSize = with(LocalDensity.current) {

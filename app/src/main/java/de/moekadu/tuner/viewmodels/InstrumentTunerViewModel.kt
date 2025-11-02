@@ -38,6 +38,7 @@ import de.moekadu.tuner.tuner.Tuner
 import de.moekadu.tuner.ui.instruments.StringWithInfo
 import de.moekadu.tuner.ui.instruments.StringsState
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.screens.InstrumentTunerData
 import de.moekadu.tuner.ui.tuning.PitchHistoryState
@@ -54,7 +55,7 @@ class InstrumentTunerViewModel @Inject constructor (
     val temperaments: TemperamentResources
 ) : ViewModel(), InstrumentTunerData {
     override val musicalScale: StateFlow<MusicalScale2> get() = temperaments.musicalScale
-    override val notePrintOptions: StateFlow<NotePrintOptions> get() = pref.notePrintOptions
+    override val notePrintOptions: StateFlow<NotePrintOptions2> get() = pref.notePrintOptions
     override val toleranceInCents: StateFlow<Int> get() = pref.toleranceInCents
 
     private var autodetectedTargetNote = musicalScale.value.referenceNote

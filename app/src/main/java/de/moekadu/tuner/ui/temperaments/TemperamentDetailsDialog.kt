@@ -45,12 +45,13 @@ import de.moekadu.tuner.temperaments.predefinedTemperamentWerckmeisterVI
 import de.moekadu.tuner.ui.notes.CentAndRatioTable
 import de.moekadu.tuner.ui.notes.CircleOfFifthTable
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 
 @Composable
 fun TemperamentDetailsDialog(
     temperament: Temperament3,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {},
 ) {
@@ -123,7 +124,7 @@ private fun TemperamentDetailsDialogPreview() {
 
         TemperamentDetailsDialog(
             temperament,
-            NotePrintOptions()
+            NotePrintOptions2()
         )
     }
 }

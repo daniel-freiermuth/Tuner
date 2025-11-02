@@ -22,6 +22,8 @@ import android.content.Context
 import de.moekadu.tuner.instruments.InstrumentResources
 import de.moekadu.tuner.instruments.InstrumentResourcesOld
 import de.moekadu.tuner.temperaments.TemperamentResources
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
+import de.moekadu.tuner.ui.notes.OctaveNotation
 import kotlinx.collections.immutable.toPersistentList
 import kotlin.math.roundToInt
 
@@ -49,7 +51,13 @@ fun migrateFromV6(
     }
     from.scientificMode?.let { newPreferenceResources.writeScientificMode(it) }
     from.screenAlwaysOn?.let { newPreferenceResources.writeScreenAlwaysOn(it) }
-    from.notePrintOptions?.let { newPreferenceResources.writeNotePrintOptions(it) }
+    from.notePrintOptions?.let { newPreferenceResources.writeNotePrintOptions(
+        NotePrintOptions2(
+            enharmonicVariant = if (it.useEnharmonic) 1 else 0,
+            octaveNotation = if (it.helmholtzNotation) OctaveNotation.Helmholtz else OctaveNotation.Scientific,
+            notationType = it.notationType
+        )
+    ) }
 
     from.windowing?.let { newPreferenceResources.writeWindowing(it) }
     from.overlap?.let { newPreferenceResources.writeOverlap(it) }

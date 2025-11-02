@@ -39,6 +39,7 @@ import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.tuner.Tuner
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.plot.LineCoordinates
 import de.moekadu.tuner.ui.plot.VerticalLinesPositions
@@ -57,7 +58,7 @@ class ScientificTunerViewModel @Inject constructor (
     @ApplicationScope val applicationScope: CoroutineScope
 ) : ViewModel(), ScientificTunerData {
     override val musicalScale: StateFlow<MusicalScale2> get() = temperaments.musicalScale
-    override val notePrintOptions: StateFlow<NotePrintOptions> get() = pref.notePrintOptions
+    override val notePrintOptions: StateFlow<NotePrintOptions2> get() = pref.notePrintOptions
     override val sampleRate: Int get() = pref.sampleRate
     override val toleranceInCents: StateFlow<Int> get() = pref.toleranceInCents
 

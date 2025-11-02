@@ -49,12 +49,13 @@ import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.stretchtuning.predefinedStretchTunings
 import de.moekadu.tuner.ui.notes.Note
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 
 @Composable
 fun QuickSettingsBar(
     musicalScale: MusicalScale2,
-    notePrintOptions: NotePrintOptions,
+    notePrintOptions: NotePrintOptions2,
     modifier: Modifier = Modifier,
     onSharpFlatClicked: () -> Unit = {},
     onTemperamentClicked: () -> Unit = {},
@@ -127,7 +128,7 @@ fun QuickSettingsBar(
         ) {
             Icon(
                 ImageVector.vectorResource(
-                    if (notePrintOptions.useEnharmonic)
+                    if (notePrintOptions.enharmonicVariant == 1)
                         R.drawable.ic_prefer_flat_isflat
                     else
                         R.drawable.ic_prefer_flat_issharp
@@ -162,7 +163,7 @@ fun QuickSettingsBar(
 @Composable
 private fun QuickSettingsBarPreview() {
     TunerTheme {
-        var notePrintOptions by remember { mutableStateOf(NotePrintOptions()) }
+        var notePrintOptions by remember { mutableStateOf(NotePrintOptions2()) }
         val musicalScale = remember { MusicalScale2.createTestEdo12() }
 
         QuickSettingsBar(
@@ -170,7 +171,7 @@ private fun QuickSettingsBarPreview() {
             notePrintOptions = notePrintOptions,
             onSharpFlatClicked = {
                 notePrintOptions = notePrintOptions.copy(
-                    useEnharmonic = !notePrintOptions.useEnharmonic
+                    enharmonicVariant = if (notePrintOptions.enharmonicVariant == 0) 1 else 0,
                 )
             }
         )
@@ -181,7 +182,7 @@ private fun QuickSettingsBarPreview() {
 @Composable
 private fun QuickSettingsBar2Preview() {
     TunerTheme {
-        var notePrintOptions by remember { mutableStateOf(NotePrintOptions()) }
+        var notePrintOptions by remember { mutableStateOf(NotePrintOptions2()) }
         val musicalScale = remember {
             MusicalScale2.createTestEdo12()
                 .copy(_stretchTuning = predefinedStretchTunings()[1])
@@ -192,7 +193,7 @@ private fun QuickSettingsBar2Preview() {
             notePrintOptions = notePrintOptions,
             onSharpFlatClicked = {
                 notePrintOptions = notePrintOptions.copy(
-                    useEnharmonic = !notePrintOptions.useEnharmonic
+                    enharmonicVariant = if (notePrintOptions.enharmonicVariant == 0) 1 else 0,
                 )
             }
         )
