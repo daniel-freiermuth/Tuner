@@ -42,7 +42,7 @@
     <string name="b_note_name">B</string>
     <string name="bflat_note_name">-</string>
     <string name="notation">记谱法</string>
-    <string name="notation_standard">默认（A-B-C-…）</string>
+    <string name="notation_regional">默认（A-B-C-…）</string>
     <string name="notation_solfege">唱名法</string>
     <string name="notation_international">国际标准（A-B-C-…）</string>
     <string name="violin_gdae">小提琴</string>
