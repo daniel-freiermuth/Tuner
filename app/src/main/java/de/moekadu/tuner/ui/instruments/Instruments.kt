@@ -29,10 +29,6 @@ import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -200,7 +197,7 @@ fun Instruments(
                 }
             }) {
                 Icon(
-                    Icons.Default.KeyboardArrowUp,
+                    painter = painterResource(R.drawable.keyboard_arrow_up_24px),
                     contentDescription = "move up"
                 )
             }
@@ -216,7 +213,7 @@ fun Instruments(
                 }
             }) {
                 Icon(
-                    Icons.Default.KeyboardArrowDown,
+                    painter = painterResource(R.drawable.keyboard_arrow_down_24px),
                     contentDescription = "move down"
                 )
             }
@@ -231,7 +228,10 @@ fun Instruments(
             FloatingActionButton(
                 onClick = onCreateNewInstrumentClicked
             ) {
-                Icon(Icons.Default.Add, contentDescription = "create new instrument")
+                Icon(
+                    painter = painterResource(R.drawable.add_24px),
+                    contentDescription = "create new instrument"
+                )
             }
         },
         snackbarHost = {

@@ -21,9 +21,6 @@ package de.moekadu.tuner.ui.common
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,7 +33,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import de.moekadu.tuner.R
 import de.moekadu.tuner.ui.theme.TunerTheme
 
 @Composable
@@ -56,10 +55,17 @@ fun EditableListSection(
         },
         trailingContent = {
             IconButton(onClick = { onExpandClicked(!expanded) }) {
-                Icon(
-                    if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "collapse"
-                )
+                if (expanded) {
+                    Icon(
+                        painter = painterResource(R.drawable.keyboard_arrow_up_24px),
+                        contentDescription = "collapse"
+                    )
+                } else {
+                    Icon(
+                        painter = painterResource(R.drawable.keyboard_arrow_down_24px),
+                        contentDescription = "expand"
+                    )
+                }
             }
         },
         modifier = modifier.clickable {

@@ -13,10 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -36,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -160,7 +157,10 @@ private fun StretchTuningPortrait(
                 title = { Text(stringResource(id = R.string.stretch_tuning_editor)) },
                 navigationIcon = {
                     IconButton(onClick = { onAbortClicked() }) {
-                        Icon(Icons.Default.Close, "close")
+                        Icon(
+                            painter = painterResource(R.drawable.close_24px),
+                            "close"
+                        )
                     }
                 },
                 actions = {
@@ -179,7 +179,10 @@ private fun StretchTuningPortrait(
                     state.addLine()
                 }
             ) {
-                Icon(Icons.Default.Add, contentDescription = "add")
+                Icon(
+                    painter = painterResource(R.drawable.add_24px),
+                    contentDescription = "add"
+                )
             }
         }
     ){ paddingValues ->
@@ -207,7 +210,10 @@ private fun StretchTuningPortrait(
                     ),
                 trailingIcon = {
                     IconButton(onClick = { state.modifyName("") }) {
-                        Icon(Icons.Default.Clear, contentDescription = "clear text")
+                        Icon(
+                            painter = painterResource(R.drawable.close_24px),
+                            contentDescription = "clear text"
+                        )
                     }
                 },
                 singleLine = true,
@@ -225,7 +231,10 @@ private fun StretchTuningPortrait(
                     ),
                 trailingIcon = {
                     IconButton(onClick = { state.modifyDescription("") }) {
-                        Icon(Icons.Default.Clear, contentDescription = "clear text")
+                        Icon(
+                            painter = painterResource(R.drawable.close_24px),
+                            contentDescription = "clear text"
+                        )
                     }
                 },
                 singleLine = true,
@@ -300,7 +309,10 @@ private fun StretchTuningLandscape(
                 title = { Text(stringResource(id = R.string.stretch_tuning_editor)) },
                 navigationIcon = {
                     IconButton(onClick = { onAbortClicked() }) {
-                        Icon(Icons.Default.Close, "close")
+                        Icon(
+                            painter = painterResource(R.drawable.close_24px),
+                            "close"
+                        )
                     }
                 },
                 actions = {
@@ -319,7 +331,10 @@ private fun StretchTuningLandscape(
                     state.addLine()
                 }
             ) {
-                Icon(Icons.Default.Add, contentDescription = "add")
+                Icon(
+                    painter = painterResource(R.drawable.add_24px),
+                    contentDescription = "add"
+                )
             }
         }
     ) { paddingValues ->
@@ -351,7 +366,10 @@ private fun StretchTuningLandscape(
                         .padding(bottom = tunerPlotStyle.margin),
                     trailingIcon = {
                         IconButton(onClick = { state.modifyName("") }) {
-                            Icon(Icons.Default.Clear, contentDescription = "clear text")
+                            Icon(
+                                painter = painterResource(R.drawable.close_24px),
+                                contentDescription = "clear text"
+                            )
                         }
                     },
                     singleLine = true,
@@ -394,7 +412,10 @@ private fun StretchTuningLandscape(
                         .padding(bottom = 8.dp),
                     trailingIcon = {
                         IconButton(onClick = { state.modifyDescription("") }) {
-                            Icon(Icons.Default.Clear, contentDescription = "clear text")
+                            Icon(
+                                painter = painterResource(R.drawable.close_24px),
+                                contentDescription = "clear text"
+                            )
                         }
                     },
                     singleLine = true,

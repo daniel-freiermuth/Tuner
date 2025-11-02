@@ -19,11 +19,6 @@
 package de.moekadu.tuner.ui.common
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -36,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import de.moekadu.tuner.R
@@ -58,7 +54,10 @@ fun OverflowMenu(
         IconButton(onClick = {
             expanded = !expanded
         }) {
-            Icon(Icons.Default.MoreVert, contentDescription = "menu")
+            Icon(
+                painter = painterResource(R.drawable.more_vert_24px),
+                contentDescription = "menu"
+            )
         }
         DropdownMenu(
             expanded = expanded,
@@ -66,7 +65,12 @@ fun OverflowMenu(
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.delete_items)) },
-                leadingIcon = { Icon(Icons.Default.Delete, contentDescription = "delete") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.delete_24px),
+                        contentDescription = "delete"
+                    )
+                },
                 onClick = {
                     callbacks.onDeleteClicked()
                     expanded = false
@@ -75,7 +79,12 @@ fun OverflowMenu(
             HorizontalDivider()
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.share)) },
-                leadingIcon = { Icon(Icons.Default.Share, contentDescription = "share") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.share_24px),
+                        contentDescription = "share"
+                    )
+                },
                 onClick = {
                     callbacks.onShareClicked()
                     expanded = false
@@ -113,7 +122,7 @@ fun OverflowMenu(
                     text = { Text(stringResource(id = R.string.settings)) },
                     leadingIcon = {
                         Icon(
-                            Icons.Default.Settings,
+                            painter = painterResource(R.drawable.settings_24px),
                             contentDescription = "settings"
                         )
                     },

@@ -28,9 +28,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -51,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -121,7 +119,10 @@ fun InstrumentEditor(
                 title = { Text(stringResource(id = R.string.edit_instrument)) },
                 navigationIcon = {
                     IconButton(onClick = { onNavigateUpClicked() }) {
-                        Icon(Icons.Default.Close, "close")
+                        Icon(
+                            painter = painterResource(R.drawable.close_24px),
+                            "close"
+                        )
                     }
                 },
                 actions = {
@@ -206,7 +207,10 @@ fun InstrumentEditorPortrait(
             },
             trailingIcon = {
                 IconButton(onClick = { state.setName("") }) {
-                    Icon(Icons.Default.Clear, contentDescription = "clear")
+                    Icon(
+                        painter = painterResource(R.drawable.close_24px),
+                        contentDescription = "clear"
+                    )
                 }
             },
             placeholder = {
@@ -354,7 +358,10 @@ fun InstrumentEditorLandscape(
                 },
                 trailingIcon = {
                     IconButton(onClick = { state.setName("") }) {
-                        Icon(Icons.Default.Clear, contentDescription = "clear")
+                        Icon(
+                            painter = painterResource(R.drawable.close_24px),
+                            contentDescription = "clear"
+                        )
                     }
                 },
                 placeholder = {

@@ -30,9 +30,6 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,6 +47,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -99,7 +97,10 @@ fun TemperamentEditor(
                 title = { Text(stringResource(id = R.string.temperament_editor)) },
                 navigationIcon = {
                     IconButton(onClick = { onAbortClicked() }) {
-                        Icon(Icons.Default.Close, "close")
+                        Icon(
+                            painter = painterResource(R.drawable.close_24px),
+                            "close"
+                        )
                     }
                 },
                 actions = {
@@ -127,7 +128,10 @@ fun TemperamentEditor(
                         .padding(horizontal = 16.dp),
                     trailingIcon = {
                         IconButton(onClick = { state.modifyName("") }) {
-                            Icon(Icons.Default.Clear, contentDescription = "clear text")
+                            Icon(
+                                painter = painterResource(R.drawable.close_24px),
+                                contentDescription = "clear text"
+                            )
                         }
                     },
                     singleLine = true,
@@ -145,7 +149,10 @@ fun TemperamentEditor(
                         .padding(top = 8.dp),
                     trailingIcon = {
                         IconButton(onClick = { state.modifyAbbreviation("") }) {
-                            Icon(Icons.Default.Clear, contentDescription = "clear text")
+                            Icon(
+                                painter = painterResource(R.drawable.close_24px),
+                                contentDescription = "clear text"
+                            )
                         }
                     },
                     singleLine = true,
@@ -163,7 +170,10 @@ fun TemperamentEditor(
                         .padding(top = 8.dp),
                     trailingIcon = {
                         IconButton(onClick = { state.modifyDescription("") }) {
-                            Icon(Icons.Default.Clear, contentDescription = "clear text")
+                            Icon(
+                                painter = painterResource(R.drawable.close_24px),
+                                contentDescription = "clear text"
+                            )
                         }
                     },
                     singleLine = true,

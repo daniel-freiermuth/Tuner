@@ -18,10 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -46,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -221,7 +218,7 @@ fun StretchTuningOverview(
                 }
             }) {
                 Icon(
-                    Icons.Default.KeyboardArrowUp,
+                    painter = painterResource(R.drawable.keyboard_arrow_up_24px),
                     contentDescription = "move up"
                 )
             }
@@ -237,7 +234,7 @@ fun StretchTuningOverview(
                 }
             }) {
                 Icon(
-                    Icons.Default.KeyboardArrowDown,
+                    painter = painterResource(R.drawable.keyboard_arrow_down_24px),
                     contentDescription = "move down"
                 )
             }
@@ -281,7 +278,10 @@ fun StretchTuningOverview(
                     containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                     elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = "new stretch tuning")
+                    Icon(
+                        painter = painterResource(R.drawable.add_24px),
+                        contentDescription = "new stretch tuning"
+                    )
                 }
             }
         },

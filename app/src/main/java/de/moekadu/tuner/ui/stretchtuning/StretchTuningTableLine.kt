@@ -10,12 +10,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -35,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextMeasurer
@@ -86,7 +81,10 @@ private fun OverflowMenu(
         IconButton(onClick = {
             expanded = !expanded
         }) {
-            Icon(Icons.Default.MoreVert, contentDescription = "menu")
+            Icon(
+                painter = painterResource(R.drawable.more_vert_24px),
+                contentDescription = "menu"
+            )
         }
         DropdownMenu(
             expanded = expanded,
@@ -94,7 +92,12 @@ private fun OverflowMenu(
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.edit)) },
-                leadingIcon = { Icon(Icons.Default.Edit, contentDescription = "edit") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.edit_24px),
+                        contentDescription = "edit"
+                    )
+                },
                 onClick = {
                     onEditClicked()
                     expanded = false
@@ -103,7 +106,12 @@ private fun OverflowMenu(
             HorizontalDivider()
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.delete)) },
-                leadingIcon = { Icon(Icons.Default.Delete, contentDescription = "delete") },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.delete_24px),
+                        contentDescription = "delete"
+                    )
+                },
                 onClick = {
                     onDeleteClicked()
                     expanded = false

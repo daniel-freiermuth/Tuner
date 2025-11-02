@@ -17,10 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
@@ -44,6 +40,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -228,7 +225,7 @@ fun TemperamentsDialog2(
                 }
             }) {
                 Icon(
-                    Icons.Default.KeyboardArrowUp,
+                    painter = painterResource(R.drawable.keyboard_arrow_up_24px),
                     contentDescription = "move up"
                 )
             }
@@ -244,7 +241,7 @@ fun TemperamentsDialog2(
                 }
             }) {
                 Icon(
-                    Icons.Default.KeyboardArrowDown,
+                    painter = painterResource(R.drawable.keyboard_arrow_down_24px),
                     contentDescription = "move down"
                 )
             }
@@ -288,7 +285,10 @@ fun TemperamentsDialog2(
                     containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                     elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
                 ) {
-                    Icon(Icons.Filled.Add, contentDescription = "new temperament")
+                    Icon(
+                        painter = painterResource(R.drawable.add_24px),
+                        contentDescription = "new temperament"
+                    )
                 }
             }
         },

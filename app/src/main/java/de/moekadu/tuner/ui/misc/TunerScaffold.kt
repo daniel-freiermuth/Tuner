@@ -22,12 +22,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -42,6 +36,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import de.moekadu.tuner.R
@@ -99,12 +94,18 @@ fun TunerScaffold(
                     when (state) {
                         NavigationIconState.Clear -> {
                             IconButton(onClick = onActionModeFinishedClicked) {
-                                Icon(Icons.Default.Close, "close")
+                                Icon(
+                                    painter = painterResource(R.drawable.close_24px),
+                                    "close"
+                                )
                             }
                         }
                         NavigationIconState.Arrow -> {
                             IconButton(onClick = onNavigateUpClicked) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
+                                Icon(
+                                    painter = painterResource(R.drawable.arrow_back_24px),
+                                    "back"
+                                )
                             }
 
                         }
@@ -117,7 +118,10 @@ fun TunerScaffold(
                         defaultModeTools()
                         if (showPreferenceButton) {
                             IconButton(onClick = onPreferenceButtonClicked) {
-                                Icon(Icons.Filled.Settings, "settings")
+                                Icon(
+                                    painter = painterResource(R.drawable.settings_24px),
+                                    "settings"
+                                )
                             }
                         }
                     }
@@ -182,12 +186,18 @@ fun TunerScaffoldWithoutBottomBar(
                     when (state) {
                         NavigationIconState.Clear -> {
                             IconButton(onClick = onActionModeFinishedClicked) {
-                                Icon(Icons.Default.Close, "close")
+                                Icon(
+                                    painter = painterResource(R.drawable.close_24px),
+                                    "close"
+                                )
                             }
                         }
                         NavigationIconState.Arrow -> {
                             IconButton(onClick = onNavigateUpClicked) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
+                                Icon(
+                                    painter = painterResource(R.drawable.arrow_back_24px),
+                                    "back"
+                                )
                             }
 
                         }
@@ -200,7 +210,10 @@ fun TunerScaffoldWithoutBottomBar(
                         defaultModeTools()
                         if (showPreferenceButton) {
                             IconButton(onClick = onPreferenceButtonClicked) {
-                                Icon(Icons.Filled.Settings, "settings")
+                                Icon(
+                                    painter = painterResource(R.drawable.settings_24px),
+                                    "settings"
+                                )
                             }
                         }
                     }
@@ -227,10 +240,16 @@ private fun TunerScaffoldPreview() {
             actionModeActive = actionMode,
             actionModeTools = {
                 IconButton(onClick = { }) {
-                    Icon(Icons.Default.Edit, contentDescription = "edit")
+                    Icon(
+                        painter = painterResource(R.drawable.edit_24px),
+                        contentDescription = "edit"
+                    )
                 }
                 IconButton(onClick = { }) {
-                    Icon(Icons.Default.Build, contentDescription = "build")
+                    Icon(
+                        painter = painterResource(R.drawable.add_24px),
+                        contentDescription = "build"
+                    )
                 }
             },
             actionModeTitle = "Edit",

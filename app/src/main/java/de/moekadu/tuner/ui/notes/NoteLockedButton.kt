@@ -23,9 +23,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,10 +33,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.times
+import de.moekadu.tuner.R
 import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
@@ -77,7 +76,7 @@ fun NoteLockedButton(
             modifier = Modifier.weight(1f)
         ) {
             Icon(
-                Icons.Filled.Lock,
+                painter = painterResource(R.drawable.lock_24px),
                 contentDescription = "locked",
                 modifier = Modifier.size(iconSize)
             )
@@ -86,7 +85,10 @@ fun NoteLockedButton(
                 textAlign = TextAlign.Center
             )
         }
-        Icon(Icons.Default.Clear, contentDescription = "clear")
+        Icon(
+            painter = painterResource(R.drawable.close_24px),
+            contentDescription = "clear"
+        )
     }
 }
 

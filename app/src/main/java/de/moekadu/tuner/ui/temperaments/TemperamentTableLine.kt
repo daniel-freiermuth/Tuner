@@ -28,8 +28,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -51,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -464,7 +463,10 @@ fun TemperamentTableLine(
                         onClick = { onNoteEditorCloseClicked() },
                         modifier = Modifier.fillMaxWidth()
                         ) {
-                        Icon(Icons.Default.KeyboardArrowUp, contentDescription = "close")
+                        Icon(
+                            painter = painterResource(R.drawable.keyboard_arrow_up_24px),
+                            contentDescription = "close"
+                        )
                     }
                 }
             }

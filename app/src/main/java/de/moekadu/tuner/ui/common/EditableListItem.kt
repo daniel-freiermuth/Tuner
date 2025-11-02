@@ -29,12 +29,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -54,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -114,7 +109,7 @@ fun EditableListItem(
                 CompositionLocalProvider(LocalContentColor provides variantColor) {
                     if (isSelected) {
                         Icon(
-                            Icons.Default.CheckCircle,
+                            painter = painterResource(R.drawable.check_circle_24px),
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxSize()
@@ -150,7 +145,7 @@ fun EditableListItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
                     ) {
                         Icon(
-                            ImageVector.vectorResource(id = R.drawable.ic_copy),
+                            painter = painterResource(R.drawable.ic_copy),
                             contentDescription = "copy",
                             tint = variantColor
                         )
@@ -161,7 +156,7 @@ fun EditableListItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
                     ) {
                         Icon(
-                            Icons.Default.Info,
+                            painter = painterResource(R.drawable.info_24px),
                             contentDescription = "details",
                             tint = variantColor
                         )
@@ -173,7 +168,7 @@ fun EditableListItem(
                         modifier = Modifier.padding(horizontal = 16.dp),
                     ) {
                         Icon(
-                            Icons.Default.MoreVert,
+                            painter = painterResource(R.drawable.more_vert_24px),
                             contentDescription = null,
                             tint = variantColor
                         )
@@ -187,7 +182,7 @@ fun EditableListItem(
                                 text = { Text(stringResource(id = R.string.details)) },
                                 leadingIcon = {
                                     Icon(
-                                        Icons.Default.Info,
+                                        painter = painterResource(R.drawable.info_24px),
                                         contentDescription = "details"
                                     )
                                 },
@@ -203,7 +198,7 @@ fun EditableListItem(
                                 text = { Text(stringResource(id = R.string.edit)) },
                                 leadingIcon = {
                                     Icon(
-                                        Icons.Default.Edit,
+                                        painter = painterResource(R.drawable.edit_24px),
                                         contentDescription = "edit"
                                     )
                                 },
@@ -234,7 +229,7 @@ fun EditableListItem(
                                 text = { Text(stringResource(id = R.string.delete)) },
                                 leadingIcon = {
                                     Icon(
-                                        Icons.Default.Delete,
+                                        painter = painterResource(R.drawable.delete_24px),
                                         contentDescription = "delete"
                                     )
                                 },
