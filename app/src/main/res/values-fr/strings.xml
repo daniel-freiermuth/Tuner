@@ -202,9 +202,9 @@
     <string name="pythagorean_tuning_abbr">pythagoricien</string>
     <string name="werckmeister_iv_abbr">Werckmeister IV</string>
     <string name="notation">Notation</string>
-    <string name="notation_regional">Défaut (A-B-C-…)</string>
+    <string name="notation_regional">Défaut</string>
     <string name="notation_solfege">Solfège</string>
-    <string name="notation_international">International (A-B-C-…)</string>
+    <string name="notation_international">International</string>
     <string name="notation_hindustani">hindoustanie</string>
     <string name="helmholtz_notation">Helmholtz (C, … c\')</string>
     <string name="extended_quarter_comma_mean_tone">Mésotonique ¼ comma étendu</string>
