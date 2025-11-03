@@ -223,7 +223,7 @@
     <string name="notation">Schreibweise</string>
     <string name="notation_regional">Standard (A-H-C-…)</string>
     <string name="notation_solfege">Solfège</string>
-    <string name="notation_international">International (A-B-C-…)</string>
+    <string name="notation_international">International</string>
     <string name="notation_carnatic">Karnatisch</string>
     <string name="notation_hindustani">Hindustanisch</string>
     <string name="notation_byzantine">Byzantinisch</string>
@@ -286,4 +286,8 @@
     <string name="cent_2f">%+.2f ¢</string>
     <string name="hertz_2f">%.2f Hz</string>
     <string name="stretched_frequencies_must_be_strictly_increasing">Gespreizte Frequenzen müssen monoton anwachsen (voriger Wert: %1$.2f Hz, dieser Wert: %2$.2f Hz).</string>
+    <string name="notation_international_description">C-D-E-…-B</string>
+    <string name="notation_regional_description">C-D-E-…-B</string>
+    <string name="octave_notation_scientific">Wissenschaftlich</string>
+    <string name="octave_notation_helmholtz">Helmholtz</string>
 </resources>
