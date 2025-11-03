@@ -221,7 +221,7 @@
     <string name="a_solfege">La</string>
     <string name="b_solfege">Si</string>
     <string name="notation">Schreibweise</string>
-    <string name="notation_regional">Standard (A-H-C-…)</string>
+    <string name="notation_regional">Regional</string>
     <string name="notation_solfege">Solfège</string>
     <string name="notation_international">International</string>
     <string name="notation_carnatic">Karnatisch</string>
@@ -287,7 +287,17 @@
     <string name="hertz_2f">%.2f Hz</string>
     <string name="stretched_frequencies_must_be_strictly_increasing">Gespreizte Frequenzen müssen monoton anwachsen (voriger Wert: %1$.2f Hz, dieser Wert: %2$.2f Hz).</string>
     <string name="notation_international_description">C-D-E-…-B</string>
-    <string name="notation_regional_description">C-D-E-…-B</string>
+    <string name="notation_regional_description">C-D-E-…-H</string>
     <string name="octave_notation_scientific">Wissenschaftlich</string>
     <string name="octave_notation_helmholtz">Helmholtz</string>
+    <string name="notation_solfege_description">Do-Re-Mi-…-Si</string>
+    <string name="notation_carnatic_description">Sa-Ri₁-Ri₂-…-Ni₂</string>
+    <string name="notation_hindustani_description">Sa-Re₁-Re₂-…-Ni₂</string>
+    <string name="notation_byzantine_description">Νη-Πα-Βου-…-Ζω</string>
+    <string name="notation_vietnamese_description">Hò-Xư-Y-…-Phan</string>
+    <string name="octave_notation_scientific_description">… C¹ C² C³ C⁴ …</string>
+    <string name="octave_notation_helmholtz_description">… C, C c c\' …</string>
+    <string name="octave_notation_helmholtz_numbered">Helmholtz nummeriert</string>
+    <string name="octave_notation_helmholtz_numbered_description">… C₁ C c c¹ …</string>
+    <string name="octave_representation">Oktavdarstellung</string>
 </resources>
