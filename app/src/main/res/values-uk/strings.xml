@@ -94,7 +94,7 @@
     <string name="append_current_list">Додати в кінець списку</string>
     <string name="b_note_name">H</string>
     <string name="bflat_note_name">B</string>
-    <string name="notation_regional">Стандартна</string>
+    <string name="notation_regional">Регіональна</string>
     <string name="predefined_items">Попередньо налаштовані</string>
     <string name="pick_icon">Вибрати значок</string>
     <plurals name="load_temperaments">
