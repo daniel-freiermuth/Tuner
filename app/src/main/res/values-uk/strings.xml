@@ -229,7 +229,7 @@
     <string name="notation_regional_description">C-D-E-…-H</string>
     <string name="notation_solfege_description">до-ре-мі-…-сі</string>
     <string name="notation_international_description">C-D-E-…-B</string>
-    <string name="octave_notation_scientific">Наукова</string>
+    <string name="octave_notation_scientific">Наукове</string>
     <string name="octave_notation_helmholtz">Гельмгольц</string>
     <string name="octave_notation_helmholtz_description">… C, C c c\' …</string>
     <string name="octave_notation_helmholtz_numbered">Гельмгольц із цифрами</string>
@@ -246,4 +246,5 @@
     <string name="g_note_vietnamese">Xê</string>
     <string name="a_note_vietnamese">Công</string>
     <string name="b_note_vietnamese">Phan</string>
+    <string name="octave_representation">Позначення октав</string>
 </resources>
