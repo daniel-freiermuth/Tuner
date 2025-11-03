@@ -74,9 +74,9 @@
     <string name="a_note_international" translatable="false">A</string>
     <string name="b_note_international" translatable="false">B</string>
     <string name="notation">Jelölés</string>
-    <string name="notation_regional">Alapértelmezett (A-H-C-…)</string>
+    <string name="notation_regional">Alapértelmezett</string>
     <string name="notation_solfege">Szolfézs</string>
-    <string name="notation_international">Nemzetközi (A-B-C-…)</string>
+    <string name="notation_international">Nemzetközi</string>
     <string name="violin_gdae">Hegedű</string>
     <string name="abort">Megszakítás</string>
     <string name="instrument_name">Hangszer neve</string>
