@@ -81,9 +81,9 @@
     <string name="a_note_international" translatable="false">A</string>
     <string name="b_note_international" translatable="false">B</string>
     <string name="notation">Notacja</string>
-    <string name="notation_regional">Domyślna (A-B-C-…)</string>
+    <string name="notation_regional">Domyślna</string>
     <string name="notation_solfege">Solfeż</string>
-    <string name="notation_international">Międzynarodowa (A-B-C-…)</string>
+    <string name="notation_international">Międzynarodowa</string>
     <string name="violin_gdae">Skrzypce</string>
     <string name="abort">Anuluj</string>
     <string name="instrument_name">Nazwa instrumentu</string>
