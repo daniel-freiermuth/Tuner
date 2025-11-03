@@ -50,9 +50,9 @@
     <string name="b_note_name">H</string>
     <string name="bflat_note_name">B</string>
     <string name="notation">Zápis</string>
-    <string name="notation_regional" tools:ignore="TypographyEllipsis">Výchozí (A-B-C-...)</string>
+    <string name="notation_regional" tools:ignore="TypographyEllipsis">Výchozí</string>
     <string name="notation_solfege">Solfège</string>
-    <string name="notation_international" tools:ignore="TypographyEllipsis">Mezinárodní (A-B-C-...)</string>
+    <string name="notation_international" tools:ignore="TypographyEllipsis">Mezinárodní</string>
     <string name="violin_gdae">Housle</string>
     <string name="abort">Zrušit</string>
     <string name="instrument_name">Název nástroje</string>
