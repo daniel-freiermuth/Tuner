@@ -503,7 +503,7 @@ fun Strings(
                 //.border(outline.lineWidth, outlineColor, outlineShape)
                 .clip(outlineShape)
         ) {
-            val numLabelsPerStair = (maxWidth.value / (labelSize.width + 16.dp).value).roundToInt()
+            val numLabelsPerStair = (maxWidth.value / (labelSize.width + 16.dp).value).roundToInt().coerceAtLeast(1)
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(space),
                 modifier = Modifier
