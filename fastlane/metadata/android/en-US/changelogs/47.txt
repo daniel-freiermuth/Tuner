@@ -1,3 +1,4 @@
 v9.0.0:
-- Stretch tuning support based on existing tables.
-- Fix crash when loading certain invalid instrument input files.
+- Initial support of stretch tuning (predefined tables required).
+- Option for Helmholtz numbered octave representation.
+
