@@ -1,6 +1,6 @@
 v2.0.0:
-- Einfacher Modus.
-- UI Verbesserungen.
+- Einfacher Modus
+- UI Verbesserungen
 
 v2.0.1:
 - Fix: Konfigurationsänderungen (z.B. Drehung) führten dazu, dass das UI doppelt geladen wurde
