@@ -1,3 +1,3 @@
 v9.0.0:
-- Initiale Untersützung von Spreizstimmungen (vordefinierte Tabellen notwendig).
+- Initiale Unterstützung von Spreizstimmungen (vordefinierte Tabellen notwendig).
 - Option für nummerierte Helmholtz-Oktavdarstellung.
