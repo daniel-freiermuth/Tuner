@@ -61,7 +61,7 @@
     <string name="pick_icon">选取图标</string>
     <string name="copy_extension">%s（副本）</string>
     <string name="failed_to_archive_items">无法将乐器写入文件</string>
-    <string name="database_empty">没有可以保存的乐器</string>
+    <string name="database_empty">没有可以保存的乐器。</string>
     <string name="replace_current_list">替换当前列表</string>
     <string name="prepend_current_list">在当前列表之前添加</string>
     <string name="append_current_list">在当前列表之后添加</string>
@@ -95,13 +95,26 @@
     <string name="no_capture_duration">禁用捕捉</string>
     <string name="extended_quarter_comma_mean_tone_abbr">¼ 半音音程</string>
     <string name="sensitivity">灵敏度</string>
-    <string name="incorrect_temperament">不兼容的音律</string>
+    <string name="incorrect_temperament">不兼容的音律！</string>
     <string name="windowing_function">窗函数</string>
     <string name="window_hamming">汉明窗</string>
     <string name="window_hann">汉恩窗</string>
-    <string name="no_window">不使用</string>
+    <string name="no_window">不使用窗函数</string>
     <string name="overlap">窗重叠</string>
     <string name="window_size">窗大小</string>
-    <string name="new_temperament_requires_adapting_reference_note">新的音调需要调整基准音符</string>
+    <string name="new_temperament_requires_adapting_reference_note">新的音调需要调整基准音符！</string>
     <string name="helmholtz_notation">Helmholtz 记谱法（C, … c’）</string>
+    <string name="stretch_tuning">拉伸调音</string>
+    <string name="no_stretch_tuning">不使用拉伸调音</string>
+    <string name="stretch_tuning_off">拉伸调音已关闭。</string>
+    <string name="stretch_tuning_editor">编辑拉伸调音</string>
+    <string name="stretch_tuning_info">拉伸调音信息</string>
+    <string name="stretched_frequency">拉伸的频率</string>
+    <string name="stretched_frequencies_must_be_strictly_increasing">拉伸频率必须严格递增（上一个值：%1$.2f Hz，当前值：%2$.2f Hz）。</string>
+    <plurals name="load_temperaments">
+        <item quantity="other">正在加载 %d 个律制</item>
+    </plurals>
+    <plurals name="sharing_num_items">
+        <item quantity="other">正在分享 %d 个项目</item>
+    </plurals>
 </resources>
