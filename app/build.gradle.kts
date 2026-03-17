@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
@@ -21,8 +20,12 @@ android {
         testInstrumentationRunner =  "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
-    buildTypes {
-        release {
+
+    androidResources {
+        generateLocaleConfig = true
+    }
+
+    buildTypes { release {
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(
@@ -35,6 +38,7 @@ android {
             }
         }
     }
+
     buildFeatures {
         buildConfig = true
         compose = true  // seems to be needed to have compose preview
@@ -44,8 +48,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+}
+
+kotlin {
+    compilerOptions {
+        languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_3
     }
 }
 
@@ -63,7 +70,7 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.androidx.runtime.tracing)
     implementation(libs.hilt.android)
-    implementation (libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.accompanist.permissions)

@@ -26,7 +26,11 @@ import kotlinx.serialization.Serializable
  *
  * If sometimes predefined values are needed, which are based on resource id is used and sometimes
  * user defined values are used which are defined by a string, this class can simplify the usage.
- *
+ * @warning Serialization of resource ids is not a good idea, since these values are not stable
+ *   over app versions. So, the resId should not be used, when restored from a serialized value,
+ *   which has to persist over app versions. Temporary serialization (within a temporary workflow)
+ *   works fine.
+
  * @param string String or null if resId is not null.
  * @param resId String resource id or null if string is not null.
  */

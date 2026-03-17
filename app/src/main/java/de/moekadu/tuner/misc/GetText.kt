@@ -28,6 +28,9 @@ sealed interface GetText {
     fun value(context: Context?): String
 }
 
+/** Class to get string value from explicit string.
+ * @param string String contained in this class.
+ */
 @Serializable
 data class GetTextFromString(
     val string: String
@@ -35,6 +38,13 @@ data class GetTextFromString(
     override fun value(context: Context?) = string
 }
 
+/** Class to get string value from a string resource.
+ * @warning It makes not really sense to serialize this class, since string ids are not really
+ *   stable. Within this app this should not be an issue, since the serialization of this
+ *   class is not used (but only GetTextFromString is used for serialization). But the design
+ *   could be better ... .
+ * @param id String resource id.
+ */
 @Serializable
 data class GetTextFromResId(
     @StringRes val id: Int
@@ -42,6 +52,14 @@ data class GetTextFromResId(
     override fun value(context: Context?) = context?.getString(id) ?: ""
 }
 
+/** Class to get string value from a string resource, with an int argument.
+ * @warning It makes not really sense to serialize this class, since string ids are not really
+ *   stable. Within this app this should not be an issue, since the serialization of this
+ *   class is not used (but only GetTextFromString is used for serialization). But the design
+ *   could be better ... .
+ * @param id String resource id.
+ * @param arg Int argument.
+ */
 @Serializable
 data class GetTextFromResIdWithIntArg(
     @StringRes val id: Int,
