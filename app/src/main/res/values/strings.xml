@@ -349,4 +349,13 @@
     <string name="octave_notation_helmholtz_numbered">Helmholtz numbered</string>
     <string name="octave_notation_helmholtz_numbered_description">… C₁ C c c¹ …</string>
     <string name="octave_representation">Octave representation</string>
+    <string name="language">Language</string>
+    <string name="english" translatable="false">English</string>
+    <string name="german" translatable="false">Deutsch</string>
+    <string name="system_default">System default</string>
+    <string name="french" translatable="false">Français</string>
+    <string name="hungarian" translatable="false">Magyar</string>
+    <string name="polish" translatable="false">Polski</string>
+    <string name="ukrainian" translatable="false">українська</string>
+    <string name="simplified_chinese" translatable="false">简体中文</string>
 </resources>

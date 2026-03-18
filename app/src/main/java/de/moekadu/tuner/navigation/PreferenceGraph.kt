@@ -30,6 +30,7 @@ import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.ui.preferences.AboutDialog
 import de.moekadu.tuner.ui.preferences.AppearanceDialog
+import de.moekadu.tuner.ui.preferences.LanguageDialog
 import de.moekadu.tuner.ui.preferences.NotationDialog
 import de.moekadu.tuner.ui.preferences.ResetDialog
 import de.moekadu.tuner.ui.preferences.WindowingFunctionDialog
@@ -52,6 +53,7 @@ fun NavGraphBuilder.preferenceGraph(
                 viewModel = viewModel,
                 onNavigateUpClicked = onNavigateUpClicked,
                 onAppearanceClicked = { controller.navigate(AppearanceDialogRoute) },
+                onLanguageClicked = { controller.navigate(LanguageDialogRoute) },
                 onReferenceFrequencyClicked = {
                     controller.navigate(
                         ReferenceFrequencyDialogRoute(
@@ -75,6 +77,11 @@ fun NavGraphBuilder.preferenceGraph(
                 appearance = appearance,
                 onAppearanceChanged = { preferences.writeAppearance(it) },
                 onDismiss = { controller.navigateUp() }
+            )
+        }
+        dialog<LanguageDialogRoute> {
+            LanguageDialog(
+                onDismiss = { controller.navigateUp()}
             )
         }
         dialog<NotationDialogRoute> {
@@ -126,6 +133,8 @@ data object PreferencesGraphRoute
 data object PreferencesRoute
 @Serializable
 data object AppearanceDialogRoute
+@Serializable
+data object LanguageDialogRoute
 @Serializable
 data object NotationDialogRoute
 @Serializable

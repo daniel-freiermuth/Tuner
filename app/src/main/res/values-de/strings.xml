@@ -300,4 +300,6 @@
     <string name="octave_notation_helmholtz_numbered">Helmholtz nummeriert</string>
     <string name="octave_notation_helmholtz_numbered_description">… C₁ C c c¹ …</string>
     <string name="octave_representation">Oktavdarstellung</string>
+    <string name="language">Sprache</string>
+    <string name="system_default">Systemstandard</string>
 </resources>

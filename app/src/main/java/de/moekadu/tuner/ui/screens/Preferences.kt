@@ -19,6 +19,7 @@
 package de.moekadu.tuner.ui.screens
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +51,7 @@ import de.moekadu.tuner.viewmodels.PreferencesViewModel
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import androidx.compose.ui.platform.LocalResources
+import de.moekadu.tuner.ui.preferences.LanguageSelections
 
 private fun appearanceSummary(mode: NightMode, context: Context) = when (mode) {
     NightMode.Auto -> context.getString(R.string.system_appearance)
@@ -64,6 +66,7 @@ fun Preferences(
     onNavigateUpClicked: () -> Unit = {},
     onAppearanceClicked: () -> Unit = {},
     onReferenceFrequencyClicked: () -> Unit = {},
+    onLanguageClicked: () -> Unit = {},
     onNotationClicked: () -> Unit = {},
     onTemperamentClicked: () -> Unit = {},
     onWindowingFunctionClicked: () -> Unit = {},
@@ -94,6 +97,21 @@ fun Preferences(
                     title = stringResource(id = R.string.basic)
                 )
             }
+
+            item {
+                val selectedLocale = remember {
+                    LanguageSelections.entries.firstOrNull {
+                        it.tag == AppCompatDelegate.getApplicationLocales()[0]?.language
+                    } ?: LanguageSelections.SystemDefault
+                }
+                SimplePreference(
+                    name = stringResource(id = R.string.language),
+                    supporting = { Text(stringResource(selectedLocale.resId))},
+                    iconId = R.drawable.language_24px,
+                    modifier = Modifier.clickable { onLanguageClicked() }
+                )
+            }
+
             item {
                 val appearance by pref.appearance.collectAsStateWithLifecycle()
                 SimplePreference(
@@ -112,13 +130,14 @@ fun Preferences(
                     iconId = R.drawable.ic_screen_on
                 )
             }
+
             item {
 //            val referenceNote by pref.referenceFrequencyAsString.collectAsStateWithLifecycle()
                 SimplePreference(
                     name = stringResource(id = R.string.reference_frequency),
                     supporting = {
                         val textStyle = LocalTextStyle.current
-                        val resources = LocalContext.current.resources
+                        val resources = LocalResources.current
                         val frequencyAsString =
                             decimalFormat.format(musicalScale.referenceFrequency)
                         val summary =
