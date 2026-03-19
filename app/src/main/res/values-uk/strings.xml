@@ -247,4 +247,21 @@
     <string name="a_note_vietnamese">Công</string>
     <string name="b_note_vietnamese">Phan</string>
     <string name="octave_representation">Позначення октав</string>
+    <string name="language">Мова</string>
+    <string name="system_default">Як у системі</string>
+    <string name="stretch_tuning">Розтягнений стрій</string>
+    <plurals name="load_stretch_tunings">
+        <item quantity="one">Завантаження %d розтягненого строю</item>
+        <item quantity="few">Завантаження %d розтягнених строїв</item>
+        <item quantity="many">Завантаження %d розтягнених строїв</item>
+        <item quantity="other">Завантаження %d розтягнених строїв</item>
+    </plurals>
+    <string name="stretch_tuning_editor">Редагувати розтягнений стрій</string>
+    <string name="stretch_tuning_info">Про розтягнений стрій</string>
+    <string name="stretch">Розтягування</string>
+    <string name="no_stretch_tuning">Без розтягування</string>
+    <string name="stretch_tuning_off">Розтягування вимкнено.</string>
+    <string name="stretched_frequencies_must_be_strictly_increasing">Розтягнуті частоти повинні строго зростати (попереднє значення: %1$.2f Гц, поточне: %2$.2f Гц).</string>
+    <string name="stretched_frequency">Розтягнута частота</string>
+    <string name="pure_tuning_desc">Чистий стрій границі 5, асиметрична гама</string>
 </resources>
