@@ -28,6 +28,7 @@ enum class LanguageSelections(val tag: String?, @StringRes val resId: Int) {
     German("de", R.string.german),
     Hungarian("hu", R.string.hungarian),
     Polish("pl", R.string.polish),
+    Romanian("ro", R.string.romanian),
     Ukrainian("uk", R.string.ukrainian),
     SimplifiedChinese("zh", R.string.simplified_chinese)
 }

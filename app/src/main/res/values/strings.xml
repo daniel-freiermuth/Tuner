@@ -358,4 +358,5 @@
     <string name="polish" translatable="false">Polski</string>
     <string name="ukrainian" translatable="false">українська</string>
     <string name="simplified_chinese" translatable="false">简体中文</string>
+    <string name="romanian" translatable="false">Română</string>
 </resources>
