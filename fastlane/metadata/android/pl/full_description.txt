@@ -1,4 +1,4 @@
-    Aplikacja Tuner do strojenia instrumentów muzycznych z takimi funkcjami jak:
+Aplikacja Tuner do strojenia instrumentów muzycznych z takimi funkcjami jak:
     * Wykrywanie wysokości dźwięku na podstawie autokorelacji i widma FFT.
     * Poprawa dokładności poprzez ocenę informacji o fazie widma i dopasowanie wielomianowe.
     * Wyświetlanie zmian wysokości dźwięku w czasie.
