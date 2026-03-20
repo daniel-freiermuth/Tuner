@@ -356,7 +356,7 @@
     <string name="french" translatable="false">Français</string>
     <string name="hungarian" translatable="false">Magyar</string>
     <string name="polish" translatable="false">Polski</string>
-    <string name="ukrainian" translatable="false">українська</string>
+    <string name="ukrainian" translatable="false">Українська</string>
     <string name="simplified_chinese" translatable="false">简体中文</string>
     <string name="romanian" translatable="false">Română</string>
 </resources>
