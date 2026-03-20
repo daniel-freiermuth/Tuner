@@ -1,4 +1,4 @@
-    Hangszerhangoló alkalmazás a következő funckiókkal:
+Hangszerhangoló alkalmazás a következő funckiókkal:
     * Hangmagasság észlelése autokorreláció és FFT spektrum alapján.
     * Pontosságjavítás a spektrum fázisinformációinak és a polinomiális illesztése alapján.
     * Hangmagasság időbeli változásának megjelenítése.
