@@ -1,4 +1,4 @@
-    Základní ladička s funkcemi jako:
+Základní ladička s funkcemi jako:
     * Detekce výšky tónu na základě autokorelace a spektra FFT.
     * Zlepšení přesnosti pomocí vyhodnocení informace o fázi spektra a polynomického přizpůsobení.
     * Ukazuje, jak se mění výška tónu v čase.
