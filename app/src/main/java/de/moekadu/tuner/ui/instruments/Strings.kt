@@ -71,7 +71,6 @@ import androidx.compose.ui.unit.takeOrElse
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.rememberMaxNoteSize
 import de.moekadu.tuner.ui.plot.PlotWindowOutline
@@ -147,7 +146,9 @@ private fun findIndexOfClosestScrollableHighlightedString(
                 .minByOrNull {
                     val noteIndex = it - musicalScale.noteIndexBegin
                     (noteIndex - centerItemIndex).absoluteValue
-                }?: -1
+                }
+                ?.let { it - musicalScale.noteIndexBegin }
+                ?: -1
         } else {
             -1
         }
