@@ -6,7 +6,7 @@ kotlin = "2.3.20"
 
 activityKtx = "1.13.0"
 appcompat = "1.7.1"
-composeBom = "2026.03.00"
+composeBom = "2026.03.01"
 coreKtx = "1.18.0"
 coreTesting = "1.1.1"
 datastore = "1.2.1"
@@ -22,7 +22,7 @@ lifecycle = "2.10.0"
 material = "1.13.0"
 navigationCompose = "2.9.7"
 preferenceKtx = "1.2.1"
-runtimeTracing = "1.10.5"
+runtimeTracing = "1.10.6"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
