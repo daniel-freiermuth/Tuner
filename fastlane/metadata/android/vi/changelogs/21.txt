@@ -1,0 +1,10 @@
+v.5.0.1:
+- Khắc phục lỗi ghi đè tệp cảnh
+- Cập nhật bản dịch tiếng Pháp (cảm ơn Glandos)
+
+v.5.1.0:
+- Tối ưu hoá lại biểu tượng
+- Tối ưu hoá cách đặt tên nốt cho các hệ thống chia quãng tám không phải 12 nốt
+- Bổ sung bản dịch tiếng Séc (cảm ơn rockconqueror)
+- Thêm tuỳ chọn đặc biệt để ghi âm và lưu dưới định dạng WAV
+- Nâng cấp SDK mục tiêu lên 33

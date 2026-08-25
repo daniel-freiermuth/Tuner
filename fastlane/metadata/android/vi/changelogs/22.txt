@@ -1,0 +1,10 @@
+v5.1.0:
+- Cải tiến lại biểu tượng
+- Cải tiến cách đặt tên nốt cho các hệ thống chia quãng tám không phải loại 12 nốt
+- Bổ sung bản dịch tiếng Séc (cảm ơn rockconqueror)
+- Thêm tùy chọn đặc biệt để thu âm và lưu dưới định dạng WAV
+- Nâng cấp SDK mục tiêu lên mức 33
+
+v5.2.0:
+- Sửa lỗi: Đóng ứng dụng khi nhấn nút quay lại
+- Thêm thanh công cụ phía dưới chứa các cài đặt nhanh

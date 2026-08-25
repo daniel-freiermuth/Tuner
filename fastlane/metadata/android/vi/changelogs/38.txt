@@ -1,0 +1,8 @@
+v6.8.2:
+- Các sửa lỗi nội bộ nhỏ.
+
+v6.8.1:
+- Thay đổi cài đặt âm thanh nội bộ để hỗ trợ nhiều thiết bị hơn.
+
+v6.8.0:
+- Biểu tượng cho Tar, Setar và Kamancheh (cảm ơn ahangarha)

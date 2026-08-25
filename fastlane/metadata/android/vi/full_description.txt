@@ -1,0 +1,9 @@
+Ứng dụng lên dây nhạc cụ với các tính năng như:
+    * Phát hiện cao độ dựa trên phương pháp tự tương quan và phổ FFT.
+    * Cải thiện độ chính xác bằng cách đánh giá thông tin pha của phổ và kỹ thuật khớp đa thức.
+    * Hiển thị sự thay đổi cao độ theo thời gian.
+    * Cơ sở dữ liệu nhạc cụ cơ bản (bình quân luật 12, guitar, bass, violin...)
+    * Cho phép tuỳ chỉnh nhạc cụ.
+    * Nhiều hệ thống thang âm như: bình quân luật 12, hệ âm đúng, Werckmeister, Kirnberger…
+    * Các hệ thống chia âm không theo chuẩn 12 nốt (EDO 17, 19, …, 41, 53)
+    * Cho phép các tuỳ chọn kỹ thuật chuyên sâu như: kích thước cửa sổ FFT, loại cửa sổ FFT, độ chồng lấp và nhiều thông số khác.

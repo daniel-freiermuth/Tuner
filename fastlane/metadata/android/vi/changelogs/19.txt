@@ -1,0 +1,3 @@
+v5.0.0:
+- Cải thiện hiển thị nhãn trên biểu đồ
+- Hỗ trợ các thang âm không có 12 nốt (vi âm)

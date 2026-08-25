@@ -1,0 +1,8 @@
+v6.6.1:
+- Sử dụng phạm vi độ nhạy phù hợp hơn ở cấp độ nội bộ.
+
+v6.6.0:
+- Sửa lỗi: Ứng dụng lên dây đôi khi ngừng hoạt động sau khi thay đổi cài đặt.
+- Bổ sung tuỳ chọn độ nhạy để dừng dò tín hiệu khi tín hiệu yếu.
+- Loại bỏ tuỳ chọn mức nhiễu tối đa để chuyển sang sử dụng tuỳ chọn độ nhạy.
+- Cải thiện độ ổn định khi dò tín hiệu trong một số trường hợp đặc biệt.

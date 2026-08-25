@@ -1,0 +1,4 @@
+v1.4.0:
+- Thêm chế độ đơn giản
+- Hiển thị màu sắc khi đúng cao độ
+- Thêm tùy chọn cài đặt độ sai lệch cho phép khi đúng cao độ

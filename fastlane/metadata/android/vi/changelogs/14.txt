@@ -1,0 +1,7 @@
+v2.0.1:
+- Sửa lỗi: Giao diện bị tải lại hai lần khi thay đổi cấu hình (ví dụ: xoay màn hình)
+- Sửa lỗi: Ứng dụng lên dây đôi khi bị dừng hoạt động khi chuyển đổi giữa chế độ đơn giản và chế độ khoa học
+- Sử dụng biểu tượng "đưa về nốt hiện tại" thay cho biểu tượng cuộn lên/xuống
+
+v2.1.0:
+- Thêm đàn violin

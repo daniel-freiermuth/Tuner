@@ -1,0 +1,15 @@
+v6.4.0:
+- Bản dịch tiếng Trung (cảm ơn BLumia)
+
+v6.3.0:
+- Hiển thị độ lệch so với nốt mục tiêu theo đơn vị cent
+
+v6.2.0:
+- Các hệ thống kí âm của Ấn Độ
+
+v6.1.0:
+- Nhạc cụ tuỳ chỉnh không có dây đàn sẽ chuyển sang chế độ bình quân luật 12, chỉ hiển thị lịch sử cao độ.
+
+v6.0.0:
+- Cải thiện khả năng nhận diện nốt nhạc nhờ đánh giá tốt hơn các hoạ âm bậc cao.
+- Thực hiện nhiều thay đổi trong cấu trúc mã nguồn nội bộ.

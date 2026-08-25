@@ -1,0 +1,7 @@
+v3.0.0:
+- Các kiểu lên dây tùy chỉnh
+- Cải tiến giao diện người dùng
+
+v3.1.0
+- Các kiểu lên dây cho viola, cello và double bass
+- Tuỳ chọn ưu tiên dấu giáng (thay vì dấu thăng)

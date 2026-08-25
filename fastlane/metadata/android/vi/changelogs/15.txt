@@ -1,0 +1,3 @@
+v3.0.0:
+- Tùy chỉnh kiểu lên dây
+- Cải tiến giao diện người dùng

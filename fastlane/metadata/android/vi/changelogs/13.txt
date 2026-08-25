@@ -1,0 +1,8 @@
+v2.0.0:
+- Bổ sung chế độ đơn giản
+- Cải tiến thêm giao diện người dùng
+
+v2.0.1:
+- Sửa lỗi: Thay đổi cấu hình (ví dụ: xoay màn hình) khiến giao diện bị tải lại hai lần
+- Sửa lỗi: Việc chuyển đổi giữa chế độ đơn giản và chế độ khoa học đôi khi làm dừng hoạt động của ứng dụng lên dây
+- Sử dụng biểu tượng "đưa nốt nhạc hiện tại về giữa" thay cho biểu tượng cuộn lên/xuống

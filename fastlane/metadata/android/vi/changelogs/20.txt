@@ -1,0 +1,7 @@
+v5.0.0:
+- Cải thiện giao diện các nhãn trên biểu đồ
+- Hỗ trợ các thang âm không có 12 nốt (vi âm)
+
+v.5.0.1:
+- Khắc phục lỗi ghi đè tệp cảnh
+- Cập nhật bản dịch tiếng Pháp (cảm ơn Glandos)

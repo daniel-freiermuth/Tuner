@@ -1,0 +1,5 @@
+v4.0.0:
+- Chủ yếu sử dụng giao diện MaterialYou
+- Biểu tượng ứng dụng động cho Android 13
+- Đồng bộ màu thanh trạng thái với màu nền ứng dụng
+- Bản dịch tiếng Pháp (cảm ơn Glandos)

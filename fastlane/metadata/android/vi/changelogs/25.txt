@@ -1,0 +1,7 @@
+v5.4.0:
+- Cập nhật bản dịch tiếng Séc (cảm ơn elastic-rock)
+- Hỗ trợ cài đặt ngôn ngữ riêng cho từng ứng dụng trên Android 13 (cảm ơn elastic-rock)
+- Tùy chọn kí hiệu nốt nhạc theo chuẩn "Quốc tế".
+
+v5.3.0:
+- Kí hiệu nốt nhạc Solfege

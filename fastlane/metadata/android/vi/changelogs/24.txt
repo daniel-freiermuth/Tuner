@@ -1,0 +1,6 @@
+v5.2.0:
+- Sửa lỗi: Đóng ứng dụng khi nhấn nút quay lại
+- Thanh công cụ phía dưới với các cài đặt nhanh
+
+v5.3.0:
+- Kí âm Solfege

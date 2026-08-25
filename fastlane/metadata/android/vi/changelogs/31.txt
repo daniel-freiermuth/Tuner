@@ -1,0 +1,4 @@
+v6.5.0:
+- Tuỳ chọn sử dụng kí pháp Helmholtz
+- Công tắc kiểu Material3 trong phần tuỳ chọn
+- Mở rộng hệ thống điều âm trung âm 1/4 comma

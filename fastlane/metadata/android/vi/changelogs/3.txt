@@ -1,0 +1,7 @@
+v1.1.0:
+- Điều chỉnh các cài đặt mặc định
+- Thêm tuỳ chọn đặt lại cài đặt
+- Thêm mục "Giới thiệu" trong phần cài đặt
+
+v1.1.1:
+- Tải đúng cài đặt khi khởi động ứng dụng

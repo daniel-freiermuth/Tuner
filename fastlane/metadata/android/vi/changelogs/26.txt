@@ -1,0 +1,3 @@
+v6.0.0:
+- Cải thiện khả năng nhận diện nốt nhạc nhờ đánh giá tốt hơn các hoạ âm bậc cao.
+- Thực hiện nhiều thay đổi trong cấu trúc mã nguồn nội bộ.

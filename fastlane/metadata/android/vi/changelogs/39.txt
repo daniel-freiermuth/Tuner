@@ -1,0 +1,4 @@
+v7.0.0:
+- Hệ thống giao diện người dùng mới (jetpack compose).
+- Cải thiện khả năng nhận diện nốt nhạc (hi vọng là vậy) đối với một số trường hợp đặc biệt.
+- Hỗ trợ các hệ thống chia quãng do người dùng tự định nghĩa.

@@ -1,0 +1,8 @@
+v3.1.0
+- Các kiểu lên dây cho viola, cello và double bass
+- Tuỳ chọn ưu tiên ký hiệu giáng (thay vì thăng)
+
+v3.2.0
+- Các hệ thống chia quãng tám 12 âm khác nhau
+- Nốt tham chiếu không bắt buộc phải là A4, giúp việc chuyển tông trở nên dễ dàng
+- Tuỳ chọn bỏ chọn các nhạc cụ muốn chia sẻ
