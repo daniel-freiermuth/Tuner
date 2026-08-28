@@ -1,0 +1,11 @@
+v7.0.0:
+- Nuevo backend de interfaz de usuario (jetpack compose).
+- Detección de notas mejorada (con suerte) para algunos casos extremos.
+- Temperamentos definidos por el usuario.
+
+v7.1.0:
+- Corregir la visualización correcta de las preferencias en Android 15.
+- Activar el modo de pantalla completa (lo que significa que, por ejemplo, las listas se muestran hasta el fondo detrás de la barra de navegación).
+
+v7.1.1:
+- Corregir error común de cierre inesperado al detectar frecuencias bajas.

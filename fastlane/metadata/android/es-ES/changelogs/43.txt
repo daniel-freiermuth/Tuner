@@ -1,0 +1,17 @@
+v7.0.0:
+- Nuevo backend de interfaz (jetpack compose).
+- Detección de notas mejorada en casos extremos.
+- Temperamentos definidos por el usuario.
+
+v7.1.0:
+- Corregir preferencias en Android 15.
+- Activar modo de pantalla completa (listas visibles tras la barra de navegación).
+
+v7.1.1:
+- Corregir cierre inesperado al detectar frecuencias bajas.
+
+v7.1.2:
+- Corregir preferencia de sostenido/bemol en escalas no de 12 tonos.
+
+v7.1.3:
+- Corregir conflicto regional al fijar decimales en la frecuencia de referencia.

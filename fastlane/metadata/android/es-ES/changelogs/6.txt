@@ -1,0 +1,18 @@
+v1.1.0:
+- Adaptar configuración predeterminada.
+- Añadir opción para restablecer configuración.
+- Añadir sección "Acerca de" en configuración.
+
+v1.1.1:
+- Cargar configuración correcta al iniciar la aplicación.
+
+v1.2.0:
+- Traducciones al alemán.
+
+v1.2.1:
+- Mostrar tolerancia de 5 centésimas (cents).
+- Superíndices numéricos para notas en lugar de ' y ,.
+
+v1.2.2:
+- Añadir preferencia para mantener pantalla encendida.
+- Hacer barra de estado siempre negra

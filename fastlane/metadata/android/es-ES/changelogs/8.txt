@@ -1,0 +1,17 @@
+v1.2.0:
+- Traducciones al alemán.
+
+v1.2.1:
+- Mostrar tolerancia de 5 centésimas (cents).
+- Superíndices numéricos para notas en lugar de ' y ,.
+
+v1.2.2:
+- Añadir preferencia para mantener pantalla encendida.
+- Hacer barra de estado siempre negra.
+
+v1.2.3:
+- Corregir índices de las octavas.
+- Mejoras en la apariencia de las preferencias.
+
+v1.2.4:
+- Mejoras en la apariencia de las preferencias

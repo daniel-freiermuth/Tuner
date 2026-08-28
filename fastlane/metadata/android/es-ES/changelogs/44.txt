@@ -1,0 +1,4 @@
+v8.0.0:
+- Nombres de notas mejorados en distintos temperamentos (rompe compatibilidad previa).
+- Traducciones al polaco y húngaro (gracias a Omikorin y meskobalasz).
+- Más temperamentos EDO

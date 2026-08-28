@@ -1,0 +1,4 @@
+v7.0.0:
+- Nuevo backend de interfaz de usuario (jetpack compose).
+- Detección de notas mejorada (con suerte) para algunos casos extremos.
+- Temperamentos definidos por el usuario.

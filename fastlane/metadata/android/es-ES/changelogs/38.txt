@@ -1,0 +1,8 @@
+v6.8.2:
+- Correcciones internas menores.
+
+v6.8.1:
+- Cambiar la configuración de audio interna para admitir más dispositivos.
+
+v6.8.0:
+- Iconos por Tar, Setar y Kamancheh (gracias a ahangarha)

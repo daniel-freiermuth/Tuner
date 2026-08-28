@@ -1,0 +1,3 @@
+v8.2.0:
+- Estrategia de afinación ligeramente distinta cuando la señal permanece muy similar.
+- Opción para detectar la frecuencia de referencia en el diálogo de nota de referencia.

@@ -1,0 +1,10 @@
+v1.1.0:
+- Adaptar la configuración predeterminada
+- Añadir la opción de restablecer la configuración
+- Añadir la sección "Acerca de" en la configuración
+
+v1.1.1:
+- Cargar la configuración correcta al iniciar la aplicación
+
+v1.2.0:
+- Traducciones al alemán

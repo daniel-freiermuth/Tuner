@@ -1,0 +1,3 @@
+v9.0.0:
+- Soporte inicial para afinación por extensión (requiere tablas predefinidas).
+- Opción para representación de octavas numeradas de Helmholtz.

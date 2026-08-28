@@ -1,0 +1,9 @@
+v8.0.0:
+- Nombres de notas mejorados en distintos temperamentos (rompe compatibilidad previa).
+- Traducciones al polaco y húngaro (gracias a Omikorin y meskobalasz).
+- Más temperamentos EDO.
+
+v8.1.0:
+- Nombres de notas en vietnamita.
+- Flujo de trabajo mejorado para seleccionar temperamentos.
+- Opción para mostrar el afinador en la pantalla de bloqueo (gracias a m0nkeyc0de)

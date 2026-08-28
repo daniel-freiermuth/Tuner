@@ -1,0 +1,8 @@
+v1.3.0:
+- Control táctil para gráficos.
+- Animación más rápida para enfocar un nuevo tono.
+- Búsqueda de picos de frecuencia ligeramente adaptada.
+- No buscar nuevos tonos si el ruido es demasiado alto.
+- Usar plurales en las descripciones de preferencias.
+- Feedback visual extra si no se detecta un tono nuevo en cierto tiempo.
+- Actualización al SDK 31
