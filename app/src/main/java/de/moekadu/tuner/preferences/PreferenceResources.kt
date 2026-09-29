@@ -122,6 +122,12 @@ class PreferenceResources @Inject constructor(
         )
     }
 
+    // show the chromatic instrument as note staff instead of a list of all notes
+    val chromaticAsStaff = getPreferenceFlow(CHROMATIC_AS_STAFF_KEY, CHROMATIC_AS_STAFF_DEFAULT)
+    fun writeChromaticAsStaff(chromaticAsStaff: Boolean) {
+        writePreference(CHROMATIC_AS_STAFF_KEY, chromaticAsStaff)
+    }
+
     // scientific mode
     val scientificMode = getPreferenceFlow(SCIENTIFIC_MODE_KEY, SCIENTIFIC_MODE_DEFAULT)
     fun writeScientificMode(scientificMode: Boolean) {
@@ -229,6 +235,7 @@ class PreferenceResources @Inject constructor(
                 it[NOTE_PRINT_OPTIONS_KEY] = Json.encodeToString(NotePrintOptionsDefault)
                 it[SENSITIVITY_KEY] = SensitivityDefault
                 it[SCIENTIFIC_MODE_KEY] = SCIENTIFIC_MODE_DEFAULT
+                it[CHROMATIC_AS_STAFF_KEY] = CHROMATIC_AS_STAFF_DEFAULT
                 it[NUM_MOVING_AVERAGE_KEY] = NumMovingAverageDefault
                 it[WINDOW_SIZE_KEY] = WindowSizeExponentDefault
                 it[WINDOWING_KEY] = WindowingDefault.name
@@ -314,6 +321,7 @@ class PreferenceResources @Inject constructor(
         private const val DISPLAY_ON_LOCK_SCREEN_DEFAULT = false
         private val NotePrintOptionsDefault = NotePrintOptions()
         private const val SCIENTIFIC_MODE_DEFAULT = false
+        private const val CHROMATIC_AS_STAFF_DEFAULT = false
 
 //        private val MusicalScaleDefault = MusicalScaleFactory.create(TemperamentType.EDO12)
         private val WindowingDefault = WindowingFunction.Tophat
@@ -337,6 +345,7 @@ class PreferenceResources @Inject constructor(
 //        const val PREFER_FLAT_KEY = "prefer_flat"
 //        const val SOLFEGE_KEY = "solfege"
         private val SCIENTIFIC_MODE_KEY = booleanPreferencesKey("scientific_mode")
+        private val CHROMATIC_AS_STAFF_KEY = booleanPreferencesKey("chromatic_as_staff")
 
 //        private val NOTATION_KEY = stringPreferencesKey("notation")
         private val TEMPERAMENT_AND_REFERENCE_NOTE_KEY =
