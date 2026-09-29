@@ -118,6 +118,12 @@ class PreferenceResources @Inject constructor (
         ))
     }
 
+    // key signature of the note staff: > 0 number of sharps, < 0 number of flats
+    val keySignature = getPreferenceFlow(KEY_SIGNATURE_KEY, KeySignatureDefault)
+    fun writeKeySignature(keySignature: Int) {
+        writePreference(KEY_SIGNATURE_KEY, keySignature)
+    }
+
     // show the chromatic instrument as note staff instead of a list of all notes
     val chromaticAsStaff = getPreferenceFlow(CHROMATIC_AS_STAFF_KEY, ChromaticAsStaffDefault)
     fun writeChromaticAsStaff(chromaticAsStaff: Boolean) {
@@ -218,6 +224,7 @@ class PreferenceResources @Inject constructor (
                 it[NOTE_PRINT_OPTIONS_KEY] = Json.encodeToString(NotePrintOptionsDefault)
                 it[SENSITIVITY_KEY] = SensitivityDefault
                 it[SCIENTIFIC_MODE_KEY] = ScientificModeDefault
+                it[KEY_SIGNATURE_KEY] = KeySignatureDefault
                 it[CHROMATIC_AS_STAFF_KEY] = ChromaticAsStaffDefault
                 it[NUM_MOVING_AVERAGE_KEY] = NumMovingAverageDefault
                 it[WINDOW_SIZE_KEY] = WindowSizeExponentDefault
@@ -303,6 +310,7 @@ class PreferenceResources @Inject constructor (
         private const val DisplayOnLockScreenDefault = false
         private val NotePrintOptionsDefault = NotePrintOptions()
         private const val ScientificModeDefault = false
+        private const val KeySignatureDefault = 0
         private const val ChromaticAsStaffDefault = false
 //        private val MusicalScaleDefault = MusicalScaleFactory.create(TemperamentType.EDO12)
         private val WindowingDefault = WindowingFunction.Tophat
@@ -325,6 +333,7 @@ class PreferenceResources @Inject constructor (
 //        const val PREFER_FLAT_KEY = "prefer_flat"
 //        const val SOLFEGE_KEY = "solfege"
         private val SCIENTIFIC_MODE_KEY = booleanPreferencesKey("scientific_mode")
+        private val KEY_SIGNATURE_KEY = intPreferencesKey("key_signature")
         private val CHROMATIC_AS_STAFF_KEY = booleanPreferencesKey("chromatic_as_staff")
 //        private val NOTATION_KEY = stringPreferencesKey("notation")
         private val TEMPERAMENT_AND_REFERENCE_NOTE_KEY = stringPreferencesKey("temperament_and_reference_note")
