@@ -106,6 +106,13 @@ class PreferenceResources @Inject constructor(
         )
     }
 
+    // show the chromatic instrument as note staff instead of a list of all notes
+    private val chromaticAsStaffPref = createPreference("chromatic_as_staff", false)
+    val chromaticAsStaff = chromaticAsStaffPref.asStateFlow()
+    fun writeChromaticAsStaff(chromaticAsStaff: Boolean) {
+        chromaticAsStaffPref.set(chromaticAsStaff)
+    }
+
     // scientific mode
     private val scientificModePref = createPreference("scientific_mode", false)
     val scientificMode = scientificModePref.asStateFlow()
