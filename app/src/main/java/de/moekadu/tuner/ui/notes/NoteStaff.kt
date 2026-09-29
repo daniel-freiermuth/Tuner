@@ -21,10 +21,18 @@ package de.moekadu.tuner.ui.notes
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
@@ -43,6 +51,9 @@ import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -53,6 +64,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import de.moekadu.tuner.R
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
@@ -104,16 +116,82 @@ private const val NOTE_HEAD_SKEW = 0.3f
  */
 private const val ACCIDENTAL_STAFF_SPACE_PER_EM = 0.308f
 
+/** Largest number of sharps or flats of a key signature. */
+const val MAX_KEY_SIGNATURE = 7
+
+private val SHARP_ORDER =
+    listOf(BaseNote.F, BaseNote.C, BaseNote.G, BaseNote.D, BaseNote.A, BaseNote.E, BaseNote.B)
+private val FLAT_ORDER = SHARP_ORDER.reversed()
+
+// Staff positions of the key signature accidentals in the treble staff, in the order of
+// SHARP_ORDER/FLAT_ORDER; the bass staff uses the same pattern two octaves lower.
+private val TREBLE_SHARP_POSITIONS = listOf(38, 35, 39, 36, 33, 37, 34)
+private val TREBLE_FLAT_POSITIONS = listOf(34, 37, 33, 36, 32, 35, 31)
+private const val KEY_SIGNATURE_SPACING = 1.1f // staff spaces per accidental
+
+private const val NATURAL_SYMBOL = "\uE107"
+
+/** Modifier which a key signature applies to a base note.
+ * @param keySignature Number of sharps (> 0) or flats (< 0).
+ */
+fun keySignatureModifier(base: BaseNote, keySignature: Int): NoteModifier = when {
+    keySignature > 0 && base in SHARP_ORDER.take(keySignature) -> NoteModifier.Sharp
+    keySignature < 0 && base in FLAT_ORDER.take(-keySignature) -> NoteModifier.Flat
+    else -> NoteModifier.None
+}
+
+/** Note as written on the staff.
+ * @param note Spelling of the note (base and modifier are used, enharmonic is not).
+ * @param showAccidental True if an accidental must be drawn; for notes without modifier this
+ *   is a natural sign, cancelling the key signature.
+ */
+data class SpelledNote(val note: MusicalNote, val showAccidental: Boolean)
+
+private fun NoteModifier.isSharp() = this == NoteModifier.Sharp || this == NoteModifier.SharpSharp
+private fun NoteModifier.isFlat() = this == NoteModifier.Flat || this == NoteModifier.FlatFlat
+
+/** Choose the spelling of a note for the staff.
+ * @param useEnharmonic Enharmonic preference, used if there is no key signature and when the
+ *   key signature does not decide between two spellings.
+ * @param keySignature Number of sharps (> 0) or flats (< 0) or null if the staff has no key
+ *   signature (e.g. for temperaments, which do not have 12 notes per octave).
+ */
+fun spellNote(note: MusicalNote, useEnharmonic: Boolean, keySignature: Int?): SpelledNote {
+    val preferred = if (useEnharmonic) note.switchEnharmonic() else note
+    if (keySignature == null) {
+        return SpelledNote(preferred, preferred.modifier != NoteModifier.None)
+    }
+
+    val candidates = if (note.enharmonicBase == BaseNote.None) {
+        listOf(note)
+    } else {
+        listOf(preferred, preferred.switchEnharmonic())
+    }
+
+    val spelled =
+        candidates.firstOrNull { it.modifier == keySignatureModifier(it.base, keySignature) }
+            ?: candidates.firstOrNull {
+                when {
+                    keySignature > 0 -> it.modifier.isSharp()
+                    keySignature < 0 -> it.modifier.isFlat()
+                    else -> false
+                }
+            }
+            ?: candidates.first()
+    return SpelledNote(
+        spelled,
+        spelled.modifier != keySignatureModifier(spelled.base, keySignature)
+    )
+}
+
 /** Position of the note on a staff, counted in diatonic steps with C0 = 0.
- * @param useEnharmonic Use the enharmonic spelling of the note, if it has one.
  * @return Staff position or null if the note has no base note or no octave.
  */
-fun MusicalNote.staffPosition(useEnharmonic: Boolean): Int? {
-    val spelled = if (useEnharmonic) switchEnharmonic() else this
-    if (spelled.base == BaseNote.None || spelled.octave == Int.MAX_VALUE) {
+fun MusicalNote.staffPosition(): Int? {
+    if (base == BaseNote.None || octave == Int.MAX_VALUE) {
         return null
     }
-    return 7 * (spelled.octave + spelled.octaveOffset) + spelled.base.ordinal
+    return 7 * (octave + octaveOffset) + base.ordinal
 }
 
 /** Placement of a note within the displayed grand staff.
@@ -161,13 +239,18 @@ private fun createNoteHeadPath() = Path().apply {
  * @param note Note to be shown or null to show an empty staff.
  * @param modifier Modifier.
  * @param tuningState Tuning state, which defines the color of the note.
- * @param notePrintOptions Note print options, used for the spelling and the note name label.
+ * @param notePrintOptions Note print options, used for the note name label and for the
+ *   spelling when the key signature does not decide it.
  * @param staffColor Color of staff lines and clefs.
  * @param inTuneColor Note color when the note is in tune.
  * @param outOfTuneColor Note color when the note is out of tune.
  * @param unknownTuningColor Note color when the tuning state is unknown.
  * @param fontSize Font size of note name label.
  * @param outline Outline of the staff window.
+ * @param keySignature Number of sharps (> 0) or flats (< 0) of the key signature or null
+ *   for a staff without key signature.
+ * @param onKeySignatureChange If not null (and keySignature is not null), buttons for adding
+ *   sharps/flats are shown, which call this with the new key signature.
  * @param onClick Callback when the staff is clicked.
  */
 @Composable
@@ -182,6 +265,8 @@ fun NoteStaff(
     unknownTuningColor: Color = MaterialTheme.colorScheme.primary,
     fontSize: TextUnit = 16.sp,
     outline: PlotWindowOutline = PlotWindowOutline(),
+    keySignature: Int? = null,
+    onKeySignatureChange: ((Int) -> Unit)? = null,
     onClick: () -> Unit = {}
 ) {
     val resources = LocalContext.current.resources
@@ -195,130 +280,213 @@ fun NoteStaff(
         TuningState.TooLow, TuningState.TooHigh -> outOfTuneColor
         else -> unknownTuningColor
     }
-    val placement = remember(note, notePrintOptions) {
-        note?.staffPosition(notePrintOptions.useEnharmonic)?.let { grandStaffPlacement(it) }
+    val spelledNote = remember(note, notePrintOptions, keySignature) {
+        note?.let { spellNote(it, notePrintOptions.useEnharmonic, keySignature) }
     }
-    val modifierOfNote = remember(note, notePrintOptions) {
-        when {
-            note == null -> NoteModifier.None
-
-            notePrintOptions.useEnharmonic && note.enharmonicBase != BaseNote.None ->
-                note.enharmonicModifier
-
-            else -> note.modifier
-        }
+    val placement = remember(spelledNote) {
+        spelledNote?.note?.staffPosition()?.let { grandStaffPlacement(it) }
     }
-    val noteName = remember(note, notePrintOptions, fontSize, resources) {
-        note?.asAnnotatedString(notePrintOptions, fontSize, FontWeight.Bold, true, resources)
-    }
-
-    Canvas(
-        modifier = modifier.clickable(
-            interactionSource = remember { MutableInteractionSource() },
-            indication = null,
-            onClick = onClick
+    val noteName = remember(spelledNote, notePrintOptions, fontSize, resources) {
+        spelledNote?.note?.asAnnotatedString(
+            notePrintOptions.copy(useEnharmonic = false),
+            fontSize,
+            FontWeight.Bold,
+            true,
+            resources
         )
-    ) {
-        val outlineWidth = outline.lineWidth.toPx()
-        val cornerRadius = CornerRadius(outline.cornerRadius.toPx())
-        val clip = Path().apply {
-            addRoundRect(RoundRect(Rect(Offset.Zero, size), cornerRadius))
-        }
-        clipPath(clip) {
-            val staffSpace = min(size.height / STAFF_SPACES_VISIBLE, size.width / 9f)
-            val lineWidth = 0.1f * staffSpace
-            val left = 0.5f * staffSpace
-            val right = size.width - 0.5f * staffSpace
-            fun y(position: Int) = 0.5f * size.height - 0.5f * staffSpace * (position - MIDDLE_C)
+    }
+    val numKeyAccidentals = abs(keySignature ?: 0)
 
-            for (position in (BASS_BOTTOM_LINE..BASS_TOP_LINE step 2) +
-                (TREBLE_BOTTOM_LINE..TREBLE_TOP_LINE step 2)) {
-                drawLine(
-                    staffColor,
-                    Offset(left, y(position)),
-                    Offset(right, y(position)),
-                    lineWidth
-                )
+    Box(modifier = modifier) {
+        Canvas(
+            modifier = Modifier.fillMaxSize().clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
+        ) {
+            val outlineWidth = outline.lineWidth.toPx()
+            val cornerRadius = CornerRadius(outline.cornerRadius.toPx())
+            val clip = Path().apply {
+                addRoundRect(RoundRect(Rect(Offset.Zero, size), cornerRadius))
             }
-            drawLine(
-                staffColor,
-                Offset(left, y(TREBLE_TOP_LINE) - 0.5f * lineWidth),
-                Offset(left, y(BASS_BOTTOM_LINE) + 0.5f * lineWidth),
-                lineWidth
-            )
-            val clefX = left + 0.5f * staffSpace
-            drawClef(trebleClef, clefX, y(TREBLE_CLEF_LINE), staffSpace, staffColor)
-            drawClef(bassClef, clefX, y(BASS_CLEF_LINE), staffSpace, staffColor)
+            clipPath(clip) {
+                val staffSpace = min(
+                    size.height / STAFF_SPACES_VISIBLE,
+                    size.width / (9f + numKeyAccidentals * KEY_SIGNATURE_SPACING)
+                )
+                val lineWidth = 0.1f * staffSpace
+                val left = 0.5f * staffSpace
+                val right = size.width - 0.5f * staffSpace
+                fun y(position: Int) =
+                    0.5f * size.height - 0.5f * staffSpace * (position - MIDDLE_C)
 
-            val noteX = maxOf(
-                left + (TREBLE_CLEF_WIDTH + 4.5f) * staffSpace,
-                0.45f * size.width
-            )
-            if (placement != null) {
-                val noteY = y(placement.position)
-                for (position in ledgerLinePositions(placement.position)) {
+                for (position in (BASS_BOTTOM_LINE..BASS_TOP_LINE step 2) +
+                    (TREBLE_BOTTOM_LINE..TREBLE_TOP_LINE step 2)) {
                     drawLine(
                         staffColor,
-                        Offset(noteX - 1.1f * staffSpace, y(position)),
-                        Offset(noteX + 1.1f * staffSpace, y(position)),
+                        Offset(left, y(position)),
+                        Offset(right, y(position)),
                         lineWidth
                     )
                 }
-                translate(noteX, noteY) {
-                    withTransform({ scale(staffSpace, staffSpace, Offset.Zero) }) {
-                        drawPath(noteHeadPath, noteColor)
+                drawLine(
+                    staffColor,
+                    Offset(left, y(TREBLE_TOP_LINE) - 0.5f * lineWidth),
+                    Offset(left, y(BASS_BOTTOM_LINE) + 0.5f * lineWidth),
+                    lineWidth
+                )
+                val clefX = left + 0.5f * staffSpace
+                drawClef(trebleClef, clefX, y(TREBLE_CLEF_LINE), staffSpace, staffColor)
+                drawClef(bassClef, clefX, y(BASS_CLEF_LINE), staffSpace, staffColor)
+
+                val keySignatureX = clefX + (BASS_CLEF_WIDTH + 0.6f) * staffSpace
+                if (keySignature != null && keySignature != 0) {
+                    val symbol = if (keySignature > 0) {
+                        NoteModifier.Sharp.accidentalSymbols()
+                    } else {
+                        NoteModifier.Flat.accidentalSymbols()
+                    }
+                    val treblePositions = if (keySignature >
+                        0
+                    ) {
+                        TREBLE_SHARP_POSITIONS
+                    } else {
+                        TREBLE_FLAT_POSITIONS
+                    }
+                    for (i in 0 until numKeyAccidentals) {
+                        val rightX = keySignatureX + (i + 1) * KEY_SIGNATURE_SPACING * staffSpace
+                        for (position in listOf(treblePositions[i], treblePositions[i] - 14)) {
+                            drawAccidental(
+                                textMeasurer,
+                                symbol,
+                                rightX,
+                                y(position),
+                                staffSpace,
+                                staffColor
+                            )
+                        }
                     }
                 }
-                drawAccidental(
-                    textMeasurer,
-                    modifierOfNote,
-                    noteX - 1.1f * staffSpace,
-                    noteY,
-                    staffSpace,
-                    noteColor
+
+                val noteX = maxOf(
+                    keySignatureX + (numKeyAccidentals * KEY_SIGNATURE_SPACING + 3.5f) * staffSpace,
+                    0.45f * size.width
                 )
-                if (placement.octaveShift > 0) {
-                    drawOctaveClefMark(
-                        textMeasurer,
-                        placement.octaveShift,
-                        centerX = clefX + 0.5f * TREBLE_CLEF_WIDTH * staffSpace,
-                        clefEdgeY = y(TREBLE_CLEF_LINE) + TREBLE_CLEF_TOP * staffSpace,
-                        staffSpace = staffSpace,
-                        color = noteColor
-                    )
-                } else if (placement.octaveShift < 0) {
-                    drawOctaveClefMark(
-                        textMeasurer,
-                        placement.octaveShift,
-                        centerX = clefX + 0.5f * BASS_CLEF_WIDTH * staffSpace,
-                        clefEdgeY = y(BASS_CLEF_LINE) + BASS_CLEF_BOTTOM * staffSpace,
-                        staffSpace = staffSpace,
-                        color = noteColor
+                if (placement != null) {
+                    val noteY = y(placement.position)
+                    for (position in ledgerLinePositions(placement.position)) {
+                        drawLine(
+                            staffColor,
+                            Offset(noteX - 1.1f * staffSpace, y(position)),
+                            Offset(noteX + 1.1f * staffSpace, y(position)),
+                            lineWidth
+                        )
+                    }
+                    translate(noteX, noteY) {
+                        withTransform({ scale(staffSpace, staffSpace, Offset.Zero) }) {
+                            drawPath(noteHeadPath, noteColor)
+                        }
+                    }
+                    if (spelledNote?.showAccidental == true) {
+                        val symbols = if (spelledNote.note.modifier == NoteModifier.None) {
+                            NATURAL_SYMBOL
+                        } else {
+                            spelledNote.note.modifier.accidentalSymbols()
+                        }
+                        drawAccidental(
+                            textMeasurer,
+                            symbols,
+                            noteX - 1.1f * staffSpace,
+                            noteY,
+                            staffSpace,
+                            noteColor
+                        )
+                    }
+                    if (placement.octaveShift > 0) {
+                        drawOctaveClefMark(
+                            textMeasurer,
+                            placement.octaveShift,
+                            centerX = clefX + 0.5f * TREBLE_CLEF_WIDTH * staffSpace,
+                            clefEdgeY = y(TREBLE_CLEF_LINE) + TREBLE_CLEF_TOP * staffSpace,
+                            staffSpace = staffSpace,
+                            color = noteColor
+                        )
+                    } else if (placement.octaveShift < 0) {
+                        drawOctaveClefMark(
+                            textMeasurer,
+                            placement.octaveShift,
+                            centerX = clefX + 0.5f * BASS_CLEF_WIDTH * staffSpace,
+                            clefEdgeY = y(BASS_CLEF_LINE) + BASS_CLEF_BOTTOM * staffSpace,
+                            staffSpace = staffSpace,
+                            color = noteColor
+                        )
+                    }
+                }
+                if (noteName != null) {
+                    val layout = textMeasurer.measure(noteName, TextStyle(color = noteColor))
+                    val labelY = if (placement !=
+                        null
+                    ) {
+                        y(placement.position)
+                    } else {
+                        0.5f * size.height
+                    }
+                    drawText(
+                        layout,
+                        topLeft = Offset(
+                            noteX + 1.5f * staffSpace,
+                            (labelY - 0.5f * layout.size.height).coerceIn(
+                                0f,
+                                maxOf(0f, size.height - layout.size.height)
+                            )
+                        )
                     )
                 }
             }
-            if (noteName != null) {
-                val layout = textMeasurer.measure(noteName, TextStyle(color = noteColor))
-                val labelY = if (placement != null) y(placement.position) else 0.5f * size.height
-                drawText(
-                    layout,
-                    topLeft = Offset(
-                        noteX + 1.5f * staffSpace,
-                        (labelY - 0.5f * layout.size.height).coerceIn(
-                            0f,
-                            maxOf(0f, size.height - layout.size.height)
-                        )
-                    )
+            drawRoundRect(
+                outlineColor,
+                topLeft = Offset(0.5f * outlineWidth, 0.5f * outlineWidth),
+                size = Size(size.width - outlineWidth, size.height - outlineWidth),
+                cornerRadius = cornerRadius,
+                style = Stroke(outlineWidth)
+            )
+        }
+        if (keySignature != null && onKeySignatureChange != null) {
+            Row(
+                modifier = Modifier.align(Alignment.TopEnd).padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                KeySignatureButton(
+                    symbol = NoteModifier.Flat.accidentalSymbols(),
+                    contentDescription = stringResource(R.string.key_signature_flat),
+                    enabled = keySignature > -MAX_KEY_SIGNATURE,
+                    onClick = { onKeySignatureChange(keySignature - 1) }
+                )
+                KeySignatureButton(
+                    symbol = NoteModifier.Sharp.accidentalSymbols(),
+                    contentDescription = stringResource(R.string.key_signature_sharp),
+                    enabled = keySignature < MAX_KEY_SIGNATURE,
+                    onClick = { onKeySignatureChange(keySignature + 1) }
                 )
             }
         }
-        drawRoundRect(
-            outlineColor,
-            topLeft = Offset(0.5f * outlineWidth, 0.5f * outlineWidth),
-            size = Size(size.width - outlineWidth, size.height - outlineWidth),
-            cornerRadius = cornerRadius,
-            style = Stroke(outlineWidth)
-        )
+    }
+}
+
+@Composable
+private fun KeySignatureButton(
+    symbol: String,
+    contentDescription: String,
+    enabled: Boolean,
+    onClick: () -> Unit
+) {
+    FilledTonalIconButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = Modifier.size(36.dp).semantics { this.contentDescription = contentDescription }
+    ) {
+        Text(symbol, fontFamily = musicalSymbolFont, fontSize = 22.sp)
     }
 }
 
@@ -336,19 +504,15 @@ private fun DrawScope.drawClef(
     }
 }
 
-/** Draw accidental, such that it ends at [rightX] and is vertically aligned to [noteY]. */
+/** Draw accidental glyphs, such that they end at [rightX] and are vertically aligned to [noteY]. */
 private fun DrawScope.drawAccidental(
     textMeasurer: TextMeasurer,
-    modifier: NoteModifier,
+    symbols: String,
     rightX: Float,
     noteY: Float,
     staffSpace: Float,
     color: Color
 ) {
-    val symbols = modifier.accidentalSymbols()
-    if (symbols.isEmpty()) {
-        return
-    }
     val fontSizePx = staffSpace / ACCIDENTAL_STAFF_SPACE_PER_EM
     val layout = textMeasurer.measure(
         symbols,

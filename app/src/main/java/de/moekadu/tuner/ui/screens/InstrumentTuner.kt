@@ -85,6 +85,10 @@ interface InstrumentTunerData {
     val notePrintOptions: StateFlow<NotePrintOptions>
     val toleranceInCents: StateFlow<Int>
 
+    /** Key signature of the note staff: > 0 number of sharps, < 0 number of flats. */
+    val keySignature: StateFlow<Int>
+    fun onKeySignatureChanged(keySignature: Int)
+
     /** True to show the chromatic instrument as note staff instead of the list of all notes. */
     val chromaticAsStaff: StateFlow<Boolean>
     val instrument: StateFlow<Instrument>
@@ -219,6 +223,7 @@ fun InstrumentTunerPortrait(
             val musicalScaleAsState by data.musicalScale.collectAsStateWithLifecycle()
             val notePrintOptionsAsState by data.notePrintOptions.collectAsStateWithLifecycle()
             val toleranceInCentsAsState by data.toleranceInCents.collectAsStateWithLifecycle()
+            val keySignatureAsState by data.keySignature.collectAsStateWithLifecycle()
             val chromaticAsStaffAsState by data.chromaticAsStaff.collectAsStateWithLifecycle()
             val instrumentAsState by data.instrument.collectAsStateWithLifecycle()
             val noteNames by remember {
@@ -284,6 +289,12 @@ fun InstrumentTunerPortrait(
                     unknownTuningColor = tunerPlotStyle.inactiveStringColor,
                     fontSize = tunerPlotStyle.stringFontStyle.fontSize,
                     outline = tunerPlotStyle.plotWindowOutline,
+                    keySignature = if (musicalScaleAsState.numberOfNotesPerOctave == 12) {
+                        keySignatureAsState
+                    } else {
+                        null
+                    },
+                    onKeySignatureChange = { data.onKeySignatureChanged(it) },
                     onClick = { data.toggleChromaticTargetLock(musicalScaleAsState) }
                 )
             } else if (instrumentAsState.strings.isNotEmpty() || instrumentAsState.isChromatic) {
@@ -404,6 +415,7 @@ fun InstrumentTunerLandscape(
         val notePrintOptionsAsState by data.notePrintOptions.collectAsStateWithLifecycle()
         val musicalScaleAsState by data.musicalScale.collectAsStateWithLifecycle()
         val toleranceInCentsAsState by data.toleranceInCents.collectAsStateWithLifecycle()
+        val keySignatureAsState by data.keySignature.collectAsStateWithLifecycle()
         val chromaticAsStaffAsState by data.chromaticAsStaff.collectAsStateWithLifecycle()
         val instrumentAsState by data.instrument.collectAsStateWithLifecycle()
         val noteNames by remember {
@@ -465,6 +477,12 @@ fun InstrumentTunerLandscape(
                     unknownTuningColor = tunerPlotStyle.inactiveStringColor,
                     fontSize = tunerPlotStyle.stringFontStyle.fontSize,
                     outline = tunerPlotStyle.plotWindowOutline,
+                    keySignature = if (musicalScaleAsState.numberOfNotesPerOctave == 12) {
+                        keySignatureAsState
+                    } else {
+                        null
+                    },
+                    onKeySignatureChange = { data.onKeySignatureChanged(it) },
                     onClick = { data.toggleChromaticTargetLock(musicalScaleAsState) }
                 )
             } else {
@@ -582,6 +600,10 @@ class TestInstrumentTunerData : InstrumentTunerData {
         MutableStateFlow(NotePrintOptions())
     override val toleranceInCents: StateFlow<Int> =
         MutableStateFlow(10)
+    override val keySignature = MutableStateFlow(0)
+    override fun onKeySignatureChanged(keySignature: Int) {
+        this.keySignature.value = keySignature
+    }
     override val chromaticAsStaff = MutableStateFlow(false)
 
     private val noteNameScale = musicalScale.value.temperament.noteNames(
