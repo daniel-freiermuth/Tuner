@@ -4,42 +4,83 @@ import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.ui.notes.GrandStaffPlacement
+import de.moekadu.tuner.ui.notes.SpelledNote
 import de.moekadu.tuner.ui.notes.grandStaffPlacement
 import de.moekadu.tuner.ui.notes.ledgerLinePositions
+import de.moekadu.tuner.ui.notes.spellNote
 import de.moekadu.tuner.ui.notes.staffPosition
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 
 class NoteStaffTest {
+    private val cSharp4 = MusicalNote(
+        BaseNote.C,
+        NoteModifier.Sharp,
+        4,
+        enharmonicBase = BaseNote.D,
+        enharmonicModifier = NoteModifier.Flat
+    )
+    private val dFlat4 = cSharp4.switchEnharmonic()
+    private val aSharp4 = MusicalNote(
+        BaseNote.A,
+        NoteModifier.Sharp,
+        4,
+        enharmonicBase = BaseNote.B,
+        enharmonicModifier = NoteModifier.Flat
+    )
+    private val bFlat4 = aSharp4.switchEnharmonic()
+    private val f4 = MusicalNote(BaseNote.F, NoteModifier.None, 4)
+    private val c4 = MusicalNote(
+        BaseNote.C,
+        NoteModifier.None,
+        4,
+        enharmonicBase = BaseNote.B,
+        enharmonicModifier = NoteModifier.Sharp,
+        enharmonicOctaveOffset = -1
+    )
+
     @Test
-    fun staffPositionUsesPrintedOctaveAndSpelling() {
+    fun staffPositionUsesPrintedOctave() {
         // middle C
-        assertEquals(28, MusicalNote(BaseNote.C, NoteModifier.None, 4).staffPosition(false))
+        assertEquals(28, MusicalNote(BaseNote.C, NoteModifier.None, 4).staffPosition())
         // Cb4 belongs to octave 3 of the scale but is printed in octave 4
         val cFlat4 = MusicalNote(BaseNote.C, NoteModifier.Flat, 3, octaveOffset = 1)
-        assertEquals(28, cFlat4.staffPosition(false))
+        assertEquals(28, cFlat4.staffPosition())
         // B#3 belongs to octave 4 but is printed in octave 3
-        val bSharp3 = MusicalNote(BaseNote.B, NoteModifier.Sharp, 4, octaveOffset = -1)
-        assertEquals(27, bSharp3.staffPosition(false))
-
-        val cSharp4 = MusicalNote(
-            BaseNote.C,
-            NoteModifier.Sharp,
-            4,
-            enharmonicBase = BaseNote.D,
-            enharmonicModifier = NoteModifier.Flat
-        )
-        assertEquals(28, cSharp4.staffPosition(false))
-        assertEquals(29, cSharp4.staffPosition(true))
-        // no enharmonic available -> keep spelling
-        assertEquals(28, MusicalNote(BaseNote.C, NoteModifier.None, 4).staffPosition(true))
+        assertEquals(27, c4.switchEnharmonic().staffPosition())
+        assertEquals(29, dFlat4.staffPosition())
     }
 
     @Test
     fun staffPositionNeedsBaseAndOctave() {
-        assertNull(MusicalNote(BaseNote.None, NoteModifier.None, 4).staffPosition(false))
-        assertNull(MusicalNote(BaseNote.C, NoteModifier.None).staffPosition(false))
+        assertNull(MusicalNote(BaseNote.None, NoteModifier.None, 4).staffPosition())
+        assertNull(MusicalNote(BaseNote.C, NoteModifier.None).staffPosition())
+    }
+
+    @Test
+    fun spellingWithoutKeySignatureFollowsEnharmonicPreference() {
+        assertEquals(SpelledNote(cSharp4, true), spellNote(cSharp4, false, null))
+        assertEquals(SpelledNote(dFlat4, true), spellNote(cSharp4, true, null))
+        assertEquals(SpelledNote(f4, false), spellNote(f4, true, null))
+    }
+
+    @Test
+    fun spellingPrefersNotesOfTheKey() {
+        // D major: C# is part of the key, no accidental; F needs a natural sign
+        assertEquals(SpelledNote(cSharp4, false), spellNote(cSharp4, true, 2))
+        assertEquals(SpelledNote(f4, true), spellNote(f4, false, 2))
+        // F major: Bb, regardless of the enharmonic preference
+        assertEquals(SpelledNote(bFlat4, false), spellNote(aSharp4, false, -1))
+        // Bb major: C#/Db is not in the key -> flat spelling with accidental
+        assertEquals(SpelledNote(dFlat4, true), spellNote(cSharp4, false, -2))
+        // G major: C#/Db not in the key -> sharp spelling
+        assertEquals(SpelledNote(cSharp4, true), spellNote(dFlat4, false, 1))
+        // C major: preference decides
+        assertEquals(SpelledNote(dFlat4, true), spellNote(cSharp4, true, 0))
+        assertEquals(SpelledNote(c4, false), spellNote(c4, true, 0))
+        // C# major: C is written as B#
+        assertEquals(SpelledNote(c4.switchEnharmonic(), false), spellNote(c4, false, 7))
     }
 
     @Test

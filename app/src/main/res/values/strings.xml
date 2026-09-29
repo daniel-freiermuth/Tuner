@@ -240,6 +240,8 @@
     <string name="black_night_mode">Black background in dark mode</string>
     <string name="system_color_accents">Color accents from system</string>
     <string name="incorrect_temperament">Incompatible temperament!</string>
+    <string name="key_signature_sharp">Key signature: one more sharp or one less flat</string>
+    <string name="key_signature_flat">Key signature: one more flat or one less sharp</string>
     <string name="chromatic_as_staff">Chromatic tuner as note staff</string>
     <string name="chromatic_as_staff_summary">Show the target note on a staff instead of the list of all notes</string>
     <string name="ok">OK</string>
