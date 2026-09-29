@@ -118,6 +118,12 @@ class PreferenceResources @Inject constructor (
         ))
     }
 
+    // show the chromatic instrument as note staff instead of a list of all notes
+    val chromaticAsStaff = getPreferenceFlow(CHROMATIC_AS_STAFF_KEY, ChromaticAsStaffDefault)
+    fun writeChromaticAsStaff(chromaticAsStaff: Boolean) {
+        writePreference(CHROMATIC_AS_STAFF_KEY, chromaticAsStaff)
+    }
+
     // scientific mode
     val scientificMode = getPreferenceFlow(SCIENTIFIC_MODE_KEY, ScientificModeDefault)
     fun writeScientificMode(scientificMode: Boolean) {
@@ -212,6 +218,7 @@ class PreferenceResources @Inject constructor (
                 it[NOTE_PRINT_OPTIONS_KEY] = Json.encodeToString(NotePrintOptionsDefault)
                 it[SENSITIVITY_KEY] = SensitivityDefault
                 it[SCIENTIFIC_MODE_KEY] = ScientificModeDefault
+                it[CHROMATIC_AS_STAFF_KEY] = ChromaticAsStaffDefault
                 it[NUM_MOVING_AVERAGE_KEY] = NumMovingAverageDefault
                 it[WINDOW_SIZE_KEY] = WindowSizeExponentDefault
                 it[WINDOWING_KEY] = WindowingDefault.name
@@ -296,6 +303,7 @@ class PreferenceResources @Inject constructor (
         private const val DisplayOnLockScreenDefault = false
         private val NotePrintOptionsDefault = NotePrintOptions()
         private const val ScientificModeDefault = false
+        private const val ChromaticAsStaffDefault = false
 //        private val MusicalScaleDefault = MusicalScaleFactory.create(TemperamentType.EDO12)
         private val WindowingDefault = WindowingFunction.Tophat
         private val OverlapDefault = 25f / 100f
@@ -317,6 +325,7 @@ class PreferenceResources @Inject constructor (
 //        const val PREFER_FLAT_KEY = "prefer_flat"
 //        const val SOLFEGE_KEY = "solfege"
         private val SCIENTIFIC_MODE_KEY = booleanPreferencesKey("scientific_mode")
+        private val CHROMATIC_AS_STAFF_KEY = booleanPreferencesKey("chromatic_as_staff")
 //        private val NOTATION_KEY = stringPreferencesKey("notation")
         private val TEMPERAMENT_AND_REFERENCE_NOTE_KEY = stringPreferencesKey("temperament_and_reference_note")
         private val WINDOWING_KEY = stringPreferencesKey("windowing")

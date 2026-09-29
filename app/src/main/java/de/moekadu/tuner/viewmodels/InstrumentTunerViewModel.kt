@@ -56,6 +56,7 @@ class InstrumentTunerViewModel @Inject constructor (
     override val musicalScale: StateFlow<MusicalScale2> get() = temperaments.musicalScale
     override val notePrintOptions: StateFlow<NotePrintOptions> get() = pref.notePrintOptions
     override val toleranceInCents: StateFlow<Int> get() = pref.toleranceInCents
+    override val chromaticAsStaff: StateFlow<Boolean> get() = pref.chromaticAsStaff
 
     private var autodetectedTargetNote = musicalScale.value.referenceNote
     private var currentSmoothedFrequency = musicalScale.value.referenceFrequency
