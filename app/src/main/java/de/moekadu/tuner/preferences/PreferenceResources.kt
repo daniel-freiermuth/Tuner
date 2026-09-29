@@ -106,6 +106,13 @@ class PreferenceResources @Inject constructor(
         )
     }
 
+    // key signature of the note staff: > 0 number of sharps, < 0 number of flats
+    private val keySignaturePref = createPreference("key_signature", 0)
+    val keySignature = keySignaturePref.asStateFlow()
+    fun writeKeySignature(keySignature: Int) {
+        keySignaturePref.set(keySignature)
+    }
+
     // show the chromatic instrument as note staff instead of a list of all notes
     private val chromaticAsStaffPref = createPreference("chromatic_as_staff", false)
     val chromaticAsStaff = chromaticAsStaffPref.asStateFlow()
