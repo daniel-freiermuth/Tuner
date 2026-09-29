@@ -122,6 +122,12 @@ class PreferenceResources @Inject constructor(
         )
     }
 
+    // key signature of the note staff: > 0 number of sharps, < 0 number of flats
+    val keySignature = getPreferenceFlow(KEY_SIGNATURE_KEY, KEY_SIGNATURE_DEFAULT)
+    fun writeKeySignature(keySignature: Int) {
+        writePreference(KEY_SIGNATURE_KEY, keySignature)
+    }
+
     // scientific mode
     val scientificMode = getPreferenceFlow(SCIENTIFIC_MODE_KEY, SCIENTIFIC_MODE_DEFAULT)
     fun writeScientificMode(scientificMode: Boolean) {
@@ -229,6 +235,7 @@ class PreferenceResources @Inject constructor(
                 it[NOTE_PRINT_OPTIONS_KEY] = Json.encodeToString(NotePrintOptionsDefault)
                 it[SENSITIVITY_KEY] = SensitivityDefault
                 it[SCIENTIFIC_MODE_KEY] = SCIENTIFIC_MODE_DEFAULT
+                it[KEY_SIGNATURE_KEY] = KEY_SIGNATURE_DEFAULT
                 it[NUM_MOVING_AVERAGE_KEY] = NumMovingAverageDefault
                 it[WINDOW_SIZE_KEY] = WindowSizeExponentDefault
                 it[WINDOWING_KEY] = WindowingDefault.name
@@ -314,6 +321,7 @@ class PreferenceResources @Inject constructor(
         private const val DISPLAY_ON_LOCK_SCREEN_DEFAULT = false
         private val NotePrintOptionsDefault = NotePrintOptions()
         private const val SCIENTIFIC_MODE_DEFAULT = false
+        private const val KEY_SIGNATURE_DEFAULT = 0
 
 //        private val MusicalScaleDefault = MusicalScaleFactory.create(TemperamentType.EDO12)
         private val WindowingDefault = WindowingFunction.Tophat
@@ -337,6 +345,7 @@ class PreferenceResources @Inject constructor(
 //        const val PREFER_FLAT_KEY = "prefer_flat"
 //        const val SOLFEGE_KEY = "solfege"
         private val SCIENTIFIC_MODE_KEY = booleanPreferencesKey("scientific_mode")
+        private val KEY_SIGNATURE_KEY = intPreferencesKey("key_signature")
 
 //        private val NOTATION_KEY = stringPreferencesKey("notation")
         private val TEMPERAMENT_AND_REFERENCE_NOTE_KEY =
