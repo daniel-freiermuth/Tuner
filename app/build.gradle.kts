@@ -46,6 +46,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    lint {
+        abortOnError = true
+        warningsAsErrors = true
+        // Pre-existing findings; regenerate with ./gradlew updateLintBaseline after fixing some.
+        baseline = file("lint-baseline.xml")
+        // Depend on what upstream publishes, so they would fail unchanged code over time.
+        disable += setOf("GradleDependency", "NewerVersionAvailable", "AndroidGradlePluginVersion")
+        // Translations are contributed asynchronously via translate.codeberg.org.
+        informational += "MissingTranslation"
+    }
 }
 
 kotlin {

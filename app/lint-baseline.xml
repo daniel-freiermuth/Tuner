@@ -1,0 +1,2596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.11.1" type="baseline" client="gradle" dependencies="false" name="AGP (8.11.1)" variant="all" version="8.11.1">
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `String.format(Locale, ...)` instead"
+        errorLine1="                    Text(if (offset == 0) &quot;0&quot; else String.format(&quot;%+d&quot;, offset))"
+        errorLine2="                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/de/moekadu/tuner/ui/notes/NoteEditorSimple.kt"
+            line="119"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `localeConfig` is only used in API level 33 and higher (current min is 23)"
+        errorLine1="        android:localeConfig=&quot;@xml/locales_config&quot;>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="14"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;pitch_history_num_faulty_values_summary&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="23"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;num_moving_average_summary&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="28"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pl&quot; (Polish) the following quantities should also be defined: `few` (e.g. &quot;2 miesiące&quot;), `many` (e.g. &quot;5 miesięcy&quot;)"
+        errorLine1="    &lt;plurals name=&quot;pitch_history_num_faulty_values_summary&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="30"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pl&quot; (Polish) the following quantities should also be defined: `few` (e.g. &quot;2 miesiące&quot;), `many` (e.g. &quot;5 miesięcy&quot;)"
+        errorLine1="    &lt;plurals name=&quot;num_moving_average_summary&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="35"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;load_instruments&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="89"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;sharing_num_items&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="97"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pl&quot; (Polish) the following quantities should also be defined: `few` (e.g. &quot;2 miesiące&quot;), `many` (e.g. &quot;5 miesięcy&quot;)"
+        errorLine1="    &lt;plurals name=&quot;items_deleted&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="107"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pl&quot; (Polish) the following quantities should also be defined: `few` (e.g. &quot;2 miesiące&quot;), `many` (e.g. &quot;5 miesięcy&quot;)"
+        errorLine1="    &lt;plurals name=&quot;database_num_saved&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="115"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pl&quot; (Polish) the following quantities should also be defined: `few` (e.g. &quot;2 miesiące&quot;), `many` (e.g. &quot;5 miesięcy&quot;)"
+        errorLine1="    &lt;plurals name=&quot;load_instruments&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="120"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pl&quot; (Polish) the following quantities should also be defined: `few` (e.g. &quot;2 miesiące&quot;), `many` (e.g. &quot;5 miesięcy&quot;)"
+        errorLine1="    &lt;plurals name=&quot;load_temperaments&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="124"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pl&quot; (Polish) the following quantities should also be defined: `few` (e.g. &quot;2 miesiące&quot;), `many` (e.g. &quot;5 miesięcy&quot;)"
+        errorLine1="    &lt;plurals name=&quot;sharing_num_items&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="132"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pitch_history_num_faulty_values_summary&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;plurals name=&quot;pitch_history_num_faulty_values_summary&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;num_moving_average_summary&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;plurals name=&quot;num_moving_average_summary&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="35"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;display_on_lock_screen&quot; is not translated in &quot;pl&quot; (Polish) or &quot;hu&quot; (Hungarian)"
+        errorLine1="    &lt;string name=&quot;display_on_lock_screen&quot;>Display on lock screen&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="51"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;c_solfege&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;c_solfege&quot;>Do&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="75"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;d_solfege&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;d_solfege&quot;>Re&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="76"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;e_solfege&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;e_solfege&quot;>Mi&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="77"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;f_solfege&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;f_solfege&quot;>Fa&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="78"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;g_solfege&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;g_solfege&quot;>Sol&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="79"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;a_solfege&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;a_solfege&quot;>La&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="80"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;b_solfege&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;b_solfege&quot;>Si&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="81"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;items_deleted&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;plurals name=&quot;items_deleted&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="108"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;database_num_saved&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;plurals name=&quot;database_num_saved&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="116"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;load_instruments&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;plurals name=&quot;load_instruments&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="121"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;load_temperaments&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;plurals name=&quot;load_temperaments&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="125"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;sharing_num_items&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;plurals name=&quot;sharing_num_items&quot;>"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="133"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;equal_temperament_x&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;equal_temperament_x&quot;>Equal temperament %d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="173"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;equal_temperament_x_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;equal_temperament_x_desc&quot;>%d notes per octave&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="174"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;equal_temperament_x_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;equal_temperament_x_abbr&quot;>EDO %d&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="175"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pythagorean_tuning&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;pythagorean_tuning&quot;>Pythagorean tuning&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="176"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pythagorean_tuning_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;pythagorean_tuning_abbr&quot;>Pythagorean&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="177"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pure_tuning&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;pure_tuning&quot;>Just tuning&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="178"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pure_tuning_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;pure_tuning_desc&quot;>5-limit, asymmetric scale&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="179"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pure_tuning_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;pure_tuning_abbr&quot;>Just&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="180"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;quarter_comma_mean_tone&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;quarter_comma_mean_tone&quot;>¼ comma meantone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="181"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;quarter_comma_mean_tone_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;quarter_comma_mean_tone_desc&quot;>Pure major 3rds&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="182"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;quarter_comma_mean_tone_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;quarter_comma_mean_tone_abbr&quot;>¼ comma meantone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="183"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;third_comma_mean_tone&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;third_comma_mean_tone&quot;>⅓ comma meantone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="184"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;third_comma_mean_tone_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;third_comma_mean_tone_desc&quot;>Pure minor 3rds&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="185"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;third_comma_mean_tone_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;third_comma_mean_tone_abbr&quot;>⅓ comma meantone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="186"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;fifth_comma_mean_tone&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;fifth_comma_mean_tone&quot;>⅕ comma meantone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="187"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;fifth_comma_mean_tone_desc&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;fifth_comma_mean_tone_desc&quot;>Pure diatonic semitones&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="188"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;fifth_comma_mean_tone_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;fifth_comma_mean_tone_abbr&quot;>⅕ comma meantone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="189"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_iii&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_iii&quot;>Werckmeister III&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="190"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_iii_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_iii_desc&quot;>¼ comma divisions&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="191"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_iii_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_iii_abbr&quot;>Werckmeister III&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="192"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_iv&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_iv&quot;>Werckmeister IV&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="193"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_iv_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_iv_desc&quot;>⅓ comma divisions&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="194"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_iv_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_iv_abbr&quot;>Werckmeister IV&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="195"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_v&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_v&quot;>Werckmeister V&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="196"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_v_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_v_desc&quot;>Other ¼ comma divisions&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="197"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_v_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_v_abbr&quot;>Werckmeister V&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="198"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_vi&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_vi&quot;>Werckmeister VI&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="199"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_vi_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_vi_desc&quot;>Septenarius&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="200"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;werckmeister_vi_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;werckmeister_vi_abbr&quot;>Werckmeister VI&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="201"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger1&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger1&quot;>Kirnberger I&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="202"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger1_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger1_desc&quot;>One syntonic comma&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="203"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger1_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger1_abbr&quot;>Kirnberger I&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="204"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger2&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger2&quot;>Kirnberger II&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="205"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger2_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger2_desc&quot;>½ syntonic comma divisions&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="206"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger2_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger2_abbr&quot;>Kirnberger II&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="207"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger3&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger3&quot;>Kirnberger III&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="208"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger3_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger3_desc&quot;>¼ syntonic comma divisions&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="209"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;kirnberger3_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;kirnberger3_abbr&quot;>Kirnberger III&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="210"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt1&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt1&quot;>Neidhardt 1&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="211"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt1_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt1_desc&quot;>For a village, 1732&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="212"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt1_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt1_abbr&quot;>Neidhardt 1&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="213"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt2&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt2&quot;>Neidhardt 2&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="214"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt2_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt2_desc&quot;>For a small town, 1732&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="215"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt2_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt2_abbr&quot;>Neidhardt 2&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="216"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt3&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt3&quot;>Neidhardt 3&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="217"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt3_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt3_desc&quot;>For a big city, 1732&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="218"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;neidhardt3_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;neidhardt3_abbr&quot;>Neidhardt 3&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="219"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;valotti&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;valotti&quot;>Valotti&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="220"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;valotti_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;valotti_abbr&quot;>Valotti&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="221"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;young2&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;young2&quot;>Young 2&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="222"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;young2_abbr&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;young2_abbr&quot;>Young 2&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="223"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pythagorean_comma&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;pythagorean_comma&quot;>%d\u2044%d&amp;#x200A;pC&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="230"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;syntonic_comma&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;syntonic_comma&quot;>%d\u2044%d&amp;#x200A;sC&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="231"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;schisma&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;schisma&quot;>%d\u2044%d&amp;#x200A;sch&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="232"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;pythagorean_comma_desc&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;pythagorean_comma_desc&quot;>pC: Pythagorean Comma, 531441\u2044524288\nsC: Syntonic Comma, 81\u204480\nsch: Schisma, 32805\u204432768&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="235"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;comma_separator&quot; is not translated in &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;comma_separator&quot;>,\ &lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="244"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;sa_carnatic&quot; is not translated in &quot;cs&quot; (Czech), &quot;de&quot; (German), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;sa_carnatic&quot;>Sa&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="248"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;notation_carnatic&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;notation_carnatic&quot;>Carnatic&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="260"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;notation_hindustani&quot; is not translated in &quot;cs&quot; (Czech) or &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;notation_hindustani&quot;>Hindustani&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="273"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;notation_byzantine&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;notation_byzantine&quot;>Byzantine&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="282"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;helmholtz_notation&quot; is not translated in &quot;cs&quot; (Czech)"
+        errorLine1="    &lt;string name=&quot;helmholtz_notation&quot;>Helmholtz notation (C, … c\&apos;)&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="285"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;extended_quarter_comma_mean_tone&quot; is not translated in &quot;cs&quot; (Czech) or &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;extended_quarter_comma_mean_tone&quot;>Extended ¼ comma meantone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="286"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;extended_quarter_comma_mean_tone_desc&quot; is not translated in &quot;cs&quot; (Czech) or &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;extended_quarter_comma_mean_tone_desc&quot;>Pure major 3rds, 15 notes&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="287"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;extended_quarter_comma_mean_tone_abbr&quot; is not translated in &quot;cs&quot; (Czech)"
+        errorLine1="    &lt;string name=&quot;extended_quarter_comma_mean_tone_abbr&quot;>Extended ¼ comma meantone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="288"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;sensitivity&quot; is not translated in &quot;cs&quot; (Czech) or &quot;fr&quot; (French)"
+        errorLine1="    &lt;string name=&quot;sensitivity&quot;>Sensitivity&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="289"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;delete_items&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;delete_items&quot;>Delete items&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="290"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;database_empty_share&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;database_empty_share&quot;>There are no items to share.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="291"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;audio_record_permission_rationale&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;audio_record_permission_rationale&quot;>Grant microphone access to start tuning.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="292"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;writing_wave_file&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;writing_wave_file&quot;>Writing wave file: %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="293"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;failed_writing_wave_file&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;failed_writing_wave_file&quot;>Did not write wave file.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="294"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;instruments&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;instruments&quot;>Instruments&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="295"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;edit&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;edit&quot;>Edit&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="296"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;copy_&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;copy_&quot;>Copy&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="297"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;delete&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;delete&quot;>Delete&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="298"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;temperaments&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;temperaments&quot;>Temperaments&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="299"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;save&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;save&quot;>Save&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="300"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;temperament_editor&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;temperament_editor&quot;>Edit temperament&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="301"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;note_number&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;note_number&quot;>Number of notes&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="302"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;cent_str&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;cent_str&quot;>cent&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="303"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;octave_offset&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;octave_offset&quot;>Octave offset&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="304"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;ratio&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;ratio&quot;>ratio&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="305"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;temperament_name&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;temperament_name&quot;>Temperament name&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="306"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;temperament_abbreviation&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;temperament_abbreviation&quot;>Abbreviation&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="307"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;temperament_description&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;temperament_description&quot;>Description&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="308"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;decreasing_value_error&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;decreasing_value_error&quot;>Value must be greater than the previous one.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="309"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;missing_note_name&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;missing_note_name&quot;>Missing note name.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="310"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;missing_value&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;missing_value&quot;>Missing cent or ratio value.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="311"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;duplicate_note_name&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;duplicate_note_name&quot;>Duplicate note name.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="312"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;invalid_value&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;invalid_value&quot;>Invalid value.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="313"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;maximum_value_exceeded&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;maximum_value_exceeded&quot;>Maximum value of %d exceeded.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="314"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;edo_temperaments&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;edo_temperaments&quot;>Equal temperaments&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="315"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;other_temperaments&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;other_temperaments&quot;>Other temperaments&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="316"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;custom_temperaments&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;custom_temperaments&quot;>Custom temperaments&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="317"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;notation_vietnamese&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;notation_vietnamese&quot;>Vietnamese&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="318"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;c_note_vietnamese&quot; is not translated in &quot;cs&quot; (Czech), &quot;de&quot; (German), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;c_note_vietnamese&quot;>Hò&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="319"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;d_note_vietnamese&quot; is not translated in &quot;cs&quot; (Czech), &quot;de&quot; (German), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;d_note_vietnamese&quot;>Xư&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="320"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;e_note_vietnamese&quot; is not translated in &quot;cs&quot; (Czech), &quot;de&quot; (German), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;e_note_vietnamese&quot;>Y&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="321"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;f_note_vietnamese&quot; is not translated in &quot;cs&quot; (Czech), &quot;de&quot; (German), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;f_note_vietnamese&quot;>Xang&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="322"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;g_note_vietnamese&quot; is not translated in &quot;cs&quot; (Czech), &quot;de&quot; (German), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;g_note_vietnamese&quot;>Xê&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="323"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;a_note_vietnamese&quot; is not translated in &quot;cs&quot; (Czech), &quot;de&quot; (German), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;a_note_vietnamese&quot;>Công&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="324"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;b_note_vietnamese&quot; is not translated in &quot;cs&quot; (Czech), &quot;de&quot; (German), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;b_note_vietnamese&quot;>Phan&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="325"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;use_default&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;use_default&quot;>Use default&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="326"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;detect_frequency&quot; is not translated in &quot;cs&quot; (Czech), &quot;fr&quot; (French), &quot;pl&quot; (Polish), &quot;hu&quot; (Hungarian), &quot;zh&quot; (Chinese)"
+        errorLine1="    &lt;string name=&quot;detect_frequency&quot;>Detect frequency&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="327"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        message="&quot;asszimetrikus&quot; is a common misspelling; did you mean &quot;aszimmetrikus&quot;?"
+        errorLine1="    &lt;string name=&quot;pure_tuning_desc&quot;>Ötfokú, asszimetrikus skála&lt;/string>"
+        errorLine2="                                            ^">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="172"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        message="Repeated word &quot;kommás&quot; in message: possible typo"
+        errorLine1="    &lt;string name=&quot;werckmeister_iii_desc&quot;>¼ kommás kommás osztások&lt;/string>"
+        errorLine2="                                           ^">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="184"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;percent&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;percent&quot; translatable=&quot;false&quot;>%d&amp;#x200A;%%&lt;/string>"
+        errorLine2="                           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="5"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;hertz&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;hertz&quot; translatable=&quot;false&quot;>%.0f&amp;#x200A;Hz&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="6"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;hertz_1f&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;hertz_1f&quot; translatable=&quot;false&quot;>%.1f&amp;#x200A;Hz&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="7"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;hertz_str&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;hertz_str&quot; translatable=&quot;false&quot;>%s&amp;#x200A;Hz&lt;/string>"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="8"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;seconds&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;seconds&quot; translatable=&quot;false&quot;>%.2f&amp;#x200A;s&lt;/string>"
+        errorLine2="                           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="9"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;cent&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;cent&quot; translatable=&quot;false&quot;>%+d&amp;#x200A;&amp;#162;&lt;/string>"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="41"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;cent_nosign&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;cent_nosign&quot; translatable=&quot;false&quot;>%d&amp;#x200A;&amp;#162;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="42"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;tolerance_summary&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;tolerance_summary&quot; translatable=&quot;false&quot;>&amp;#177;%d&amp;#x200A;&amp;#162;&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="47"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;cent&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;cent&quot; translatable=&quot;false&quot;>%+d&amp;#x200A;&amp;#162;&lt;/string>"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="48"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;cent_nosign&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;cent_nosign&quot; translatable=&quot;false&quot;>%d&amp;#x200A;&amp;#162;&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="49"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;tolerance_summary&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;tolerance_summary&quot; translatable=&quot;false&quot;>&amp;#177;%d&amp;#x200A;&amp;#162;&lt;/string>"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="54"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;c_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;c_note_international&quot; translatable=&quot;false&quot;>C&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="75"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;d_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;d_note_international&quot; translatable=&quot;false&quot;>D&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="76"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;e_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;e_note_international&quot; translatable=&quot;false&quot;>E&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="77"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;f_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;f_note_international&quot; translatable=&quot;false&quot;>F&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="78"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;g_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;g_note_international&quot; translatable=&quot;false&quot;>G&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="79"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;a_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;a_note_international&quot; translatable=&quot;false&quot;>A&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="80"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;b_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;b_note_international&quot; translatable=&quot;false&quot;>B&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="81"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;c_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;c_note_international&quot; translatable=&quot;false&quot;>C&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="82"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;d_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;d_note_international&quot; translatable=&quot;false&quot;>D&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="83"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;e_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;e_note_international&quot; translatable=&quot;false&quot;>E&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="84"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;f_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;f_note_international&quot; translatable=&quot;false&quot;>F&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="85"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;g_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;g_note_international&quot; translatable=&quot;false&quot;>G&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="86"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;a_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;a_note_international&quot; translatable=&quot;false&quot;>A&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="87"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;b_note_international&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;b_note_international&quot; translatable=&quot;false&quot;>B&lt;/string>"
+        errorLine2="                                        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="88"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;equal_temperament_12&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;equal_temperament_12&quot;>Strój równomiernie temperowany&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="142"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;equal_temperament_12_desc&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;equal_temperament_12_desc&quot;>12 dźwięków na oktawę&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="143"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;equal_temperament_12_abbr&quot; has been marked as translatable=&quot;false&quot; elsewhere (usually in the `values` folder), but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;equal_temperament_12_abbr&quot;>EDO 12&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="144"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;plus_correction&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;plus_correction&quot; translatable=&quot;false&quot;>&quot; + &quot;&lt;/string>"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="226"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;minus_correction&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;minus_correction&quot; translatable=&quot;false&quot;>&quot; - &quot;&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="227"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;plus_correction&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;plus_correction&quot; translatable=&quot;false&quot;>&quot; + &quot;&lt;/string>"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="232"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;minus_correction&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;minus_correction&quot; translatable=&quot;false&quot;>&quot; - &quot;&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="233"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ri1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ri1_carnatic&quot; translatable=&quot;false&quot;>Ri₁&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="242"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ri2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ri2_carnatic&quot; translatable=&quot;false&quot;>Ri₂&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="243"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ga1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ga1_carnatic&quot; translatable=&quot;false&quot;>Ga₁&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="244"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ga2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ga2_carnatic&quot; translatable=&quot;false&quot;>Ga₂&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="245"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ma1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ma1_carnatic&quot; translatable=&quot;false&quot;>Ma₁&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="246"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ma2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ma2_carnatic&quot; translatable=&quot;false&quot;>Ma₂&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="247"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;pa_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;pa_carnatic&quot; translatable=&quot;false&quot;>Pa&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="248"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ri1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ri1_carnatic&quot; translatable=&quot;false&quot;>Ri₁&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="248"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dha1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;dha1_carnatic&quot; translatable=&quot;false&quot;>Dha₁&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="249"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ri2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ri2_carnatic&quot; translatable=&quot;false&quot;>Ri₂&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="249"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dha2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;dha2_carnatic&quot; translatable=&quot;false&quot;>Dha₂&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="250"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ga1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ga1_carnatic&quot; translatable=&quot;false&quot;>Ga₁&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="250"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ga2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ga2_carnatic&quot; translatable=&quot;false&quot;>Ga₂&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="251"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ni1_carnatic&quot; translatable=&quot;false&quot;>Ni₁&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="251"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ma1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ma1_carnatic&quot; translatable=&quot;false&quot;>Ma₁&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="252"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ni2_carnatic&quot; translatable=&quot;false&quot;>Ni₂&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="252"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ma2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ma2_carnatic&quot; translatable=&quot;false&quot;>Ma₂&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="253"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;pa_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;pa_carnatic&quot; translatable=&quot;false&quot;>Pa&lt;/string>"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="254"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;sa_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;sa_hindustani&quot; translatable=&quot;false&quot;>Sza&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="254"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dha1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;dha1_carnatic&quot; translatable=&quot;false&quot;>Dha₁&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="255"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;re1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;re1_hindustani&quot; translatable=&quot;false&quot;>Re₁&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="255"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dha2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;dha2_carnatic&quot; translatable=&quot;false&quot;>Dha₂&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="256"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;re2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;re2_hindustani&quot; translatable=&quot;false&quot;>Re₂&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="256"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ga1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ga1_hindustani&quot; translatable=&quot;false&quot;>Ga₁&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="257"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni1_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ni1_carnatic&quot; translatable=&quot;false&quot;>Ni₁&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="257"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ga2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ga2_hindustani&quot; translatable=&quot;false&quot;>Ga₂&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="258"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni2_carnatic&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ni2_carnatic&quot; translatable=&quot;false&quot;>Ni₂&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="258"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ma1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ma1_hindustani&quot; translatable=&quot;false&quot;>Ma₁&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="259"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ma2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ma2_hindustani&quot; translatable=&quot;false&quot;>Ma₂&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="260"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;sa_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;sa_hindustani&quot; translatable=&quot;false&quot;>Sa&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="260"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;pa_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;pa_hindustani&quot; translatable=&quot;false&quot;>Pa&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="261"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;re1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;re1_hindustani&quot; translatable=&quot;false&quot;>Re₁&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="261"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dha1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;dha1_hindustani&quot; translatable=&quot;false&quot;>Dha₁&lt;/string>"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="262"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;re2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;re2_hindustani&quot; translatable=&quot;false&quot;>Re₂&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="262"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dha2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;dha2_hindustani&quot; translatable=&quot;false&quot;>Dha₂&lt;/string>"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="263"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ga1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ga1_hindustani&quot; translatable=&quot;false&quot;>Ga₁&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="263"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ga2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ga2_hindustani&quot; translatable=&quot;false&quot;>Ga₂&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="264"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ni1_hindustani&quot; translatable=&quot;false&quot;>Ni₁&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="264"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ma1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ma1_hindustani&quot; translatable=&quot;false&quot;>Ma₁&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="265"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ni2_hindustani&quot; translatable=&quot;false&quot;>Ni₂&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="265"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ma2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ma2_hindustani&quot; translatable=&quot;false&quot;>Ma₂&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="266"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;pa_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;pa_hindustani&quot; translatable=&quot;false&quot;>Pa&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="267"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dha1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;dha1_hindustani&quot; translatable=&quot;false&quot;>Dha₁&lt;/string>"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="268"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ni_byzantine&quot; translatable=&quot;false&quot;>Νη&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="268"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dha2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;dha2_hindustani&quot; translatable=&quot;false&quot;>Dha₂&lt;/string>"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="269"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;pa_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;pa_byzantine&quot; translatable=&quot;false&quot;>Πα&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="269"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni1_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ni1_hindustani&quot; translatable=&quot;false&quot;>Ni₁&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="270"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;vou_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;vou_byzantine&quot; translatable=&quot;false&quot;>Βου&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="270"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;gha_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;gha_byzantine&quot; translatable=&quot;false&quot;>Γα&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="271"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni2_hindustani&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ni2_hindustani&quot; translatable=&quot;false&quot;>Ni₂&lt;/string>"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="271"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dhi_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;dhi_byzantine&quot; translatable=&quot;false&quot;>Δι&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="272"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ke_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;ke_byzantine&quot; translatable=&quot;false&quot;>Κε&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="273"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ni_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ni_byzantine&quot; translatable=&quot;false&quot;>Νη&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="274"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;zo_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;hu&quot; (Hungarian) here"
+        errorLine1="    &lt;string name=&quot;zo_byzantine&quot; translatable=&quot;false&quot;>Ζω&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-hu/strings.xml"
+            line="274"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;pa_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;pa_byzantine&quot; translatable=&quot;false&quot;>Πα&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="275"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;vou_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;vou_byzantine&quot; translatable=&quot;false&quot;>Βου&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="276"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;gha_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;gha_byzantine&quot; translatable=&quot;false&quot;>Γα&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="277"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;dhi_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;dhi_byzantine&quot; translatable=&quot;false&quot;>Δι&lt;/string>"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="278"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;ke_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;ke_byzantine&quot; translatable=&quot;false&quot;>Κε&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="279"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;zo_byzantine&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;pl&quot; (Polish) here"
+        errorLine1="    &lt;string name=&quot;zo_byzantine&quot; translatable=&quot;false&quot;>Ζω&lt;/string>"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-pl/strings.xml"
+            line="280"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>Aller directement à la nouvelle valeur de la hauteur&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="24"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="ImpliedQuantity"
+        message="The quantity `&apos;one&apos;` matches more than one specific number in this locale (0, 1), but the message did not include a formatting argument (such as `%d`). This is usually an internationalization error. See full issue explanation for more."
+        errorLine1="        &lt;item quantity=&quot;one&quot;>Pas de moyenne&lt;/item>"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="29"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;notes&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string name=&quot;equal_temperament_x_desc&quot;>%d notes per octave&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="174"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;exceeded&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string name=&quot;maximum_value_exceeded&quot;>Maximum value of %d exceeded.&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="314"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="DataExtractionRules"
+        message="The attribute `android:fullBackupContent` is deprecated from Android 12 and higher and may be removed in future versions. Consider adding the attribute `android:dataExtractionRules` specifying an `@xml` resource which configures cloud backups and device transfers on Android 12 and higher."
+        errorLine1="        android:fullBackupContent=&quot;true&quot;"
+        errorLine2="                                   ~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="12"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (3151 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="      android:pathData=&quot;m5.012,5.79c-0.146,0.178 -0.129,0.438 0.038,0.604 0.232,0.233 0.694,0.702 0.694,0.702l-0.811,0.811c-0.167,-0.107 -0.324,-0.127 -0.4,-0.053 -0.079,0.075 -0.059,0.234 0.049,0.404l-0.442,0.442c-0.368,-0.297 -0.75,-0.386 -0.917,-0.215 -0.194,0.198 -0.032,0.677 0.362,1.072 0.394,0.395 0.874,0.557 1.072,0.362 0.171,-0.167 0.081,-0.55 -0.215,-0.917l0.445,-0.445c0.166,0.105 0.321,0.124 0.396,0.049 0.07,-0.077 0.05,-0.23 -0.053,-0.393l0.811,-0.811 1.223,1.246 -0.796,0.796c-0.167,-0.107 -0.324,-0.127 -0.4,-0.053 -0.079,0.075 -0.059,0.234 0.049,0.404L5.677,10.236c-0.367,-0.294 -0.748,-0.382 -0.913,-0.211 -0.194,0.198 -0.034,0.674 0.359,1.068 0.394,0.395 0.874,0.557 1.072,0.362 0.171,-0.167 0.081,-0.55 -0.215,-0.917l0.445,-0.445c0.167,0.107 0.324,0.127 0.4,0.053 0.07,-0.078 0.048,-0.233 -0.057,-0.396l0.8,-0.8 1.227,1.249 -0.785,0.785c-0.168,-0.109 -0.326,-0.131 -0.404,-0.057 -0.079,0.076 -0.058,0.237 0.053,0.408l-0.442,0.442c-0.368,-0.297 -0.75,-0.386 -0.917,-0.215 -0.194,0.198 -0.034,0.674 0.359,1.068 0.394,0.395 0.874,0.557 1.072,0.362 0.171,-0.167 0.081,-0.55 -0.215,-0.917l0.445,-0.445c0.167,0.107 0.324,0.127 0.4,0.053 0.07,-0.078 0.048,-0.233 -0.057,-0.396l0.785,-0.785 18.585,18.902c-2.979,3.159 -1.047,5.702 0.166,6.915 1.497,1.497 4.099,2.801 4.099,2.801 0.488,1.883 0.694,3.993 3.159,6.458 2.266,2.266 5.296,1.267 8.488,-2.012 3.361,-3.453 4.301,-6.245 2.035,-8.511 -2.465,-2.465 -4.575,-2.671 -6.458,-3.159 0,0 -1.3,-2.606 -2.797,-4.103 -1.213,-1.213 -3.756,-3.145 -6.915,-0.166L10.55,9.04 11.335,8.255c0.164,0.105 0.318,0.127 0.396,0.057 0.074,-0.076 0.054,-0.233 -0.053,-0.4l0.445,-0.445c0.368,0.297 0.75,0.386 0.917,0.215 0.194,-0.198 0.032,-0.677 -0.362,-1.072 -0.394,-0.392 -0.871,-0.552 -1.068,-0.359 -0.171,0.167 -0.081,0.55 0.215,0.917l-0.442,0.442c-0.171,-0.111 -0.332,-0.131 -0.408,-0.053 -0.074,0.078 -0.052,0.236 0.057,0.404l-0.785,0.785 -1.249,-1.227 0.8,-0.8c0.164,0.105 0.318,0.127 0.396,0.057 0.074,-0.076 0.054,-0.233 -0.053,-0.4l0.445,-0.445c0.368,0.297 0.75,0.386 0.917,0.215 0.194,-0.198 0.032,-0.677 -0.362,-1.072 -0.394,-0.392 -0.871,-0.552 -1.068,-0.359 -0.171,0.166 -0.083,0.547 0.211,0.913L9.844,6.07c-0.17,-0.109 -0.329,-0.128 -0.404,-0.049 -0.074,0.076 -0.054,0.233 0.053,0.4l-0.796,0.796 -1.246,-1.223 0.811,-0.811c0.163,0.103 0.316,0.123 0.393,0.053 0.075,-0.075 0.055,-0.23 -0.049,-0.396l0.445,-0.445c0.368,0.297 0.75,0.386 0.917,0.215 0.194,-0.198 0.032,-0.677 -0.362,-1.072 -0.394,-0.395 -0.874,-0.557 -1.072,-0.362 -0.171,0.167 -0.081,0.55 0.215,0.917l-0.442,0.442c-0.17,-0.109 -0.329,-0.128 -0.404,-0.049 -0.074,0.076 -0.054,0.233 0.053,0.4l-0.811,0.811c-0.235,-0.231 -0.468,-0.463 -0.702,-0.694 -0.177,-0.177 -0.46,-0.181 -0.638,-0.004l-0.793,0.793zM27.606,30.105c0.425,-0.425 0.847,-0.847 1.272,-1.272L30.086,27.625c0.563,-0.563 1.314,-0.671 1.687,-0.298 0.887,0.887 -0.166,4.235 -0.166,4.235 0,0 -3.355,1.061 -4.242,0.174 -0.361,-0.361 -0.276,-1.074 0.242,-1.631zM32.007,31.962c1.994,0 7.145,0.072 8.892,1.819 1.196,1.196 0.72,2.956 -1,4.676l-0.698,0.698 -0.706,0.706c-1.721,1.721 -3.48,2.196 -4.676,1 -1.747,-1.747 -1.812,-6.906 -1.812,-8.9zM35.241,37.408 L35.785,37.952 37.997,35.74 37.453,35.196z&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ic_tar.xml"
+            line="9"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (3183 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="        android:pathData=&quot;m34.8439,6.6646c-0.8554,-0.5496 -1.5057,1.2215 -1.5057,1.2215l-0.4667,0.674 -0.846,-0.6706c0.5109,-0.7257 -0.6483,-0.6448 -0.9231,-0.3115 -0.2742,0.3711 0.1771,1.2673 0.5849,0.8502l0.7898,0.5619 -0.5117,0.7309 -0.7233,-0.5315c0.5366,-0.6943 -0.59,-0.7032 -0.9125,-0.1652 -0.3728,0.6219 0.3132,1.0461 0.6377,0.5821l0.7054,0.5043c-1.8546,2.6291 -3.1964,4.7976 -5.5827,8.0298 -1.5398,-0.9194 -4.2766,-1.1315 -5.4377,0.2306 -2.061,2.4176 -0.8976,3.9698 -2.5898,4.5756 0.6921,0.5961 1.5224,0.972 -0.3055,3.0311 -0.1949,0.2195 -0.3818,0.4023 -0.562,0.5544 -0.7047,0.1677 -1.3678,0.3338 -2.032,0.4999 -0.3035,-0.1099 -0.5964,-0.2887 -0.8887,-0.5032 -0.025,0.3161 -0.0711,0.5601 -0.1371,0.7574 -2.6902,0.6925 -4.9421,1.3593 -6.4087,1.9518l0.2427,1.0297 -1.435,0.5482 0.1668,0.381c1.3702,-0.453 2.9588,-0.9297 4.6777,-1.4167 -1.3488,1.7345 -2.5526,5.5186 2.5176,8.8608 0.0066,0.0053 0.0135,0.0095 0.0201,0.0148 0.0074,0.0041 0.0144,0.0088 0.0219,0.0129 5.5364,3.6495 8.6107,0.2165 9.3819,-1.687 0.8175,-2.0177 -0.036,-2.5722 1.6014,-3.4331 -1.0818,-0.6374 -1.7974,-1.4356 -0.8654,-3.4173 1.1718,-2.4916 1.8446,-1.8766 2.6653,-1.4756 -0.0971,-1.5786 1.3497,-1.4157 2.6589,-3.2932 6.5258,-1.4288 12.6824,-2.6247 16.4609,-3.1785l-0.0059,-1.4069c0,0 -7.339,1.2856 -15.7128,2.9637 0.2084,-1.5391 -0.9032,-3.4543 -2.1481,-4.3569 2.0299,-3.4672 3.4935,-5.5554 5.1786,-8.2962l0.7405,0.4488c-0.2985,0.4812 0.3614,0.9441 0.786,0.3564 0.3673,-0.5085 -0.0832,-1.5393 -0.5098,-0.7724l-0.775,-0.4561 0.4697,-0.7586 0.8278,0.5044c-0.2226,0.5391 0.7804,0.6015 1.0133,0.2033 0.198,-0.3839 -0.1845,-1.4812 -0.6501,-0.7256l-0.9512,-0.5141 0.4368,-0.6937c0,0 1.4138,-1.3381 0.4859,-1.8927 -0.0258,-0.0154 -0.0515,-0.0288 -0.0772,-0.0399 -0.0203,-0.0192 -0.0428,-0.0376 -0.0671,-0.0552 -0.0137,-0.0099 -0.0272,-0.0192 -0.0408,-0.0279zM44.9243,21.2535 L45.0288,21.8497c-5.1894,0.828 -10.2131,1.7305 -15.1966,2.7656 0.0249,-0.0477 0.0498,-0.0942 0.0745,-0.1439 0.0446,-0.09 0.0814,-0.1827 0.1133,-0.2776 7.4618,-1.5607 14.2831,-2.9014 14.9044,-2.9404zM22.9251,28.8825c0.8195,0.3972 -0.2533,2.0844 -0.6353,2.7141 -0.2949,0.486 -0.8038,1.8326 -0.5372,1.8972 0.4224,0.1023 -0.0293,-0.6274 0.5491,-0.4798 0.3251,0.0829 0.3622,0.3962 0.0674,0.7544 -0.3051,0.3707 -0.7558,0.1484 -1.1134,-0.0394 -0.3576,-0.1878 -0.2113,-1.7181 0.4265,-2.5165 0.531,-0.6647 1.4854,-1.7095 1.0134,-1.9933 -0.2826,-0.1699 -0.1657,0.5751 -0.5503,0.496 -0.2707,-0.0557 -0.2737,-0.265 -0.0242,-0.6214 0.1516,-0.2166 0.3497,-0.4315 0.804,-0.2113zM19.3256,26.5486c0.0223,0.0143 0.0444,0.0308 0.0659,0.0494 0.3815,0.3307 0.2621,0.598 0.1228,0.8228 -0.2293,0.3698 -0.4228,0.4496 -0.5807,0.2227 -0.2243,-0.3223 0.5063,-0.5091 0.2388,-0.7018 -0.4468,-0.3219 -1.0308,0.967 -1.4324,1.7171 -0.4823,0.9008 -1.8313,1.6388 -2.1449,1.3842 -0.3135,-0.2546 -0.6952,-0.5816 -0.4749,-1.0081 0.213,-0.4121 0.5153,-0.5012 0.7197,-0.2351 0.3636,0.4734 -0.4851,0.346 -0.2245,0.6938 0.1645,0.2196 1.2015,-0.779 1.5319,-1.2415 0.4147,-0.5806 1.4861,-2.1485 2.1782,-1.7036zM13.8512,27.7874c-0.3566,0.3884 -0.9282,0.5373 -1.7099,1.2067 -0.7899,0.2306 -1.5817,0.4661 -2.3769,0.7084 -0.0436,0.025 -0.2383,0.1371 -0.1932,-0.6353 0.3033,-0.2323 1.9313,-0.6968 4.28,-1.2798z&quot;"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ic_violin.xml"
+            line="5"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_import_export` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_import_export.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.mipmap.ic_launcher_round` appears to be unused">
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.equal_temperament_12_desc` appears to be unused"
+        errorLine1="    &lt;string name=&quot;equal_temperament_12_desc&quot; translatable=&quot;false&quot;>12 notes per octave&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="144"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.equal_temperament_12_abbr` appears to be unused"
+        errorLine1="    &lt;string name=&quot;equal_temperament_12_abbr&quot; translatable=&quot;false&quot;>EDO 12&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="145"
+            column="13"/>
+    </issue>
+
+</issues>
