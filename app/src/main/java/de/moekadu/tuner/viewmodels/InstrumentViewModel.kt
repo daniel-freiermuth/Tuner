@@ -39,7 +39,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InstrumentViewModel @Inject constructor(
     val instruments: InstrumentResources,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ): ViewModel(), InstrumentsData {
     override val listData = EditableListData(
         predefinedItemSections = persistentListOf(

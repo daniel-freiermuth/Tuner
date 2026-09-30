@@ -25,8 +25,8 @@ import de.moekadu.tuner.notenames.NoteModifier
 
 /** Available note notation types. */
 enum class NotationType(
-    @StringRes val stringResourceId: Int,
-    @StringRes val descriptionResId: Int,
+    @param:StringRes val stringResourceId: Int,
+    @param:StringRes val descriptionResId: Int,
     ) {
     /** Default C, D, E, ....*/
     Standard(

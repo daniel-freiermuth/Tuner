@@ -22,7 +22,7 @@ import androidx.annotation.DrawableRes
 import de.moekadu.tuner.R
 
 enum class InstrumentIcon(
-    @DrawableRes val resourceId: Int
+    @param:DrawableRes val resourceId: Int
 ){
     guitar(R.drawable.ic_guitar),
     ukulele(R.drawable.ic_ukulele),

@@ -18,7 +18,7 @@ import kotlin.random.Random
 @Singleton
 class InstrumentResources @Inject constructor(
     @ApplicationContext context: Context,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ) : ResourcesBase("instruments", context, applicationScope) {
 
     val predefinedInstruments = instrumentDatabase.toImmutableList()

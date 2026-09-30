@@ -24,7 +24,7 @@ import de.moekadu.tuner.R
 import kotlin.math.PI
 import kotlin.math.cos
 
-enum class WindowingFunction(@StringRes val stringResourceId: Int) {
+enum class WindowingFunction(@param:StringRes val stringResourceId: Int) {
     Tophat(R.string.no_window),
     Hamming(R.string.window_hamming),
     Hann(R.string.window_hann)

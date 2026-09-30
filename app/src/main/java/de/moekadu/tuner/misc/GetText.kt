@@ -48,7 +48,7 @@ data class GetTextFromString(
  */
 @Serializable
 data class GetTextFromResId(
-    @StringRes val id: Int
+    @param:StringRes val id: Int
 ) : GetText {
     override fun value(resources: Resources?) = resources?.getString(id) ?: ""
 }
@@ -63,7 +63,7 @@ data class GetTextFromResId(
  */
 @Serializable
 data class GetTextFromResIdWithIntArg(
-    @StringRes val id: Int,
+    @param:StringRes val id: Int,
     val arg: Int
 ) : GetText {
     override fun value(resources: Resources?) = resources?.getString(id, arg) ?: ""

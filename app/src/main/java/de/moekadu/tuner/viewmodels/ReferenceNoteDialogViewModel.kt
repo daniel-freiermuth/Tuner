@@ -39,7 +39,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReferenceNoteDialogViewModel @Inject constructor (
     val pref: PreferenceResources,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ) : ReferenceNoteDialogFrequencyDetector, ViewModel() {
     private var _detectedFrequency = mutableFloatStateOf(0f)
     /** The currently detected frequency or 0f if no frequency is detected yet.
