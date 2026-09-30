@@ -11,7 +11,10 @@ object NoteNameHelpers {
         val note = noteNames
             .firstOrNull {
                 (it.base == BaseNote.A && it.modifier == NoteModifier.None) ||
-                        (it.enharmonicBase == BaseNote.A && it.enharmonicModifier == NoteModifier.None)
+                    (
+                        it.enharmonicBase == BaseNote.A &&
+                            it.enharmonicModifier == NoteModifier.None
+                        )
             } ?: noteNames.getOrElse(0) { MusicalNote(BaseNote.A, NoteModifier.None) }
 
         return note.copy(octave = 4)

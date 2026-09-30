@@ -84,7 +84,7 @@ fun Fraction(
             fontFamily = fontFamily,
             style = style,
             maxLines = 1
-            )
+        )
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()

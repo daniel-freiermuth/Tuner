@@ -57,11 +57,9 @@ fun rememberTableColumnWidth(
     style: TextStyle = LocalTextStyle.current,
     density: Density = LocalDensity.current,
     textMeasurer: TextMeasurer = rememberTextMeasurer()
-): Dp {
-    return remember(textMeasurer, density, style) {
-        with(density) {
-            textMeasurer.measure(testString, style = style, density = density).size.width.toDp()
-        }
+): Dp = remember(textMeasurer, density, style) {
+    with(density) {
+        textMeasurer.measure(testString, style = style, density = density).size.width.toDp()
     }
 }
 
@@ -113,7 +111,7 @@ private fun OverflowMenu(
                 }
             )
         }
-   }
+    }
 }
 
 /** Line of stretch tuning table.
@@ -153,10 +151,11 @@ fun StretchTuningTableLine(
         modifier = modifier,
         color = if (errorMessage != null) {
             MaterialTheme.colorScheme.errorContainer
-        } else if (isSelected)
+        } else if (isSelected) {
             MaterialTheme.colorScheme.secondaryContainer
-        else
+        } else {
             MaterialTheme.colorScheme.surface
+        }
     ) {
         Column(
             modifier = Modifier
@@ -170,7 +169,7 @@ fun StretchTuningTableLine(
                 Spacer(modifier = Modifier.weight(2f))
                 Text(
                     column1,
-                    modifier = Modifier.padding(start=16.dp).width(column1Width),
+                    modifier = Modifier.padding(start = 16.dp).width(column1Width),
                     maxLines = 1,
                     style = textStyle,
                     textAlign = textAlign
@@ -180,7 +179,7 @@ fun StretchTuningTableLine(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     column2,
-                    modifier = Modifier.padding(end=16.dp).width(column2Width),
+                    modifier = Modifier.padding(end = 16.dp).width(column2Width),
                     style = textStyle,
                     textAlign = textAlign
                 )
@@ -213,7 +212,7 @@ fun StretchTuningTableLine(
 
 @Preview(widthDp = 400, heightDp = 400, showBackground = true)
 @Composable
-private fun  StretchTuningTableLinePreview() {
+private fun StretchTuningTableLinePreview() {
     TunerTheme {
         Surface {
             Box {
@@ -236,15 +235,27 @@ private fun  StretchTuningTableLinePreview() {
                         style = style
                     )
 
-                    stretchTuningData.unstretchedFrequencies.forEachIndexed { index, unstretchedFrequency ->
+                    stretchTuningData.unstretchedFrequencies.forEachIndexed {
+                            index,
+                            unstretchedFrequency
+                        ->
                         StretchTuningTableLine(
                             column1 = stringResource(R.string.hertz_1f, unstretchedFrequency),
-                            column2 = stringResource(R.string.cent_1f, stretchTuningData.stretchInCents[index]),
+                            column2 = stringResource(
+                                R.string.cent_1f,
+                                stretchTuningData.stretchInCents[index]
+                            ),
                             isSelected = (index == 1),
                             column1Width = frequencyWidth,
                             column2Width = centCorrectionWidth,
                             textStyle = style,
-                            errorMessage = if (index == 1) "This is an error message, and it is very long, to show what happens when the line breaks" else null
+                            errorMessage = if (index ==
+                                1
+                            ) {
+                                "This is an error message, and it is very long, to show what happens when the line breaks"
+                            } else {
+                                null
+                            }
                         )
                     }
                 }

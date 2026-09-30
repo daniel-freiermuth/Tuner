@@ -69,11 +69,9 @@ data class Instrument(
      * @param resources App resources only needed, if the instrument name is a string resource.
      * @return Name of instrument.
      */
-    fun getNameString(resources: Resources?): String {
-        return when {
-            nameResource != null && resources != null -> resources.getString(nameResource)
-            else -> name
-        }
+    fun getNameString(resources: Resources?): String = when {
+        nameResource != null && resources != null -> resources.getString(nameResource)
+        else -> name
     }
 
     /** Get readable representation of all strings (e.g. "A#4 - C5 - G5")
@@ -85,31 +83,34 @@ data class Instrument(
         notePrintOptions: NotePrintOptions2,
         fontSize: TextUnit,
         fontWeight: FontWeight? = null
-        ): AnnotatedString {
-        return if (isChromatic) {
-            buildAnnotatedString { append(context.getString(R.string.chromatic)) }
-        } else {
-            buildAnnotatedString {
+    ): AnnotatedString = if (isChromatic) {
+        buildAnnotatedString { append(context.getString(R.string.chromatic)) }
+    } else {
+        buildAnnotatedString {
 //            Log.v("Tuner", "Instrument.getStringsString: printOption=$printOption, preferFlat=$preferFlat")
-                if (strings.isNotEmpty())
-                    append(strings[0].asAnnotatedString(
+            if (strings.isNotEmpty()) {
+                append(
+                    strings[0].asAnnotatedString(
                         notePrintOptions,
                         fontSize,
                         fontWeight,
                         withOctave = true,
                         resources = context.resources
-                    ))
+                    )
+                )
+            }
 
-                for (i in 1 until strings.size) {
-                    append(" - ")
-                    append(strings[i].asAnnotatedString(
+            for (i in 1 until strings.size) {
+                append(" - ")
+                append(
+                    strings[i].asAnnotatedString(
                         notePrintOptions,
                         fontSize,
                         fontWeight,
                         withOctave = true,
                         resources = context.resources
-                    ))
-                }
+                    )
+                )
             }
         }
     }
@@ -185,7 +186,7 @@ private fun createInstrumentDatabase(): ArrayList<Instrument> {
                 MusicalNote(BaseNote.E, NoteModifier.None, 1),
                 MusicalNote(BaseNote.A, NoteModifier.None, 1),
                 MusicalNote(BaseNote.D, NoteModifier.None, 2),
-                MusicalNote(BaseNote.G, NoteModifier.None, 2),
+                MusicalNote(BaseNote.G, NoteModifier.None, 2)
             ),
             icon = InstrumentIcon.bass,
             stableId = -1 - instruments.size.toLong()
@@ -200,7 +201,7 @@ private fun createInstrumentDatabase(): ArrayList<Instrument> {
                 MusicalNote(BaseNote.E, NoteModifier.None, 1),
                 MusicalNote(BaseNote.A, NoteModifier.None, 1),
                 MusicalNote(BaseNote.D, NoteModifier.None, 2),
-                MusicalNote(BaseNote.G, NoteModifier.None, 2),
+                MusicalNote(BaseNote.G, NoteModifier.None, 2)
             ),
             icon = InstrumentIcon.bass,
             stableId = -1 - instruments.size.toLong()
@@ -228,7 +229,7 @@ private fun createInstrumentDatabase(): ArrayList<Instrument> {
                 MusicalNote(BaseNote.G, NoteModifier.None, 3),
                 MusicalNote(BaseNote.D, NoteModifier.None, 4),
                 MusicalNote(BaseNote.A, NoteModifier.None, 4),
-                MusicalNote(BaseNote.E, NoteModifier.None, 5),
+                MusicalNote(BaseNote.E, NoteModifier.None, 5)
             ),
             icon = InstrumentIcon.violin,
             stableId = -1 - instruments.size.toLong()
@@ -242,7 +243,7 @@ private fun createInstrumentDatabase(): ArrayList<Instrument> {
                 MusicalNote(BaseNote.C, NoteModifier.None, 3),
                 MusicalNote(BaseNote.G, NoteModifier.None, 3),
                 MusicalNote(BaseNote.D, NoteModifier.None, 4),
-                MusicalNote(BaseNote.A, NoteModifier.None, 4),
+                MusicalNote(BaseNote.A, NoteModifier.None, 4)
             ),
             icon = InstrumentIcon.violin,
             stableId = -1 - instruments.size.toLong()
@@ -256,7 +257,7 @@ private fun createInstrumentDatabase(): ArrayList<Instrument> {
                 MusicalNote(BaseNote.C, NoteModifier.None, 2),
                 MusicalNote(BaseNote.G, NoteModifier.None, 2),
                 MusicalNote(BaseNote.D, NoteModifier.None, 3),
-                MusicalNote(BaseNote.A, NoteModifier.None, 3),
+                MusicalNote(BaseNote.A, NoteModifier.None, 3)
             ),
             icon = InstrumentIcon.cello,
             stableId = -1 - instruments.size.toLong()
@@ -270,7 +271,7 @@ private fun createInstrumentDatabase(): ArrayList<Instrument> {
                 MusicalNote(BaseNote.E, NoteModifier.None, 1),
                 MusicalNote(BaseNote.A, NoteModifier.None, 1),
                 MusicalNote(BaseNote.D, NoteModifier.None, 2),
-                MusicalNote(BaseNote.G, NoteModifier.None, 2),
+                MusicalNote(BaseNote.G, NoteModifier.None, 2)
             ),
             icon = InstrumentIcon.double_bass,
             stableId = -1 - instruments.size.toLong()

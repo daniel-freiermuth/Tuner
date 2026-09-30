@@ -1,8 +1,8 @@
 package de.moekadu.tuner.ui.notes
 
-import de.moekadu.tuner.R
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Stable
+import de.moekadu.tuner.R
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -13,13 +13,15 @@ enum class OctaveNotation(
     /** Just numbers. */
     Scientific(
         R.string.octave_notation_scientific,
-        R.string.octave_notation_scientific_description,
+        R.string.octave_notation_scientific_description
     ),
+
     /** Using primes and commas, and numbers, when primes and commas get too many. */
     Helmholtz(
         R.string.octave_notation_helmholtz,
-        R.string.octave_notation_helmholtz_description,
-        ),
+        R.string.octave_notation_helmholtz_description
+    ),
+
     /** Using sub- and superscript numbers. */
     HelmholtzNumbered(
         R.string.octave_notation_helmholtz_numbered,
@@ -65,7 +67,6 @@ data class NotePrintOptions(
     fun resourceId(noteNameStem: NoteNameStem) = resourceIds[noteNameStem]
 }
 
-
 @Serializable
 @Stable
 data class NotePrintOptionsOld(
@@ -74,6 +75,8 @@ data class NotePrintOptionsOld(
     val notationType: NotationType = NotationType.Standard
 ) {
     enum class SharpFlatPreference {
-        Sharp, Flat, None
+        Sharp,
+        Flat,
+        None
     }
 }

@@ -45,7 +45,10 @@ val circleOfFifthsQuarterCommaMeanTone = TemperamentCircleOfFifths(
     BFsharp = FifthModification(syntonicComma = RationalNumber(-1, 4)),
     FsharpCsharp = FifthModification(syntonicComma = RationalNumber(-1, 4)),
     CsharpGsharp = FifthModification(syntonicComma = RationalNumber(-1, 4)),
-    GsharpEflat = FifthModification(pythagoreanComma = RationalNumber(-1, 1), syntonicComma = RationalNumber(11, 4)),
+    GsharpEflat = FifthModification(
+        pythagoreanComma = RationalNumber(-1, 1),
+        syntonicComma = RationalNumber(11, 4)
+    ),
     EFlatBflat = FifthModification(syntonicComma = RationalNumber(-1, 4)),
     BflatF = FifthModification(syntonicComma = RationalNumber(-1, 4)),
     FC = FifthModification(syntonicComma = RationalNumber(-1, 4))
@@ -61,7 +64,10 @@ val circleOfFifthsThirdCommaMeanTone = TemperamentCircleOfFifths(
     BFsharp = FifthModification(syntonicComma = RationalNumber(-1, 3)),
     FsharpCsharp = FifthModification(syntonicComma = RationalNumber(-1, 3)),
     CsharpGsharp = FifthModification(syntonicComma = RationalNumber(-1, 3)),
-    GsharpEflat = FifthModification(pythagoreanComma = RationalNumber(-1, 1), syntonicComma = RationalNumber(11, 3)),
+    GsharpEflat = FifthModification(
+        pythagoreanComma = RationalNumber(-1, 1),
+        syntonicComma = RationalNumber(11, 3)
+    ),
     EFlatBflat = FifthModification(syntonicComma = RationalNumber(-1, 3)),
     BflatF = FifthModification(syntonicComma = RationalNumber(-1, 3)),
     FC = FifthModification(syntonicComma = RationalNumber(-1, 3))
@@ -92,7 +98,10 @@ val circleOfFifthsFifthCommaMeanTone = TemperamentCircleOfFifths(
     BFsharp = FifthModification(syntonicComma = RationalNumber(-1, 5)),
     FsharpCsharp = FifthModification(syntonicComma = RationalNumber(-1, 5)),
     CsharpGsharp = FifthModification(syntonicComma = RationalNumber(-1, 5)),
-    GsharpEflat = FifthModification(pythagoreanComma = RationalNumber(-1, 1), syntonicComma = RationalNumber(11, 5)),
+    GsharpEflat = FifthModification(
+        pythagoreanComma = RationalNumber(-1, 1),
+        syntonicComma = RationalNumber(11, 5)
+    ),
     EFlatBflat = FifthModification(syntonicComma = RationalNumber(-1, 5)),
     BflatF = FifthModification(syntonicComma = RationalNumber(-1, 5)),
     FC = FifthModification(syntonicComma = RationalNumber(-1, 5))
@@ -306,7 +315,7 @@ data class TemperamentCircleOfFifths(
         var totalCorrection = FifthModification()
         ratios[0] = 1.0
         totalCorrection += CG
-        ratios[7] =  threeHalf.toDouble() * totalCorrection.toDouble()
+        ratios[7] = threeHalf.toDouble() * totalCorrection.toDouble()
         totalCorrection += GD
         ratios[2] = (threeHalf.pow(2) / 2).toDouble() * totalCorrection.toDouble()
         totalCorrection += DA

@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PreferencesViewModel @Inject constructor(
     val pref: PreferenceResources,
-    val temperaments: TemperamentResources,
+    val temperaments: TemperamentResources
 ) : ViewModel() {
     val musicalScale get() = temperaments.musicalScale
 }

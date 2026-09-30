@@ -31,15 +31,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.moekadu.tuner.R
 import de.moekadu.tuner.preferences.NightMode
 import de.moekadu.tuner.ui.misc.TunerScaffoldWithoutBottomBar
 import de.moekadu.tuner.ui.misc.rememberNumberFormatter
 import de.moekadu.tuner.ui.notes.asAnnotatedString
+import de.moekadu.tuner.ui.preferences.LanguageSelections
 import de.moekadu.tuner.ui.preferences.Section
 import de.moekadu.tuner.ui.preferences.SimplePreference
 import de.moekadu.tuner.ui.preferences.SliderPreference
@@ -48,9 +51,6 @@ import de.moekadu.tuner.ui.theme.TunerTheme
 import de.moekadu.tuner.viewmodels.PreferencesViewModel
 import kotlin.math.pow
 import kotlin.math.roundToInt
-import androidx.compose.ui.platform.LocalResources
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import de.moekadu.tuner.ui.preferences.LanguageSelections
 
 private fun appearanceSummary(mode: NightMode, resources: Resources) = when (mode) {
     NightMode.Auto -> resources.getString(R.string.system_appearance)
@@ -85,7 +85,7 @@ fun Preferences(
         canNavigateUp = true,
         onNavigateUpClicked = onNavigateUpClicked,
         title = stringResource(id = R.string.settings),
-        showPreferenceButton = false,
+        showPreferenceButton = false
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.consumeWindowInsets(paddingValues),
@@ -105,7 +105,7 @@ fun Preferences(
                 }
                 SimplePreference(
                     name = stringResource(id = R.string.language),
-                    supporting = { Text(stringResource(selectedLocale.resId))},
+                    supporting = { Text(stringResource(selectedLocale.resId)) },
                     iconId = R.drawable.language_24px,
                     modifier = Modifier.clickable { onLanguageClicked() }
                 )
@@ -172,22 +172,23 @@ fun Preferences(
                     supporting = {
                         val resources = LocalResources.current
                         val textStyle = LocalTextStyle.current
-                        val summary = remember(musicalScale, resources, textStyle, notePrintOptions) {
-                            buildAnnotatedString {
-                                //append(resources.getString(getTuningNameResourceId(musicalScale.temperamentType)))
-                                append(musicalScale.temperament.name.value(resources))
-                                append(resources.getString(R.string.comma_separator))
-                                append(
-                                    musicalScale.rootNote.asAnnotatedString(
-                                        notePrintOptions,
-                                        textStyle.fontSize,
-                                        textStyle.fontWeight,
-                                        withOctave = false,
-                                        resources = resources
+                        val summary =
+                            remember(musicalScale, resources, textStyle, notePrintOptions) {
+                                buildAnnotatedString {
+                                    // append(resources.getString(getTuningNameResourceId(musicalScale.temperamentType)))
+                                    append(musicalScale.temperament.name.value(resources))
+                                    append(resources.getString(R.string.comma_separator))
+                                    append(
+                                        musicalScale.rootNote.asAnnotatedString(
+                                            notePrintOptions,
+                                            textStyle.fontSize,
+                                            textStyle.fontWeight,
+                                            withOctave = false,
+                                            resources = resources
+                                        )
                                     )
-                                )
+                                }
                             }
-                        }
                         Text(summary)
                     },
                     iconId = R.drawable.ic_temperament,
@@ -225,7 +226,11 @@ fun Preferences(
                     name = stringResource(id = R.string.notation),
                     supporting = {
                         val summary = remember(notePrintOptions, resources) {
-                            "${resources.getString(notePrintOptions.notationType.stringResourceId)}, ${resources.getString(notePrintOptions.octaveNotation.stringResourceId)}"
+                            "${resources.getString(
+                                notePrintOptions.notationType.stringResourceId
+                            )}, ${resources.getString(
+                                notePrintOptions.octaveNotation.stringResourceId
+                            )}"
                         }
                         Text(summary)
                     },
@@ -292,11 +297,11 @@ fun Preferences(
                 val resources = LocalResources.current
                 val summary = remember(windowSize, resources) {
                     "$windowSize " + resources.getString(R.string.samples) +
-                            " (" + resources.getString(R.string.minimum_frequency) +
-                            resources.getString(
-                                R.string.hertz,
-                                2 * pref.sampleRate / windowSize.toFloat()
-                            ) + ")"
+                        " (" + resources.getString(R.string.minimum_frequency) +
+                        resources.getString(
+                            R.string.hertz,
+                            2 * pref.sampleRate / windowSize.toFloat()
+                        ) + ")"
                 }
                 SliderPreference(
                     name = stringResource(id = R.string.window_size),
@@ -368,10 +373,11 @@ fun Preferences(
                 SliderPreference(
                     name = stringResource(id = R.string.capture),
                     value = duration.toFloat(),
-                    supporting = if (duration == 0)
+                    supporting = if (duration == 0) {
                         stringResource(R.string.no_capture_duration)
-                    else
-                        stringResource(R.string.capture_duration, duration),
+                    } else {
+                        stringResource(R.string.capture_duration, duration)
+                    },
                     valueRange = 0f..5f,
                     steps = 4,
                     onValueChange = { pref.writeWaveWriterDurationInSeconds(it.roundToInt()) },

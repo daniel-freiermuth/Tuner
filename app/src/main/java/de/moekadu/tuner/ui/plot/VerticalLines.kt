@@ -37,17 +37,17 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.ui.theme.TunerTheme
 
-class VerticalLinesPositions(
-    val x: MutableList<Float> = mutableListOf()
-) {
+class VerticalLinesPositions(val x: MutableList<Float> = mutableListOf()) {
     fun mutate(size: Int, x: (i: Int) -> Float): VerticalLinesPositions {
         if (this.x.size == size) {
-            for (i in 0 until size)
+            for (i in 0 until size) {
                 this.x[i] = x(i)
+            }
         } else {
             this.x.clear()
-            for (i in 0 until size)
+            for (i in 0 until size) {
                 this.x.add(x(i))
+            }
         }
         return VerticalLinesPositions(this.x)
     }
@@ -55,34 +55,34 @@ class VerticalLinesPositions(
     fun mutate(x: FloatArray, from: Int = 0, to: Int = x.size): VerticalLinesPositions {
         val size = to - from
         if (this.x.size == size) {
-            for (i in 0 until size)
-                this.x[i] = x[i+from]
+            for (i in 0 until size) {
+                this.x[i] = x[i + from]
+            }
         } else {
             this.x.clear()
-            for (i in 0 until size)
-                this.x.add(x[i+from])
+            for (i in 0 until size) {
+                this.x.add(x[i + from])
+            }
         }
         return VerticalLinesPositions(this.x)
     }
     companion object {
-        fun create(size: Int, x: (i: Int) -> Float): VerticalLinesPositions {
-            return VerticalLinesPositions(MutableList(size){ x(it) })
-        }
-        fun create(x: FloatArray): VerticalLinesPositions {
-            return VerticalLinesPositions(x.toMutableList())
-        }
+        fun create(size: Int, x: (i: Int) -> Float): VerticalLinesPositions =
+            VerticalLinesPositions(MutableList(size) { x(it) })
+        fun create(x: FloatArray): VerticalLinesPositions =
+            VerticalLinesPositions(x.toMutableList())
     }
 }
 
-//data class VerticalLinesPositions(
+// data class VerticalLinesPositions(
 //    val size: Int,
 //    val x: (i: Int) -> Float
-//)
+// )
 
-//private data class VerticalLineCache(
+// private data class VerticalLineCache(
 //    private var positions: VerticalLinesPositions,
 //    private var transformation: Transformation
-//) {
+// ) {
 //    val cachedPositions
 //
 //    init {
@@ -109,7 +109,7 @@ class VerticalLinesPositions(
 //        }
 //        path.transform(transformation.matrixRawToScreen)
 //    }
-//}
+// }
 
 @Composable
 fun VerticalLines(
@@ -120,26 +120,28 @@ fun VerticalLines(
 ) {
     val c = color.takeOrElse { MaterialTheme.colorScheme.onSurface }
 
-    Spacer(modifier = Modifier
-        .fillMaxSize()
-        .drawBehind {
-            for (i in 0 until data.x.size) {
-                val transform = transformation()
-                val x = transform.toScreen(Offset(data.x[i], 0f)).x
-                drawLine(
-                    c,
-                    Offset(x, transform.viewPortScreen.top.toFloat()),
-                    Offset(x, transform.viewPortScreen.bottom.toFloat()),
-                    strokeWidth = width.toPx()
-                )
+    Spacer(
+        modifier = Modifier
+            .fillMaxSize()
+            .drawBehind {
+                for (i in 0 until data.x.size) {
+                    val transform = transformation()
+                    val x = transform.toScreen(Offset(data.x[i], 0f)).x
+                    drawLine(
+                        c,
+                        Offset(x, transform.viewPortScreen.top.toFloat()),
+                        Offset(x, transform.viewPortScreen.bottom.toFloat()),
+                        strokeWidth = width.toPx()
+                    )
+                }
             }
-        }
     )
 }
 
 @Composable
 private fun rememberTransformation(
-    screenWidth: Dp, screenHeight: Dp,
+    screenWidth: Dp,
+    screenHeight: Dp,
     viewPortRaw: Rect
 ): Transformation {
     val widthPx = with(LocalDensity.current) { screenWidth.roundToPx() }
@@ -158,9 +160,9 @@ private fun VerticalLinePreview() {
         BoxWithConstraints {
             val x = remember { floatArrayOf(0f, 1f, 2f, 3f, 4f) }
             val positions = remember {
-                VerticalLinesPositions.create(x)//(
-                    //size = 5, x = { x[it] }
-                //)
+                VerticalLinesPositions.create(x) // (
+                // size = 5, x = { x[it] }
+                // )
             }
             val transformation = rememberTransformation(
                 screenWidth = maxWidth,
@@ -172,5 +174,3 @@ private fun VerticalLinePreview() {
         }
     }
 }
-
-

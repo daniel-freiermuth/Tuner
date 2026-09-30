@@ -33,14 +33,14 @@ object InstrumentIO {
      * @param instruments List with instruments.
      * @return String representation of instruments list.
      */
-    fun instrumentsListToString(resources: Resources?, instruments: List<Instrument>): String {
-        return "Version=${BuildConfig.VERSION_NAME}\n\n" + instruments.joinToString(separator = "\n\n") {
-            getSingleInstrumentString(
-                resources,
-                it
-            )
-        }
-    }
+    fun instrumentsListToString(resources: Resources?, instruments: List<Instrument>): String =
+        "Version=${BuildConfig.VERSION_NAME}\n\n" +
+            instruments.joinToString(separator = "\n\n") {
+                getSingleInstrumentString(
+                    resources,
+                    it
+                )
+            }
 
     enum class InsertMode { Replace, Prepend, Append }
 
@@ -49,7 +49,7 @@ object InstrumentIO {
         val instruments: List<Instrument>
     )
 
-    fun readInstrumentsFromFile(context: Context, uri: Uri): InstrumentsAndFileCheckResult  {
+    fun readInstrumentsFromFile(context: Context, uri: Uri): InstrumentsAndFileCheckResult {
 //        val filename = getFilenameFromUri(context, uri)
 //            Log.v("Tuner", "InstrumentArchiving.loadInstruments: $filename")
         val instrumentsStringRaw = context.contentResolver?.openInputStream(uri)?.use { stream ->
@@ -73,8 +73,9 @@ object InstrumentIO {
     fun stringToInstruments(instrumentsString: String): InstrumentsAndFileCheckResult {
         val instruments = mutableListOf<Instrument>()
 
-        if (instrumentsString == "")
+        if (instrumentsString == "") {
             return InstrumentsAndFileCheckResult(FileCheck.Empty, instruments)
+        }
 
         val stream = SimpleStream(instrumentsString, 0)
 
@@ -109,7 +110,7 @@ object InstrumentIO {
                     val iconString = stream.readString()
 //                    Log.v("Tuner", "InstrumentDatabase.stringToInstruments: reading icon: $iconString, ${iconString.replace(" ", "_")}")
                     icon = iconString.toInstrumentIcon()
-                    //iconId = instrumentIconName2Id(stream.readString())
+                    // iconId = instrumentIconName2Id(stream.readString())
 //                        Log.v("Tuner", "InstrumentDatabase.stringToInstruments: reading icon id: $iconId")
                 }
 
@@ -145,14 +146,24 @@ object InstrumentIO {
             numInstrumentsRead += 1
         }
 
-        if (version == null && numInstrumentsRead == 0)
+        if (version == null && numInstrumentsRead == 0) {
             return InstrumentsAndFileCheckResult(FileCheck.Invalid, instruments)
+        }
         return InstrumentsAndFileCheckResult(FileCheck.Ok, instruments)
     }
 
-    private val keywords = arrayOf("Version=", "Instrument", "Length of name=", "Name=", "Icon=", "String indices=", "Strings=")
+    private val keywords =
+        arrayOf(
+            "Version=",
+            "Instrument",
+            "Length of name=",
+            "Name=",
+            "Icon=",
+            "String indices=",
+            "Strings="
+        )
 
-    private enum class Keyword {Version, Instrument, NameLength, Name, Icon, Strings, Invalid}
+    private enum class Keyword { Version, Instrument, NameLength, Name, Icon, Strings, Invalid }
 
     /** Get string representation of a single instrument.
      * @param context Context is only needed, if the instrument name is a string resource.
@@ -161,29 +172,32 @@ object InstrumentIO {
     private fun getSingleInstrumentString(resources: Resources?, instrument: Instrument): String {
         val name = instrument.getNameString(resources)
         return "Instrument ${instrument.stableId}\n" +
-                "Length of name=${name.length}\n" +
-                "Name=$name\n" +
-                "Icon=${instrument.icon.name}\n" +
-                "Strings=${
-                    instrument.strings.joinToString(
-                        separator = ";",
-                        prefix = "[",
-                        postfix = "]"
-                    ) { it.asString() }
-                }\n"
+            "Length of name=${name.length}\n" +
+            "Name=$name\n" +
+            "Icon=${instrument.icon.name}\n" +
+            "Strings=${
+                instrument.strings.joinToString(
+                    separator = ";",
+                    prefix = "[",
+                    postfix = "]"
+                ) { it.asString() }
+            }\n"
     }
 
     private class SimpleStream(val string: String, var pos: Int) {
         /** Advance to next character which is not a white space. */
         fun advance() {
-            while (pos < string.length && string[pos].isWhitespace())
+            while (pos < string.length && string[pos].isWhitespace()) {
                 ++pos
+            }
         }
         fun goToNextLine() {
-            while (pos < string.length && string[pos] != '\n')
+            while (pos < string.length && string[pos] != '\n') {
                 ++pos
-            if (pos < string.length)
+            }
+            if (pos < string.length) {
                 ++pos
+            }
         }
         fun isEos() = pos >= string.length
 
@@ -191,30 +205,36 @@ object InstrumentIO {
         fun readString(): String {
             advance()
             val posStart = pos
-            while (pos < string.length && !string[pos].isWhitespace())
+            while (pos < string.length && !string[pos].isWhitespace()) {
                 ++pos
-            return if (pos > posStart)
+            }
+            return if (pos > posStart) {
                 string.substring(posStart, pos)
-            else
+            } else {
                 ""
+            }
         }
+
         /** Read string where the exact number of characters is given. */
         fun readString(numCharacters: Int): String {
             val posStart = pos
             val res = if (numCharacters >= 0) {
                 pos += numCharacters
                 pos = min(pos, string.length)
-                if (pos < string.length)
+                if (pos < string.length) {
                     string.substring(posStart, pos)
-                else
+                } else {
                     ""
+                }
             } else {
-                while (pos < string.length && string[pos] != '\n')
+                while (pos < string.length && string[pos] != '\n') {
                     ++pos
-                if (pos < string.length)
+                }
+                if (pos < string.length) {
                     string.substring(posStart, pos).trim()
-                else
+                } else {
                     ""
+                }
             }
             return res
         }
@@ -235,17 +255,22 @@ object InstrumentIO {
          */
         fun readIntArray(): IntArray? {
             advance()
-            if (pos >= string.length || string[pos] != '[')
+            if (pos >= string.length || string[pos] != '[') {
                 return null
+            }
 //                Log.v("Tuner", "InstrumentDatabase.readIntArray. string[pos]=${string[pos]}")
             val posStart = pos
-            while (pos < string.length && string[pos] != '\n' && string[pos] != ']')
+            while (pos < string.length && string[pos] != '\n' && string[pos] != ']') {
                 ++pos
-            if (string[pos] != ']')
+            }
+            if (string[pos] != ']') {
                 return null
+            }
             ++pos
-            if (pos - 1 <= posStart + 1) // allow empty int lists
+            if (pos - 1 <= posStart + 1) {
+                // allow empty int lists
                 return intArrayOf()
+            }
             val intArrayAsString = string.substring(posStart + 1, pos - 1)
             return try {
                 intArrayAsString.split(",").map { it.trim().toInt() }.toIntArray()
@@ -253,6 +278,7 @@ object InstrumentIO {
                 null
             }
         }
+
         /** Read an array of musical notes.
          * The array is expected to be enclosed in "[" and "]", the string representation
          * of the notes must be created with MusicalNote.asString(), and the different
@@ -261,20 +287,27 @@ object InstrumentIO {
          */
         fun readMusicalNoteArray(): Array<MusicalNote>? {
             advance()
-            if (pos >= string.length || string[pos] != '[')
+            if (pos >= string.length || string[pos] != '[') {
                 return null
+            }
 //                Log.v("Tuner", "InstrumentDatabase.readIntArray. string[pos]=${string[pos]}")
             val posStart = pos
-            while (pos < string.length && string[pos] != '\n' && string[pos] != ']')
+            while (pos < string.length && string[pos] != '\n' && string[pos] != ']') {
                 ++pos
-            if (string[pos] != ']')
+            }
+            if (string[pos] != ']') {
                 return null
+            }
             ++pos
-            if (pos - 1 <= posStart + 1) // allow empty int lists
+            if (pos - 1 <= posStart + 1) {
+                // allow empty int lists
                 return arrayOf()
+            }
             val musicalNoteArrayAsString = string.substring(posStart + 1, pos - 1)
             return try {
-                musicalNoteArrayAsString.split(";").map { MusicalNote.fromString(it.trim()) }.toTypedArray()
+                musicalNoteArrayAsString.split(";").map {
+                    MusicalNote.fromString(it.trim())
+                }.toTypedArray()
             } catch (_: NumberFormatException) {
                 null
             } catch (_: IllegalArgumentException) {
@@ -303,5 +336,4 @@ object InstrumentIO {
             else -> Keyword.Invalid
         }
     }
-
 }

@@ -12,18 +12,19 @@ import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.ui.common.EditableListData
 import de.moekadu.tuner.ui.common.EditableListPredefinedSectionImmutable
 import de.moekadu.tuner.ui.screens.StretchTuningOverviewState
+import javax.inject.Inject
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class StretchTuningOverviewViewModel @Inject constructor(
     val pref: TemperamentResources,
     @ApplicationScope val applicationScope: CoroutineScope
-) : StretchTuningOverviewState, ViewModel() {
+) : ViewModel(),
+    StretchTuningOverviewState {
 
     private val musicalScale = pref.musicalScale.value
 
@@ -47,19 +48,19 @@ class StretchTuningOverviewViewModel @Inject constructor(
         getStableId = { it.stableId },
         activeItem = activeStretchTuning,
         setNewItems = { pref.writeCustomStretchTunings(it) }
-        )
+    )
 
     override fun saveStretchTunings(
         context: Context,
         uri: Uri,
         stretchTunings: List<StretchTuning>
     ) {
-       applicationScope.launch(Dispatchers.IO) {
-          context.contentResolver?.openOutputStream(uri, "wt")?.use { stream ->
-             stream.bufferedWriter().use { writer ->
-                 StretchTuningIO.writeStretchTunings(stretchTunings, writer, context.resources)
-             }
-          }
-       }
+        applicationScope.launch(Dispatchers.IO) {
+            context.contentResolver?.openOutputStream(uri, "wt")?.use { stream ->
+                stream.bufferedWriter().use { writer ->
+                    StretchTuningIO.writeStretchTunings(stretchTunings, writer, context.resources)
+                }
+            }
+        }
     }
 }

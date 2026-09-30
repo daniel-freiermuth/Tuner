@@ -31,7 +31,7 @@ val rationalNumberTemperamentWerckmeisterVI = arrayOf(
     RationalNumber(196, 117), // A
     RationalNumber(196, 110), // Bb
     RationalNumber(196, 104), // B
-    RationalNumber(2, 1), // C2
+    RationalNumber(2, 1) // C2
 )
 
 val rationalNumberTemperamentPure = arrayOf(

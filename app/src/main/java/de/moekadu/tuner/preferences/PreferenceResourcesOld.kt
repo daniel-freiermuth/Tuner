@@ -38,34 +38,36 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 @Singleton
-class PreferenceResourcesOld @Inject constructor (
-    @param:ApplicationContext private val context: Context,
+class PreferenceResourcesOld @Inject constructor(
+    @param:ApplicationContext private val context: Context
 ) {
     private val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     data class Appearance(
-        var mode: NightMode = NightMode.Auto,  // Int = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+        var mode: NightMode = NightMode.Auto, // Int = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
         var blackNightEnabled: Boolean = true,
         var useSystemColorAccents: Boolean = true
     ) {
-        private fun nightModeStringToID2(string: String) = when(string) {
+        private fun nightModeStringToID2(string: String) = when (string) {
             "dark" -> NightMode.On
             "light" -> NightMode.Off
             else -> NightMode.Auto
         }
 
         fun fromString(string: String?) {
-            if (string == null)
+            if (string == null) {
                 return
+            }
             val values = string.split(" ")
             blackNightEnabled = values.contains("blackNightEnabled")
             useSystemColorAccents = !(values.contains("noSystemColorAccents"))
-            val modeString = if (values.contains("dark"))
+            val modeString = if (values.contains("dark")) {
                 "dark"
-            else if (values.contains("light"))
+            } else if (values.contains("light")) {
                 "light"
-            else
+            } else {
                 "auto"
+            }
             mode = nightModeStringToID2(modeString)
         }
     }
@@ -73,14 +75,16 @@ class PreferenceResourcesOld @Inject constructor (
     data class NotationPreferenceValue(var notation: String, var helmholtzEnabled: Boolean) {
         override fun toString(): String {
             var result = notation
-            if (helmholtzEnabled)
+            if (helmholtzEnabled) {
                 result += " helmholtzEnabled"
+            }
             return result
         }
 
         fun fromString(string: String?) {
-            if (string == null)
+            if (string == null) {
                 return
+            }
             val values = string.split(" ")
             helmholtzEnabled = values.contains("helmholtzEnabled")
             notation = when {
@@ -93,7 +97,7 @@ class PreferenceResourcesOld @Inject constructor (
         }
     }
 
-    val appearance get() = getString(APPEARANCE_KEY)?.let{
+    val appearance get() = getString(APPEARANCE_KEY)?.let {
         val value = Appearance()
         value.fromString(sharedPreferences.getString(APPEARANCE_KEY, ""))
         value
@@ -103,18 +107,19 @@ class PreferenceResourcesOld @Inject constructor (
 
     val screenAlwaysOn get() = getBoolean(SCREEN_ALWAYS_ON)
     private val preferFlat get() = getBoolean(PREFER_FLAT_KEY)
-    private val notationPreference get() =  getString(NOTATION_KEY)?.let {
+    private val notationPreference get() = getString(NOTATION_KEY)?.let {
         val notationValue = NotationPreferenceValue("standard", false)
         notationValue.fromString(sharedPreferences.getString(NOTATION_KEY, ""))
         notationValue
     }
     val notePrintOptions: NotePrintOptions? get() {
-        if (preferFlat == null && notationPreference == null)
+        if (preferFlat == null && notationPreference == null) {
             return null
+        }
         val pF = preferFlat
         val nP = notationPreference
         val def = NotePrintOptionsOld()
-        val nT = when(nP?.notation) {
+        val nT = when (nP?.notation) {
             "international" -> NotationType.International
             "solfege" -> NotationType.Solfege
             "carnatic" -> NotationType.Carnatic
@@ -146,9 +151,9 @@ class PreferenceResourcesOld @Inject constructor (
 
     val windowSizeExponent get() = getInt(WINDOW_SIZE_KEY)?.let {
         it + 7
-        //indexToWindowSize2(it)
+        // indexToWindowSize2(it)
     }
-    val pitchHistoryDuration get() = getInt(PITCH_HISTORY_DURATION_KEY)?.let{
+    val pitchHistoryDuration get() = getInt(PITCH_HISTORY_DURATION_KEY)?.let {
         percentToPitchHistoryDuration2(it)
     }
     val pitchHistoryNumFaultyValues get() = getInt(PITCH_HISTORY_NUM_FAULTY_VALUES_KEY)
@@ -167,12 +172,14 @@ class PreferenceResourcesOld @Inject constructor (
 
     val waveWriterDurationInSeconds get() = getInt(WAVE_WRITER_DURATION_IN_SECONDS_KEY)
 
-    private val temperamentAndReferenceNote get() = TemperamentAndReferenceNoteFromPreference.fromSharedPreferences(sharedPreferences)
+    private val temperamentAndReferenceNote get() = TemperamentAndReferenceNoteFromPreference.fromSharedPreferences(
+        sharedPreferences
+    )
 
     val referenceNote get() = temperamentAndReferenceNote?.referenceNote
     val rootNote get() = temperamentAndReferenceNote?.rootNote
     val referenceFrequency get() = temperamentAndReferenceNote?.referenceFrequency
-    val temperament: Temperament3?  get() {
+    val temperament: Temperament3? get() {
         val temperamentType = temperamentAndReferenceNote?.temperamentType
         val rid = temperamentType?.resourceId()
         val predefinedTemperaments = predefinedTemperaments()
@@ -197,18 +204,21 @@ class PreferenceResourcesOld @Inject constructor (
 //            )
 //        }
 
-    private fun getBoolean(key: String) = if(sharedPreferences.contains(key))
+    private fun getBoolean(key: String) = if (sharedPreferences.contains(key)) {
         sharedPreferences.getBoolean(key, false)
-    else
+    } else {
         null
-    private fun getString(key: String) = if(sharedPreferences.contains(key))
+    }
+    private fun getString(key: String) = if (sharedPreferences.contains(key)) {
         sharedPreferences.getString(key, null)
-    else
+    } else {
         null
-    private fun getInt(key: String) = if(sharedPreferences.contains(key))
+    }
+    private fun getInt(key: String) = if (sharedPreferences.contains(key)) {
         sharedPreferences.getInt(key, 0)
-    else
+    } else {
         null
+    }
 
     companion object {
         const val APPEARANCE_KEY = "appearance"
@@ -228,30 +238,35 @@ class PreferenceResourcesOld @Inject constructor (
     }
 }
 
-private data class TemperamentAndReferenceNoteFromPreference (
+private data class TemperamentAndReferenceNoteFromPreference(
     val temperamentType: TemperamentTypeOld,
     val rootNote: MusicalNote,
     val referenceNote: MusicalNote,
-    val referenceFrequency: String) {
-    override fun toString(): String {
-        return "$temperamentType ${rootNote.asString()} ${referenceNote.asString()} $referenceFrequency"
-    }
+    val referenceFrequency: String
+) {
+    override fun toString(): String =
+        "$temperamentType ${rootNote.asString()} ${referenceNote.asString()} $referenceFrequency"
 
     companion object {
         const val TEMPERAMENT_AND_REFERENCE_NOTE_PREFERENCE_KEY = "temperament_and_reference_note.key"
 
-        fun fromSharedPreferences(pref: SharedPreferences): TemperamentAndReferenceNoteFromPreference? {
-            if (!pref.contains(TEMPERAMENT_AND_REFERENCE_NOTE_PREFERENCE_KEY))
+        fun fromSharedPreferences(
+            pref: SharedPreferences
+        ): TemperamentAndReferenceNoteFromPreference? {
+            if (!pref.contains(TEMPERAMENT_AND_REFERENCE_NOTE_PREFERENCE_KEY)) {
                 return null
+            }
             return fromString(pref.getString(TEMPERAMENT_AND_REFERENCE_NOTE_PREFERENCE_KEY, null))
         }
 
         fun fromString(string: String?): TemperamentAndReferenceNoteFromPreference? {
-            if (string == null)
+            if (string == null) {
                 return null
+            }
             val values = string.split(" ")
-            if (values.size != 4)
+            if (values.size != 4) {
                 return null
+            }
             val temperamentType = try {
                 TemperamentTypeOld.valueOf(values[0])
             } catch (ex: IllegalArgumentException) {
@@ -267,31 +282,33 @@ private data class TemperamentAndReferenceNoteFromPreference (
             } catch (ex: RuntimeException) {
                 return null
             }
-            val referenceFrequency = if (values[3].toFloatOrNull() == null)
+            val referenceFrequency = if (values[3].toFloatOrNull() == null) {
                 return null
-            else
+            } else {
                 values[3]
-            return TemperamentAndReferenceNoteFromPreference(temperamentType, rootNote, referenceNote, referenceFrequency)
+            }
+            return TemperamentAndReferenceNoteFromPreference(
+                temperamentType,
+                rootNote,
+                referenceNote,
+                referenceFrequency
+            )
         }
     }
 }
 
-private fun indexToWindowSize2(index: Int): Int {
-    return 2f.pow(7 + index).roundToInt()
-}
+private fun indexToWindowSize2(index: Int): Int = 2f.pow(7 + index).roundToInt()
 
-private fun indexToTolerance2(index: Int): Int {
-    return when (index) {
-        0 -> 1
-        1 -> 2
-        2 -> 3
-        3 -> 5
-        4 -> 7
-        5 -> 10
-        6 -> 15
-        7 -> 20
-        else -> throw RuntimeException("Invalid index for tolerance")
-    }
+private fun indexToTolerance2(index: Int): Int = when (index) {
+    0 -> 1
+    1 -> 2
+    2 -> 3
+    3 -> 5
+    4 -> 7
+    5 -> 10
+    6 -> 15
+    7 -> 20
+    else -> throw RuntimeException("Invalid index for tolerance")
 }
 
 /** Compute pitch history duration in seconds based on a percent value.
@@ -300,6 +317,7 @@ private fun indexToTolerance2(index: Int): Int {
  * @param durationAtFiftyPercent Duration in seconds at fifty percent.
  * @return Pitch history duration in seconds.
  */
-private fun percentToPitchHistoryDuration2(percent: Int, durationAtFiftyPercent: Float = 3.0f) : Float {
-    return durationAtFiftyPercent * 2.0f.pow(0.05f * (percent - 50))
-}
+private fun percentToPitchHistoryDuration2(
+    percent: Int,
+    durationAtFiftyPercent: Float = 3.0f
+): Float = durationAtFiftyPercent * 2.0f.pow(0.05f * (percent - 50))

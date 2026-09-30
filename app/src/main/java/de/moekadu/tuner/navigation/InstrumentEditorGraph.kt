@@ -44,8 +44,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Composable
-private fun createStretchTuningEditorViewModel(controller: NavController, backStackEntry: NavBackStackEntry)
-: InstrumentEditorViewModel {
+private fun createStretchTuningEditorViewModel(
+    controller: NavController,
+    backStackEntry: NavBackStackEntry
+): InstrumentEditorViewModel {
     val parentEntry = remember(backStackEntry) {
         controller.getBackStackEntry<InstrumentEditorGraphRoute>()
     }
@@ -57,7 +59,6 @@ private fun createStretchTuningEditorViewModel(controller: NavController, backSt
     }
 }
 
-
 fun NavGraphBuilder.instrumentEditorGraph(
     controller: NavController,
     preferences: PreferenceResources,
@@ -68,7 +69,8 @@ fun NavGraphBuilder.instrumentEditorGraph(
         startDestination = InstrumentEditorRoute
     ) {
         composable<InstrumentEditorRoute> {
-            val viewModel = createStretchTuningEditorViewModel(controller = controller, backStackEntry = it)
+            val viewModel =
+                createStretchTuningEditorViewModel(controller = controller, backStackEntry = it)
 
             val musicalScale by temperaments.musicalScale.collectAsStateWithLifecycle()
             val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
@@ -77,8 +79,9 @@ fun NavGraphBuilder.instrumentEditorGraph(
             val permissionGranted = rememberTunerAudioPermission(snackbarHostState)
 
             LifecycleResumeEffect(permissionGranted) {
-                if (permissionGranted)
+                if (permissionGranted) {
                     viewModel.startTuner()
+                }
                 onPauseOrDispose { viewModel.stopTuner() }
             }
             InstrumentEditor(
@@ -96,7 +99,8 @@ fun NavGraphBuilder.instrumentEditorGraph(
             )
         }
         dialog<IconPickerRoute> {
-            val viewModel = createStretchTuningEditorViewModel(controller = controller, backStackEntry = it)
+            val viewModel =
+                createStretchTuningEditorViewModel(controller = controller, backStackEntry = it)
             InstrumentIconPicker(
                 onDismiss = { controller.navigateUp() },
                 onIconSelected = { icon ->
@@ -111,18 +115,16 @@ fun NavGraphBuilder.instrumentEditorGraph(
 @Serializable
 data class InstrumentEditorGraphRoute(val instrumentSerialized: String) {
 
-    fun getInstrument(): Instrument {
-        return Json.decodeFromString<Instrument>(instrumentSerialized)
-    }
+    fun getInstrument(): Instrument = Json.decodeFromString<Instrument>(instrumentSerialized)
     companion object {
-        fun create(instrument: Instrument): InstrumentEditorGraphRoute {
-            return InstrumentEditorGraphRoute(
-                Json.encodeToString<Instrument>(instrument)
-            )
-        }
+        fun create(instrument: Instrument): InstrumentEditorGraphRoute = InstrumentEditorGraphRoute(
+            Json.encodeToString<Instrument>(instrument)
+        )
     }
 }
+
 @Serializable
 data object InstrumentEditorRoute
+
 @Serializable
 data object IconPickerRoute

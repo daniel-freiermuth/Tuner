@@ -58,7 +58,6 @@ fun StretchTuningTable(
     )
 
     Column(modifier = modifier) {
-
         StretchTuningTableLine(
             column1 = stringResource(R.string.frequency),
             column2 = stringResource(R.string.stretch),
@@ -79,14 +78,16 @@ fun StretchTuningTable(
             items(
                 stretchTuningData.size,
                 key = { stretchTuningData.keys[it] },
-                contentType = { 1 }) {
+                contentType = { 1 }
+            ) {
                 StretchTuningTableLine(
                     column1 = stringResource(
                         R.string.hertz_2f,
                         stretchTuningData.unstretchedFrequencies[it]
                     ),
                     column2 = stringResource(
-                        R.string.cent_2f, stretchTuningData.stretchInCents[it]
+                        R.string.cent_2f,
+                        stretchTuningData.stretchInCents[it]
                     ),
                     column1Width = max(minimumFrequencyColumnWidth, minimumFrequencyHeadlineWidth),
                     column2Width = max(minimumCentsColumnWidth, minimumCentHeadlineWidth),
@@ -101,11 +102,15 @@ fun StretchTuningTable(
                     onDeleteClicked = { onDeleteLineClicked(stretchTuningData.keys[it]) },
                     showOverflowMenu = showOverflowMenu,
                     reserveSpaceForOverflowMenu = showOverflowMenu,
-                    errorMessage = if (it > 0 && stretchTuningData.stretchedFrequencies[it] <= stretchTuningData.stretchedFrequencies[it - 1]) {
-                        stringResource(R.string.stretched_frequencies_must_be_strictly_increasing,
+                    errorMessage = if (it > 0 &&
+                        stretchTuningData.stretchedFrequencies[it] <=
+                        stretchTuningData.stretchedFrequencies[it - 1]
+                    ) {
+                        stringResource(
+                            R.string.stretched_frequencies_must_be_strictly_increasing,
                             stretchTuningData.stretchedFrequencies[it - 1],
-                            stretchTuningData.stretchedFrequencies[it],
-                            )
+                            stretchTuningData.stretchedFrequencies[it]
+                        )
                     } else {
                         null
                     }

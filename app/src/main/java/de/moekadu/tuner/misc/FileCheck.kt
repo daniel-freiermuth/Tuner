@@ -44,6 +44,7 @@ fun FileCheck.toastPotentialFileCheckError(context: Context, uri: Uri) {
                 Toast.LENGTH_LONG
             ).show()
         }
+
         else -> { }
     }
 }

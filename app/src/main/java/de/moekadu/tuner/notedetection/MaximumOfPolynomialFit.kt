@@ -35,10 +35,17 @@ data class MaximumOfPolynomialFit(val time: Float, val value: Float)
  * @return Pair with (time of extremum of fitted parabola, value of extremum)
  */
 fun getPeakOfPolynomialFit(
-    valueLeft: Float, valueCenter: Float, valueRight: Float, timeCenter: Float, dt: Float
-) : MaximumOfPolynomialFit {
-    if ((valueLeft == valueCenter && valueRight == valueCenter) || valueLeft - 2 * valueCenter + valueRight == 0f)
+    valueLeft: Float,
+    valueCenter: Float,
+    valueRight: Float,
+    timeCenter: Float,
+    dt: Float
+): MaximumOfPolynomialFit {
+    if ((valueLeft == valueCenter && valueRight == valueCenter) ||
+        valueLeft - 2 * valueCenter + valueRight == 0f
+    ) {
         return MaximumOfPolynomialFit(timeCenter, valueCenter)
+    }
 
     val a = 0.5f * (valueLeft + valueRight) - valueCenter
     val b = 0.5f * (valueRight - valueLeft)
@@ -57,9 +64,14 @@ fun getPeakOfPolynomialFit(
  * @return (index as float of extremum of fitted parabola, value of extremum)
  */
 fun getPeakOfPolynomialFitArray(indexCenter: Int, data: FloatArray): MaximumOfPolynomialFit {
-    if (indexCenter == 0 || indexCenter == data.size - 1)
+    if (indexCenter == 0 || indexCenter == data.size - 1) {
         return MaximumOfPolynomialFit(indexCenter.toFloat(), data[indexCenter])
+    }
     return getPeakOfPolynomialFit(
-        data[indexCenter - 1], data[indexCenter], data[indexCenter + 1], indexCenter.toFloat(),1.0f
+        data[indexCenter - 1],
+        data[indexCenter],
+        data[indexCenter + 1],
+        indexCenter.toFloat(),
+        1.0f
     )
 }

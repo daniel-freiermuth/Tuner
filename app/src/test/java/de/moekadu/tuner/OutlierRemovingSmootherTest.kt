@@ -125,7 +125,7 @@ class OutlierRemovingSmootherTest {
         // mean 92, 91, 95 (outlier 20 must be ignored)
         smoother(20f)
         smoothedValue = smoother(95f)
-        assertEquals((92f+91f+95f)/3, smoothedValue, 1e-6f)
+        assertEquals((92f + 91f + 95f) / 3, smoothedValue, 1e-6f)
 
         smoother(50f)
         smoother(22f)

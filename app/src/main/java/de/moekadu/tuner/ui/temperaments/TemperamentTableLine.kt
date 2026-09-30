@@ -78,10 +78,11 @@ private fun stringToRatio(value: String): RationalNumber? {
         val values = value.split('/')
         val numerator = values[0].trim().toIntOrNull()
         val denominator = values[1].trim().toIntOrNull()
-        return if (numerator != null && denominator != null && numerator > 0 && denominator > 0)
+        return if (numerator != null && denominator != null && numerator > 0 && denominator > 0) {
             RationalNumber(numerator, denominator)
-        else
+        } else {
             null
+        }
     }
     return null
 }
@@ -99,23 +100,24 @@ private fun centToRatio(
     value: Double,
     maximumDenominator: Int,
     maximumAllowedToleranceInCents: Double
-    ): RationalNumber? {
+): RationalNumber? {
     // check a few possible ratios if they match the cents
 
     val ratioMin = centsToFrequency(value - maximumAllowedToleranceInCents, 1.0)
     val ratioMax = centsToFrequency(value + maximumAllowedToleranceInCents, 1.0)
     val ratio = centsToFrequency(value, 1.0)
 
-    for (possibleDenominator in 1 .. maximumDenominator) {
+    for (possibleDenominator in 1..maximumDenominator) {
         val possibleNumerator = (ratio * possibleDenominator).roundToInt()
         val possibleRatio = possibleNumerator / possibleDenominator
-        if (possibleRatio > ratioMin && possibleRatio < ratioMax)
+        if (possibleRatio > ratioMin && possibleRatio < ratioMax) {
             return RationalNumber(possibleNumerator, possibleDenominator)
+        }
     }
     return null
 }
 
-//private fun checkCentOrRatioValidity(centOrRatio: String): Boolean {
+// private fun checkCentOrRatioValidity(centOrRatio: String): Boolean {
 //    // check ratios
 //    if (centOrRatio.contains('/')) {
 //        val values = centOrRatio.split('/')
@@ -125,7 +127,7 @@ private fun centToRatio(
 //    }
 //    // check cents
 //    return centOrRatio.replace(",", ".").trim().toDoubleOrNull() != null
-//}
+// }
 
 class TemperamentTableLineState(
     note: MusicalNote?,
@@ -191,18 +193,14 @@ class TemperamentTableLineState(
     fun changeDuplicateNoteError(error: Boolean) {
         _duplicateNoteError = error
     }
-    
-    fun setNoteEditor(state: NoteEditorState){
+
+    fun setNoteEditor(state: NoteEditorState) {
         _noteEditorState = state
     }
 
-    fun obtainRatio(): RationalNumber? {
-        return ratio
-            ?: cent?.let { centToRatio(it, 5, 0.1) }
-    }
-    fun obtainCent(): Double? {
-        return ratio?.let { ratioToCents(it.toDouble()) } ?: cent
-    }
+    fun obtainRatio(): RationalNumber? = ratio
+        ?: cent?.let { centToRatio(it, 5, 0.1) }
+    fun obtainCent(): Double? = ratio?.let { ratioToCents(it.toDouble()) } ?: cent
 }
 
 @Composable
@@ -217,7 +215,11 @@ private fun ClickableNote(
     enabled: Boolean = true
 ) {
     Surface(
-        onClick = if (enabled) { onClick } else { {} },
+        onClick = if (enabled) {
+            onClick
+        } else {
+            {}
+        },
         color = when {
             selected && isError -> MaterialTheme.colorScheme.errorContainer
             selected -> MaterialTheme.colorScheme.secondaryContainer
@@ -238,10 +240,13 @@ private fun ClickableNote(
                 else -> LocalContentColor.current
             }
             if (note != null && (
-                 (note.base != BaseNote.None && notePrintOptions.enharmonicVariant == 0) ||
-                 (note.enharmonicBase != BaseNote.None && notePrintOptions.enharmonicVariant == 1)
-              ))
-            {
+                    (note.base != BaseNote.None && notePrintOptions.enharmonicVariant == 0) ||
+                        (
+                            note.enharmonicBase != BaseNote.None &&
+                                notePrintOptions.enharmonicVariant == 1
+                            )
+                    )
+            ) {
                 Note(
                     note,
                     notePrintOptions = notePrintOptions,
@@ -259,7 +264,6 @@ private fun ClickableNote(
         }
     }
 }
-
 
 @Composable
 fun TemperamentTableLine(
@@ -280,7 +284,7 @@ fun TemperamentTableLine(
     }
 
     val density = LocalDensity.current
-    val noteWidth = with(density) { 45.sp.toDp()}
+    val noteWidth = with(density) { 45.sp.toDp() }
 
     val contentAlpha = if (state.isOctaveLine) 0.38f else 1f
     val contentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha)
@@ -319,7 +323,10 @@ fun TemperamentTableLine(
                         )
                         ClickableNote(
                             note = state.note,
-                            selected = (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard),
+                            selected = (
+                                state.noteEditorState ==
+                                    TemperamentTableLineState.NoteEditorState.Standard
+                                ),
                             onClick = { onNoteNameClicked(false) },
                             notePrintOptions = notePrintOptionsDefault,
                             maximumNoteWidth = noteWidth,
@@ -334,7 +341,10 @@ fun TemperamentTableLine(
                         )
                         ClickableNote(
                             note = state.note,
-                            selected = (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Enharmonic),
+                            selected = (
+                                state.noteEditorState ==
+                                    TemperamentTableLineState.NoteEditorState.Enharmonic
+                                ),
                             onClick = { onNoteNameClicked(true) },
                             notePrintOptions = notePrintOptionsEnharmonic,
                             maximumNoteWidth = noteWidth,
@@ -342,7 +352,6 @@ fun TemperamentTableLine(
                             enabled = !state.isOctaveLine
                         )
                     }
-
                 }
                 Spacer(modifier = Modifier.width(16.dp))
 
@@ -351,10 +360,11 @@ fun TemperamentTableLine(
                     onValueChange = onValueChange,
                     label = {
                         Text(
-                            if (isRatio)
+                            if (isRatio) {
                                 stringResource(id = R.string.ratio)
-                            else
+                            } else {
                                 stringResource(id = R.string.cent_str)
+                            }
                         )
                     },
                     enabled = !state.isFirstLine,
@@ -365,74 +375,93 @@ fun TemperamentTableLine(
                 )
             }
 
-            AnimatedVisibility(visible = state.noteEditorState != TemperamentTableLineState.NoteEditorState.Off) {
+            AnimatedVisibility(
+                visible =
+                    state.noteEditorState != TemperamentTableLineState.NoteEditorState.Off
+            ) {
                 Column {
-                    val resolvedBase by remember { derivedStateOf {
-                        val n = state.note
-                        if (n == null) {
-                            BaseNote.A
-                        } else if (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard
-                            && n.base != BaseNote.None) {
-                            n.base
-                        } else if (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Enharmonic
-                            && n.enharmonicBase != BaseNote.None) {
-                            n.enharmonicBase
-                        } else if (n.base != BaseNote.None) {
-                            n.base
-                        } else if (n.enharmonicBase != BaseNote.None) {
-                            n.enharmonicBase
-                        } else {
-                            BaseNote.A
+                    val resolvedBase by remember {
+                        derivedStateOf {
+                            val n = state.note
+                            if (n == null) {
+                                BaseNote.A
+                            } else if (state.noteEditorState ==
+                                TemperamentTableLineState.NoteEditorState.Standard &&
+                                n.base != BaseNote.None
+                            ) {
+                                n.base
+                            } else if (state.noteEditorState ==
+                                TemperamentTableLineState.NoteEditorState.Enharmonic &&
+                                n.enharmonicBase != BaseNote.None
+                            ) {
+                                n.enharmonicBase
+                            } else if (n.base != BaseNote.None) {
+                                n.base
+                            } else if (n.enharmonicBase != BaseNote.None) {
+                                n.enharmonicBase
+                            } else {
+                                BaseNote.A
+                            }
                         }
-                    } }
+                    }
 
-                    val resolvedModifier by remember { derivedStateOf {
-                        val n = state.note
-                        if (n == null) {
-                            NoteModifier.None
-                        } else if (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard
-                            && n.base != BaseNote.None
-                        ) {
-                            n.modifier
-                        } else if (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Enharmonic
-                            && n.enharmonicBase != BaseNote.None
-                        ) {
-                            n.enharmonicModifier
-                        } else if (n.base != BaseNote.None) {
-                            n.modifier
-                        } else if (n.enharmonicBase != BaseNote.None) {
-                            n.enharmonicModifier
-                        } else {
-                            NoteModifier.None
+                    val resolvedModifier by remember {
+                        derivedStateOf {
+                            val n = state.note
+                            if (n == null) {
+                                NoteModifier.None
+                            } else if (state.noteEditorState ==
+                                TemperamentTableLineState.NoteEditorState.Standard &&
+                                n.base != BaseNote.None
+                            ) {
+                                n.modifier
+                            } else if (state.noteEditorState ==
+                                TemperamentTableLineState.NoteEditorState.Enharmonic &&
+                                n.enharmonicBase != BaseNote.None
+                            ) {
+                                n.enharmonicModifier
+                            } else if (n.base != BaseNote.None) {
+                                n.modifier
+                            } else if (n.enharmonicBase != BaseNote.None) {
+                                n.enharmonicModifier
+                            } else {
+                                NoteModifier.None
+                            }
                         }
-                    } }
-                    val resolvedOffset by remember { derivedStateOf {
-                        val n = state.note
-                        if (n == null) {
-                            0
-                        } else if (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard
-                            && n.base != BaseNote.None
-                        ) {
-                            n.octaveOffset
-                        } else if (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Enharmonic
-                            && n.enharmonicBase != BaseNote.None
-                        ) {
-                            n.enharmonicOctaveOffset
-                        } else if (n.base != BaseNote.None) {
-                            n.octaveOffset
-                        } else if (n.enharmonicBase != BaseNote.None) {
-                            n.enharmonicOctaveOffset
-                        } else {
-                            0
+                    }
+                    val resolvedOffset by remember {
+                        derivedStateOf {
+                            val n = state.note
+                            if (n == null) {
+                                0
+                            } else if (state.noteEditorState ==
+                                TemperamentTableLineState.NoteEditorState.Standard &&
+                                n.base != BaseNote.None
+                            ) {
+                                n.octaveOffset
+                            } else if (state.noteEditorState ==
+                                TemperamentTableLineState.NoteEditorState.Enharmonic &&
+                                n.enharmonicBase != BaseNote.None
+                            ) {
+                                n.enharmonicOctaveOffset
+                            } else if (n.base != BaseNote.None) {
+                                n.octaveOffset
+                            } else if (n.enharmonicBase != BaseNote.None) {
+                                n.enharmonicOctaveOffset
+                            } else {
+                                0
+                            }
                         }
-                    } }
+                    }
                     NoteEditorSimple(
                         base = resolvedBase,
                         noteModifier = resolvedModifier,
                         octaveOffset = resolvedOffset,
                         onNoteChange = { base, modifier, offset ->
 //                            Log.v("Tuner", "TemperamentTableLine: noteEditorState=${state.noteEditorState}")
-                            if (state.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard) {
+                            if (state.noteEditorState ==
+                                TemperamentTableLineState.NoteEditorState.Standard
+                            ) {
                                 onChangeNote(
                                     state.note?.copy(
                                         base = base,
@@ -442,10 +471,10 @@ fun TemperamentTableLine(
                                 )
                             } else {
                                 val hasEnharmonic = !(
-                                        state.note?.base == base &&
+                                    state.note?.base == base &&
                                         state.note?.modifier == modifier &&
                                         state.note?.octaveOffset == offset
-                                        )
+                                    )
                                 onChangeNote(
                                     state.note?.copy(
                                         enharmonicBase = if (hasEnharmonic) base else BaseNote.None,
@@ -456,12 +485,12 @@ fun TemperamentTableLine(
                             }
                         },
                         notePrintOptions = notePrintOptions,
-                        modifier = Modifier.padding(top = 4.dp, start=4.dp, end = 4.dp)
+                        modifier = Modifier.padding(top = 4.dp, start = 4.dp, end = 4.dp)
                     )
                     TextButton(
                         onClick = { onNoteEditorCloseClicked() },
                         modifier = Modifier.fillMaxWidth()
-                        ) {
+                    ) {
                         Icon(
                             painter = painterResource(R.drawable.keyboard_arrow_up_24px),
                             contentDescription = "close"
@@ -470,10 +499,11 @@ fun TemperamentTableLine(
                 }
             }
 
-            AnimatedVisibility(visible = (
-                    state.centOrRatio == ""
-                            || state.invalidValueError
-                            || state.decreasingValueError
+            AnimatedVisibility(
+                visible = (
+                    state.centOrRatio == "" ||
+                        state.invalidValueError ||
+                        state.decreasingValueError
                     )
             ) {
                 Text(
@@ -481,12 +511,15 @@ fun TemperamentTableLine(
                         state.centOrRatio == "" -> {
                             stringResource(R.string.missing_value)
                         }
+
                         state.invalidValueError -> {
                             stringResource(R.string.invalid_value)
                         }
+
                         state.decreasingValueError -> {
                             stringResource(R.string.decreasing_value_error)
                         }
+
                         else -> ""
                     },
                     color = MaterialTheme.colorScheme.error,
@@ -495,16 +528,17 @@ fun TemperamentTableLine(
                 )
             }
 
-            AnimatedVisibility(visible = (state.note == null || state.duplicateNoteError)
-            ) {
+            AnimatedVisibility(visible = (state.note == null || state.duplicateNoteError)) {
                 Text(
                     when {
                         state.note == null -> {
                             stringResource(R.string.missing_note_name)
                         }
+
                         state.duplicateNoteError -> {
                             stringResource(R.string.duplicate_note_name)
                         }
+
                         else -> ""
                     },
                     color = MaterialTheme.colorScheme.error,
@@ -548,14 +582,24 @@ private fun TemperamentTableLinePreview() {
                     notePrintOptions = NotePrintOptions2(notationType = NotationType.Solfege),
                     onValueChange = { state.changeCentOrRatio(it) },
                     onNoteNameClicked = { enharmonic ->
-                        if ((!enharmonic && state.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard)
-                            || (enharmonic && state.noteEditorState == TemperamentTableLineState.NoteEditorState.Enharmonic)
+                        if ((
+                                !enharmonic &&
+                                    state.noteEditorState ==
+                                    TemperamentTableLineState.NoteEditorState.Standard
+                                ) ||
+                            (
+                                enharmonic &&
+                                    state.noteEditorState ==
+                                    TemperamentTableLineState.NoteEditorState.Enharmonic
+                                )
                         ) {
                             state.setNoteEditor(TemperamentTableLineState.NoteEditorState.Off)
                         } else if (!enharmonic) {
                             state.setNoteEditor(TemperamentTableLineState.NoteEditorState.Standard)
                         } else {
-                            state.setNoteEditor(TemperamentTableLineState.NoteEditorState.Enharmonic)
+                            state.setNoteEditor(
+                                TemperamentTableLineState.NoteEditorState.Enharmonic
+                            )
                         }
                     },
                     onNoteEditorCloseClicked = {

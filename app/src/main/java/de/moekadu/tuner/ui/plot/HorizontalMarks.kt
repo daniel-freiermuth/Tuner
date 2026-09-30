@@ -38,7 +38,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class HorizontalMark(
     val position: Float,
     val settings: Settings,
-    val content: @Composable (modifier: Modifier) -> Unit,
+    val content: @Composable (modifier: Modifier) -> Unit
 ) : ParentDataModifier {
     data class Settings(
         val anchor: Anchor = Anchor.Center,
@@ -50,10 +50,7 @@ data class HorizontalMark(
     override fun Density.modifyParentData(parentData: Any?) = this@HorizontalMark
 }
 
-private data class MeasuredHorizontalMark(
-    val placeable: Placeable,
-    val mark: HorizontalMark
-)
+private data class MeasuredHorizontalMark(val placeable: Placeable, val mark: HorizontalMark)
 
 @Composable
 private fun HorizontalMarkLines(
@@ -92,7 +89,8 @@ private fun HorizontalMarkLabels(
     clipLabelsToWindow: Boolean,
     transformation: () -> Transformation
 ) {
-    Layout(modifier = Modifier.fillMaxSize(),
+    Layout(
+        modifier = Modifier.fillMaxSize(),
         content = {
             marks.forEach { it.content(it) }
         }
@@ -101,8 +99,10 @@ private fun HorizontalMarkLabels(
             val maxHeight = measureables.maxOf { it.minIntrinsicHeight(Int.MAX_VALUE) }
             val maxWidth = measureables.maxOf { it.maxIntrinsicWidth(maxHeight) }
             constraints.copy(
-                minWidth = maxWidth, minHeight = maxHeight,
-                maxWidth = maxWidth, maxHeight = maxHeight
+                minWidth = maxWidth,
+                minHeight = maxHeight,
+                maxWidth = maxWidth,
+                maxHeight = maxHeight
             )
         } else {
             constraints.copy(minWidth = 0, minHeight = 0)
@@ -121,11 +121,12 @@ private fun HorizontalMarkLabels(
                 val yTransformed = transform.toScreen(yOffset).y
                 val vp = transform.viewPortScreen
                 val settings = mark.settings
-                val visible = yTransformed in vp.top.toFloat() .. vp.bottom.toFloat()
+                val visible = yTransformed in vp.top.toFloat()..vp.bottom.toFloat()
                 if (clipLabelsToWindow || visible) {
                     p.place(
                         settings.anchor.place(
-                            vp.left + settings.labelPosition * vp.width + settings.screenOffset.x.toPx(),
+                            vp.left + settings.labelPosition * vp.width +
+                                settings.screenOffset.x.toPx(),
                             yTransformed + settings.screenOffset.y.toPx(),
                             p.width.toFloat(),
                             p.height.toFloat(),
@@ -138,7 +139,6 @@ private fun HorizontalMarkLabels(
         }
     }
 }
-
 
 @Composable
 fun HorizontalMarks(

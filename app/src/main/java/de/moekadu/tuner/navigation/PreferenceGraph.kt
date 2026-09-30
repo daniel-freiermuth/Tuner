@@ -45,7 +45,7 @@ fun NavGraphBuilder.preferenceGraph(
     temperaments: TemperamentResources
 ) {
     navigation<PreferencesGraphRoute>(
-        startDestination = PreferencesRoute,
+        startDestination = PreferencesRoute
     ) {
         composable<PreferencesRoute> {
             val viewModel: PreferencesViewModel = hiltViewModel()
@@ -65,7 +65,7 @@ fun NavGraphBuilder.preferenceGraph(
                 onNotationClicked = { controller.navigate(NotationDialogRoute) },
                 onTemperamentClicked = { controller.navigate(TemperamentDialogRoute) },
                 onWindowingFunctionClicked = { controller.navigate(WindowingFunctionDialogRoute) },
-                onStretchTuningClicked = {controller.navigate(StretchTuningOverviewRoute) },
+                onStretchTuningClicked = { controller.navigate(StretchTuningOverviewRoute) },
                 onResetClicked = { controller.navigate(ResetDialogRoute) },
                 onAboutClicked = { controller.navigate(AboutDialogRoute) }
             )
@@ -81,7 +81,7 @@ fun NavGraphBuilder.preferenceGraph(
         }
         dialog<LanguageDialogRoute> {
             LanguageDialog(
-                onDismiss = { controller.navigateUp()}
+                onDismiss = { controller.navigateUp() }
             )
         }
         dialog<NotationDialogRoute> {
@@ -90,7 +90,8 @@ fun NavGraphBuilder.preferenceGraph(
                 notePrintOptions = notePrintOptions,
                 onNotationChange = { notation, octaveNotation ->
                     val newNotePrintOptions = preferences.notePrintOptions.value.copy(
-                        notationType = notation, octaveNotation = octaveNotation,
+                        notationType = notation,
+                        octaveNotation = octaveNotation
                     )
                     preferences.writeNotePrintOptions(newNotePrintOptions)
                     controller.navigateUp()
@@ -105,7 +106,7 @@ fun NavGraphBuilder.preferenceGraph(
                 onWindowingFunctionChanged = {
                     preferences.writeWindowing(it)
                     controller.navigateUp()
-                } ,
+                },
                 onDismiss = { controller.navigateUp() }
             )
         }
@@ -129,17 +130,24 @@ fun NavGraphBuilder.preferenceGraph(
 
 @Serializable
 data object PreferencesGraphRoute
+
 @Serializable
 data object PreferencesRoute
+
 @Serializable
 data object AppearanceDialogRoute
+
 @Serializable
 data object LanguageDialogRoute
+
 @Serializable
 data object NotationDialogRoute
+
 @Serializable
 data object WindowingFunctionDialogRoute
+
 @Serializable
 data object ResetDialogRoute
+
 @Serializable
 data object AboutDialogRoute

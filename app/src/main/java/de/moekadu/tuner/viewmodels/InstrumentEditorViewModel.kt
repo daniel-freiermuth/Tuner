@@ -29,30 +29,31 @@ import de.moekadu.tuner.instruments.InstrumentIcon
 import de.moekadu.tuner.instruments.instrumentChromatic
 import de.moekadu.tuner.notedetection.FrequencyDetectionCollectedResults
 import de.moekadu.tuner.notedetection.FrequencyEvaluationResult
-import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.notenames.MusicalNote
+import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.tuner.Tuner
+import de.moekadu.tuner.ui.instruments.InstrumentEditorData
 import de.moekadu.tuner.ui.instruments.StringWithInfo
 import de.moekadu.tuner.ui.instruments.StringsState
 import de.moekadu.tuner.ui.notes.NoteDetectorState
-import de.moekadu.tuner.ui.instruments.InstrumentEditorData
+import kotlin.math.min
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlin.math.min
 
 @HiltViewModel(assistedFactory = InstrumentEditorViewModel.Factory::class)
 class InstrumentEditorViewModel @AssistedInject constructor(
     @Assisted instrument: Instrument,
     pref: PreferenceResources,
     private val temperaments: TemperamentResources
-) : ViewModel(), InstrumentEditorData {
-     @AssistedFactory
-     interface Factory {
-         fun create(instrument: Instrument): InstrumentEditorViewModel
-     }
+) : ViewModel(),
+    InstrumentEditorData {
+    @AssistedFactory
+    interface Factory {
+        fun create(instrument: Instrument): InstrumentEditorViewModel
+    }
 
     val musicalScale get() = temperaments.musicalScale
     private var stableId = instrument.stableId
@@ -105,7 +106,8 @@ class InstrumentEditorViewModel @AssistedInject constructor(
             selectedStringIndex.value = 0
         } else {
             val newKey = StringWithInfo.generateKey(existingList = stringsValue)
-            val note = stringsValue.getOrNull(selectedStringIndex.value)?.note ?: initializerNote.value
+            val note =
+                stringsValue.getOrNull(selectedStringIndex.value)?.note ?: initializerNote.value
             val insertionPosition = min(selectedStringIndex.value + 1, stringsValue.size)
             strings.value = stringsValue.mutate {
                 it.add(insertionPosition, StringWithInfo(note, newKey))
@@ -121,13 +123,15 @@ class InstrumentEditorViewModel @AssistedInject constructor(
             strings.value = stringsValue.mutate {
                 it.removeAt(index)
             }
-            selectedStringIndex.value = if (stringsValue.size <= 1)
+            selectedStringIndex.value = if (stringsValue.size <= 1) {
                 0
-            else
+            } else {
                 index.coerceIn(0, stringsValue.size - 2)
+            }
 
-            if (stringsValue.size == 1)
+            if (stringsValue.size == 1) {
                 initializerNote.value = stringsValue[0].note
+            }
         }
     }
 
@@ -158,16 +162,14 @@ class InstrumentEditorViewModel @AssistedInject constructor(
 //        stableId = instrument.stableId
 //    }
 
-    fun getInstrument(): Instrument {
-        return Instrument(
-            name = this.name.value,
-            nameResource = null,
-            strings = strings.value.map{ it.note }.toTypedArray(),
-            icon = icon.value,
-            stableId = stableId,
-            isChromatic = false
-        )
-    }
+    fun getInstrument(): Instrument = Instrument(
+        name = this.name.value,
+        nameResource = null,
+        strings = strings.value.map { it.note }.toTypedArray(),
+        icon = icon.value,
+        stableId = stableId,
+        isChromatic = false
+    )
 
     fun startTuner() {
         tuner.connect()

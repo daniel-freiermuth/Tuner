@@ -53,7 +53,7 @@ private data class ImportOption(
 private val importOptions = persistentListOf(
     ImportOption(InstrumentIO.InsertMode.Replace, R.string.replace_current_list),
     ImportOption(InstrumentIO.InsertMode.Prepend, R.string.prepend_current_list),
-    ImportOption(InstrumentIO.InsertMode.Append, R.string.append_current_list),
+    ImportOption(InstrumentIO.InsertMode.Append, R.string.append_current_list)
 )
 
 @Composable
@@ -61,7 +61,10 @@ fun ImportInstrumentsDialog(
     instruments: ImmutableList<Instrument>,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit = { },
-    onImport: (insertMode: InstrumentIO.InsertMode, instruments: ImmutableList<Instrument>) -> Unit = { _,_ -> }
+    onImport: (
+        insertMode: InstrumentIO.InsertMode,
+        instruments: ImmutableList<Instrument>
+    ) -> Unit = { _, _ -> }
 ) {
     var importChoice by rememberSaveable { mutableStateOf(InstrumentIO.InsertMode.Append) }
     val context = LocalContext.current
@@ -82,7 +85,9 @@ fun ImportInstrumentsDialog(
         title = {
             Text(
                 LocalResources.current.getQuantityString(
-                    R.plurals.load_instruments, instruments.size, instruments.size
+                    R.plurals.load_instruments,
+                    instruments.size,
+                    instruments.size
                 )
             )
         },

@@ -44,8 +44,10 @@ import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 
-private enum class NavigationIconState{
-    Off, Arrow, Clear
+private enum class NavigationIconState {
+    Off,
+    Arrow,
+    Clear
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +59,8 @@ fun TunerScaffold(
     showPreferenceButton: Boolean = true,
     onPreferenceButtonClicked: () -> Unit = {},
     title: String = stringResource(id = R.string.app_name),
-    defaultModeTools: @Composable (RowScope.() -> Unit) = {}, // tools extra to preference in non-action mode
+    defaultModeTools: @Composable (RowScope.() -> Unit) = {
+    }, // tools extra to preference in non-action mode
     actionModeActive: Boolean = false,
     actionModeTitle: String = "",
     actionModeTools: @Composable (RowScope.() -> Unit) = {},
@@ -79,10 +82,11 @@ fun TunerScaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    if (actionModeActive)
+                    if (actionModeActive) {
                         Text(actionModeTitle)
-                    else
+                    } else {
                         Text(title)
+                    }
                 },
                 navigationIcon = {
                     val state = when {
@@ -99,6 +103,7 @@ fun TunerScaffold(
                                 )
                             }
                         }
+
                         NavigationIconState.Arrow -> {
                             IconButton(onClick = onNavigateUpClicked) {
                                 Icon(
@@ -106,9 +111,10 @@ fun TunerScaffold(
                                     "back"
                                 )
                             }
-
                         }
-                        NavigationIconState.Off -> {}}
+
+                        NavigationIconState.Off -> {}
+                    }
                 },
                 actions = {
                     if (actionModeActive) {
@@ -156,7 +162,8 @@ fun TunerScaffoldWithoutBottomBar(
     showPreferenceButton: Boolean = true,
     onPreferenceButtonClicked: () -> Unit = {},
     title: String = stringResource(id = R.string.app_name),
-    defaultModeTools: @Composable (RowScope.() -> Unit) = {}, // tools extra to preference in non-action mode
+    defaultModeTools: @Composable (RowScope.() -> Unit) = {
+    }, // tools extra to preference in non-action mode
     actionModeActive: Boolean = false,
     actionModeTitle: String = "",
     actionModeTools: @Composable (RowScope.() -> Unit) = {},
@@ -171,10 +178,11 @@ fun TunerScaffoldWithoutBottomBar(
         topBar = {
             TopAppBar(
                 title = {
-                    if (actionModeActive)
+                    if (actionModeActive) {
                         Text(actionModeTitle)
-                    else
+                    } else {
                         Text(title)
+                    }
                 },
                 navigationIcon = {
                     val state = when {
@@ -191,6 +199,7 @@ fun TunerScaffoldWithoutBottomBar(
                                 )
                             }
                         }
+
                         NavigationIconState.Arrow -> {
                             IconButton(onClick = onNavigateUpClicked) {
                                 Icon(
@@ -198,9 +207,10 @@ fun TunerScaffoldWithoutBottomBar(
                                     "back"
                                 )
                             }
-
                         }
-                        NavigationIconState.Off -> {}}
+
+                        NavigationIconState.Off -> {}
+                    }
                 },
                 actions = {
                     if (actionModeActive) {
@@ -226,7 +236,6 @@ fun TunerScaffoldWithoutBottomBar(
         content(paddingValues)
     }
 }
-
 
 @Preview(widthDp = 300, heightDp = 500)
 @Composable
@@ -258,12 +267,12 @@ private fun TunerScaffoldPreview() {
             Column(modifier = Modifier.padding(paddingValues)) {
                 Button(onClick = { actionMode = !actionMode }) {
                     Text(
-                        "EnableAction",
+                        "EnableAction"
                     )
                 }
                 Button(onClick = { showBottomBar = !showBottomBar }) {
                     Text(
-                        "Show bottom bar",
+                        "Show bottom bar"
                     )
                 }
             }

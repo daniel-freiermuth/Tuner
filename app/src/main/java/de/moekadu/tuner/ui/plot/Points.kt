@@ -27,7 +27,7 @@ private data class PointsCache(
     private val maxPointSizeScreen: Float,
     private var transformation: Transformation
 ) {
-    //val path = Path()
+    // val path = Path()
     private var numCoordinates = 0
     private var coordinatesScreen = mutableListOf<Offset>()
     private val pointSizeBoxScreen = Rect(Offset.Zero, Size(maxPointSizeScreen, maxPointSizeScreen))
@@ -36,14 +36,17 @@ private data class PointsCache(
         _update(coordinates, transformation, init = true)
     }
 
-    fun update(coordinates: LineCoordinates, transformation: Transformation): List<Offset> {
-        return _update(coordinates, transformation, init = false)
-    }
+    fun update(coordinates: LineCoordinates, transformation: Transformation): List<Offset> =
+        _update(coordinates, transformation, init = false)
 
-    private fun _update(coordinates: LineCoordinates, transformation: Transformation, init: Boolean)
-            :List<Offset>{
-        if (coordinates == this.coordinates && transformation == this.transformation && !init)
+    private fun _update(
+        coordinates: LineCoordinates,
+        transformation: Transformation,
+        init: Boolean
+    ): List<Offset> {
+        if (coordinates == this.coordinates && transformation == this.transformation && !init) {
             return coordinatesScreen.subList(0, numCoordinates)
+        }
         this.coordinates = coordinates
         this.transformation = transformation
 
@@ -51,19 +54,23 @@ private data class PointsCache(
         val pointHeightRaw = pointSizeBoxRaw.height
         val pointWidthRaw = pointSizeBoxRaw.width
 
-        //path.rewind()
-        val rawMinX = min(transformation.viewPortRaw.right, transformation.viewPortRaw.left) - pointWidthRaw
-        val rawMaxX = max(transformation.viewPortRaw.right, transformation.viewPortRaw.left) + pointWidthRaw
-        val rawMinY = min(transformation.viewPortRaw.top, transformation.viewPortRaw.bottom) - pointHeightRaw
-        val rawMaxY = max(transformation.viewPortRaw.top, transformation.viewPortRaw.bottom) + pointHeightRaw
+        // path.rewind()
+        val rawMinX =
+            min(transformation.viewPortRaw.right, transformation.viewPortRaw.left) - pointWidthRaw
+        val rawMaxX =
+            max(transformation.viewPortRaw.right, transformation.viewPortRaw.left) + pointWidthRaw
+        val rawMinY =
+            min(transformation.viewPortRaw.top, transformation.viewPortRaw.bottom) - pointHeightRaw
+        val rawMaxY =
+            max(transformation.viewPortRaw.top, transformation.viewPortRaw.bottom) + pointHeightRaw
         numCoordinates = coordinates.coordinates.count {
-            it.x in rawMinX..rawMaxX  && it.y in rawMinY .. rawMaxY
+            it.x in rawMinX..rawMaxX && it.y in rawMinY..rawMaxY
         }
         if (numCoordinates > coordinatesScreen.size) {
             var count = 0
             coordinatesScreen = MutableList(numCoordinates) {
                 var c = coordinates.coordinates[count]
-                while (!(c.x in rawMinX .. rawMaxX && c.y in rawMinY .. rawMaxY)) {
+                while (!(c.x in rawMinX..rawMaxX && c.y in rawMinY..rawMaxY)) {
                     count += 1
                     c = coordinates.coordinates[count]
                 }
@@ -73,7 +80,7 @@ private data class PointsCache(
         } else {
             var count = 0
             coordinates.coordinates.forEach {
-                if (it.x in rawMinX..rawMaxX  && it.y in rawMinY .. rawMaxY) {
+                if (it.x in rawMinX..rawMaxX && it.y in rawMinY..rawMaxY) {
                     coordinatesScreen[count] = transformation.toScreen(it)
                     count += 1
                 }
@@ -90,25 +97,27 @@ fun Points(
     maxPointSizeScreen: Dp,
     transformation: () -> Transformation
 ) {
-    Spacer(modifier = Modifier
-        .fillMaxSize()
-        .drawWithCache {
-            val cachedData = PointsCache(data, maxPointSizeScreen.toPx(), transformation())
-            onDrawBehind {
-                val points = cachedData.update(data, transformation())
-                points.forEach { p ->
-                    translate(p.x, p.y) {
-                        this.shape()
+    Spacer(
+        modifier = Modifier
+            .fillMaxSize()
+            .drawWithCache {
+                val cachedData = PointsCache(data, maxPointSizeScreen.toPx(), transformation())
+                onDrawBehind {
+                    val points = cachedData.update(data, transformation())
+                    points.forEach { p ->
+                        translate(p.x, p.y) {
+                            this.shape()
+                        }
                     }
                 }
             }
-        }
     )
 }
 
 @Composable
 private fun rememberTransformation(
-    screenWidth: Dp, screenHeight: Dp,
+    screenWidth: Dp,
+    screenHeight: Dp,
     viewPortRaw: Rect
 ): Transformation {
     val widthPx = with(LocalDensity.current) { screenWidth.roundToPx() }
@@ -127,9 +136,12 @@ private fun PointsPreview() {
         BoxWithConstraints {
             val x = remember { floatArrayOf(0f, 1f, 2f, 3f, 4f, 5.03f) }
             val y = remember { floatArrayOf(3f, 1f, 2f, -2f, 0f, -3.01f) }
-            val coords = remember { LineCoordinates.create(
-                size = x.size, x = { x[it] }, y = { y[it] }
-            )
+            val coords = remember {
+                LineCoordinates.create(
+                    size = x.size,
+                    x = { x[it] },
+                    y = { y[it] }
+                )
 //                LineCoordinates(
 //                    size = 5, x = { x[it] }, y = { y[it] }
 //                )
@@ -142,7 +154,7 @@ private fun PointsPreview() {
 
             Points(
                 coords,
-                 PointShape.circle(6.dp, MaterialTheme.colorScheme.error),
+                PointShape.circle(6.dp, MaterialTheme.colorScheme.error),
                 6.dp,
                 { transformation }
             )

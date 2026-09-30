@@ -58,8 +58,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.takeOrElse
-import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteNamesEDOGenerator
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlin.math.absoluteValue
@@ -108,13 +108,13 @@ private fun NoteSelectorBase(
 
                 return super.onPostScroll(consumed, available, source)
             }
-
         }
     }
 
     LaunchedEffect(key1 = selectedIndex, key2 = state) {
-        if (!state.isScrollInProgress && selectedIndex >= 0)
+        if (!state.isScrollInProgress && selectedIndex >= 0) {
             state.animateScrollToItem(selectedIndex)
+        }
     }
 
     BoxWithConstraints(
@@ -200,10 +200,11 @@ fun NoteSelector(
                     withOctave = false,
                     fontSize = fontSizeResolved,
                     style = textStyle,
-                    color = if (selectedIndex == index)
+                    color = if (selectedIndex == index) {
                         MaterialTheme.colorScheme.onSecondaryContainer
-                    else
+                    } else {
                         MaterialTheme.colorScheme.onSurface
+                    }
                 )
             }
         }
@@ -238,7 +239,9 @@ fun NoteSelector(
     val fontWeightResolved = textStyle?.fontWeight
 
     val octaveRange = remember(musicalScale) {
-        musicalScale.getNote(musicalScale.noteIndexBegin).octave .. musicalScale.getNote(musicalScale.noteIndexEnd-1).octave
+        musicalScale.getNote(
+            musicalScale.noteIndexBegin
+        ).octave..musicalScale.getNote(musicalScale.noteIndexEnd - 1).octave
     }
 
     val noteNames = remember(musicalScale.temperament, musicalScale.rootNote) {
@@ -279,10 +282,11 @@ fun NoteSelector(
                     withOctave = true,
                     fontSize = fontSizeResolved,
                     style = textStyle,
-                    color = if (selectedIndex == index)
+                    color = if (selectedIndex == index) {
                         MaterialTheme.colorScheme.onSecondaryContainer
-                    else
+                    } else {
                         MaterialTheme.colorScheme.onSurface
+                    }
                 )
             }
         }
@@ -311,7 +315,7 @@ private fun NoteSelectorPreview() {
                 notePrintOptions = notePrintOptions
             ) { selectedIndex = it }
             Spacer(modifier = Modifier.height(12.dp))
-            OutlinedButton(onClick = {  }) {
+            OutlinedButton(onClick = { }) {
                 Text("Text button")
             }
         }

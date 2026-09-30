@@ -56,10 +56,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.moekadu.tuner.R
 import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.instruments.InstrumentIcon
+import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.SortedAndDistinctInstrumentStrings
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
-import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.instruments.InstrumentButton
 import de.moekadu.tuner.ui.instruments.StringWithInfo
 import de.moekadu.tuner.ui.instruments.Strings
@@ -93,7 +93,7 @@ interface InstrumentTunerData {
     val selectedNoteKey: Int?
     val stringsState: StringsState
     fun onStringClicked(key: Int, note: MusicalNote)
-    //val onStringClicked: (key: Int, note: MusicalNote) -> (Unit)
+    // val onStringClicked: (key: Int, note: MusicalNote) -> (Unit)
 
     // Data specific to history plot
     val pitchHistoryState: PitchHistoryState
@@ -116,9 +116,11 @@ interface InstrumentTunerData {
 
 private fun checkInstrumentCompatibility(
     musicalScale: MusicalScale2,
-    instrument: Instrument): Boolean {
-    if (instrument.isChromatic)
+    instrument: Instrument
+): Boolean {
+    if (instrument.isChromatic) {
         return true
+    }
     val sortedStrings = SortedAndDistinctInstrumentStrings(instrument, musicalScale)
     return when {
         sortedStrings.sortedAndDistinctNoteIndices.isEmpty() -> true
@@ -150,8 +152,9 @@ fun InstrumentTuner(
     val permissionGranted = rememberTunerAudioPermission(snackbarHostState)
 
     LifecycleResumeEffect(permissionGranted) {
-        if (permissionGranted)
+        if (permissionGranted) {
             data.startTuner()
+        }
         onPauseOrDispose { data.stopTuner() }
     }
     TunerScaffold(
@@ -172,7 +175,9 @@ fun InstrumentTuner(
         modifier = modifier
     ) { paddingValues ->
         val configuration = LocalConfiguration.current
-        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE && !isEmptyInstrument) {
+        if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE &&
+            !isEmptyInstrument
+        ) {
             InstrumentTunerLandscape(
                 data = data,
                 modifier = Modifier.fillMaxSize().padding(paddingValues),
@@ -206,9 +211,11 @@ fun InstrumentTunerPortrait(
             val notePrintOptionsAsState by data.notePrintOptions.collectAsStateWithLifecycle()
             val toleranceInCentsAsState by data.toleranceInCents.collectAsStateWithLifecycle()
             val instrumentAsState by data.instrument.collectAsStateWithLifecycle()
-            val noteNames by remember { derivedStateOf {
-                musicalScaleAsState.temperament.noteNames(musicalScaleAsState.rootNote)
-            }}
+            val noteNames by remember {
+                derivedStateOf {
+                    musicalScaleAsState.temperament.noteNames(musicalScaleAsState.rootNote)
+                }
+            }
 //        val tickHeightPx = rememberTextLabelHeight(tunerPlotStyle.tickFontStyle)
 //        val tickHeightDp = with(LocalDensity.current) { tickHeightPx.toDp() }
             val noteWidthDp = rememberMaxNoteSize(
@@ -222,10 +229,10 @@ fun InstrumentTunerPortrait(
                 ).octave
             ).width + 8.dp + 4.dp
             val scope = rememberCoroutineScope()
-            val scaleInvalid= remember(musicalScaleAsState, instrumentAsState) {
+            val scaleInvalid = remember(musicalScaleAsState, instrumentAsState) {
                 !checkInstrumentCompatibility(musicalScaleAsState, instrumentAsState)
             }
-            //Log.v("Tuner", "InstrumentTuner: instrument as state: $instrumentAsState")
+            // Log.v("Tuner", "InstrumentTuner: instrument as state: $instrumentAsState")
             InstrumentButton(
                 iconResourceId = instrumentAsState.icon.resourceId,
                 name = instrumentAsState.getNameString(LocalResources.current),
@@ -240,10 +247,11 @@ fun InstrumentTunerPortrait(
                         bottom = 0.dp
                     ),
                 outline = tunerPlotStyle.plotWindowOutline,
-                errorMessage = if (scaleInvalid)
+                errorMessage = if (scaleInvalid) {
                     stringResource(id = R.string.incorrect_temperament)
-                else
-                    null,
+                } else {
+                    null
+                },
                 onClick = onInstrumentButtonClicked
             )
 
@@ -270,10 +278,11 @@ fun InstrumentTunerPortrait(
                     fontSize = tunerPlotStyle.stringFontStyle.fontSize,
                     sidebarPosition = StringsSidebarPosition.End,
                     sidebarWidth = noteWidthDp,
-                    outline = if (data.stringsState.scrollMode == StringsScrollMode.Manual)
+                    outline = if (data.stringsState.scrollMode == StringsScrollMode.Manual) {
                         tunerPlotStyle.plotWindowOutlineDuringGesture
-                    else
-                        tunerPlotStyle.plotWindowOutline,
+                    } else {
+                        tunerPlotStyle.plotWindowOutline
+                    },
                     state = data.stringsState,
                     onStringClicked = { key, note -> data.onStringClicked(key, note) }
                 )
@@ -334,17 +343,18 @@ fun InstrumentTunerPortrait(
                 colorOnOutOfTune = tunerPlotStyle.onNegativeColor,
                 colorOnInactive = tunerPlotStyle.onInactiveColor,
                 centDeviationStyle = tunerPlotStyle.toleranceTickFontStyle,
-                //centDeviationColor = ,
+                // centDeviationColor = ,
                 toleranceLineColor = tunerPlotStyle.toleranceColor,
                 toleranceLabelStyle = tunerPlotStyle.toleranceTickFontStyle,
                 toleranceLabelColor = tunerPlotStyle.toleranceColor,
                 tickLineWidth = tunerPlotStyle.tickLineWidth,
                 tickLineColor = tunerPlotStyle.tickLineColor,
                 tickLabelStyle = tunerPlotStyle.stringFontStyle,
-                plotWindowOutline = if (data.pitchHistoryGestureBasedViewPort.isActive)
+                plotWindowOutline = if (data.pitchHistoryGestureBasedViewPort.isActive) {
                     tunerPlotStyle.plotWindowOutlineDuringGesture
-                else
+                } else {
                     tunerPlotStyle.plotWindowOutline
+                }
             )
         }
     }
@@ -364,9 +374,11 @@ fun InstrumentTunerLandscape(
         val musicalScaleAsState by data.musicalScale.collectAsStateWithLifecycle()
         val toleranceInCentsAsState by data.toleranceInCents.collectAsStateWithLifecycle()
         val instrumentAsState by data.instrument.collectAsStateWithLifecycle()
-        val noteNames by remember { derivedStateOf {
-            musicalScaleAsState.temperament.noteNames(musicalScaleAsState.rootNote)
-        }}
+        val noteNames by remember {
+            derivedStateOf {
+                musicalScaleAsState.temperament.noteNames(musicalScaleAsState.rootNote)
+            }
+        }
 //        val tickHeightPx = rememberTextLabelHeight(tunerPlotStyle.tickFontStyle)
 //        val tickHeightDp = with(LocalDensity.current) { tickHeightPx.toDp() }
         val noteWidthDp = rememberMaxNoteSize(
@@ -380,7 +392,7 @@ fun InstrumentTunerLandscape(
             ).octave
         ).width + 8.dp + 4.dp
         val scope = rememberCoroutineScope()
-        val scaleInvalid= remember(musicalScaleAsState, instrumentAsState) {
+        val scaleInvalid = remember(musicalScaleAsState, instrumentAsState) {
             !checkInstrumentCompatibility(musicalScaleAsState, instrumentAsState)
         }
 
@@ -397,10 +409,11 @@ fun InstrumentTunerLandscape(
                         bottom = 0.dp
                     ),
                 outline = tunerPlotStyle.plotWindowOutline,
-                errorMessage = if (scaleInvalid)
+                errorMessage = if (scaleInvalid) {
                     stringResource(id = R.string.incorrect_temperament)
-                else
-                    null,
+                } else {
+                    null
+                },
                 onClick = onInstrumentButtonClicked
 
             )
@@ -427,10 +440,11 @@ fun InstrumentTunerLandscape(
                 fontSize = tunerPlotStyle.stringFontStyle.fontSize,
                 sidebarPosition = StringsSidebarPosition.Start,
                 sidebarWidth = noteWidthDp,
-                outline = if (data.stringsState.scrollMode == StringsScrollMode.Manual)
+                outline = if (data.stringsState.scrollMode == StringsScrollMode.Manual) {
                     tunerPlotStyle.plotWindowOutlineDuringGesture
-                else
-                    tunerPlotStyle.plotWindowOutline,
+                } else {
+                    tunerPlotStyle.plotWindowOutline
+                },
                 state = data.stringsState,
                 onStringClicked = { key, note -> data.onStringClicked(key, note) }
             )
@@ -488,7 +502,7 @@ fun InstrumentTunerLandscape(
             colorOutOfTune = tunerPlotStyle.negativeColor,
             colorInactive = tunerPlotStyle.inactiveColor,
             centDeviationStyle = tunerPlotStyle.toleranceTickFontStyle,
-            //centDeviationColor = ,
+            // centDeviationColor = ,
             targetNoteLineWidth = tunerPlotStyle.targetNoteLineWith,
             colorOnInTune = tunerPlotStyle.onPositiveColor,
             colorOnOutOfTune = tunerPlotStyle.onNegativeColor,
@@ -499,10 +513,11 @@ fun InstrumentTunerLandscape(
             tickLineWidth = tunerPlotStyle.tickLineWidth,
             tickLineColor = tunerPlotStyle.tickLineColor,
             tickLabelStyle = tunerPlotStyle.stringFontStyle,
-            plotWindowOutline = if (data.pitchHistoryGestureBasedViewPort.isActive)
+            plotWindowOutline = if (data.pitchHistoryGestureBasedViewPort.isActive) {
                 tunerPlotStyle.plotWindowOutlineDuringGesture
-            else
+            } else {
                 tunerPlotStyle.plotWindowOutline
+            }
         )
     }
 }
@@ -512,10 +527,10 @@ class TestInstrumentTunerData : InstrumentTunerData {
         MusicalScale2.createTestEdo12()
     )
 
-    override val notePrintOptions: StateFlow<NotePrintOptions2>
-            = MutableStateFlow(NotePrintOptions2())
-    override val toleranceInCents: StateFlow<Int>
-            = MutableStateFlow(10)
+    override val notePrintOptions: StateFlow<NotePrintOptions2> =
+        MutableStateFlow(NotePrintOptions2())
+    override val toleranceInCents: StateFlow<Int> =
+        MutableStateFlow(10)
 
     private val noteNameScale = musicalScale.value.temperament.noteNames(
         musicalScale.value.rootNote
@@ -540,7 +555,7 @@ class TestInstrumentTunerData : InstrumentTunerData {
                 noteNameScale.notes[6].copy(octave = 5),
                 noteNameScale.notes[4].copy(octave = 6),
                 noteNameScale.notes[5].copy(octave = 7),
-                noteNameScale.notes[3].copy(octave = 8),
+                noteNameScale.notes[3].copy(octave = 8)
             ),
             icon = InstrumentIcon.piano,
             stableId = 1L,
@@ -550,7 +565,7 @@ class TestInstrumentTunerData : InstrumentTunerData {
 
     override var strings by mutableStateOf(
         instrument.value.strings.mapIndexed { index, note ->
-            StringWithInfo(note, index) //, musicalScale.value.getNoteIndex(note))
+            StringWithInfo(note, index) // , musicalScale.value.getNoteIndex(note))
         }.toPersistentList()
     )
     override var selectedNoteKey by mutableStateOf<Int?>(null)
@@ -575,12 +590,12 @@ class TestInstrumentTunerData : InstrumentTunerData {
         addFrequency(435f)
     }
 
-    override val pitchHistoryGestureBasedViewPort: GestureBasedViewPort
-            = GestureBasedViewPort()
+    override val pitchHistoryGestureBasedViewPort: GestureBasedViewPort =
+        GestureBasedViewPort()
     override var tuningState: TuningState
-            by mutableStateOf(TuningState.TooLow)
+        by mutableStateOf(TuningState.TooLow)
     override var targetNote: MusicalNote
-            by mutableStateOf(musicalScale.value.referenceNote)
+        by mutableStateOf(musicalScale.value.referenceNote)
     override val targetNoteForLockButton get() = targetNote
 
     override fun onClearFixedTargetClicked() {

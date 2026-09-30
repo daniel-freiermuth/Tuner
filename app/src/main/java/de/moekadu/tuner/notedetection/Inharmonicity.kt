@@ -36,7 +36,8 @@ import kotlin.math.sqrt
 class InharmonicityDetector(val maxNumHarmonics: Int) {
 
     /** Buffer for the harmonics sorted by the amplitudes (largest comes first). */
-    private val harmonics = Array<Harmonic?>(maxNumHarmonics) {null}
+    private val harmonics = Array<Harmonic?>(maxNumHarmonics) { null }
+
     /** Object for averaging the available harmonics. */
     private val statistics = UpdatableStatistics()
 
@@ -52,16 +53,16 @@ class InharmonicityDetector(val maxNumHarmonics: Int) {
 
         for (i in 0 until harmonics.size) {
             var h = harmonics[i]
-            val currentMin = this.harmonics.last()?.spectrumAmplitudeSquared ?: Float.NEGATIVE_INFINITY
+            val currentMin =
+                this.harmonics.last()?.spectrumAmplitudeSquared ?: Float.NEGATIVE_INFINITY
 
             if (h.spectrumAmplitudeSquared > currentMin) {
-                for (j in 0 until this.harmonics.size){
+                for (j in 0 until this.harmonics.size) {
                     val harmonicJ = this.harmonics[j]
                     if (harmonicJ == null) {
                         this.harmonics[j] = h
                         break
-                    }
-                    else if (h.spectrumAmplitudeSquared > harmonicJ.spectrumAmplitudeSquared) {
+                    } else if (h.spectrumAmplitudeSquared > harmonicJ.spectrumAmplitudeSquared) {
                         this.harmonics[j] = h
                         h = harmonicJ
                     }
@@ -79,8 +80,9 @@ class InharmonicityDetector(val maxNumHarmonics: Int) {
      */
     fun computeInharmonicity(harmonics: Harmonics, acousticWeighting: AcousticWeighting): Float {
         val maxHarmonics = extractAndSortHarmonicsWithHighestAmplitude(harmonics)
-        if (maxHarmonics.size < 2 || maxHarmonics[1] == null)
+        if (maxHarmonics.size < 2 || maxHarmonics[1] == null) {
             return 0f
+        }
         statistics.clear()
 
         var hPrev = maxHarmonics[0] ?: return 0f
@@ -97,8 +99,10 @@ class InharmonicityDetector(val maxNumHarmonics: Int) {
             )
 
             val inharmonicity = computeInharmonicity(
-                hPrev.frequency, hPrev.harmonicNumber,
-                hI.frequency, hI.harmonicNumber
+                hPrev.frequency,
+                hPrev.harmonicNumber,
+                hI.frequency,
+                hI.harmonicNumber
             )
 
             statistics.update(inharmonicity, weightPrev * weightI)
@@ -137,10 +141,13 @@ class MemoryPoolInharmonicityDetector {
  * @param harmonicNumber2 Harmonic number of second frequency.
  * @return Inharmonicity value.
  */
-fun computeInharmonicity(frequency1: Float, harmonicNumber1: Int, frequency2: Float, harmonicNumber2: Int): Float {
-    return if (harmonicNumber1 > harmonicNumber2) {
-        log(frequency1 / frequency2, harmonicNumber1.toFloat() / harmonicNumber2.toFloat()) - 1
-    } else {
-        log(frequency2 / frequency1,harmonicNumber2.toFloat() / harmonicNumber1.toFloat()) - 1
-    }
+fun computeInharmonicity(
+    frequency1: Float,
+    harmonicNumber1: Int,
+    frequency2: Float,
+    harmonicNumber2: Int
+): Float = if (harmonicNumber1 > harmonicNumber2) {
+    log(frequency1 / frequency2, harmonicNumber1.toFloat() / harmonicNumber2.toFloat()) - 1
+} else {
+    log(frequency2 / frequency1, harmonicNumber2.toFloat() / harmonicNumber1.toFloat()) - 1
 }

@@ -41,8 +41,7 @@ object TemperamentIO {
         val temperaments: List<EditableTemperament>
     )
 
-    fun temperamentsListToString(resources: Resources, temperaments: List<Temperament3>)
-    : String {
+    fun temperamentsListToString(resources: Resources, temperaments: List<Temperament3>): String {
         val writer = StringWriter()
         writeTemperaments(temperaments, writer.buffered(), resources)
         return writer.toString()
@@ -51,7 +50,8 @@ object TemperamentIO {
     fun writeTemperaments(
         temperaments: List<Temperament3>,
         writer: BufferedWriter,
-        resources: Resources) {
+        resources: Resources
+    ) {
         writeVersion(writer)
         temperaments.forEach {
             writer.writeLine("!")
@@ -62,11 +62,7 @@ object TemperamentIO {
         writer.writeLine("! $VERSION_KEY=${BuildConfig.VERSION_NAME}")
     }
 
-    fun writeTemperament(
-        temperament: Temperament3,
-        writer: BufferedWriter,
-        resources: Resources
-    ) {
+    fun writeTemperament(temperament: Temperament3, writer: BufferedWriter, resources: Resources) {
         val name = temperament.name.value(resources)
             .replace("\n", " ")
         val abbreviation = temperament.abbreviation.value(resources)
@@ -76,10 +72,12 @@ object TemperamentIO {
 
         writer.writeLine("! ${name.replace(" ","_")}.scl")
 
-        if (abbreviation != "")
+        if (abbreviation != "") {
             writer.writeLine("! $ABBREVIATION_KEY=$abbreviation")
-        if (description != "")
+        }
+        if (description != "") {
             writer.writeLine("! $DESCRIPTION_KEY=$description")
+        }
 
         writer.writeLine("!")
         writer.writeLine(name)
@@ -91,7 +89,7 @@ object TemperamentIO {
         val ratios = temperament.rationalNumbers()
         val cents = temperament.cents()
 
-        for (i in 1 .. numberOfNotes) {
+        for (i in 1..numberOfNotes) {
             if (ratios != null) {
                 val r = ratios[i]
                 writer.write(" ${r.numerator}/${r.denominator}")
@@ -106,11 +104,10 @@ object TemperamentIO {
         }
     }
 
-    fun readTemperamentsFromFile(context: Context, uri: Uri): TemperamentsAndFileCheckResult {
-        return context.contentResolver?.openInputStream(uri)?.use { reader ->
+    fun readTemperamentsFromFile(context: Context, uri: Uri): TemperamentsAndFileCheckResult =
+        context.contentResolver?.openInputStream(uri)?.use { reader ->
             parseTemperaments(reader.bufferedReader())
         } ?: TemperamentsAndFileCheckResult(FileCheck.Invalid, listOf())
-    }
 
     fun parseTemperaments(reader: BufferedReader): TemperamentsAndFileCheckResult {
         val collectedTemperaments = ArrayList<EditableTemperament>()
@@ -145,6 +142,7 @@ object TemperamentIO {
                     name == null -> {
                         name = line.trim()
                     }
+
                     numberOfNotes < 0 -> {
                         val n = line.trim().toIntOrNull()
                         if (n == null || n < 0) {
@@ -154,6 +152,7 @@ object TemperamentIO {
                             numberOfNotes = n
                         }
                     }
+
                     else -> {
                         val noteLineCheck = parseNoteLine(line)
                         if (noteLineCheck == null) {
@@ -166,14 +165,16 @@ object TemperamentIO {
                 }
             }
 
-            if (fileCheckResult == FileCheck.Ok && numberOfNotes >= 0 && noteLines.size == numberOfNotes) {
+            if (fileCheckResult == FileCheck.Ok && numberOfNotes >= 0 &&
+                noteLines.size == numberOfNotes
+            ) {
                 // we do not support temperaments with only one note, we at least need the octave
                 if (numberOfNotes > 0) {
                     noteLines.add(
                         0,
                         noteLines.last()?.copy(
                             cent = 0.0,
-                            ratio = RationalNumber(1,1)
+                            ratio = RationalNumber(1, 1)
                         )
                     )
 
@@ -194,62 +195,67 @@ object TemperamentIO {
                 numberOfNotes = -1
                 noteLines.clear()
             }
-            if (fileCheckResult != FileCheck.Ok)
+            if (fileCheckResult != FileCheck.Ok) {
                 return@forEachLine
+            }
         }
 
-        return when{
+        return when {
             fileCheckResult == FileCheck.Ok && collectedTemperaments.isEmpty() -> {
                 TemperamentsAndFileCheckResult(FileCheck.Empty, collectedTemperaments)
             }
+
             fileCheckResult == FileCheck.Ok -> {
                 TemperamentsAndFileCheckResult(FileCheck.Ok, collectedTemperaments)
             }
+
             else -> {
                 TemperamentsAndFileCheckResult(FileCheck.Invalid, listOf())
             }
         }
     }
 
-    private fun notesEqualCheck(note: MusicalNote?, other: MusicalNote?): Boolean {
-        return (note?.base == other?.base &&
-                note?.modifier == other?.modifier &&
-                note?.octaveOffset == other?.octaveOffset &&
-                note?.enharmonicBase == other?.enharmonicBase &&
-                note?.enharmonicModifier == other?.enharmonicModifier &&
-                note?.enharmonicOctaveOffset == other?.enharmonicOctaveOffset
-                )
-    }
-    private fun isCommentLine(string: String): Boolean {
-        return string.trimStart().getOrNull(0) == '!'
-    }
+    private fun notesEqualCheck(note: MusicalNote?, other: MusicalNote?): Boolean = (
+        note?.base == other?.base &&
+            note?.modifier == other?.modifier &&
+            note?.octaveOffset == other?.octaveOffset &&
+            note?.enharmonicBase == other?.enharmonicBase &&
+            note?.enharmonicModifier == other?.enharmonicModifier &&
+            note?.enharmonicOctaveOffset == other?.enharmonicOctaveOffset
+        )
+    private fun isCommentLine(string: String): Boolean = string.trimStart().getOrNull(0) == '!'
 
     private fun parseCommentLine(string: String): Pair<String?, String?> {
         val keys = listOf(VERSION_KEY, DESCRIPTION_KEY, ABBREVIATION_KEY)
         val trimmed = string.trim()
-        if (trimmed.getOrNull(0) != '!')
+        if (trimmed.getOrNull(0) != '!') {
             return Pair(null, null)
+        }
 
         val keyAndValue = trimmed.drop(1).split('=', limit = 2)
-        if (keyAndValue.size < 2)
+        if (keyAndValue.size < 2) {
             return Pair(null, null)
+        }
         val possibleKey = keyAndValue[0].trim()
         val possibleValue = keyAndValue[1].trim()
         for (key in keys) {
-            if (key == possibleKey)
+            if (key == possibleKey) {
                 return Pair(possibleKey, possibleValue)
+            }
         }
         return Pair(null, null)
     }
 
     private fun parseNoteLine(string: String): EditableTemperament.NoteLineContents? {
         val valueAndMore = string.trim().split("\\s+".toRegex(), limit = 2)
-        if (valueAndMore.isEmpty())
+        if (valueAndMore.isEmpty()) {
             return null
+        }
         val cent = parseCent(valueAndMore[0])
         val ratio = if (cent == null) parseRatio(valueAndMore[0]) else null
-        if (cent == null && ratio == null)
+        if (cent == null && ratio == null) {
             return null
+        }
 
         val note = if (valueAndMore.size >= 2) parseNote(valueAndMore[1]) else null
         return EditableTemperament.NoteLineContents(note, cent, ratio)
@@ -258,38 +264,45 @@ object TemperamentIO {
     private fun parseRatio(string: String): RationalNumber? {
         // int numbers without slash are also a ratio with denominator 1
         val possibleNumerator = string.trim().toIntOrNull()
-        if (possibleNumerator != null)
+        if (possibleNumerator != null) {
             return RationalNumber(possibleNumerator, 1)
+        }
 
         // now check for rations with slash
         val values = string.trim().split('/')
-        if (values.size != 2)
+        if (values.size != 2) {
             return null
+        }
         val numerator = values[0].toIntOrNull()
         val denominator = values[1].toIntOrNull()
-        return if (numerator != null && denominator != null)
+        return if (numerator != null && denominator != null) {
             RationalNumber(numerator, denominator)
-        else
+        } else {
             null
+        }
     }
 
     private fun parseCent(string: String): Double? {
-        if (!string.contains('.'))
+        if (!string.contains('.')) {
             return null
+        }
         return string.trim().toDoubleOrNull()
     }
 
     private fun parseNote(string: String): MusicalNote? {
 //        Log.v("Tuner", "TemperamentIO.parseNote: $string")
         val keyAndValue = string.trim().split('=', limit = 2)
-        if (keyAndValue.size < 2)
+        if (keyAndValue.size < 2) {
             return null
-        if (keyAndValue[0].trim() != NOTE_KEY)
+        }
+        if (keyAndValue[0].trim() != NOTE_KEY) {
             return null
+        }
 
         var noteString = keyAndValue[1]
-        if (noteString.isEmpty())
+        if (noteString.isEmpty()) {
             return null
+        }
 
         var baseNote = BaseNote.None
         var noteModifier = NoteModifier.None
@@ -298,10 +311,11 @@ object TemperamentIO {
         // if string does start with "-/", then the nonenharmonic is None, if not we try to parse
         if (!noteString.matches("-\\s+/.*".toRegex())) {
             // first find base note
-            baseNote = BaseNote.entries.firstOrNull {  noteString.startsWith(it.name) }
+            baseNote = BaseNote.entries.firstOrNull { noteString.startsWith(it.name) }
                 ?: return null
-            if (baseNote == BaseNote.None)
+            if (baseNote == BaseNote.None) {
                 return null
+            }
 
             // cut away string responsible for base note
             noteString = noteString.substring(baseNote.name.length)
@@ -320,12 +334,13 @@ object TemperamentIO {
             // remove '/' if there is one, afterwards we read the enharmonic
             noteString = noteString.substring(offsetString?.length ?: 0).trim()
 //            Log.v("Tuner", "TemperamentIO.parseNote, step 3: $noteString, offsetString = $offsetString")
-            if (noteString.getOrNull(0) == '/')
+            if (noteString.getOrNull(0) == '/') {
                 noteString = noteString.drop(1).trim()
+            }
         }
 
         // find enharmonic base
-        val enharmonicBase = BaseNote.entries.firstOrNull {  noteString.startsWith(it.name) }
+        val enharmonicBase = BaseNote.entries.firstOrNull { noteString.startsWith(it.name) }
             ?: BaseNote.None
 
         if (enharmonicBase == BaseNote.None) {
@@ -347,7 +362,9 @@ object TemperamentIO {
         val enharmonicOctaveOffset = enharmonicOffsetString?.toIntOrNull() ?: 0
 //        Log.v("Tuner", "TemperamentIO.parseNote result: $baseNote, $noteModifier, $octaveOffset, $enharmonicBase, $enharmonicModifier, $enharmonicOctaveOffset")
         return MusicalNote(
-            baseNote, noteModifier, octaveOffset,
+            baseNote,
+            noteModifier,
+            octaveOffset,
             enharmonicBase = enharmonicBase,
             enharmonicModifier = enharmonicModifier,
             enharmonicOctaveOffset = enharmonicOctaveOffset
@@ -365,10 +382,10 @@ object TemperamentIO {
             builder.append("/")
             builder.append(
                 noteToString(
-                note.enharmonicBase,
-                note.enharmonicModifier,
-                note.enharmonicOctaveOffset
-            )
+                    note.enharmonicBase,
+                    note.enharmonicModifier,
+                    note.enharmonicOctaveOffset
+                )
             )
         }
         return builder.toString()

@@ -1,8 +1,8 @@
 package de.moekadu.tuner
 
 import de.moekadu.tuner.notedetection.Correlation
-import org.junit.Test
 import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class CorrelationTest {
 
@@ -36,11 +36,11 @@ class CorrelationTest {
             6.01020f, 3.78942f, 4.02729f, 3.51248f, 3.68700f, 3.76005f, 2.39249f, 2.09610f, 1.93074f,
             1.62987f, 1.30983f, 0.38935f, 0.58799f, 0.22544f, 0.51215f, 0.11189f
         )
-        //val values = FloatArray(64) { Random.nextFloat() }
+        // val values = FloatArray(64) { Random.nextFloat() }
 
         val correlationCheck = classicCorrelation(values)
 
-        resultCheck.zip(correlationCheck) {a, b ->
+        resultCheck.zip(correlationCheck) { a, b ->
             assertEquals(a, b, 1e-4f)
         }
 

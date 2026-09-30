@@ -8,10 +8,7 @@ import kotlinx.serialization.Serializable
  * @param rootIndex Index of fifths, where we start the temperament (position of not with ratio 1)
  */
 @Serializable
-data class ChainOfFifths(
-    val fifths: Array<out FifthModification>,
-    val rootIndex: Int
-) {
+data class ChainOfFifths(val fifths: Array<out FifthModification>, val rootIndex: Int) {
     /** If you want to create a circle of fifths, you can close the circle with the returned
      * modification.
      * This makes e.g. sense for 12 notes per octave.
@@ -20,8 +17,9 @@ data class ChainOfFifths(
         var totalCorrection = FifthModification(
             pythagoreanComma = RationalNumber(-1, 1)
         )
-        for (fifth in fifths)
+        for (fifth in fifths) {
             totalCorrection -= fifth
+        }
         return totalCorrection
     }
 
@@ -48,18 +46,20 @@ data class ChainOfFifths(
         for (i in rootIndex until fifths.size) {
             totalCorrection += fifths[i]
             fifthRatio *= threeHalf
-            if (fifthRatio.numerator > 2 * fifthRatio.denominator)
+            if (fifthRatio.numerator > 2 * fifthRatio.denominator) {
                 fifthRatio /= 2
+            }
             ratios[i + 1] = fifthRatio.toDouble() * totalCorrection.toDouble()
         }
 
         fifthRatio = RationalNumber(1, 1)
         totalCorrection = FifthModification()
-        for (i in rootIndex-1 downTo  0) {
+        for (i in rootIndex - 1 downTo 0) {
             totalCorrection -= fifths[i]
             fifthRatio /= threeHalf
-            if (fifthRatio.numerator < fifthRatio.denominator)
+            if (fifthRatio.numerator < fifthRatio.denominator) {
                 fifthRatio *= 2
+            }
             ratios[i] = fifthRatio.toDouble() * totalCorrection.toDouble()
         }
         return ratios
@@ -68,9 +68,7 @@ data class ChainOfFifths(
     /** Return the ratios sorted according to the ratios value.
      * See getRatiosAlongFifths for details.
      */
-    fun getSortedRatios(): DoubleArray {
-        return getRatiosAlongFifths().sortedArray()
-    }
+    fun getSortedRatios(): DoubleArray = getRatiosAlongFifths().sortedArray()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -91,8 +89,7 @@ data class ChainOfFifths(
     }
 
     companion object {
-        fun create(vararg fifths: FifthModification, rootIndex: Int): ChainOfFifths {
-            return ChainOfFifths(fifths, rootIndex)
-        }
+        fun create(vararg fifths: FifthModification, rootIndex: Int): ChainOfFifths =
+            ChainOfFifths(fifths, rootIndex)
     }
 }

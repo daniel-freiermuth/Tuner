@@ -25,14 +25,17 @@ object StretchTuningIO {
         val stretchTunings: List<StretchTuning>
     )
 
-    fun stretchTuningsToString(resources: Resources, stretchTunings: List<StretchTuning>)
-            : String {
+    fun stretchTuningsToString(resources: Resources, stretchTunings: List<StretchTuning>): String {
         val writer = StringWriter()
         writeStretchTunings(stretchTunings, writer.buffered(), resources)
         return writer.toString()
     }
 
-    fun writeStretchTunings(stretchTunings: List<StretchTuning>, writer: BufferedWriter, resources: Resources) {
+    fun writeStretchTunings(
+        stretchTunings: List<StretchTuning>,
+        writer: BufferedWriter,
+        resources: Resources
+    ) {
         writeVersion(writer)
         stretchTunings.forEach { stretchTuning ->
             writer.writeLine("")
@@ -41,7 +44,9 @@ object StretchTuningIO {
     }
 
     fun writeStretchTuning(
-        stretchTuning: StretchTuning, writer: BufferedWriter, resources: Resources
+        stretchTuning: StretchTuning,
+        writer: BufferedWriter,
+        resources: Resources
     ) {
         writer.writeLine("# ${stretchTuning.name.value(resources)}")
         val descriptionString = stretchTuning.description.value(resources)
@@ -53,15 +58,13 @@ object StretchTuningIO {
             }
     }
 
-    fun readStretchTuningsFromFile(context: Context, uri: Uri): StretchTuningsAndFileCheckResult {
-        return context.contentResolver?.openInputStream(uri)?.use { reader ->
+    fun readStretchTuningsFromFile(context: Context, uri: Uri): StretchTuningsAndFileCheckResult =
+        context.contentResolver?.openInputStream(uri)?.use { reader ->
             parseStretchTunings(reader.bufferedReader())
         } ?: StretchTuningsAndFileCheckResult(FileCheck.Invalid, listOf())
-    }
 
-    fun parseStretchTunings(reader: BufferedReader): StretchTuningsAndFileCheckResult {
-        return parseStretchTuningsImpl(reader)
-    }
+    fun parseStretchTunings(reader: BufferedReader): StretchTuningsAndFileCheckResult =
+        parseStretchTuningsImpl(reader)
 }
 
 private fun BufferedWriter.writeLine(line: String) {
@@ -73,39 +76,43 @@ private fun writeVersion(writer: BufferedWriter) {
     writer.writeLine("# $VERSION_KEY=${BuildConfig.VERSION_NAME}")
 }
 
-private fun isCommentLine(string: String): Boolean {
-    return string.trimStart().getOrNull(0) == '#'
-}
+private fun isCommentLine(string: String): Boolean = string.trimStart().getOrNull(0) == '#'
 private fun parseVersionLine(string: String): String? {
     val trimmed = string.trim()
-    if (trimmed.getOrNull(0) != '#')
+    if (trimmed.getOrNull(0) != '#') {
         return null
+    }
 
     val keyAndValue = trimmed.drop(1).split('=', limit = 2)
-    if (keyAndValue.size < 2)
+    if (keyAndValue.size < 2) {
         return null
+    }
     val key = keyAndValue[0].trim()
     val value = keyAndValue[1].trim()
-    if (key == VERSION_KEY)
+    if (key == VERSION_KEY) {
         return value
+    }
     return null
 }
 
 private fun parseCommentLineString(string: String): String? {
     val trimmed = string.trim()
-    if (trimmed.getOrNull(0) != '#')
+    if (trimmed.getOrNull(0) != '#') {
         return null
+    }
     val value = trimmed.drop(1).trim()
     return value.ifEmpty { null }
 }
 
 private fun parseDataLine(string: String): Pair<Double, Double>? {
-    if (string.isBlank() || isCommentLine(string))
+    if (string.isBlank() || isCommentLine(string)) {
         return null
+    }
 
     val values = string.trim().split("\\s+".toRegex())
-    if (values.size < 2)
+    if (values.size < 2) {
         return null
+    }
     val unstretchedFrequency = values[0]
         .trim()
         .replace(",", ".")
@@ -128,7 +135,9 @@ private enum class ReaderState {
     SearchData
 }
 
-fun parseStretchTuningsImpl(reader: BufferedReader): StretchTuningIO.StretchTuningsAndFileCheckResult {
+fun parseStretchTuningsImpl(
+    reader: BufferedReader
+): StretchTuningIO.StretchTuningsAndFileCheckResult {
     val collectedStretchTunings = ArrayList<StretchTuning>()
 
     var version: String? = null
@@ -164,12 +173,14 @@ fun parseStretchTuningsImpl(reader: BufferedReader): StretchTuningIO.StretchTuni
 
         // one section ends with a black line (or with the file end)
         if (!lineConsumed && unstretchedFrequencies.isNotEmpty() && line.isBlank()) {
-            collectedStretchTunings.add(StretchTuning(
-                name = GetTextFromString(name ?: ""),
-                description = GetTextFromString(description ?: ""),
-                unstretchedFrequencies = unstretchedFrequencies.toDoubleArray(),
-                stretchInCents = stretchInCents.toDoubleArray()
-            ))
+            collectedStretchTunings.add(
+                StretchTuning(
+                    name = GetTextFromString(name ?: ""),
+                    description = GetTextFromString(description ?: ""),
+                    unstretchedFrequencies = unstretchedFrequencies.toDoubleArray(),
+                    stretchInCents = stretchInCents.toDoubleArray()
+                )
+            )
             name = null
             description = null
             unstretchedFrequencies.clear()
@@ -190,7 +201,9 @@ fun parseStretchTuningsImpl(reader: BufferedReader): StretchTuningIO.StretchTuni
 
         // we don't know if we really find a version string, so allow to also directly read a name even
         // if we didn't find a version yet
-        if (!lineConsumed && (readerState == ReaderState.SearchVersion || readerState == ReaderState.SearchName)) {
+        if (!lineConsumed &&
+            (readerState == ReaderState.SearchVersion || readerState == ReaderState.SearchName)
+        ) {
             name = parseCommentLineString(line)
             if (name != null) {
                 readerState = ReaderState.SearchDescription
@@ -209,7 +222,9 @@ fun parseStretchTuningsImpl(reader: BufferedReader): StretchTuningIO.StretchTuni
         }
 
         // skip any numbers of blank lines inbetween sections
-        if (!lineConsumed && line.isBlank() && (readerState == ReaderState.SearchVersion || readerState == ReaderState.SearchName)) {
+        if (!lineConsumed && line.isBlank() &&
+            (readerState == ReaderState.SearchVersion || readerState == ReaderState.SearchName)
+        ) {
             lineConsumed = true
             // Log.v("Tuner", "StretchTuningIO.parseStretchTuningImpl: blank line skipped")
         }
@@ -246,11 +261,13 @@ fun parseStretchTuningsImpl(reader: BufferedReader): StretchTuningIO.StretchTuni
         )
     }
 
-    if (fileCheckResult != FileCheck.Ok)
+    if (fileCheckResult != FileCheck.Ok) {
         collectedStretchTunings.clear()
+    }
     // Log.v("Tuner", "StretchTuningIO.parseStretchTuningImpl. fileCheckResult=$fileCheckResult")
     return StretchTuningIO.StretchTuningsAndFileCheckResult(
-        fileCheckResult, collectedStretchTunings
+        fileCheckResult,
+        collectedStretchTunings
     )
 }
 private fun parseSimpleNote(string: String): MusicalNote? {
@@ -259,8 +276,9 @@ private fun parseSimpleNote(string: String): MusicalNote? {
     // first find base note
     val baseNote = BaseNote.entries.firstOrNull { noteString.startsWith(it.name) }
         ?: return null
-    if (baseNote == BaseNote.None)
+    if (baseNote == BaseNote.None) {
         return null
+    }
 
     // cut away string responsible for base note
     noteString = noteString.substring(baseNote.name.length)
@@ -271,10 +289,12 @@ private fun parseSimpleNote(string: String): MusicalNote? {
             noteString = noteString.substring(1)
             NoteModifier.Sharp
         }
+
         'b' -> {
             noteString = noteString.substring(1)
             NoteModifier.Flat
         }
+
         else -> {
             NoteModifier.None
         }
@@ -288,31 +308,36 @@ private fun parseSimpleNote(string: String): MusicalNote? {
 
 private fun parseSingleLineSimpleFormat(line: String): StretchTuning? {
     val parts = line.split(":")
-    if (parts.size != 2)
+    if (parts.size != 2) {
         return null
+    }
     val name = parts[0].trim()
     // Log.v("Tuner", "StretchTuningIO.parseSingleLineSimpleFormat: name = $name")
     val values = parts[1].trim().split("\\s+".toRegex())
     // Log.v("Tuner", "StretchTuningIO.parseSingleLineSimpleFormat: values.size = ${values.size}")
-    if (values.size < 2)
+    if (values.size < 2) {
         return null
+    }
     val startNote = parseSimpleNote(values[0])
     // Log.v("Tuner", "StretchTuningIO.parseSingleLineSimpleFormat: startNote = $startNote")
 
-    if (startNote == null)
+    if (startNote == null) {
         return null
+    }
 
     val edo12 = predefinedTemperamentEDO(12, 0)
     val notes = edo12.noteNames(null)
     val startNoteResolved = notes.notes
         .firstOrNull { it.match(startNote, true) }
         ?.copy(octave = startNote.octave)
-    if (startNoteResolved == null)
+    if (startNoteResolved == null) {
         return null
+    }
 
     val edo12Scale = MusicalScale2(
         edo12,
-        _rootNote = null, _referenceNote = null,
+        _rootNote = null,
+        _referenceNote = null,
         referenceFrequency = DefaultValues.REFERENCE_FREQUENCY,
         frequencyMin = DefaultValues.FREQUENCY_MIN,
         frequencyMax = DefaultValues.FREQUENCY_MAX,
@@ -320,8 +345,9 @@ private fun parseSingleLineSimpleFormat(line: String): StretchTuning? {
     )
     val index0 = edo12Scale.getNoteIndex2(startNoteResolved)
     // Log.v("Tuner", "StretchTuningIO.parseSingleLineSimpleFormat: index0 = $index0")
-    if (index0 == Int.MAX_VALUE)
+    if (index0 == Int.MAX_VALUE) {
         return null
+    }
 
     val unstretchedFrequencies = DoubleArray(values.size - 1) // first value is base note
     val cents = DoubleArray(values.size - 1)
@@ -331,10 +357,11 @@ private fun parseSingleLineSimpleFormat(line: String): StretchTuning? {
             edo12Scale.getNoteFrequency(index0 + index).toDouble()
         val cent = string.replace(",", ".").toDoubleOrNull()
         // Log.v("Tuner", "StretchTuningIO.parseSingleLineSimpleFormat: cent=$cent")
-        if (cent == null)
+        if (cent == null) {
             return null
-        else
+        } else {
             cents[index] = cent
+        }
     }
     val result = StretchTuning(
         name = GetTextFromString(name),
@@ -343,8 +370,9 @@ private fun parseSingleLineSimpleFormat(line: String): StretchTuning? {
         cents
     )
     // Log.v("Tuner", "StretchTuningIO.parseSingleLineSimpleFormat: isMonotonic = ${result.isMonotonic}")
-    return if (result.isMonotonic)
+    return if (result.isMonotonic) {
         result
-    else
+    } else {
         null
+    }
 }

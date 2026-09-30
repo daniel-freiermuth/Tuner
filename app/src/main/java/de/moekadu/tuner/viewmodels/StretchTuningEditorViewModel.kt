@@ -14,18 +14,19 @@ import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.temperaments.centsToFrequency
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.screens.StretchTuningEditorState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlin.math.log10
 import kotlin.math.pow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-@HiltViewModel (assistedFactory = StretchTuningEditorViewModel.Factory::class)
+@HiltViewModel(assistedFactory = StretchTuningEditorViewModel.Factory::class)
 class StretchTuningEditorViewModel @AssistedInject constructor(
     @Assisted initialStretchTuning: StretchTuning,
     @Assisted("initialName") initialName: String, // we cannot read this directly from stretchTuning, since we need a context to resolve the string
     @Assisted("initialDescription") initialDescription: String, // we cannot read this directly from stretchTuning, since we need a context to resolve the string
     val pref: TemperamentResources
-    ) : ViewModel(), StretchTuningEditorState {
+) : ViewModel(),
+    StretchTuningEditorState {
 
     @AssistedFactory
     interface Factory {
@@ -69,10 +70,11 @@ class StretchTuningEditorViewModel @AssistedInject constructor(
             0 -> {
                 _stretchTuning.value = currentStretchTuning.add(
                     pref.musicalScale.value.referenceFrequency.toDouble(),
-                    0.0,
+                    0.0
                 )
                 _selectedKey.value = _stretchTuning.value.keys.lastOrNull() ?: StretchTuning.NO_KEY
             }
+
             1 -> {
                 val newFrequency = centsToFrequency(
                     100.0,
@@ -84,17 +86,19 @@ class StretchTuningEditorViewModel @AssistedInject constructor(
                 )
                 _selectedKey.value = _stretchTuning.value.keys.lastOrNull() ?: StretchTuning.NO_KEY
             }
+
             else -> {
                 val keyIndex = currentStretchTuning.keys.indexOfFirst { it == selectedKey.value }
-                val i0 = if (keyIndex == -1)
+                val i0 = if (keyIndex == -1) {
                     currentStretchTuning.size - 2
-                else
+                } else {
                     keyIndex.coerceIn(0, currentStretchTuning.size - 2)
+                }
                 val lf0 = log10(currentStretchTuning.unstretchedFrequencies[i0])
                 val lf1 = log10(currentStretchTuning.unstretchedFrequencies[i0 + 1])
                 val c0 = currentStretchTuning.stretchInCents[i0]
                 val c1 = currentStretchTuning.stretchInCents[i0 + 1]
-                val lfnew = if (keyIndex == -1 || keyIndex == currentStretchTuning.size-1) {
+                val lfnew = if (keyIndex == -1 || keyIndex == currentStretchTuning.size - 1) {
                     2 * lf1 - lf0
                 } else {
                     0.5 * (lf1 + lf0)
@@ -102,11 +106,13 @@ class StretchTuningEditorViewModel @AssistedInject constructor(
                 val cnew = c0 + (c1 - c0) * (lfnew - lf0) / (lf1 - lf0)
                 val fnew = 10.0.pow(lfnew)
                 _stretchTuning.value = currentStretchTuning.add(
-                    fnew, cnew
+                    fnew,
+                    cnew
                 )
                 val index = _stretchTuning.value.unstretchedFrequencies.binarySearch(fnew)
-                if (index >= 0)
+                if (index >= 0) {
                     _selectedKey.value = _stretchTuning.value.keys[index]
+                }
             }
         }
     }
@@ -132,11 +138,7 @@ class StretchTuningEditorViewModel @AssistedInject constructor(
         }
     }
 
-    override fun modifyLine(
-        unstretchedFrequency: Double,
-        stretchInCents: Double,
-        key: Int
-    ) {
+    override fun modifyLine(unstretchedFrequency: Double, stretchInCents: Double, key: Int) {
         // Log.v("Tuner", "StretchTuningEditorViewModel: modifyLine: unstretched frequency = $unstretchedFrequency, stretchInCents = $stretchInCents, key=$key")
         _stretchTuning.value = stretchTuning.value.modify(unstretchedFrequency, stretchInCents, key)
     }

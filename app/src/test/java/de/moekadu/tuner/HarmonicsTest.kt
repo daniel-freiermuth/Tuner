@@ -1,18 +1,18 @@
 package de.moekadu.tuner
 
 import de.moekadu.tuner.notedetection.*
+import kotlin.math.floor
+import kotlin.math.roundToInt
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
-import kotlin.math.floor
-import kotlin.math.roundToInt
 
 class HarmonicsTest {
     @Test
     fun testGlobalMaximumIndex() {
         val size = 100
-        val values = FloatArray(size) {it - 0.5f * size}
+        val values = FloatArray(size) { it - 0.5f * size }
         val maximumIndex1 = 20
         val maximumIndex2 = 70
         values[maximumIndex1] = size.toFloat() + 3
@@ -32,7 +32,7 @@ class HarmonicsTest {
     @Test
     fun testLocalMaximumIndex() {
         val size = 30
-        val values = FloatArray(size) {10f}
+        val values = FloatArray(size) { 10f }
         values[5] = 11f
         values[20] = 20f
 
@@ -55,10 +55,10 @@ class HarmonicsTest {
         harmonics.addHarmonic(1, 3f, 8, 2f)
 
         harmonics.sort()
-        assertEquals(1,harmonics[0].harmonicNumber)
-        assertEquals(2,harmonics[1].harmonicNumber)
-        assertEquals(5,harmonics[2].harmonicNumber)
-        assertEquals(8,harmonics[3].harmonicNumber)
+        assertEquals(1, harmonics[0].harmonicNumber)
+        assertEquals(2, harmonics[1].harmonicNumber)
+        assertEquals(5, harmonics[2].harmonicNumber)
+        assertEquals(8, harmonics[3].harmonicNumber)
     }
 
     // @Test
@@ -168,13 +168,12 @@ class HarmonicsTest {
             spectrum.amplitudeSpectrumSquared[globMaxIdx]
         )
 
-
         harmonics.findHarmonicsFromSpectrum2(
             initialHarmonic,
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies
         )
         assertEquals(1, harmonics.size) // we find only the third harmonic
@@ -193,7 +192,7 @@ class HarmonicsTest {
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies
         )
         assertEquals(2, harmonics.size) // we find the second and third harmonic
@@ -211,7 +210,7 @@ class HarmonicsTest {
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies
         )
         assertEquals(3, harmonics.size) // we find first,  second and third harmonic
@@ -229,7 +228,7 @@ class HarmonicsTest {
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies
         )
         assertEquals(3, harmonics.size) // we find second, third and fifth harmonic
@@ -240,7 +239,7 @@ class HarmonicsTest {
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies,
             maxNumFail = 1
         )
@@ -257,7 +256,7 @@ class HarmonicsTest {
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies,
             harmonicTolerance = 0.2f
         )
@@ -269,7 +268,7 @@ class HarmonicsTest {
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies,
             harmonicTolerance = 0.1f
         )
@@ -286,7 +285,7 @@ class HarmonicsTest {
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies,
             harmonicTolerance = 0.2f
         )
@@ -298,13 +297,12 @@ class HarmonicsTest {
             frequencyMin,
             frequencyMax,
             spectrum,
-            findGlobalMaximumIndex(1, spectrum.size -1, spectrum.amplitudeSpectrumSquared),
+            findGlobalMaximumIndex(1, spectrum.size - 1, spectrum.amplitudeSpectrumSquared),
             spectrumFrequencies,
             harmonicTolerance = 0.1f
         )
         assertEquals(2, harmonics.size) // we find only the second and third harmonic
     }
-
 
     @Test
     fun checkForCommonDivisorTest() {

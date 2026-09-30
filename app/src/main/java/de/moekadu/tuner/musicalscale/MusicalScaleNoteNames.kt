@@ -22,23 +22,20 @@ import androidx.compose.runtime.Stable
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteNames2
 
-private fun resolveReferenceNote(noteNames: NoteNames2, referenceNote: MusicalNote?): MusicalNote {
-    return when {
+private fun resolveReferenceNote(noteNames: NoteNames2, referenceNote: MusicalNote?): MusicalNote =
+    when {
         referenceNote == null -> noteNames.defaultReferenceNote
         noteNames.hasNote(referenceNote) -> referenceNote
         else -> noteNames.defaultReferenceNote
     }
-}
+
 /** Note names, which can map indices between musical notes and via verse.
  * @param noteNames Note names of one octave.
  * @param referenceNote Reference note of the scale, which refers to noteIndex 0.
  *   This note must be part of the note names. Use null to use the default reference note.
  */
 @Stable
-class MusicalScaleNoteNames2(
-    val noteNames: NoteNames2,
-    referenceNote: MusicalNote?
-) {
+class MusicalScaleNoteNames2(val noteNames: NoteNames2, referenceNote: MusicalNote?) {
     /** Reference note. */
     val referenceNote = resolveReferenceNote(noteNames, referenceNote)
 
@@ -46,15 +43,16 @@ class MusicalScaleNoteNames2(
     val referenceNoteIndexWithinOctave = noteNames.getNoteIndex(this.referenceNote)
 
     /** Reference note index within the octave (index in notes). */
-    private val octaveSwitchIndexWithinNoteNames
-            = noteNames.getNoteIndex(noteNames.octaveSwitchIndex)
+    private val octaveSwitchIndexWithinNoteNames =
+        noteNames.getNoteIndex(noteNames.octaveSwitchIndex)
 
     /** Octave of reference note. */
     private val referenceOctave =
-        if (referenceNoteIndexWithinOctave < octaveSwitchIndexWithinNoteNames)
+        if (referenceNoteIndexWithinOctave < octaveSwitchIndexWithinNoteNames) {
             this.referenceNote.octave
-        else
+        } else {
             this.referenceNote.octave - 1
+        }
 
     /** Number of notes contained in the scale. */
     val size = noteNames.size
@@ -70,8 +68,9 @@ class MusicalScaleNoteNames2(
             octave -= 1
             localNoteIndex += size
         }
-        if (localNoteIndex >= octaveSwitchIndexWithinNoteNames)
+        if (localNoteIndex >= octaveSwitchIndexWithinNoteNames) {
             octave += 1
+        }
 //        Log.v("Tuner", "MusicalScaleNoteNames.getNoteOfIndex: noteIndex=$noteIndex, octave=$octave, localNoteIndex=$localNoteIndex, referenceNoteIndexWithinOctave=$referenceNoteIndexWithinOctave, referenceNote=$referenceNote")
         return noteNames[localNoteIndex].copy(octave = octave)
     }
@@ -85,10 +84,11 @@ class MusicalScaleNoteNames2(
         return if (localNoteIndex < 0) {
             Int.MAX_VALUE
         } else {
-            val octave = if (localNoteIndex < octaveSwitchIndexWithinNoteNames)
-                    musicalNote.octave
-            else
+            val octave = if (localNoteIndex < octaveSwitchIndexWithinNoteNames) {
+                musicalNote.octave
+            } else {
                 musicalNote.octave - 1
+            }
             (octave - referenceOctave) * size + localNoteIndex - referenceNoteIndexWithinOctave
         }
     }
@@ -99,15 +99,15 @@ class MusicalScaleNoteNames2(
      * @param musicalNote Some musical note.
      * @return Note indices relative to reference note, where the note matches.
      */
-    fun getMatchingNoteIndices(musicalNote: MusicalNote): IntArray {
-        return noteNames.getMatchingNoteIndices(musicalNote).map { localNoteIndex ->
-            val octave = if (localNoteIndex < octaveSwitchIndexWithinNoteNames)
+    fun getMatchingNoteIndices(musicalNote: MusicalNote): IntArray =
+        noteNames.getMatchingNoteIndices(musicalNote).map { localNoteIndex ->
+            val octave = if (localNoteIndex < octaveSwitchIndexWithinNoteNames) {
                 musicalNote.octave
-            else
+            } else {
                 musicalNote.octave - 1
+            }
             (octave - referenceOctave) * size + localNoteIndex - referenceNoteIndexWithinOctave
         }.toIntArray()
-    }
 
     /** Check if a note matches any of the notes in this class.
      * A match means that either a combination of enharmonic or non enharmonic are the
@@ -115,10 +115,9 @@ class MusicalScaleNoteNames2(
      * @param musicalNote Musical note to be checked.
      * @return False if note is null, or has not match. Else true.
      */
-    fun hasMatchingNote(musicalNote: MusicalNote?): Boolean {
-        return if (musicalNote == null)
-            false
-        else
-            noteNames.hasNote(musicalNote)
+    fun hasMatchingNote(musicalNote: MusicalNote?): Boolean = if (musicalNote == null) {
+        false
+    } else {
+        noteNames.hasNote(musicalNote)
     }
 }

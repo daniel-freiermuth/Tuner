@@ -1,6 +1,6 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -23,7 +23,7 @@ android {
         targetSdk = 37
         versionCode = 50
         versionName = "9.2.0"
-        testInstrumentationRunner =  "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -31,7 +31,8 @@ android {
         generateLocaleConfig = true
     }
 
-    buildTypes { release {
+    buildTypes {
+        release {
             isShrinkResources = true
             isMinifyEnabled = true
             proguardFiles(
@@ -47,7 +48,7 @@ android {
 
     buildFeatures {
         buildConfig = true
-        compose = true  // seems to be needed to have compose preview
+        compose = true // seems to be needed to have compose preview
     }
 
     compileOptions {

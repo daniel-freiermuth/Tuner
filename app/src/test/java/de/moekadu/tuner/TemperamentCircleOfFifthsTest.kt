@@ -1,14 +1,15 @@
 package de.moekadu.tuner
 
 import de.moekadu.tuner.temperaments.*
-import org.junit.Test
 import kotlin.math.log
 import kotlin.math.pow
+import org.junit.Test
 
 class TemperamentCircleOfFifthsTest {
-    private val notes = arrayOf("C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B", "C")
+    private val notes =
+        arrayOf("C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B", "C")
     private fun cent(ratio: Double): Double {
-        val centRatio = 2.0.pow(1.0/1200)
+        val centRatio = 2.0.pow(1.0 / 1200)
         return log(ratio, centRatio)
     }
 

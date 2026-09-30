@@ -99,12 +99,13 @@ fun QuickSettingsBar(
         ) {
             val abbreviation =
                 musicalScale.temperament.abbreviation.value(resources).let { abbr ->
-                    if (abbr == "")
+                    if (abbr == "") {
                         musicalScale.temperament.name.value(resources).let { nme ->
                             if (nme == "") "-" else nme
                         }
-                    else
+                    } else {
                         abbr
+                    }
                 }
 
             Text(
@@ -126,10 +127,11 @@ fun QuickSettingsBar(
         ) {
             Icon(
                 ImageVector.vectorResource(
-                    if (notePrintOptions.enharmonicVariant == 1)
+                    if (notePrintOptions.enharmonicVariant == 1) {
                         R.drawable.ic_prefer_flat_isflat
-                    else
+                    } else {
                         R.drawable.ic_prefer_flat_issharp
+                    }
                 ),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
@@ -169,7 +171,7 @@ private fun QuickSettingsBarPreview() {
             notePrintOptions = notePrintOptions,
             onSharpFlatClicked = {
                 notePrintOptions = notePrintOptions.copy(
-                    enharmonicVariant = if (notePrintOptions.enharmonicVariant == 0) 1 else 0,
+                    enharmonicVariant = if (notePrintOptions.enharmonicVariant == 0) 1 else 0
                 )
             }
         )
@@ -191,7 +193,7 @@ private fun QuickSettingsBar2Preview() {
             notePrintOptions = notePrintOptions,
             onSharpFlatClicked = {
                 notePrintOptions = notePrintOptions.copy(
-                    enharmonicVariant = if (notePrintOptions.enharmonicVariant == 0) 1 else 0,
+                    enharmonicVariant = if (notePrintOptions.enharmonicVariant == 0) 1 else 0
                 )
             }
         )

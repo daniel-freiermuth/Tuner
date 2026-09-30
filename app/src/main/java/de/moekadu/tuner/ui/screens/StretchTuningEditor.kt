@@ -23,10 +23,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -66,11 +66,11 @@ interface StretchTuningEditorState {
     fun modifyLine(unstretchedFrequency: Double, stretchInCents: Double, key: Int)
 }
 
-//@Composable
-//private fun OverflowMenu(
+// @Composable
+// private fun OverflowMenu(
 //    onLoadClicked: () -> Unit,
 //    modifier: Modifier = Modifier
-//) {
+// ) {
 //    var expanded by rememberSaveable { mutableStateOf(false) }
 //    Box(modifier = modifier) {
 //        IconButton(onClick = {
@@ -93,13 +93,13 @@ interface StretchTuningEditorState {
 //            // HorizontalDivider()
 //        }
 //    }
-//}
+// }
 
 @Composable
 fun StretchTuningEditor(
-    state:  StretchTuningEditorState,
+    state: StretchTuningEditorState,
     modifier: Modifier = Modifier,
-    onEditLineClicked: ( key: Int ) -> Unit = {},
+    onEditLineClicked: (key: Int) -> Unit = {},
     onAbortClicked: () -> Unit = {},
     onSaveClicked: () -> Unit = {},
     tunerPlotStyle: TunerPlotStyle = TunerPlotStyle.create()
@@ -108,14 +108,22 @@ fun StretchTuningEditor(
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
             StretchTuningLandscape(
-                state, modifier, onEditLineClicked, onAbortClicked, onSaveClicked,
+                state,
+                modifier,
+                onEditLineClicked,
+                onAbortClicked,
+                onSaveClicked,
                 tunerPlotStyle
             )
         }
 
         else -> {
             StretchTuningPortrait(
-                state, modifier, onEditLineClicked, onAbortClicked, onSaveClicked,
+                state,
+                modifier,
+                onEditLineClicked,
+                onAbortClicked,
+                onSaveClicked,
                 tunerPlotStyle
             )
         }
@@ -127,7 +135,7 @@ fun StretchTuningEditor(
 private fun StretchTuningPortrait(
     state: StretchTuningEditorState,
     modifier: Modifier,
-    onEditLineClicked: ( key: Int ) -> Unit,
+    onEditLineClicked: (key: Int) -> Unit,
     onAbortClicked: () -> Unit,
     onSaveClicked: () -> Unit,
     tunerPlotStyle: TunerPlotStyle
@@ -135,7 +143,7 @@ private fun StretchTuningPortrait(
     val stretchTuningData by state.stretchTuning.collectAsStateWithLifecycle()
     val selectedKey by state.selectedKey.collectAsStateWithLifecycle()
 
-    //TunerScaffoldWithoutBottomBar(
+    // TunerScaffoldWithoutBottomBar(
     //    title = stringResource(R.string.stretch_tuning),
     //    showPreferenceButton = false,
     //    //defaultModeTools = { OverflowMenu(onLoadClicked = {}) },
@@ -183,17 +191,19 @@ private fun StretchTuningPortrait(
                 )
             }
         }
-    ){ paddingValues ->
+    ) { paddingValues ->
         val layoutDirection = LocalLayoutDirection.current
         Column(
             modifier = modifier
                 .consumeWindowInsets(paddingValues)
                 .padding(
                     top = paddingValues.calculateTopPadding(),
-                    start = tunerPlotStyle.margin + paddingValues.calculateStartPadding(layoutDirection),
+                    start =
+                        tunerPlotStyle.margin + paddingValues.calculateStartPadding(
+                            layoutDirection
+                        ),
                     end = tunerPlotStyle.margin + paddingValues.calculateEndPadding(layoutDirection)
-                )
-            ,
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TextField(
@@ -251,10 +261,11 @@ private fun StretchTuningPortrait(
                 tickLineWidth = tunerPlotStyle.tickLineWidth,
                 tickLineColor = tunerPlotStyle.tickLineColor,
                 tickLabelStyle = tunerPlotStyle.tickFontStyle,
-                plotWindowOutline = if (state.gestureBasedViewPort.isActive)
+                plotWindowOutline = if (state.gestureBasedViewPort.isActive) {
                     tunerPlotStyle.plotWindowOutlineDuringGesture
-                else
+                } else {
                     tunerPlotStyle.plotWindowOutline
+                }
             )
             StretchTuningTable(
                 stretchTuningData,
@@ -279,7 +290,7 @@ private fun StretchTuningPortrait(
 private fun StretchTuningLandscape(
     state: StretchTuningEditorState,
     modifier: Modifier,
-    onEditLineClicked: ( key: Int ) -> Unit,
+    onEditLineClicked: (key: Int) -> Unit,
     onAbortClicked: () -> Unit,
     onSaveClicked: () -> Unit,
     tunerPlotStyle: TunerPlotStyle
@@ -343,9 +354,12 @@ private fun StretchTuningLandscape(
                 .consumeWindowInsets(paddingValues)
                 .padding(
                     top = paddingValues.calculateTopPadding(),
-                    start = tunerPlotStyle.margin + paddingValues.calculateStartPadding(layoutDirection),
+                    start =
+                        tunerPlotStyle.margin + paddingValues.calculateStartPadding(
+                            layoutDirection
+                        ),
                     end = tunerPlotStyle.margin + paddingValues.calculateEndPadding(layoutDirection)
-                    ),
+                )
         ) {
             Column(
                 modifier = Modifier
@@ -389,10 +403,11 @@ private fun StretchTuningLandscape(
                     tickLineWidth = tunerPlotStyle.tickLineWidth,
                     tickLineColor = tunerPlotStyle.tickLineColor,
                     tickLabelStyle = tunerPlotStyle.tickFontStyle,
-                    plotWindowOutline = if (state.gestureBasedViewPort.isActive)
+                    plotWindowOutline = if (state.gestureBasedViewPort.isActive) {
                         tunerPlotStyle.plotWindowOutlineDuringGesture
-                    else
+                    } else {
                         tunerPlotStyle.plotWindowOutline
+                    }
                 )
             }
 
@@ -442,12 +457,14 @@ private class TestStretchTuningState : StretchTuningEditorState {
     override val name = mutableStateOf("some name")
 
     override val description = mutableStateOf("stretch tuning description")
-    override val stretchTuning = MutableStateFlow(StretchTuning(
-        name = GetTextFromString("Test"),
-        description = GetTextFromString("Stretch tuning description."),
-        unstretchedFrequencies = doubleArrayOf(320.0, 440.0, 540.0, 1023.4, 3000.0, 12310.0),
-        stretchInCents = doubleArrayOf(-4.0, 0.9, 1.2, 2.4, 5.0, 7.6)
-    ))
+    override val stretchTuning = MutableStateFlow(
+        StretchTuning(
+            name = GetTextFromString("Test"),
+            description = GetTextFromString("Stretch tuning description."),
+            unstretchedFrequencies = doubleArrayOf(320.0, 440.0, 540.0, 1023.4, 3000.0, 12310.0),
+            stretchInCents = doubleArrayOf(-4.0, 0.9, 1.2, 2.4, 5.0, 7.6)
+        )
+    )
     override val selectedKey = MutableStateFlow(2)
 
     override val gestureBasedViewPort = GestureBasedViewPort()
@@ -489,8 +506,9 @@ fun StretchTuningEditorPreview() {
     TunerTheme {
         val state = remember { TestStretchTuningState() }
 
-        Surface() {
-            StretchTuningEditor(state,
+        Surface {
+            StretchTuningEditor(
+                state,
                 modifier = Modifier.fillMaxSize()
             )
         }

@@ -26,17 +26,15 @@ import android.media.MediaRecorder
 import android.util.Log
 import de.moekadu.tuner.misc.MemoryPool
 import de.moekadu.tuner.misc.WaveWriter
+import kotlin.math.max
+import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlin.math.max
-import kotlin.math.roundToInt
-import kotlin.time.Duration.Companion.milliseconds
 
-class SoundSourceJob(
-    val channel: ReceiveChannel<MemoryPool<SampleData>.RefCountedMemory>
-)
+class SoundSourceJob(val channel: ReceiveChannel<MemoryPool<SampleData>.RefCountedMemory>)
 
 /** Generator of sound samples.
 
@@ -69,7 +67,7 @@ fun CoroutineScope.launchSoundSourceJob(
 
     launch(Dispatchers.IO) {
         val record =
-            if (testFunction == null)
+            if (testFunction == null) {
                 AudioRecord(
                     MediaRecorder.AudioSource.MIC,
                     sampleRate,
@@ -77,8 +75,9 @@ fun CoroutineScope.launchSoundSourceJob(
                     AudioFormat.ENCODING_PCM_16BIT,
                     minBufferSize
                 )
-            else
+            } else {
                 null
+            }
 
         if (record?.state == AudioRecord.STATE_UNINITIALIZED) {
             Log.v(
@@ -88,23 +87,28 @@ fun CoroutineScope.launchSoundSourceJob(
         } else {
             record?.startRecording()
             val recordData =
-                if (record != null)
+                if (record != null) {
                     ShortArray(record.bufferSizeInFrames / 2)
-                else
+                } else {
                     ShortArray(minBufferSize / Short.SIZE_BYTES / 2)
+                }
 
             val sampleDataList = ArrayList<MemoryPool<SampleData>.RefCountedMemory>()
             var nextStartingDataFrame = 0
             var currentFrame = 0
             while (true) {
-                if (!isActive)
+                if (!isActive) {
                     break
+                }
 
                 val numRead = if (testFunction != null) {
                     for (i in recordData.indices) {
-                        recordData[i] = (Short.MAX_VALUE * testFunction(
-                            currentFrame + i, 1f / sampleRate
-                        )).toInt().toShort()
+                        recordData[i] = (
+                            Short.MAX_VALUE * testFunction(
+                                currentFrame + i,
+                                1f / sampleRate
+                            )
+                            ).toInt().toShort()
                     }
                     delay((1000 * recordData.size.toFloat() / sampleRate).toLong().milliseconds)
                     recordData.size
@@ -114,11 +118,11 @@ fun CoroutineScope.launchSoundSourceJob(
                     0
                 }
 
-                //Log.v("TestRecordFlow", "SoundSource: numRead=$numRead, currentFrame=$currentFrame, windowSize=$windowSize")
+                // Log.v("TestRecordFlow", "SoundSource: numRead=$numRead, currentFrame=$currentFrame, windowSize=$windowSize")
                 if (numRead > 0) {
                     // add empty sampleData objects to the data queue
                     while (nextStartingDataFrame <= currentFrame + numRead) {
-                        //sampleDataList.add(SampleData(windowSize, sampleRate, nextStartingDataFrame))
+                        // sampleDataList.add(SampleData(windowSize, sampleRate, nextStartingDataFrame))
                         sampleDataList.add(
                             memoryPool.get(
                                 windowSize,
@@ -137,14 +141,15 @@ fun CoroutineScope.launchSoundSourceJob(
                         .filter { it.memory.isFull }
                         .map {
 //                                Log.v("Tuner", "SoundSource: sending sample data at frame: ${it.memory.framePosition}")
-                            //outputChannel.send(it)
+                            // outputChannel.send(it)
                             val sendStatus = outputChannel.trySend(it)
-                            if (!sendStatus.isSuccess)
+                            if (!sendStatus.isSuccess) {
                                 it.decRef()
+                            }
                         }
                     sampleDataList.removeAll { it.memory.isFull }
 
-                    //for(s in sampleDataList)
+                    // for(s in sampleDataList)
                     //    Log.v("TestRecordFlow", "is full: ${s.isFull}")
 
                     currentFrame += numRead

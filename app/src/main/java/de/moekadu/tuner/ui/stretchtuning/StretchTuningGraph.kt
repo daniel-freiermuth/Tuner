@@ -38,11 +38,11 @@ import de.moekadu.tuner.ui.plot.VerticalLinesPositions
 import de.moekadu.tuner.ui.plot.rememberTextLabelHeight
 import de.moekadu.tuner.ui.plot.rememberTextLabelWidth
 import de.moekadu.tuner.ui.theme.TunerTheme
-import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 
 @Composable
 fun StretchTuningGraph(
@@ -65,12 +65,12 @@ fun StretchTuningGraph(
 ) {
     val viewPort = remember(stretchTuningData, referenceFrequency) {
         val marginRelative = 0.04f
-        val fmin = when(stretchTuningData.size) {
+        val fmin = when (stretchTuningData.size) {
             0 -> 0.5 * referenceFrequency
             1 -> 0.5 * stretchTuningData.unstretchedFrequencies[0]
             else -> stretchTuningData.unstretchedFrequencies.min()
         }
-        val fmax = when(stretchTuningData.size) {
+        val fmax = when (stretchTuningData.size) {
             0 -> 2.0 * referenceFrequency
             1 -> 2.0 * stretchTuningData.unstretchedFrequencies[0]
             else -> stretchTuningData.unstretchedFrequencies.max()
@@ -78,12 +78,12 @@ fun StretchTuningGraph(
         val fminCents = ratioToCents(fmin / referenceFrequency.toDouble()).toFloat()
         val fmaxCents = ratioToCents(fmax / referenceFrequency.toDouble()).toFloat()
         val fCentsMargin = (fmaxCents - fminCents) * marginRelative
-        val cminInit = when(stretchTuningData.size) {
+        val cminInit = when (stretchTuningData.size) {
             0 -> -12.0
             1 -> min(-5.0, stretchTuningData.stretchInCents[0])
             else -> stretchTuningData.stretchInCents.min()
         }
-        val cmaxInit = when(stretchTuningData.size) {
+        val cmaxInit = when (stretchTuningData.size) {
             0 -> 12.0
             1 -> max(5.0, stretchTuningData.stretchInCents[0])
             else -> stretchTuningData.stretchInCents.max()
@@ -101,18 +101,18 @@ fun StretchTuningGraph(
 
     val viewPortGestureLimits = remember(stretchTuningData, referenceFrequency) {
         val marginRelative = 2
-        val fmax = when(stretchTuningData.size) {
+        val fmax = when (stretchTuningData.size) {
             0 -> 2.0 * referenceFrequency
             1 -> 2.0 * stretchTuningData.unstretchedFrequencies[0]
             else -> stretchTuningData.unstretchedFrequencies.max()
         }
         val fmaxCents = ratioToCents(fmax / referenceFrequency.toDouble()).toFloat()
-        val cminInit = when(stretchTuningData.size) {
+        val cminInit = when (stretchTuningData.size) {
             0 -> -12.0
             1 -> min(-5.0, stretchTuningData.stretchInCents[0])
             else -> stretchTuningData.stretchInCents.min()
         }
-        val cmaxInit = when(stretchTuningData.size) {
+        val cmaxInit = when (stretchTuningData.size) {
             0 -> 12.0
             1 -> max(5.0, stretchTuningData.stretchInCents[0])
             else -> stretchTuningData.stretchInCents.max()
@@ -125,7 +125,7 @@ fun StretchTuningGraph(
             left = ratioToCents(1.0 / referenceFrequency.toDouble()).toFloat(),
             top = (cmax + cMargin).toFloat(),
             right = 4 * fmaxCents,
-            bottom = (cmax - cMargin).toFloat(),
+            bottom = (cmax - cMargin).toFloat()
         )
     }
 
@@ -133,10 +133,10 @@ fun StretchTuningGraph(
         stringResource(R.string.cent, 500),
         style = tickLabelStyle
     )
-    val maxLabelWidthDp = with(LocalDensity.current) { maxLabelWidth.toDp() + 2.dp}
+    val maxLabelWidthDp = with(LocalDensity.current) { maxLabelWidth.toDp() + 2.dp }
 
     val maxLabelHeight = rememberTextLabelHeight(tickLabelStyle)
-    val maxLabelHeightDp = with(LocalDensity.current) { maxLabelHeight.toDp() + 2.dp}
+    val maxLabelHeightDp = with(LocalDensity.current) { maxLabelHeight.toDp() + 2.dp }
 
     val scope = rememberCoroutineScope()
 
@@ -157,7 +157,7 @@ fun StretchTuningGraph(
             right = maxLabelWidthDp,
             bottom = maxLabelHeightDp
         ),
-        plotWindowOutline = plotWindowOutline,
+        plotWindowOutline = plotWindowOutline
     ) {
         val horizontalLinePositions = remember {
             HorizontalLinesPositions.create(floatArrayOf(0f))
@@ -168,7 +168,11 @@ fun StretchTuningGraph(
         val line = remember(stretchTuningData, referenceFrequency) {
             LineCoordinates.create(
                 stretchTuningData.size,
-                { ratioToCents(stretchTuningData.unstretchedFrequencies[it] / referenceFrequency.toDouble()).toFloat() },
+                {
+                    ratioToCents(
+                        stretchTuningData.unstretchedFrequencies[it] / referenceFrequency.toDouble()
+                    ).toFloat()
+                },
                 { stretchTuningData.stretchInCents[it].toFloat() }
             )
         }
@@ -178,7 +182,10 @@ fun StretchTuningGraph(
                 null
             } else {
                 Offset(
-                    ratioToCents(stretchTuningData.unstretchedFrequencies[index] / referenceFrequency.toDouble()).toFloat(),
+                    ratioToCents(
+                        stretchTuningData.unstretchedFrequencies[index] /
+                            referenceFrequency.toDouble()
+                    ).toFloat(),
                     stretchTuningData.stretchInCents[index].toFloat()
                 )
             }
@@ -203,7 +210,10 @@ fun StretchTuningGraph(
             clipLabelToPlotWindow = false
         ) { tickModifier, _, _, c ->
             Text(
-                stringResource(R.string.hertz, centsToFrequency(c.toDouble(), referenceFrequency.toDouble()).toFloat()),
+                stringResource(
+                    R.string.hertz,
+                    centsToFrequency(c.toDouble(), referenceFrequency.toDouble()).toFloat()
+                ),
                 modifier = tickModifier.padding(horizontal = 2.dp),
                 style = tickLabelStyle,
                 color = tickLabelColor
@@ -257,12 +267,14 @@ fun StretchTuningGraph(
 private fun StretchTuningGraphPreview() {
     TunerTheme {
         Surface {
-            val stretchTuningData = remember {StretchTuning(
-                GetTextFromString("Test"),
-                GetTextFromString("Test stretch description"),
-                doubleArrayOf(100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1200.0),
-                doubleArrayOf( 97.0, 199.0, 297.0, 400.0, 502.0, 606.0, 708.0, 807.0, 913.0, 1220.0)
-            )}
+            val stretchTuningData = remember {
+                StretchTuning(
+                    GetTextFromString("Test"),
+                    GetTextFromString("Test stretch description"),
+                    doubleArrayOf(100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1200.0),
+                    doubleArrayOf(97.0, 199.0, 297.0, 400.0, 502.0, 606.0, 708.0, 807.0, 913.0, 1220.0)
+                )
+            }
             StretchTuningGraph(
                 stretchTuningData = stretchTuningData,
                 modifier = Modifier.fillMaxSize().padding(8.dp),

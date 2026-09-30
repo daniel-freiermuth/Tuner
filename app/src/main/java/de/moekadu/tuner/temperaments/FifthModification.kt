@@ -18,8 +18,8 @@
 */
 package de.moekadu.tuner.temperaments
 
-import kotlinx.serialization.Serializable
 import kotlin.math.pow
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class FifthModification(
@@ -40,17 +40,18 @@ data class FifthModification(
         simplify()
     }
 
-    fun toDouble(): Double {
-        return (pythagoreanCommaRatio.toDouble().pow(pythagoreanComma.toDouble())
-                * syntonicCommaRatio.toDouble().pow(syntonicComma.toDouble())
-                * schismaRatio.toDouble().pow(schisma.toDouble()))
-    }
+    fun toDouble(): Double = (
+        pythagoreanCommaRatio.toDouble().pow(pythagoreanComma.toDouble()) *
+            syntonicCommaRatio.toDouble().pow(syntonicComma.toDouble()) *
+            schismaRatio.toDouble().pow(schisma.toDouble())
+        )
 
     operator fun plus(other: FifthModification): FifthModification {
         val result = FifthModification(
             pythagoreanComma + other.pythagoreanComma,
             syntonicComma + other.syntonicComma,
-            schisma + other.schisma)
+            schisma + other.schisma
+        )
         result.simplify()
         return result
     }
@@ -59,14 +60,14 @@ data class FifthModification(
         val result = FifthModification(
             pythagoreanComma - other.pythagoreanComma,
             syntonicComma - other.syntonicComma,
-            schisma - other.schisma)
+            schisma - other.schisma
+        )
         result.simplify()
         return result
     }
 
-    operator fun unaryMinus(): FifthModification {
-        return FifthModification(-pythagoreanComma, -syntonicComma, -schisma)
-    }
+    operator fun unaryMinus(): FifthModification =
+        FifthModification(-pythagoreanComma, -syntonicComma, -schisma)
 
     private fun simplify() {
         when {
@@ -75,11 +76,13 @@ data class FifthModification(
                 schisma.setZero()
                 syntonicComma.setZero()
             }
+
             pythagoreanComma == -schisma -> {
                 syntonicComma += pythagoreanComma
                 schisma.setZero()
                 pythagoreanComma.setZero()
             }
+
             pythagoreanComma == -syntonicComma -> {
                 schisma += pythagoreanComma
                 pythagoreanComma.setZero()

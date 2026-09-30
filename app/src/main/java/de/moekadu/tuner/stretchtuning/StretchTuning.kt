@@ -5,42 +5,46 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.GetText
 import de.moekadu.tuner.misc.GetTextFromResId
 import de.moekadu.tuner.temperaments.centsToFrequency
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlin.math.log10
 import kotlin.random.Random
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-private fun DoubleArray.removeAt(position: Int): DoubleArray {
-    return DoubleArray(size - 1) { this[if (it < position) it else it + 1] }
+private fun DoubleArray.removeAt(position: Int): DoubleArray = DoubleArray(size - 1) {
+    this[if (it < position) it else it + 1]
 }
-private fun DoubleArray.replace(i: Int, value: Double): DoubleArray {
-    return DoubleArray(size) { if (it == i) value else this[it]}
-}
-private fun DoubleArray.add(position: Int, value: Double): DoubleArray {
-    return DoubleArray(size + 1) {
-        if (it < position) this[it]
-        else if (it == position) value
-        else this[it - 1]
+private fun DoubleArray.replace(i: Int, value: Double): DoubleArray =
+    DoubleArray(size) { if (it == i) value else this[it] }
+private fun DoubleArray.add(position: Int, value: Double): DoubleArray = DoubleArray(size + 1) {
+    if (it < position) {
+        this[it]
+    } else if (it == position) {
+        value
+    } else {
+        this[it - 1]
     }
 }
-private fun IntArray.removeAt(position: Int): IntArray {
-    return IntArray(size - 1) { this[if (it < position) it else it + 1] }
-}
-private fun IntArray.add(position: Int, value: Int): IntArray {
-    return IntArray(size + 1) {
-        if (it < position) this[it]
-        else if (it == position) value
-        else this[it - 1]
+private fun IntArray.removeAt(position: Int): IntArray =
+    IntArray(size - 1) { this[if (it < position) it else it + 1] }
+private fun IntArray.add(position: Int, value: Int): IntArray = IntArray(size + 1) {
+    if (it < position) {
+        this[it]
+    } else if (it == position) {
+        value
+    } else {
+        this[it - 1]
     }
 }
 
 private fun checkIsMonotonic(values: DoubleArray): Boolean {
-    if (values.size <= 1)
+    if (values.size <= 1) {
         return true
+    }
 
     for (i in 1 until values.size) {
-        if (values[i] <= values[i - 1])
+        if (values[i] <= values[i - 1]) {
             return false
+        }
     }
     return true
 }
@@ -95,11 +99,11 @@ data class StretchTuning(
      */
     fun getStretchedFrequency(unstretchedFrequency: Double, referenceFrequency: Double): Double {
         val referenceStretch = getStretch(referenceFrequency)
-        val stretch = getStretch(unstretchedFrequency) -referenceStretch
+        val stretch = getStretch(unstretchedFrequency) - referenceStretch
 
         val stretchedFrequency = centsToFrequency(stretch, unstretchedFrequency)
-        //Log.v("Tuner", "StretchTuning.getStretchedFrequency: unstretched = $unstretchedFrequency, stretched = $stretchedFrequency, cents = ${stretch}")
-        //if (unstretchedFrequency == Double.POSITIVE_INFINITY)
+        // Log.v("Tuner", "StretchTuning.getStretchedFrequency: unstretched = $unstretchedFrequency, stretched = $stretchedFrequency, cents = ${stretch}")
+        // if (unstretchedFrequency == Double.POSITIVE_INFINITY)
         //    throw RuntimeException("Frequency cannot be infinity")
         return stretchedFrequency
     }
@@ -109,12 +113,14 @@ data class StretchTuning(
      * @return Interpolated cent value.
      */
     private fun getStretch(unstretchedFrequency: Double): Double {
-        if (unstretchedFrequencies.size <= 1)
+        if (unstretchedFrequencies.size <= 1) {
             return 0.0
+        }
 
         val index = unstretchedFrequencies.binarySearch(unstretchedFrequency)
-        if (index >= 0)
+        if (index >= 0) {
             return stretchInCents[index]
+        }
 
         val insertionIndex = -index - 1
         // the following line do linear interpolation on logscale, if outside the bounds,
@@ -136,9 +142,8 @@ data class StretchTuning(
      * @param stretchInCents Stretch in cents.
      * @return New StretchTuning object where the line was added if possible.
      */
-    fun add(unstretchedFrequency: Double, stretchInCents: Double) : StretchTuning {
-        return add(unstretchedFrequency, stretchInCents, generateKey())
-    }
+    fun add(unstretchedFrequency: Double, stretchInCents: Double): StretchTuning =
+        add(unstretchedFrequency, stretchInCents, generateKey())
 
     /** Return a new object where the data pair of a given key is removed.
      * @param key Key of stretch tuning value pair.
@@ -167,7 +172,7 @@ data class StretchTuning(
      * @return In case that the class is changed a new StretchTuning object with the modified
      *   values.
      */
-    fun modify(unstretchedFrequency: Double, stretchInCents: Double, key: Int) : StretchTuning {
+    fun modify(unstretchedFrequency: Double, stretchInCents: Double, key: Int): StretchTuning {
         val position = keys.indexOfFirst { it == key }
         // Log.v("Tuner", "StretchTuning.modify: unstretchedFrequency=$unstretchedFrequency, stretchInCents=$stretchInCents, key=$key, position=$position")
         return if (position >= 0 && unstretchedFrequencies[position] == unstretchedFrequency) {
@@ -185,7 +190,7 @@ data class StretchTuning(
         }
     }
 
-    private fun add(unstretchedFrequency: Double, stretchInCents: Double, key: Int) : StretchTuning {
+    private fun add(unstretchedFrequency: Double, stretchInCents: Double, key: Int): StretchTuning {
         val position = unstretchedFrequencies.binarySearch(unstretchedFrequency)
 
         // in case the unstretched frequency already exists, overwrite it
@@ -211,8 +216,9 @@ data class StretchTuning(
 
     private fun generateKey(): Int {
         var value = Random.nextInt(0, Int.MAX_VALUE - 1)
-        while (keys.contains(value))
+        while (keys.contains(value)) {
             value = Random.nextInt(0, Int.MAX_VALUE - 1)
+        }
         return value
     }
     companion object {

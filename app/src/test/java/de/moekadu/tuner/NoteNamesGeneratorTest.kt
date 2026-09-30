@@ -95,8 +95,9 @@ class NoteNamesGeneratorTest {
 
     @Test
     fun testNumberOfNotes() {
-        for (numberOfNotesPerOctave in 5 ..72)
+        for (numberOfNotesPerOctave in 5..72) {
             testNumberOfNotesImpl(numberOfNotesPerOctave)
+        }
     }
 
     @Test

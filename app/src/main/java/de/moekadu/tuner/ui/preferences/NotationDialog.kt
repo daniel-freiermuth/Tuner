@@ -101,17 +101,21 @@ fun NotationDialog(
                     onExpandedChange = { isNotationExpanded = it }
                 ) {
                     TextField(
-                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                        modifier = Modifier.menuAnchor(
+                            ExposedDropdownMenuAnchorType.PrimaryNotEditable
+                        ),
                         value = stringResource(notationType.stringResourceId),
                         onValueChange = {},
                         label = { Text(stringResource(R.string.notation)) },
                         readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isNotationExpanded) },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = isNotationExpanded)
+                        },
                         colors = ExposedDropdownMenuDefaults.textFieldColors()
                     )
                     ExposedDropdownMenu(
                         expanded = isNotationExpanded,
-                        onDismissRequest = { isNotationExpanded = false },
+                        onDismissRequest = { isNotationExpanded = false }
                     ) {
                         for (n in NotationType.entries) {
                             DropdownMenuItem(
@@ -144,17 +148,23 @@ fun NotationDialog(
                 ) {
                     // Log.v("Tuner", "NotationDialog: octave expanded: $isOctaveNotationExpanded")
                     TextField(
-                        modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                        modifier = Modifier.menuAnchor(
+                            ExposedDropdownMenuAnchorType.PrimaryNotEditable
+                        ),
                         value = stringResource(octaveNotation.stringResourceId),
                         onValueChange = {},
                         label = { Text(stringResource(R.string.octave_representation)) },
                         readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isOctaveNotationExpanded) },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(
+                                expanded = isOctaveNotationExpanded
+                            )
+                        },
                         colors = ExposedDropdownMenuDefaults.textFieldColors()
                     )
                     ExposedDropdownMenu(
                         expanded = isOctaveNotationExpanded,
-                        onDismissRequest = { isOctaveNotationExpanded = false },
+                        onDismissRequest = { isOctaveNotationExpanded = false }
                     ) {
                         for (n in OctaveNotation.entries) {
                             DropdownMenuItem(
@@ -193,7 +203,8 @@ private fun NotationDialogTest() {
             notePrintOptions = notePrintOptions,
             onNotationChange = { n, h ->
                 notePrintOptions = notePrintOptions.copy(
-                    notationType = n, octaveNotation = h
+                    notationType = n,
+                    octaveNotation = h
                 )
             }
         )

@@ -23,7 +23,14 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 enum class BaseNote {
-    C, D, E, F, G, A, B, None
+    C,
+    D,
+    E,
+    F,
+    G,
+    A,
+    B,
+    None
 }
 
 /** Modifiers for base notes.
@@ -34,13 +41,55 @@ enum class BaseNote {
  * is more sharp than SharpDownDown.
  */
 enum class NoteModifier {
-    FlatFlatFlatDownDownDown, FlatFlatFlatDownDown, FlatFlatFlatDown, FlatFlatFlat, FlatFlatFlatUp, FlatFlatFlatUpUp, FlatFlatFlatUpUpUp,
-    FlatFlatDownDownDown, FlatFlatDownDown, FlatFlatDown, FlatFlat, FlatFlatUp, FlatFlatUpUp, FlatFlatUpUpUp,
-    FlatDownDownDown, FlatDownDown, FlatDown, Flat, FlatUp, FlatUpUp, FlatUpUpUp,
-    NaturalDownDownDown, NaturalDownDown, NaturalDown, None, NaturalUp, NaturalUpUp, NaturalUpUpUp,
-    SharpDownDownDown, SharpDownDown, SharpDown, Sharp, SharpUp, SharpUpUp, SharpUpUpUp,
-    SharpSharpDownDownDown, SharpSharpDownDown, SharpSharpDown, SharpSharp, SharpSharpUp, SharpSharpUpUp, SharpSharpUpUpUp,
-    SharpSharpSharpDownDownDown, SharpSharpSharpDownDown, SharpSharpSharpDown, SharpSharpSharp, SharpSharpSharpUp, SharpSharpSharpUpUp, SharpSharpSharpUpUpUp
+    FlatFlatFlatDownDownDown,
+    FlatFlatFlatDownDown,
+    FlatFlatFlatDown,
+    FlatFlatFlat,
+    FlatFlatFlatUp,
+    FlatFlatFlatUpUp,
+    FlatFlatFlatUpUpUp,
+    FlatFlatDownDownDown,
+    FlatFlatDownDown,
+    FlatFlatDown,
+    FlatFlat,
+    FlatFlatUp,
+    FlatFlatUpUp,
+    FlatFlatUpUpUp,
+    FlatDownDownDown,
+    FlatDownDown,
+    FlatDown,
+    Flat,
+    FlatUp,
+    FlatUpUp,
+    FlatUpUpUp,
+    NaturalDownDownDown,
+    NaturalDownDown,
+    NaturalDown,
+    None,
+    NaturalUp,
+    NaturalUpUp,
+    NaturalUpUpUp,
+    SharpDownDownDown,
+    SharpDownDown,
+    SharpDown,
+    Sharp,
+    SharpUp,
+    SharpUpUp,
+    SharpUpUpUp,
+    SharpSharpDownDownDown,
+    SharpSharpDownDown,
+    SharpSharpDown,
+    SharpSharp,
+    SharpSharpUp,
+    SharpSharpUpUp,
+    SharpSharpUpUpUp,
+    SharpSharpSharpDownDownDown,
+    SharpSharpSharpDownDown,
+    SharpSharpSharpDown,
+    SharpSharpSharp,
+    SharpSharpSharpUp,
+    SharpSharpSharpUpUp,
+    SharpSharpSharpUpUpUp
 }
 
 /** Representation of a musical note.
@@ -61,24 +110,33 @@ enum class NoteModifier {
  */
 @Serializable
 @Parcelize
-data class MusicalNote(val base: BaseNote, val modifier: NoteModifier, val octave: Int = Int.MAX_VALUE,
-                       val octaveOffset: Int = 0,
-                       val enharmonicBase: BaseNote = BaseNote.None,
-                       val enharmonicModifier: NoteModifier = NoteModifier.None,
-                       val enharmonicOctaveOffset: Int = 0) : Parcelable {
+data class MusicalNote(
+    val base: BaseNote,
+    val modifier: NoteModifier,
+    val octave: Int = Int.MAX_VALUE,
+    val octaveOffset: Int = 0,
+    val enharmonicBase: BaseNote = BaseNote.None,
+    val enharmonicModifier: NoteModifier = NoteModifier.None,
+    val enharmonicOctaveOffset: Int = 0
+) : Parcelable {
     /** Get string representation of note, which can be later on parsed to get back the note. */
-    fun asString(): String {
-        return "MusicalNote(base=$base,modifier=$modifier,octave=$octave,octaveOffset=$octaveOffset,enharmonicBase=$enharmonicBase,enharmonicModifier=$enharmonicModifier,enharmonicOctaveOffset=$enharmonicOctaveOffset)"
-    }
+    fun asString(): String =
+        "MusicalNote(base=$base,modifier=$modifier,octave=$octave,octaveOffset=$octaveOffset,enharmonicBase=$enharmonicBase,enharmonicModifier=$enharmonicModifier,enharmonicOctaveOffset=$enharmonicOctaveOffset)"
 
     /** Return a note, where enharmonic and base representation are exchanged. */
     fun switchEnharmonic(switchAlsoForBaseNone: Boolean = false): MusicalNote {
-        if (enharmonicBase == BaseNote.None && !switchAlsoForBaseNone)
+        if (enharmonicBase == BaseNote.None && !switchAlsoForBaseNone) {
             return this
-        return MusicalNote(base = enharmonicBase, modifier = enharmonicModifier, octave = octave,
+        }
+        return MusicalNote(
+            base = enharmonicBase,
+            modifier = enharmonicModifier,
+            octave = octave,
             octaveOffset = enharmonicOctaveOffset,
-            enharmonicBase = base, enharmonicModifier = modifier,
-            enharmonicOctaveOffset = octaveOffset)
+            enharmonicBase = base,
+            enharmonicModifier = modifier,
+            enharmonicOctaveOffset = octaveOffset
+        )
     }
 
     /** Check if two notes match.
@@ -88,22 +146,35 @@ data class MusicalNote(val base: BaseNote, val modifier: NoteModifier, val octav
      * @return True, if the note match else false.
      */
     fun match(other: MusicalNote?, ignoreOctave: Boolean = false): Boolean {
-        if (other == null)
+        if (other == null) {
             return false
-        if (!ignoreOctave && octave != other.octave)
+        }
+        if (!ignoreOctave && octave != other.octave) {
             return false
+        }
 
         if (base != BaseNote.None) {
-            if (base == other.base && modifier == other.modifier && octaveOffset == other.octaveOffset)
+            if (base == other.base && modifier == other.modifier &&
+                octaveOffset == other.octaveOffset
+            ) {
                 return true
-            else if (base == other.enharmonicBase && modifier == other.enharmonicModifier && octaveOffset == other.enharmonicOctaveOffset)
+            } else if (base == other.enharmonicBase && modifier == other.enharmonicModifier &&
+                octaveOffset == other.enharmonicOctaveOffset
+            ) {
                 return true
+            }
         }
         if (enharmonicBase != BaseNote.None) {
-            if (enharmonicBase == other.base && enharmonicModifier == other.modifier && enharmonicOctaveOffset == other.octaveOffset)
+            if (enharmonicBase == other.base && enharmonicModifier == other.modifier &&
+                enharmonicOctaveOffset == other.octaveOffset
+            ) {
                 return true
-            else if (enharmonicBase == other.enharmonicBase && enharmonicModifier == other.enharmonicModifier && enharmonicOctaveOffset == other.enharmonicOctaveOffset)
+            } else if (enharmonicBase == other.enharmonicBase &&
+                enharmonicModifier == other.enharmonicModifier &&
+                enharmonicOctaveOffset == other.enharmonicOctaveOffset
+            ) {
                 return true
+            }
         }
         return false
     }
@@ -112,24 +183,28 @@ data class MusicalNote(val base: BaseNote, val modifier: NoteModifier, val octav
      * @param other Note used to compare.
      * @return True if notes are the same (ignoring the octave but not octave offset).
      */
-    fun equalsIgnoreOctave(other: MusicalNote?): Boolean {
-        return if (other == null) {
-            false
-        } else {
-            (base == other.base && modifier == other.modifier
-                    && octaveOffset == other.octaveOffset
-                    && enharmonicBase == other.enharmonicBase
-                    && enharmonicModifier == other.enharmonicModifier
-                    && enharmonicOctaveOffset == other.enharmonicOctaveOffset)
-        }
+    fun equalsIgnoreOctave(other: MusicalNote?): Boolean = if (other == null) {
+        false
+    } else {
+        (
+            base == other.base && modifier == other.modifier &&
+                octaveOffset == other.octaveOffset &&
+                enharmonicBase == other.enharmonicBase &&
+                enharmonicModifier == other.enharmonicModifier &&
+                enharmonicOctaveOffset == other.enharmonicOctaveOffset
+            )
     }
     companion object {
         /** Parse a string (which normally is created with "asString" and return the resulting note. */
         fun fromString(string: String): MusicalNote {
             val className = "MusicalNote"
-            if (string.length < className.length + 2 || string.substring(0, className.length + 1) != "$className(" || string.substring(string.length-1, string.length) != ")")
+            if (string.length < className.length + 2 ||
+                string.substring(0, className.length + 1) != "$className(" ||
+                string.substring(string.length - 1, string.length) != ")"
+            ) {
                 throw RuntimeException("$className.fromString: $string cannot be parsed")
-            val contentString = string.substring(className.length + 1, string.length-1)
+            }
+            val contentString = string.substring(className.length + 1, string.length - 1)
             var base = BaseNote.None
             var modifier = NoteModifier.None
             var octave = Int.MAX_VALUE
@@ -145,18 +220,31 @@ data class MusicalNote(val base: BaseNote, val modifier: NoteModifier, val octav
                 }
                 when (keyAndValue[0]) {
                     "base" -> base = BaseNote.valueOf(keyAndValue[1])
+
                     "modifier" -> modifier = NoteModifier.valueOf(keyAndValue[1])
+
                     "octave" -> octave = keyAndValue[1].toInt()
+
                     "octaveOffset" -> octaveOffset = keyAndValue[1].toInt()
+
                     "enharmonicBase" -> enharmonicBase = BaseNote.valueOf(keyAndValue[1])
-                    "enharmonicModifier" -> enharmonicModifier = NoteModifier.valueOf(keyAndValue[1])
+
+                    "enharmonicModifier" ->
+                        enharmonicModifier =
+                            NoteModifier.valueOf(keyAndValue[1])
+
                     "enharmonicOctaveOffset" -> enharmonicOctaveOffset = keyAndValue[1].toInt()
                 }
             }
-            return MusicalNote(base = base, modifier = modifier, octave = octave,
+            return MusicalNote(
+                base = base,
+                modifier = modifier,
+                octave = octave,
                 octaveOffset = octaveOffset,
-                enharmonicBase = enharmonicBase, enharmonicModifier = enharmonicModifier,
-                enharmonicOctaveOffset = enharmonicOctaveOffset)
+                enharmonicBase = enharmonicBase,
+                enharmonicModifier = enharmonicModifier,
+                enharmonicOctaveOffset = enharmonicOctaveOffset
+            )
         }
 
 //        /** Check if two notes are the same, while ignoring the octave.

@@ -23,7 +23,7 @@ import kotlin.math.*
 import kotlin.math.roundToInt
 import kotlin.ranges.until
 
-private fun bitReverse(value : Int, numBits : Int) : Int {
+private fun bitReverse(value: Int, numBits: Int): Int {
     var myValue = value
     var rev = 0
 
@@ -40,19 +40,14 @@ private fun bitReverse(value : Int, numBits : Int) : Int {
  * @param size Size as passed to the constructor of the FFT.
  * @return Number of frequencies for which when using realFFT
  */
-fun FFT.Companion.numFrequenciesReal(size: Int) : Int {
-    return size / 2 + 1
-}
+fun FFT.Companion.numFrequenciesReal(size: Int): Int = size / 2 + 1
 
 /** Number of frequencies, for which we get a result from the fft.
  * @param size Size as passed to the constructor of the FFT. Note, that this is not the number of
  *   complex values passed to fft, but the corresponding number of complex numbers would be size/2
  * @return Number of frequencies as result for fft.
  */
-fun FFT.Companion.numFrequenciesComplex(size: Int) : Int {
-    return size / 2
-}
-
+fun FFT.Companion.numFrequenciesComplex(size: Int): Int = size / 2
 
 /** Frequency for a specific index computed by the fftReal.
  * @param idx Index for which the frequency should be computed.
@@ -60,9 +55,7 @@ fun FFT.Companion.numFrequenciesComplex(size: Int) : Int {
  * @param dt Time step width between two input samples.
  * @return Frequency value for the given value.
  */
-fun FFT.Companion.getFrequencyReal(idx : Int, size: Int, dt : Float) : Float {
-    return idx / (dt * size)
-}
+fun FFT.Companion.getFrequencyReal(idx: Int, size: Int, dt: Float): Float = idx / (dt * size)
 
 /** Frequency for a specific index computed by the fft.
  * @param idx Index of complex number for which the frequency should be computed.
@@ -70,16 +63,16 @@ fun FFT.Companion.getFrequencyReal(idx : Int, size: Int, dt : Float) : Float {
  * @param dt Time step width between two input samples.
  * @return Frequency value for the given value.
  */
-fun FFT.Companion.getFrequencyComplex(idx : Int, size: Int, dt : Float) : Float {
+fun FFT.Companion.getFrequencyComplex(idx: Int, size: Int, dt: Float): Float {
     val numValues = size / 2
     val half = numValues / 2
 
-    return if (idx < half)
+    return if (idx < half) {
         idx / (dt * numValues)
-    else
+    } else {
         (idx - numValues) / (dt * numValues)
+    }
 }
-
 
 /** Fast Fourier transform for pure real input data.
  * @param size Number of floating point values of input. This means:
@@ -87,7 +80,7 @@ fun FFT.Companion.getFrequencyComplex(idx : Int, size: Int, dt : Float) : Float 
  *   For complex fft: size = number of complex numbers / 2
  *   Must be a power of two!.
  */
-class FFT(val size : Int) {
+class FFT(val size: Int) {
     companion object;
 
     private val cosTable = FloatArray(size / 2)
@@ -215,7 +208,7 @@ class FFT(val size : Int) {
 
                 var k1re = 2 * i
 
-                repeat(wStep){
+                repeat(wStep) {
                     val k1im = k1re + 1
                     val k2re = k1re + 2 * numInner
                     val k2im = k2re + 1
@@ -324,7 +317,7 @@ class FFT(val size : Int) {
         var k2re = 2 * halfSize
         var k2im = k2re + 1
 
-        for (i in 1 .. halfSize / 2) {
+        for (i in 1..halfSize / 2) {
             k1re += 2
             k1im += 2
             k2re -= 2
@@ -349,7 +342,7 @@ class FFT(val size : Int) {
         output[size] = output[0] - output[1]
         output[0] = output[0] + output[1]
         output[1] = 0.0f
-        output[size+1] = 0.0f
+        output[size + 1] = 0.0f
     }
 
     /** Prepare frequency domain data, which only contains the positive frequencies
@@ -371,7 +364,7 @@ class FFT(val size : Int) {
         var k2re = 2 * halfSize
         var k2im = k2re + 1
 
-        for (i in 1 .. halfSize / 2) {
+        for (i in 1..halfSize / 2) {
             k1re += 2 // range of k1re during loop: 2 .. size/2
             k1im += 2 // range of k1re during loop: 3 .. size/2 + 1
             k2re -= 2 // range of k2re during loop: size-2 .. size/2

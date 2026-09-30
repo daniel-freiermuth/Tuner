@@ -39,7 +39,10 @@ data class PlotWindowOutline(
 )
 
 @Composable
-fun Modifier.createPlotWindowOutline(outline: PlotWindowOutline, viewPort: () -> IntRect): Modifier {
+fun Modifier.createPlotWindowOutline(
+    outline: PlotWindowOutline,
+    viewPort: () -> IntRect
+): Modifier {
     val color = outline.color.takeOrElse { MaterialTheme.colorScheme.onSurface }
     return this.drawBehind {
         val vP = viewPort()
@@ -51,7 +54,7 @@ fun Modifier.createPlotWindowOutline(outline: PlotWindowOutline, viewPort: () ->
         )
         val bottomRight = Offset(
             vP.right - lineWidthPxHalf,
-            vP.bottom - lineWidthPxHalf,
+            vP.bottom - lineWidthPxHalf
         )
         val size = Size(bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
 

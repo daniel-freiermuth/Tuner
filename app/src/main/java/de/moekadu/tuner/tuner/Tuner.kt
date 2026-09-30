@@ -24,6 +24,7 @@ import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.misc.DefaultValues
 import de.moekadu.tuner.misc.MemoryPool
 import de.moekadu.tuner.misc.WaveWriter
+import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.AcousticZeroWeighting
 import de.moekadu.tuner.notedetection.FrequencyDetectionCollectedResults
 import de.moekadu.tuner.notedetection.FrequencyDetectionResultCollector
@@ -31,9 +32,9 @@ import de.moekadu.tuner.notedetection.FrequencyEvaluationResult
 import de.moekadu.tuner.notedetection.FrequencyEvaluator
 import de.moekadu.tuner.notedetection.launchSoundSourceJob
 import de.moekadu.tuner.notedetection.testFunction
-import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.notenames.MusicalNote
-import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.preferences.PreferenceResources
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -53,7 +54,6 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.time.Duration.Companion.milliseconds
 
 /** Tuner.
  * @note Tuner starts after calling `connect()` and pauses when calling `disconnect()`.
@@ -117,13 +117,17 @@ class Tuner(
             pref.toleranceInCents.collect { restartChannel.trySend(Command.ChangePreferences) }
         }
         scope.launch {
-            pref.pitchHistoryNumFaultyValues.collect { restartChannel.trySend(Command.ChangePreferences) }
+            pref.pitchHistoryNumFaultyValues.collect {
+                restartChannel.trySend(Command.ChangePreferences)
+            }
         }
         scope.launch {
             pref.maxNoise.collect { restartChannel.trySend(Command.ChangePreferences) }
         }
         scope.launch {
-            pref.minHarmonicEnergyContent.collect { restartChannel.trySend(Command.ChangePreferences) }
+            pref.minHarmonicEnergyContent.collect {
+                restartChannel.trySend(Command.ChangePreferences)
+            }
         }
         scope.launch {
             pref.sensitivity.collect { restartChannel.trySend(Command.ChangePreferences) }
@@ -133,7 +137,9 @@ class Tuner(
 //            pref.musicalScale.collect { restartChannel.trySend(Command.ChangePreferences) }
 //        }
         scope.launch {
-            pref.waveWriterDurationInSeconds.collect { restartChannel.trySend(Command.ChangePreferences) }
+            pref.waveWriterDurationInSeconds.collect {
+                restartChannel.trySend(Command.ChangePreferences)
+            }
         }
 
         scope.launch {
@@ -155,9 +161,11 @@ class Tuner(
                         Command.Reconnect -> {
                             reconnect = true
                         }
+
                         Command.Disconnect -> {
                             reconnect = false
                         }
+
                         // in case of a setting-change, we do emit the current reconnect state
                         // ... so in the end it will recreate the task in the collectLatest block
                         // if reconnect is currently on, else it wont.
@@ -176,8 +184,9 @@ class Tuner(
                     // the small delay avoid these restarts.
                     delay(50.milliseconds)
                     // Log.v("Tuner", "Tuner: buffer after delay $v, $reconnect, $isActive")
-                    if (this@launch.isActive && r)
+                    if (this@launch.isActive && r) {
                         run()
+                    }
                     // Log.v("Tuner", "Tuner: after 'if run'")
                 }
         }
@@ -202,7 +211,7 @@ class Tuner(
                 capacity = 2,
                 onBufferOverflow = BufferOverflow.DROP_OLDEST,
                 onUndeliveredElement = { launch { it.decRef() } }
-        )
+            )
 
         // Log.v("Tuner", "Tuner: overlap=${pref.overlap.value}, windowSize=${pref.windowSize.value}")
         // Log.v("Tuner", "Tuner: samplerate=${pref.sampleRate}, windowing=${pref.windowing.value}")
@@ -257,7 +266,7 @@ class Tuner(
 
             frequencyDetectionResultsChannel
                 .consumeAsFlow()
-                .combine(userDefinedTargetNote) {  noteDetectionResult, targetNote ->
+                .combine(userDefinedTargetNote) { noteDetectionResult, targetNote ->
                     val result = freqEvaluator.evaluate(noteDetectionResult.memory, targetNote)
                     noteDetectionResult.decRef()
                     result

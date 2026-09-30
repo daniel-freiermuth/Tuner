@@ -23,9 +23,9 @@ import kotlinx.serialization.json.Json
 
 @Composable
 private fun createStretchTuningEditorViewModel(
-    controller: NavController, backStackEntry: NavBackStackEntry
-)
-        : StretchTuningEditorViewModel {
+    controller: NavController,
+    backStackEntry: NavBackStackEntry
+): StretchTuningEditorViewModel {
     val parentEntry = remember(backStackEntry) {
         controller.getBackStackEntry<StretchTuningEditorGraphRoute>()
     }
@@ -42,7 +42,6 @@ private fun createStretchTuningEditorViewModel(
     }
 }
 
-
 fun NavGraphBuilder.stretchTuningEditorGraph(
     controller: NavController,
     preferences: PreferenceResources
@@ -52,7 +51,8 @@ fun NavGraphBuilder.stretchTuningEditorGraph(
     ) {
         composable<StretchTuningEditorRoute> { backStackEntry ->
             val viewModel = createStretchTuningEditorViewModel(
-                controller = controller, backStackEntry = backStackEntry
+                controller = controller,
+                backStackEntry = backStackEntry
             )
             StretchTuningEditor(
                 viewModel,
@@ -69,9 +69,13 @@ fun NavGraphBuilder.stretchTuningEditorGraph(
                     val unstretchedFrequency = stretchTuning.unstretchedFrequencies.getOrNull(index)
                     val stretchInCents = stretchTuning.stretchInCents.getOrNull(index)
                     if (unstretchedFrequency != null && stretchInCents != null) {
-                        controller.navigate(ModifyStretchTuningLineDialogRoute(
-                            unstretchedFrequency, stretchInCents, key
-                        ))
+                        controller.navigate(
+                            ModifyStretchTuningLineDialogRoute(
+                                unstretchedFrequency,
+                                stretchInCents,
+                                key
+                            )
+                        )
                     }
                 }
             )
@@ -81,14 +85,15 @@ fun NavGraphBuilder.stretchTuningEditorGraph(
             val stretchTuning = it.toRoute<StretchTuningInfoGraphRoute>().stretchTuning
             StretchTuningInfo(
                 stretchTuning,
-                onNavigateUpClicked = { controller.navigateUp()}
+                onNavigateUpClicked = { controller.navigateUp() }
             )
         }
 
         dialog<ModifyStretchTuningLineDialogRoute> {
             val data = it.toRoute<ModifyStretchTuningLineDialogRoute>()
             val viewModel = createStretchTuningEditorViewModel(
-                controller = controller, backStackEntry = it
+                controller = controller,
+                backStackEntry = it
             )
             ModifyStretchTuningLineDialog(
                 data.unstretchedFrequency,
@@ -98,7 +103,7 @@ fun NavGraphBuilder.stretchTuningEditorGraph(
                     controller.navigateUp()
                 },
                 onConfirmedClicked = { unstretchedFrequency, stretchInCents, key ->
-                   viewModel.modifyLine(unstretchedFrequency, stretchInCents, key)
+                    viewModel.modifyLine(unstretchedFrequency, stretchInCents, key)
                     controller.navigateUp()
                 }
             )
@@ -107,9 +112,7 @@ fun NavGraphBuilder.stretchTuningEditorGraph(
 }
 
 @Serializable
-data class StretchTuningEditorGraphRoute(
-    val serializedStretchTuning: String,
-) {
+data class StretchTuningEditorGraphRoute(val serializedStretchTuning: String) {
     constructor(stretchTuning: StretchTuning) : this(
         Json.encodeToString(stretchTuning)
     )
@@ -117,10 +120,9 @@ data class StretchTuningEditorGraphRoute(
     val stretchTuning
         get() = Json.decodeFromString<StretchTuning>(serializedStretchTuning)
 }
+
 @Serializable
-data class StretchTuningInfoGraphRoute(
-    val serializedStretchTuning: String,
-) {
+data class StretchTuningInfoGraphRoute(val serializedStretchTuning: String) {
     constructor(stretchTuning: StretchTuning) : this(
         Json.encodeToString(stretchTuning)
     )
@@ -134,5 +136,7 @@ data object StretchTuningEditorRoute
 
 @Serializable
 data class ModifyStretchTuningLineDialogRoute(
-    val unstretchedFrequency: Double, val stretchInCents: Double, val key: Int
+    val unstretchedFrequency: Double,
+    val stretchInCents: Double,
+    val key: Int
 )

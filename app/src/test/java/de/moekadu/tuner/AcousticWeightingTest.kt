@@ -2,13 +2,11 @@ package de.moekadu.tuner
 
 import de.moekadu.tuner.notedetection.AcousticAWeighting
 import de.moekadu.tuner.notedetection.AcousticCWeighting
+import kotlin.math.log10
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import kotlin.math.log10
 
-fun ampRatioToLog(amp: Float, ampRef: Float): Float {
-    return 20f * log10(amp / ampRef)
-}
+fun ampRatioToLog(amp: Float, ampRef: Float): Float = 20f * log10(amp / ampRef)
 
 class AcousticWeightingTest {
 
@@ -27,5 +25,4 @@ class AcousticWeightingTest {
         assertEquals(-14.3f, ampRatioToLog(weighting.applyToAmplitude(10f, 10f), 10f), 0.1f)
         assertEquals(-4.5f, ampRatioToLog(weighting.applyToAmplitude(10f, 10000f), 10f), 0.1f)
     }
-
 }

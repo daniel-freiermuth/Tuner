@@ -18,8 +18,7 @@
 */
 package de.moekadu.tuner.instruments
 
-
-//object ShareInstruments {
+// object ShareInstruments {
 //    class Contract : ActivityResultContract<Intent, Unit>() {
 //        override fun createIntent(context: Context, input: Intent): Intent {
 //            val title = input.getStringExtra(Intent.EXTRA_TITLE)
@@ -59,4 +58,4 @@ package de.moekadu.tuner.instruments
 //            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 //        }
 //    }
-//}
+// }

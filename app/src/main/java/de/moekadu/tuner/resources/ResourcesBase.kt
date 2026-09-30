@@ -12,6 +12,9 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
+import kotlin.collections.forEach
+import kotlin.let
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -24,9 +27,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
-import kotlin.collections.forEach
-import kotlin.let
-import kotlin.time.Duration.Companion.milliseconds
 
 open class ResourcesBase(
     private val filename: String,
@@ -37,7 +37,7 @@ open class ResourcesBase(
         fun storeIn(mutableDataStorePreferences: MutablePreferences)
         fun reset()
     }
-    protected class SerializableResourcePreference<T: Any?, R: Any?>(
+    protected class SerializableResourcePreference<T : Any?, R : Any?>(
         key: String,
         val default: T,
         prefsForInitialization: Preferences,
@@ -68,20 +68,20 @@ open class ResourcesBase(
             set(default)
         }
 
-        private fun readFromPrefs(prefs: Preferences): T? {
-            return try {
-                prefs[key]?.let { serialized ->
-                    try {
-                        val deserialized = Json.decodeFromString(serializer, serialized)
-                        val r = fromSerializable(deserialized)
-                        verifyAfterReading(r)
-                    } catch (_: IllegalArgumentException) {
-                        onDeserializationFailure(serialized)
-                    } catch (_: Exception) { null }
+        private fun readFromPrefs(prefs: Preferences): T? = try {
+            prefs[key]?.let { serialized ->
+                try {
+                    val deserialized = Json.decodeFromString(serializer, serialized)
+                    val r = fromSerializable(deserialized)
+                    verifyAfterReading(r)
+                } catch (_: IllegalArgumentException) {
+                    onDeserializationFailure(serialized)
+                } catch (_: Exception) {
+                    null
                 }
-            } catch (_: ClassCastException) {
-                null
             }
+        } catch (_: ClassCastException) {
+            null
         }
     }
 
@@ -148,12 +148,10 @@ open class ResourcesBase(
             set(default)
         }
 
-        private fun readFromPrefs(prefs: Preferences): Boolean? {
-            return try {
-                prefs[key]
-            } catch (ex: ClassCastException) {
-                null
-            }
+        private fun readFromPrefs(prefs: Preferences): Boolean? = try {
+            prefs[key]
+        } catch (ex: ClassCastException) {
+            null
         }
     }
 
@@ -179,12 +177,10 @@ open class ResourcesBase(
         override fun reset() {
             set(default)
         }
-        private fun readFromPrefs(prefs: Preferences): Int? {
-            return try {
-                prefs[key]
-            } catch (ex: ClassCastException) {
-                null
-            }
+        private fun readFromPrefs(prefs: Preferences): Int? = try {
+            prefs[key]
+        } catch (ex: ClassCastException) {
+            null
         }
     }
 
@@ -210,12 +206,10 @@ open class ResourcesBase(
         override fun reset() {
             set(default)
         }
-        private fun readFromPrefs(prefs: Preferences): Float? {
-            return try {
-                prefs[key]
-            } catch (ex: ClassCastException) {
-                null
-            }
+        private fun readFromPrefs(prefs: Preferences): Float? = try {
+            prefs[key]
+        } catch (ex: ClassCastException) {
+            null
         }
     }
 
@@ -241,12 +235,10 @@ open class ResourcesBase(
         override fun reset() {
             set(default)
         }
-        private fun readFromPrefs(prefs: Preferences): String? {
-            return try {
-                prefs[key]
-            } catch (ex: ClassCastException) {
-                null
-            }
+        private fun readFromPrefs(prefs: Preferences): String? = try {
+            prefs[key]
+        } catch (ex: ClassCastException) {
+            null
         }
     }
 
@@ -278,8 +270,9 @@ open class ResourcesBase(
     }
 
     fun store() {
-        if (newPreferencesAvailableChannel.tryReceive().isSuccess)
+        if (newPreferencesAvailableChannel.tryReceive().isSuccess) {
             applicationScope.launch(Dispatchers.IO) { storeCurrentPrefs() }
+        }
     }
 
     /** Manually invalidate to make this trigger the persist step.
@@ -296,16 +289,21 @@ open class ResourcesBase(
         collectedPreferences.forEach { it.reset() }
     }
 
-    protected inline fun <reified T: Any?> createSerializablePreference(
-        key: String, default: T,
+    protected inline fun <reified T : Any?> createSerializablePreference(
+        key: String,
+        default: T,
         noinline verifyAfterReading: (T?) -> T? = { it },
         noinline onDeserializationFailure: (serialized: String) -> T? = { default }
-    ) : SerializableResourcePreference<T, T> {
+    ): SerializableResourcePreference<T, T> {
 //        Log.v("Metronome", "ResourcesBase.createSerializablePreference: key=$key, default=$default, type=${T::class.simpleName}")
         val availablePrefs = runBlocking { dataStore.data.first() }
         val pref = SerializableResourcePreference(
-            key, default, availablePrefs,
-            serializer<T>(), {it}, {it},
+            key,
+            default,
+            availablePrefs,
+            serializer<T>(),
+            { it },
+            { it },
             verifyAfterReading,
             onDeserializationFailure
         ) {
@@ -314,19 +312,25 @@ open class ResourcesBase(
         collectedPreferences.add(pref)
         return pref
     }
-    protected inline fun <reified T: Any?, reified R: Any?> createTransformablePreference(
-        key: String, default: T,
+    protected inline fun <reified T : Any?, reified R : Any?> createTransformablePreference(
+        key: String,
+        default: T,
         noinline makeSerializable: (T) -> R,
         noinline fromSerializable: (R) -> T,
         noinline verifyAfterReading: (T?) -> T? = { it },
         noinline onDeserializationFailure: (serialized: String) -> T? = { default }
-    ) : SerializableResourcePreference<T, R> {
+    ): SerializableResourcePreference<T, R> {
 //        Log.v("Metronome", "ResourcesBase.createSerializablePreference: key=$key, default=$default, type=${T::class.simpleName}")
         val availablePrefs = runBlocking { dataStore.data.first() }
         val pref = SerializableResourcePreference(
-            key, default, availablePrefs,
-            serializer<R>(), makeSerializable, fromSerializable,
-            verifyAfterReading, onDeserializationFailure
+            key,
+            default,
+            availablePrefs,
+            serializer<R>(),
+            makeSerializable,
+            fromSerializable,
+            verifyAfterReading,
+            onDeserializationFailure
         ) {
             newPreferencesAvailableChannel.trySend(true)
         }
@@ -334,8 +338,7 @@ open class ResourcesBase(
         return pref
     }
 
-    protected fun createPreference(key: String, default: Boolean)
-            : BoolResourcePreference {
+    protected fun createPreference(key: String, default: Boolean): BoolResourcePreference {
         val availablePrefs = runBlocking { dataStore.data.first() }
         val pref = BoolResourcePreference(key, default, availablePrefs) {
             newPreferencesAvailableChannel.trySend(true)
@@ -344,8 +347,7 @@ open class ResourcesBase(
         return pref
     }
 
-    protected fun createPreference(key: String, default: Int)
-            : IntResourcePreference {
+    protected fun createPreference(key: String, default: Int): IntResourcePreference {
         val availablePrefs = runBlocking { dataStore.data.first() }
         val pref = IntResourcePreference(key, default, availablePrefs) {
             newPreferencesAvailableChannel.trySend(true)
@@ -354,8 +356,7 @@ open class ResourcesBase(
         return pref
     }
 
-    protected fun createPreference(key: String, default: Float)
-            : FloatResourcePreference {
+    protected fun createPreference(key: String, default: Float): FloatResourcePreference {
         val availablePrefs = runBlocking { dataStore.data.first() }
         val pref = FloatResourcePreference(key, default, availablePrefs) {
             newPreferencesAvailableChannel.trySend(true)
@@ -363,8 +364,7 @@ open class ResourcesBase(
         collectedPreferences.add(pref)
         return pref
     }
-    protected fun createPreference(key: String, default: String)
-            : StringResourcePreference {
+    protected fun createPreference(key: String, default: String): StringResourcePreference {
         val availablePrefs = runBlocking { dataStore.data.first() }
         val pref = StringResourcePreference(key, default, availablePrefs) {
             newPreferencesAvailableChannel.trySend(true)

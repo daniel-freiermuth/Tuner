@@ -10,8 +10,9 @@ class FifthModificationTest {
     @Test
     fun plus() {
         var f = FifthModification(pythagoreanComma = RationalNumber(-1, 6))
-        for (i in 0 until 5)
+        for (i in 0 until 5) {
             f += FifthModification(pythagoreanComma = RationalNumber(-1, 6))
+        }
         assertEquals(f.pythagoreanComma.numerator, -1)
         assertEquals(f.pythagoreanComma.denominator, 1)
         assertEquals(f.syntonicComma.numerator, 0)

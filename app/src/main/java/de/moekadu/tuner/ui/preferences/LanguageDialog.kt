@@ -33,10 +33,7 @@ enum class LanguageSelections(val tag: String?, @StringRes val resId: Int) {
 }
 
 @Composable
-fun LanguageDialog(
-    modifier: Modifier = Modifier,
-    onDismiss: () -> Unit = {}
-) {
+fun LanguageDialog(modifier: Modifier = Modifier, onDismiss: () -> Unit = {}) {
     AlertDialog(
         onDismissRequest = onDismiss,
         modifier = modifier,
@@ -59,7 +56,7 @@ fun LanguageDialog(
         text = {
             val selectedLocale = remember {
                 LanguageSelections.entries.firstOrNull {
-                    it.tag == AppCompatDelegate.getApplicationLocales()[0]?.language //toLanguageTag()
+                    it.tag == AppCompatDelegate.getApplicationLocales()[0]?.language // toLanguageTag()
                 } ?: LanguageSelections.SystemDefault
             }
 
@@ -71,7 +68,9 @@ fun LanguageDialog(
                         it.resId
                     ) {
                         if (it == LanguageSelections.SystemDefault) {
-                            AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
+                            AppCompatDelegate.setApplicationLocales(
+                                LocaleListCompat.getEmptyLocaleList()
+                            )
                         } else {
                             val localeList = LocaleListCompat.forLanguageTags(it.tag)
 //                            Log.v("Tuner", "LanguageDialog: tag=${it.tag}, localList=${localeList[0]}")
@@ -81,7 +80,7 @@ fun LanguageDialog(
                     }
                 }
             }
-            //val appLocale = LocaleListCompat.forLanguageTags()
+            // val appLocale = LocaleListCompat.forLanguageTags()
         }
     )
 }
@@ -92,5 +91,4 @@ private fun LanguageDialogTest() {
     TunerTheme {
         LanguageDialog()
     }
-
 }

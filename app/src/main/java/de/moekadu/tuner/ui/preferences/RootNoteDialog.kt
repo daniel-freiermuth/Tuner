@@ -67,14 +67,16 @@ fun RootNoteDialog(
     onDismiss: () -> Unit = {}
 ) {
     val rootNotes = remember(temperament) {
-         temperament.possibleRootNotes()
+        temperament.possibleRootNotes()
     }
 
-    var selectedRootNoteIndex by rememberSaveable { mutableIntStateOf(
-        rootNotes
-            .indexOfFirst { it.equalsIgnoreOctave(initialRootNote) }
-            .coerceAtLeast(0)
-    ) }
+    var selectedRootNoteIndex by rememberSaveable {
+        mutableIntStateOf(
+            rootNotes
+                .indexOfFirst { it.equalsIgnoreOctave(initialRootNote) }
+                .coerceAtLeast(0)
+        )
+    }
 
     val hasChainOfFifths = remember(temperament) {
         temperament.chainOfFifths() != null
@@ -151,9 +153,11 @@ fun RootNoteDialog(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                HorizontalDivider(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp))
+                HorizontalDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
                 Text(
                     stringResource(id = R.string.details),
                     // temperament.name.value(context),
@@ -196,7 +200,6 @@ fun RootNoteDialog(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
-
             }
         }
     )

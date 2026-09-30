@@ -25,6 +25,7 @@ package de.moekadu.tuner.notedetection
 class TimeSeries(val size: Int, val dt: Float) {
     /** Frame position. */
     var framePosition = 0
+
     /** Values of time series. */
     val values = FloatArray(size)
 

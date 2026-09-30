@@ -43,12 +43,10 @@ import de.moekadu.tuner.preferences.NightMode
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.ui.theme.TunerTheme
 
-
-
 @Composable
 fun AppearanceDialog(
     appearance: PreferenceResources.Appearance,
-    onAppearanceChanged: (PreferenceResources.Appearance)-> Unit,
+    onAppearanceChanged: (PreferenceResources.Appearance) -> Unit,
     onDismiss: () -> Unit = {}
 ) {
     AlertDialog(
@@ -76,24 +74,27 @@ fun AppearanceDialog(
                         selected = appearance.mode == NightMode.Auto,
                         stringRes = R.string.system_appearance_short,
                         onClick = {
-                            if (appearance.mode != NightMode.Auto)
+                            if (appearance.mode != NightMode.Auto) {
                                 onAppearanceChanged(appearance.copy(mode = NightMode.Auto))
+                            }
                         }
                     )
                     RadioButtonLine(
                         selected = appearance.mode == NightMode.Off,
                         stringRes = R.string.light_appearance_short,
                         onClick = {
-                            if (appearance.mode != NightMode.Off)
+                            if (appearance.mode != NightMode.Off) {
                                 onAppearanceChanged(appearance.copy(mode = NightMode.Off))
+                            }
                         }
                     )
                     RadioButtonLine(
                         selected = appearance.mode == NightMode.On,
                         stringRes = R.string.dark_appearance_short,
                         onClick = {
-                            if (appearance.mode != NightMode.On)
+                            if (appearance.mode != NightMode.On) {
                                 onAppearanceChanged(appearance.copy(mode = NightMode.On))
+                            }
                         }
                     )
                 }
@@ -102,8 +103,9 @@ fun AppearanceDialog(
                     checked = appearance.blackNightEnabled,
                     stringRes = R.string.black_night_mode,
                     onClick = {
-                        if (appearance.blackNightEnabled != it)
+                        if (appearance.blackNightEnabled != it) {
                             onAppearanceChanged(appearance.copy(blackNightEnabled = it))
+                        }
                     }
                 )
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -111,8 +113,9 @@ fun AppearanceDialog(
                         checked = appearance.useSystemColorAccents,
                         stringRes = R.string.system_color_accents,
                         onClick = {
-                            if (appearance.useSystemColorAccents != it)
+                            if (appearance.useSystemColorAccents != it) {
                                 onAppearanceChanged(appearance.copy(useSystemColorAccents = it))
+                            }
                         }
                     )
                 }
@@ -125,7 +128,7 @@ fun AppearanceDialog(
 @Composable
 private fun AppearanceDialogTest() {
     TunerTheme {
-        var appearance by remember {mutableStateOf(PreferenceResources.Appearance())}
+        var appearance by remember { mutableStateOf(PreferenceResources.Appearance()) }
 
         AppearanceDialog(
             appearance,

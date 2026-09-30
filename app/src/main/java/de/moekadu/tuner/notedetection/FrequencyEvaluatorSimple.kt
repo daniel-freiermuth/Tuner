@@ -62,9 +62,10 @@ class FrequencyEvaluatorSimple(
             val requiredEnergyLevel =
                 100 - sensitivity - 0.0001f // minus a very small number, to make sure, that a level of 0 always enables evaluation for sensitivity 100
 //            Log.v("Tuner", "FrequencyEvaluator.evaluate: energy = ${it.harmonicEnergyAbsolute} signalLevel = ${transformEnergyToLevelFrom0To100(it.harmonicEnergyAbsolute)}, required = $requiredEnergyLevel")
-            if (it.noise < maxNoise
-                && it.harmonicEnergyContentRelative >= minHarmonicEnergyContent
-                && transformEnergyToLevelFrom0To100(it.harmonicEnergyAbsolute) >= requiredEnergyLevel
+            if (it.noise < maxNoise &&
+                it.harmonicEnergyContentRelative >= minHarmonicEnergyContent &&
+                transformEnergyToLevelFrom0To100(it.harmonicEnergyAbsolute) >=
+                requiredEnergyLevel
             ) {
                 smoothedFrequency = smoother(it.frequency)
             }

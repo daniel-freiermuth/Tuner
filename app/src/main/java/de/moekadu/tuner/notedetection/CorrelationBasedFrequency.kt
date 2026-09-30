@@ -31,12 +31,13 @@ import kotlin.math.roundToInt
  *   larger. A value would 1 be real local minimum, where only the direct neighbors are larger.
  * @return True if the index is a local minimum, else false.
  */
-private fun isLocalMin(i: Int, data: FloatArray, radius: Int= 1): Boolean {
+private fun isLocalMin(i: Int, data: FloatArray, radius: Int = 1): Boolean {
     val startIndex = max(0, i - radius)
     val endIndex = min(data.size, i + radius + 1)
     for (j in startIndex until endIndex) {
-        if (i != j && data[j] < data[i])
+        if (i != j && data[j] < data[i]) {
             return false
+        }
     }
     return true
 }
@@ -49,12 +50,12 @@ private fun isLocalMin(i: Int, data: FloatArray, radius: Int= 1): Boolean {
  */
 private fun findFirstMinimum(data: FloatArray, radius: Int = 2): Int {
     for (i in radius until data.size - radius) {
-        if (isLocalMin(i, data, radius))
+        if (isLocalMin(i, data, radius)) {
             return i
+        }
     }
     return data.size
 }
-
 
 /** Result of frequency detection from auto correlation.
  * @param frequency Detected frequency.
@@ -65,7 +66,7 @@ data class CorrelationBasedFrequency(
     var frequency: Float,
     var timeShift: Float,
     var correlationAtTimeShift: Float
-    ) {
+) {
     fun set(frequency: Float, timeShift: Float, correlationAtTimeShift: Float) {
         this.frequency = frequency
         this.timeShift = timeShift
@@ -105,7 +106,9 @@ fun findCorrelationBasedFrequency(
     subharmonicPeakRatio: Float = 0.8f
 ) {
     // functor for local maximum check
-    val isLocalMax = {i: Int, data: AutoCorrelation -> data[i] >= data[i-1] && data[i] >= data[i+1]}
+    val isLocalMax = { i: Int, data: AutoCorrelation ->
+        data[i] >= data[i - 1] && data[i] >= data[i + 1]
+    }
 
     val globalIndexEnd = if (frequencyMin > 0f) {
         val indexShiftFrequencyMin = (1.0 / (correlation.dt * frequencyMin)).toInt() + 1
@@ -114,9 +117,9 @@ fun findCorrelationBasedFrequency(
         correlation.size - 1
     }
 
-    val  firstLocalMinimum = findFirstMinimum(correlation.values)
+    val firstLocalMinimum = findFirstMinimum(correlation.values)
 
-    val globalIndexBegin = if (frequencyMax > 0f ) {
+    val globalIndexBegin = if (frequencyMax > 0f) {
         val indexShiftFrequencyMax = ceil(1.0 / (correlation.dt * frequencyMax)).toInt()
         max(indexShiftFrequencyMax, firstLocalMinimum)
     } else {
@@ -140,7 +143,8 @@ fun findCorrelationBasedFrequency(
     }
 
     var (fittedMaximumIndex, fittedPeak) = getPeakOfPolynomialFitArray(
-        globalMaximumIndex, correlation.values
+        globalMaximumIndex,
+        correlation.values
     )
 
     // check if there is a smaller peak, which we should prefer
@@ -148,7 +152,6 @@ fun findCorrelationBasedFrequency(
     val maximumDivision = ceil(fittedMaximumIndex / globalIndexBegin).toInt()
 
     for (division in maximumDivision downTo 2) {
-
         var indexBegin = (ceil(fittedMaximumIndex / (division + subharmonicsTolerance))).toInt()
         indexBegin = max(indexBegin, 1)
 
@@ -173,7 +176,8 @@ fun findCorrelationBasedFrequency(
 
         if (localMaximumIndex > 0) {
             val (fittedLocalMaximumIndex, fittedLocalMaximum) = getPeakOfPolynomialFitArray(
-                localMaximumIndex, correlation.values
+                localMaximumIndex,
+                correlation.values
             )
             if (fittedLocalMaximum >= requiredMaximumValue) {
                 fittedMaximumIndex = fittedLocalMaximumIndex
@@ -190,7 +194,6 @@ fun findCorrelationBasedFrequency(
     )
     return
 }
-
 
 /** Very simple frequency finding by search for next local maximum.
  * @param results Inhere we store the results.
@@ -215,9 +218,9 @@ fun findCorrelationBasedFrequencySimple(
         correlation.size - 1
     }
 
-    val  firstLocalMinimum = findFirstMinimum(correlation.values)
+    val firstLocalMinimum = findFirstMinimum(correlation.values)
 
-    val globalIndexBegin = if (frequencyMax > 0f ) {
+    val globalIndexBegin = if (frequencyMax > 0f) {
         val indexShiftFrequencyMax = ceil(1.0 / (correlation.dt * frequencyMax)).toInt()
         max(indexShiftFrequencyMax, firstLocalMinimum)
     } else {
@@ -231,17 +234,20 @@ fun findCorrelationBasedFrequencySimple(
 
     val searchIndexStart = (1.0 / (correlation.dt * frequencyPrevious))
         .roundToInt()
-        .coerceIn(globalIndexBegin,  globalIndexEnd)
+        .coerceIn(globalIndexBegin, globalIndexEnd)
 
     var i = searchIndexStart
-    while (i < globalIndexEnd && correlation[i+1] > correlation[i])
+    while (i < globalIndexEnd && correlation[i + 1] > correlation[i]) {
         i += 1
+    }
 
-    while (i > globalIndexBegin && correlation[i-1] > correlation[i])
+    while (i > globalIndexBegin && correlation[i - 1] > correlation[i]) {
         i -= 1
+    }
 
     val (fittedMaximumIndex, fittedPeak) = getPeakOfPolynomialFitArray(
-        i, correlation.values
+        i,
+        correlation.values
     )
 
     results.set(
@@ -251,4 +257,3 @@ fun findCorrelationBasedFrequencySimple(
     )
     return
 }
-

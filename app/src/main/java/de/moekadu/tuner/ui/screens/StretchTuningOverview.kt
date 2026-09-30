@@ -84,13 +84,15 @@ private fun rememberImportExportCallbacks(
     val stateUpdated by rememberUpdatedState(newValue = state)
     val onLoadStretchTuningsUpdated by rememberUpdatedState(newValue = onLoadStretchTunings)
 
-    val saveStretchTuningsLauncher =  rememberLauncherForActivityResult(
+    val saveStretchTuningsLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("text/plain")
     ) { uri ->
         if (uri != null) {
             val stretchTunings = stateUpdated.listData.extractSelectedItems()
             stateUpdated.saveStretchTunings(
-                context, uri, stretchTunings
+                context,
+                uri,
+                stretchTunings
             )
             stateUpdated.listData.clearSelectedItems()
             val filename = getFilenameFromUri(context, uri)
@@ -102,10 +104,14 @@ private fun rememberImportExportCallbacks(
                     stretchTunings.size,
                     filename
                 ),
-                Toast.LENGTH_LONG).show()
+                Toast.LENGTH_LONG
+            ).show()
         } else {
-            Toast.makeText(context,
-                R.string.failed_to_archive_items, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                R.string.failed_to_archive_items,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -122,7 +128,10 @@ private fun rememberImportExportCallbacks(
 //            val cR = context.contentResolver
 //            Log.v("Tuner", "Temperaments import temperament file, mimetype=${cR.getType(uri)}")
 
-            val (readState, stretchTunings) = StretchTuningIO.readStretchTuningsFromFile(context, uri)
+            val (readState, stretchTunings) = StretchTuningIO.readStretchTuningsFromFile(
+                context,
+                uri
+            )
             readState.toastPotentialFileCheckError(context, uri)
             if (stretchTunings.isNotEmpty()) {
                 onLoadStretchTuningsUpdated(stretchTunings)
@@ -131,12 +140,13 @@ private fun rememberImportExportCallbacks(
         }
     }
     return remember(context, resources) {
-        object: OverflowMenuCallbacks {
+        object : OverflowMenuCallbacks {
             override fun onDeleteClicked() {
-                if (stateUpdated.listData.selectedItems.value.isNotEmpty())
+                if (stateUpdated.listData.selectedItems.value.isNotEmpty()) {
                     stateUpdated.listData.deleteSelectedItems()
-                else
+                } else {
                     stateUpdated.listData.deleteAllItems()
+                }
             }
             override fun onShareClicked() {
                 val stretchTunings = stateUpdated.listData.extractSelectedItems()
@@ -160,7 +170,9 @@ private fun rememberImportExportCallbacks(
                 }
             }
             override fun onImportClicked() {
-                importStretchTuningsLauncher.launch(arrayOf("text/plain", "application/octet-stream"))  // text/plain or */*
+                importStretchTuningsLauncher.launch(
+                    arrayOf("text/plain", "application/octet-stream")
+                ) // text/plain or */*
             }
             override fun onSettingsClicked() {
                 // onPreferenceButtonClicked()
@@ -176,7 +188,7 @@ fun StretchTuningOverview(
     canNavigateUp: Boolean = true,
     onNavigateUp: () -> Unit = {},
     onStretchTuningClicked: (StretchTuning) -> Unit = {},
-    onEditStretchTuningClicked: (StretchTuning, copy: Boolean) -> Unit = {_,_->},
+    onEditStretchTuningClicked: (StretchTuning, copy: Boolean) -> Unit = { _, _ -> },
     onStretchTuningInfoClicked: (StretchTuning) -> Unit = {},
     onLoadStretchTunings: (List<StretchTuning>) -> Unit = {}
 ) {
@@ -237,7 +249,7 @@ fun StretchTuningOverview(
                     contentDescription = "move down"
                 )
             }
-           OverflowMenu(overflowCallbacks, showSettings = false)
+            OverflowMenu(overflowCallbacks, showSettings = false)
         },
         onActionModeFinishedClicked = {
             state.listData.clearSelectedItems()
@@ -301,18 +313,22 @@ fun StretchTuningOverview(
             ),
             onActivateItemClicked = { onStretchTuningClicked(it) },
             snackbarHostState = snackbarHostState
-       ) { item, itemInfo, itemModifier ->
+        ) { item, itemInfo, itemModifier ->
             EditableListItem(
-                title = { Text(
-                    item.name.value(resources),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                ) },
-                description = { Text(
-                    item.description.value(resources),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                ) },
+                title = {
+                    Text(
+                        item.name.value(resources),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                description = {
+                    Text(
+                        item.description.value(resources),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 icon = {
                     Surface(
                         shape = CircleShape,
@@ -336,7 +352,9 @@ fun StretchTuningOverview(
                 onOptionsClicked = {
                     when (it) {
                         ListItemTask.Edit -> onEditStretchTuningClicked(item, false)
+
                         ListItemTask.Copy -> onEditStretchTuningClicked(item, true)
+
                         ListItemTask.Delete -> {
                             state.listData.deleteItems(persistentSetOf(item.stableId))
                         }
@@ -353,7 +371,6 @@ fun StretchTuningOverview(
         }
     }
 }
-
 
 private class StretchTuningOverviewTestState : StretchTuningOverviewState {
 
@@ -394,7 +411,9 @@ private class StretchTuningOverviewTestState : StretchTuningOverviewState {
         editableItemsSectionResId = R.string.custom_item,
         editableItems = editableItems,
         editableItemsExpanded = editableItemsExpanded,
-        toggleEditableItemsExpanded = { editableItemsExpanded.value = !editableItemsExpanded.value },
+        toggleEditableItemsExpanded = {
+            editableItemsExpanded.value = !editableItemsExpanded.value
+        },
         getStableId = { it.stableId },
         activeItem = activeItem,
         setNewItems = { editableItems.value = it }
@@ -405,9 +424,7 @@ private class StretchTuningOverviewTestState : StretchTuningOverviewState {
         uri: Uri,
         stretchTunings: List<StretchTuning>
     ) {
-
     }
-
 }
 
 @Preview(heightDp = 800, widthDp = 400, showBackground = true)

@@ -56,16 +56,22 @@ fun StretchTuningInfo(
     when (configuration.orientation) {
         Configuration.ORIENTATION_LANDSCAPE -> {
             StretchTuningInfoLandscape(
-                stretchTuning, modifier, onNavigateUpClicked,
-                gestureBasedViewPort, lazyListState,
+                stretchTuning,
+                modifier,
+                onNavigateUpClicked,
+                gestureBasedViewPort,
+                lazyListState,
                 tunerPlotStyle
             )
         }
 
         else -> {
             StretchTuningInfoPortrait(
-                stretchTuning, modifier, onNavigateUpClicked,
-                gestureBasedViewPort, lazyListState,
+                stretchTuning,
+                modifier,
+                onNavigateUpClicked,
+                gestureBasedViewPort,
+                lazyListState,
                 tunerPlotStyle
             )
         }
@@ -96,20 +102,22 @@ private fun StretchTuningInfoPortrait(
                             "back"
                         )
                     }
-                },
+                }
             )
         }
-    ){ paddingValues ->
+    ) { paddingValues ->
         val layoutDirection = LocalLayoutDirection.current
         Column(
             modifier = modifier
                 .consumeWindowInsets(paddingValues)
                 .padding(
                     top = paddingValues.calculateTopPadding(),
-                    start = tunerPlotStyle.margin + paddingValues.calculateStartPadding(layoutDirection),
+                    start =
+                        tunerPlotStyle.margin + paddingValues.calculateStartPadding(
+                            layoutDirection
+                        ),
                     end = tunerPlotStyle.margin + paddingValues.calculateEndPadding(layoutDirection)
-                )
-            ,
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val resources = LocalResources.current
@@ -117,8 +125,7 @@ private fun StretchTuningInfoPortrait(
                 stretchTuning.name.value(resources),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
-                ,
+                    .padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
@@ -139,10 +146,11 @@ private fun StretchTuningInfoPortrait(
                 tickLineWidth = tunerPlotStyle.tickLineWidth,
                 tickLineColor = tunerPlotStyle.tickLineColor,
                 tickLabelStyle = tunerPlotStyle.tickFontStyle,
-                plotWindowOutline = if (gestureBasedViewPort.isActive)
+                plotWindowOutline = if (gestureBasedViewPort.isActive) {
                     tunerPlotStyle.plotWindowOutlineDuringGesture
-                else
+                } else {
                     tunerPlotStyle.plotWindowOutline
+                }
 
             )
             StretchTuningTable(
@@ -197,9 +205,12 @@ private fun StretchTuningInfoLandscape(
                 .consumeWindowInsets(paddingValues)
                 .padding(
                     top = paddingValues.calculateTopPadding(),
-                    start = tunerPlotStyle.margin + paddingValues.calculateStartPadding(layoutDirection),
+                    start =
+                        tunerPlotStyle.margin + paddingValues.calculateStartPadding(
+                            layoutDirection
+                        ),
                     end = tunerPlotStyle.margin + paddingValues.calculateEndPadding(layoutDirection)
-                ),
+                )
         ) {
             Row(
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp),
@@ -233,10 +244,11 @@ private fun StretchTuningInfoLandscape(
                     tickLineWidth = tunerPlotStyle.tickLineWidth,
                     tickLineColor = tunerPlotStyle.tickLineColor,
                     tickLabelStyle = tunerPlotStyle.tickFontStyle,
-                    plotWindowOutline = if (gestureBasedViewPort.isActive)
+                    plotWindowOutline = if (gestureBasedViewPort.isActive) {
                         tunerPlotStyle.plotWindowOutlineDuringGesture
-                    else
+                    } else {
                         tunerPlotStyle.plotWindowOutline
+                    }
                 )
 
                 StretchTuningTable(
@@ -257,7 +269,6 @@ private fun StretchTuningInfoLandscape(
     }
 }
 
-
 @Preview(widthDp = 400, heightDp = 800)
 @Preview(widthDp = 800, heightDp = 400)
 @Composable
@@ -267,12 +278,19 @@ fun StretchTuningEditorPreview() {
             StretchTuning(
                 name = GetTextFromString("Test"),
                 description = GetTextFromString("Stretch tuning description."),
-                unstretchedFrequencies = doubleArrayOf(320.0, 440.0, 540.0, 1023.4, 3000.0, 12310.0),
+                unstretchedFrequencies = doubleArrayOf(
+                    320.0,
+                    440.0,
+                    540.0,
+                    1023.4,
+                    3000.0,
+                    12310.0
+                ),
                 stretchInCents = doubleArrayOf(-3.0, 0.0, 1.0, 5.0, 8.0, 12.3)
             )
         }
 
-        Surface() {
+        Surface {
             StretchTuningInfo(
                 stretchTuning,
                 modifier = Modifier.fillMaxSize()

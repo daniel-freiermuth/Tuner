@@ -57,10 +57,11 @@ data class Fifth(
     val drawNoteLight: Boolean,
     val drawModificationLight: Boolean
 )
+
 //
 @Composable
-private fun rememberChain(temperament: Temperament3, rootNote: MusicalNote?): Array<Fifth>{
-    return remember(temperament, rootNote) {
+private fun rememberChain(temperament: Temperament3, rootNote: MusicalNote?): Array<Fifth> =
+    remember(temperament, rootNote) {
         val chain = temperament.chainOfFifths()
         if (chain == null) {
             arrayOf()
@@ -94,19 +95,21 @@ private fun rememberChain(temperament: Temperament3, rootNote: MusicalNote?): Ar
                     )
                 )
             } else if (temperament.size == 12) {
-                result[result.size-1] = result[result.size-1].copy(
+                result[result.size - 1] = result[result.size - 1].copy(
                     modification = chain.getClosingCircleCorrection(),
                     drawModificationLight = true
                 )
                 arrayOf(
-                    Fifth(result.last().startNote,
+                    Fifth(
+                        result.last().startNote,
                         chain.getClosingCircleCorrection(),
                         false,
                         drawNoteLight = true,
                         drawModificationLight = true
                     )
                 ) + result + arrayOf(
-                    Fifth(result[0].startNote,
+                    Fifth(
+                        result[0].startNote,
                         null,
                         false,
                         drawNoteLight = true,
@@ -118,8 +121,6 @@ private fun rememberChain(temperament: Temperament3, rootNote: MusicalNote?): Ar
             }
         }
     }
-}
-
 
 /** Visualize the circle of fifths distances within a musical scale.
  * @param temperament Temperament for which the circle of fifths should be shown.
@@ -142,7 +143,7 @@ fun CircleOfFifthTable(
         val measureResult = textMeasurer.measure("M", noteTypography)
         val baseline = measureResult.firstBaseline
         val bottom = measureResult.size.height
-        val distance = with(density) {(bottom - baseline).toDp()}
+        val distance = with(density) { (bottom - baseline).toDp() }
         distance
     }
 
@@ -158,9 +159,9 @@ fun CircleOfFifthTable(
             fifthArray.forEach { fifth ->
                 item {
                     NoteWithEnharmonic(
-                        fifth.startNote, //note,
+                        fifth.startNote, // note,
                         modifier.graphicsLayer {
-                            alpha = if(fifth.drawNoteLight) 0.5f else 1f
+                            alpha = if (fifth.drawNoteLight) 0.5f else 1f
                         },
                         notePrintOptions = notePrintOptions,
                         withOctave = false,
@@ -177,7 +178,7 @@ fun CircleOfFifthTable(
                             modifier = Modifier
                                 .padding(bottom = (bottomToBaselineDistance))
                                 .graphicsLayer {
-                                    alpha = if(fifth.drawModificationLight) 0.5f else 1f
+                                    alpha = if (fifth.drawModificationLight) 0.5f else 1f
                                 }
                         )
                     }
@@ -185,7 +186,7 @@ fun CircleOfFifthTable(
             }
         } else {
             item {
-                val rootNoteResolved = remember(rootNote, temperament){
+                val rootNoteResolved = remember(rootNote, temperament) {
                     rootNote ?: temperament.noteNames(null)[0]
                 }
                 Note(
@@ -210,7 +211,6 @@ fun CircleOfFifthTable(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

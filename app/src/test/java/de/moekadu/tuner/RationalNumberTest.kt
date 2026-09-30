@@ -96,7 +96,7 @@ class RationalNumberTest {
         assertEquals(15, r.denominator)
 
         r = RationalNumber(2, 3)
-        r += RationalNumber(5,2)
+        r += RationalNumber(5, 2)
         assertEquals(19, r.numerator)
         assertEquals(6, r.denominator)
     }
@@ -131,6 +131,7 @@ class RationalNumberTest {
         assertEquals(2, r.numerator)
         assertEquals(3, r.denominator)
     }
+
     @Test
     fun multiply() {
         var r1 = RationalNumber(5, 8)
@@ -148,22 +149,23 @@ class RationalNumberTest {
 
     @Test
     fun div() {
-        var r = RationalNumber(5,7)
+        var r = RationalNumber(5, 7)
         r /= 3
         assertEquals(5, r.numerator)
         assertEquals(21, r.denominator)
 
-        r = RationalNumber(6,7)
+        r = RationalNumber(6, 7)
         r /= 3
         assertEquals(2, r.numerator)
         assertEquals(7, r.denominator)
     }
+
     @Test
     fun pow() {
         var r1 = RationalNumber(5, 8)
         var r = r1.pow(3)
-        assertEquals(5*5*5, r.numerator)
-        assertEquals(8*8*8, r.denominator)
+        assertEquals(5 * 5 * 5, r.numerator)
+        assertEquals(8 * 8 * 8, r.denominator)
 
         r1 = RationalNumber(5, 4)
         r = r1.pow(0)
@@ -173,9 +175,9 @@ class RationalNumberTest {
 
     @Test
     fun equals() {
-        var r1 = RationalNumber(10,6)
+        var r1 = RationalNumber(10, 6)
         assert(r1 == RationalNumber(5, 3))
-        r1 = RationalNumber(-10,6)
+        r1 = RationalNumber(-10, 6)
         assert(r1 == -RationalNumber(5, 3))
     }
 
@@ -192,7 +194,7 @@ class RationalNumberTest {
 
     @Test
     fun toDouble() {
-        val r = RationalNumber(5,2)
+        val r = RationalNumber(5, 2)
         assertEquals(r.toDouble(), 2.5, 1e-24)
     }
 }

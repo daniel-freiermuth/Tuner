@@ -12,23 +12,21 @@ data class InstrumentOld(
     val stableId: Long,
     val isChromatic: Boolean = false
 ) {
-    fun toNew(): Instrument {
-       return if (name == null) {
-            instrumentDatabase.firstOrNull {
-                (icon.name == it.icon.name) &&
-                        strings.size == it.strings.size
-                        && isChromatic == it.isChromatic
-                        && strings.contentEquals(it.strings)
-            } ?: instrumentDatabase[0]
-        } else {
-            Instrument(
-                name = name,
-                nameResource = nameResource,
-                strings = strings,
-                icon = icon,
-                stableId = stableId,
-                isChromatic = isChromatic
-            )
-        }
+    fun toNew(): Instrument = if (name == null) {
+        instrumentDatabase.firstOrNull {
+            (icon.name == it.icon.name) &&
+                strings.size == it.strings.size &&
+                isChromatic == it.isChromatic &&
+                strings.contentEquals(it.strings)
+        } ?: instrumentDatabase[0]
+    } else {
+        Instrument(
+            name = name,
+            nameResource = nameResource,
+            strings = strings,
+            icon = icon,
+            stableId = stableId,
+            isChromatic = isChromatic
+        )
     }
 }

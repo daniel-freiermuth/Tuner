@@ -32,19 +32,19 @@ import java.text.ParsePosition
  * @param string String to be parsed.
  * @return String as float of null if failed.
  */
-private fun DecimalFormat.toDoubleOrNull(string: String): Double? {
-    return try {
-        val trimmed = string.trim()
-        val position = ParsePosition(0)
-        val result = this.parse(trimmed, position)?.toDouble()
-        if (position.index == trimmed.length)
-            result
-        else
-            null
-    } catch (_: Exception) {
+private fun DecimalFormat.toDoubleOrNull(string: String): Double? = try {
+    val trimmed = string.trim()
+    val position = ParsePosition(0)
+    val result = this.parse(trimmed, position)?.toDouble()
+    if (position.index == trimmed.length) {
+        result
+    } else {
         null
     }
+} catch (_: Exception) {
+    null
 }
+
 @Composable
 fun ModifyStretchTuningLineDialog(
     initialUnstretchedFrequency: Double,
@@ -53,7 +53,10 @@ fun ModifyStretchTuningLineDialog(
     modifier: Modifier = Modifier,
     onAbortClicked: () -> Unit = {},
     onConfirmedClicked: (
-        unstretchedFrequency: Double, stretchInCents: Double, key: Int) -> Unit = {_, _, _ ->}
+        unstretchedFrequency: Double,
+        stretchInCents: Double,
+        key: Int
+    ) -> Unit = { _, _, _ -> }
 ) {
     val locale = LocalConfiguration.current.locales[0]
 
@@ -63,21 +66,27 @@ fun ModifyStretchTuningLineDialog(
     val numberFormat = remember(locale) {
         NumberFormat.getNumberInstance(locale) as DecimalFormat
     }
-    val validUnstretchedFrequencyString by remember { derivedStateOf {
-        numberFormat.toDoubleOrNull(unstretchedFrequencyAsString) != null
-    }}
+    val validUnstretchedFrequencyString by remember {
+        derivedStateOf {
+            numberFormat.toDoubleOrNull(unstretchedFrequencyAsString) != null
+        }
+    }
 
-    val validUnstretchedFrequencyPositive by remember { derivedStateOf {
-        (numberFormat.toDoubleOrNull(unstretchedFrequencyAsString) ?: 1.0) > 0.0
-    }}
+    val validUnstretchedFrequencyPositive by remember {
+        derivedStateOf {
+            (numberFormat.toDoubleOrNull(unstretchedFrequencyAsString) ?: 1.0) > 0.0
+        }
+    }
 
     var stretchInCentsAsString by rememberSaveable {
         mutableStateOf("%.2f".format(initialStretchInCents))
     }
-    val validStretchInCents by remember { derivedStateOf {
-        val value = numberFormat.toDoubleOrNull(stretchInCentsAsString)
-        value != null
-    }}
+    val validStretchInCents by remember {
+        derivedStateOf {
+            val value = numberFormat.toDoubleOrNull(stretchInCentsAsString)
+            value != null
+        }
+    }
 
     AlertDialog(
         onDismissRequest = onAbortClicked,
@@ -92,7 +101,9 @@ fun ModifyStretchTuningLineDialog(
                     ) ?: initialStretchInCents
                     onConfirmedClicked(unstretchedFrequency, stretchInCents, key)
                 },
-                enabled = validUnstretchedFrequencyString && validUnstretchedFrequencyPositive && validStretchInCents
+                enabled =
+                    validUnstretchedFrequencyString && validUnstretchedFrequencyPositive &&
+                        validStretchInCents
             ) {
                 Text(stringResource(id = R.string.done))
             }
@@ -108,7 +119,7 @@ fun ModifyStretchTuningLineDialog(
         icon = {
             Icon(
                 ImageVector.vectorResource(R.drawable.ic_stretch),
-                contentDescription="stretch"
+                contentDescription = "stretch"
             )
         },
         title = {
@@ -119,16 +130,16 @@ fun ModifyStretchTuningLineDialog(
                 TextField(
                     value = unstretchedFrequencyAsString,
                     onValueChange = { unstretchedFrequencyAsString = it },
-                    label = { Text(stringResource(id = R.string.frequency))},
-                    suffix = { Text(stringResource(id = R.string.hertz_str, ""))},
+                    label = { Text(stringResource(id = R.string.frequency)) },
+                    suffix = { Text(stringResource(id = R.string.hertz_str, "")) },
                     isError = !(validUnstretchedFrequencyString && validUnstretchedFrequencyPositive),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                     maxLines = 1,
                     supportingText = if (!validUnstretchedFrequencyString) {
-                        { Text(stringResource(R.string.input_is_no_number))}
+                        { Text(stringResource(R.string.input_is_no_number)) }
                     } else if (!validUnstretchedFrequencyPositive) {
-                        { Text(stringResource(R.string.value_must_be_larger_zero))}
+                        { Text(stringResource(R.string.value_must_be_larger_zero)) }
                     } else {
                         null
                     }
@@ -136,19 +147,18 @@ fun ModifyStretchTuningLineDialog(
                 TextField(
                     value = stretchInCentsAsString,
                     onValueChange = { stretchInCentsAsString = it },
-                    label = { Text(stringResource(id = R.string.stretch))},
-                    suffix = { Text(stringResource(id = R.string.cent_symbol))},
+                    label = { Text(stringResource(id = R.string.stretch)) },
+                    suffix = { Text(stringResource(id = R.string.cent_symbol)) },
                     isError = !(validStretchInCents),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                     maxLines = 1,
                     supportingText = if (!validStretchInCents) {
-                        { Text(stringResource(R.string.input_is_no_number))}
+                        { Text(stringResource(R.string.input_is_no_number)) }
                     } else {
                         null
                     }
                 )
-
             }
         }
     )

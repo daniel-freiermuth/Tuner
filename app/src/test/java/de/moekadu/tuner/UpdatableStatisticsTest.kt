@@ -1,10 +1,10 @@
 package de.moekadu.tuner
 
 import de.moekadu.tuner.misc.UpdatableStatistics
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import kotlin.math.absoluteValue
 import kotlin.math.pow
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class UpdatableStatisticsTest {
 
@@ -23,8 +23,9 @@ class UpdatableStatisticsTest {
     fun testConst() {
         val value = 40.0f
         val stat = UpdatableStatistics()
-        for (i in 0 until 100)
+        for (i in 0 until 100) {
             stat.update(value, 1.0f)
+        }
 
         assertEquals(value, stat.mean)
         assertEquals(0.0f, stat.variance)
@@ -41,8 +42,9 @@ class UpdatableStatisticsTest {
         variance /= values.size
 
         val stat = UpdatableStatistics()
-        for (v in values)
+        for (v in values) {
             stat.update(v, 1.0f)
+        }
 
         assertEquals(mean, stat.mean, 1e-6f * mean.absoluteValue)
         assertEquals(variance, stat.variance, 1e-6f * variance)
@@ -75,5 +77,4 @@ class UpdatableStatisticsTest {
         assertEquals(mean, stat.mean, 1e-6f * mean.absoluteValue)
         assertEquals(variance, stat.variance, 1e-6f * variance)
     }
-
 }

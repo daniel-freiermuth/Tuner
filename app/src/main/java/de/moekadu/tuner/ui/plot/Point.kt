@@ -40,12 +40,15 @@ class PointShape {
         @Composable
         fun circle(size: Dp, color: Color = Color.Unspecified): (DrawScope.() -> Unit) {
             val c = color.takeOrElse { MaterialTheme.colorScheme.onSurface }
-            return  { drawCircle(c, size.toPx() / 2, Offset.Zero) }
+            return { drawCircle(c, size.toPx() / 2, Offset.Zero) }
         }
 
         @Composable
-        fun upwardTriangleShape(size: Dp, color: Color, offset: DpOffset = DpOffset.Zero)
-                : (DrawScope.() -> Unit) {
+        fun upwardTriangleShape(
+            size: Dp,
+            color: Color,
+            offset: DpOffset = DpOffset.Zero
+        ): (DrawScope.() -> Unit) {
             val c = color.takeOrElse { MaterialTheme.colorScheme.onSurface }
             val r = with(LocalDensity.current) { size.toPx() / 2 }
             val dx = with(LocalDensity.current) { offset.x.toPx() }
@@ -62,8 +65,11 @@ class PointShape {
         }
 
         @Composable
-        fun downwardTriangleShape(size: Dp, color: Color, offset: DpOffset = DpOffset.Zero)
-                : (DrawScope.() -> Unit) {
+        fun downwardTriangleShape(
+            size: Dp,
+            color: Color,
+            offset: DpOffset = DpOffset.Zero
+        ): (DrawScope.() -> Unit) {
             val c = color.takeOrElse { MaterialTheme.colorScheme.onSurface }
             val r = with(LocalDensity.current) { size.toPx() / 2 }
             val dx = with(LocalDensity.current) { offset.x.toPx() }
@@ -80,8 +86,10 @@ class PointShape {
         }
 
         @Composable
-        fun circleWithUpwardTriangleShape(size: Dp, color: Color = Color.Unspecified)
-                : (DrawScope.() -> Unit) {
+        fun circleWithUpwardTriangleShape(
+            size: Dp,
+            color: Color = Color.Unspecified
+        ): (DrawScope.() -> Unit) {
             val c = color.takeOrElse { MaterialTheme.colorScheme.onSurface }
             val r = with(LocalDensity.current) { size.toPx() / 2 }
             val rTri = 1.4f * r
@@ -100,8 +108,10 @@ class PointShape {
         }
 
         @Composable
-        fun circleWithDownwardTriangleShape(size: Dp, color: Color = Color.Unspecified)
-                : (DrawScope.() -> Unit) {
+        fun circleWithDownwardTriangleShape(
+            size: Dp,
+            color: Color = Color.Unspecified
+        ): (DrawScope.() -> Unit) {
             val c = color.takeOrElse { MaterialTheme.colorScheme.onSurface }
             val r = with(LocalDensity.current) { size.toPx() / 2 }
             val rTri = 1.4f * r
@@ -123,20 +133,17 @@ class PointShape {
 }
 
 @Composable
-fun Point(
-    position: Offset,
-    shape: DrawScope.() -> Unit,
-    transformation: () -> Transformation
-) {
-    Spacer(modifier = Modifier
-        .fillMaxSize()
-        .drawWithCache {
-            onDrawBehind {
-                val p = transformation().toScreen(position)
-                translate(p.x, p.y) {
-                    this.shape()
+fun Point(position: Offset, shape: DrawScope.() -> Unit, transformation: () -> Transformation) {
+    Spacer(
+        modifier = Modifier
+            .fillMaxSize()
+            .drawWithCache {
+                onDrawBehind {
+                    val p = transformation().toScreen(position)
+                    translate(p.x, p.y) {
+                        this.shape()
+                    }
                 }
             }
-        }
     )
 }

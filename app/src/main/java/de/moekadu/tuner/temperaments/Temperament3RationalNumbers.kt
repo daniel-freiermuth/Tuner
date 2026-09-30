@@ -37,10 +37,10 @@ data class Temperament3RationalNumbersEDONames(
 
     override fun equalOctaveDivision(): Int? = null
     override fun rationalNumbers(): Array<RationalNumber> = this.rationalNumbers
-    override fun possibleRootNotes(): Array<MusicalNote>
-            = NoteNamesEDOGenerator.possibleRootNotes(size)
-    override fun noteNames(rootNote: MusicalNote?): NoteNames2
-            = NoteNamesEDOGenerator.getNoteNames(size, rootNote)!!
+    override fun possibleRootNotes(): Array<MusicalNote> =
+        NoteNamesEDOGenerator.possibleRootNotes(size)
+    override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
+        NoteNamesEDOGenerator.getNoteNames(size, rootNote)!!
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

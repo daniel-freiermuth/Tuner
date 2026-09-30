@@ -24,6 +24,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -34,9 +36,11 @@ import androidx.navigation.toRoute
 import de.moekadu.tuner.R
 import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.instruments.InstrumentIcon
+import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.preferences.PreferenceResources
+import de.moekadu.tuner.stretchtuning.StretchTuning
 import de.moekadu.tuner.temperaments.EditableTemperament
 import de.moekadu.tuner.temperaments.Temperament3
 import de.moekadu.tuner.temperaments.TemperamentResources
@@ -46,25 +50,22 @@ import de.moekadu.tuner.ui.preferences.ReferenceNoteDialog
 import de.moekadu.tuner.ui.preferences.RootNoteDialog
 import de.moekadu.tuner.ui.screens.InstrumentTuner
 import de.moekadu.tuner.ui.screens.ScientificTuner
+import de.moekadu.tuner.ui.screens.StretchTuningOverview
 import de.moekadu.tuner.ui.temperaments.TemperamentDetailsDialog
 import de.moekadu.tuner.ui.temperaments.TemperamentsDialog2
 import de.moekadu.tuner.viewmodels.InstrumentTunerViewModel
 import de.moekadu.tuner.viewmodels.InstrumentViewModel
 import de.moekadu.tuner.viewmodels.ReferenceNoteDialogViewModel
 import de.moekadu.tuner.viewmodels.ScientificTunerViewModel
+import de.moekadu.tuner.viewmodels.StretchTuningOverviewViewModel
 import de.moekadu.tuner.viewmodels.TemperamentDialog2ViewModel
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import androidx.compose.ui.platform.LocalResources
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import de.moekadu.tuner.misc.GetTextFromString
-import de.moekadu.tuner.stretchtuning.StretchTuning
-import de.moekadu.tuner.ui.screens.StretchTuningOverview
-import de.moekadu.tuner.viewmodels.StretchTuningOverviewViewModel
 
 @Composable
 private fun createTemperamentDialogViewModel(
-    controller: NavController, backStackEntry: NavBackStackEntry
+    controller: NavController,
+    backStackEntry: NavBackStackEntry
 ): TemperamentDialog2ViewModel? {
     val parentEntry = remember(backStackEntry) {
         try {
@@ -73,12 +74,12 @@ private fun createTemperamentDialogViewModel(
             null
         }
     }
-    return if (parentEntry == null)
+    return if (parentEntry == null) {
         null
-    else
+    } else {
         hiltViewModel<TemperamentDialog2ViewModel>(parentEntry)
+    }
 }
-
 
 fun NavGraphBuilder.mainGraph(
     controller: NavController,
@@ -104,12 +105,13 @@ fun NavGraphBuilder.mainGraph(
                     controller.navigate(
                         // provided by musicalScalePropertiesGraph
                         ReferenceFrequencyDialogRoute(
-                            temperamentResources.musicalScale.value, null
+                            temperamentResources.musicalScale.value,
+                            null
                         )
                     )
                 },
                 onTemperamentClicked = { controller.navigate(TemperamentDialogRoute) },
-                onStretchTuningClicked = { controller.navigate(StretchTuningOverviewRoute)}
+                onStretchTuningClicked = { controller.navigate(StretchTuningOverviewRoute) }
             )
         } else {
             val viewModel: InstrumentTunerViewModel = hiltViewModel()
@@ -122,7 +124,8 @@ fun NavGraphBuilder.mainGraph(
                     controller.navigate(
                         // provided by musicalScalePropertiesGraph
                         ReferenceFrequencyDialogRoute(
-                            temperamentResources.musicalScale.value, null
+                            temperamentResources.musicalScale.value,
+                            null
                         )
                     )
                 },
@@ -156,7 +159,10 @@ fun NavGraphBuilder.mainGraph(
                 val newInstrument = if (copy) {
                     instrument.copy(
                         nameResource = null,
-                        name = resources.getString(R.string.copy_extension, instrument.getNameString(resources)),
+                        name = resources.getString(
+                            R.string.copy_extension,
+                            instrument.getNameString(resources)
+                        ),
                         stableId = Instrument.NO_STABLE_ID
                     )
                 } else {
@@ -292,7 +298,9 @@ fun NavGraphBuilder.mainGraph(
                     controller.navigate(
                         ReferenceFrequencyDialogRoute(
                             proposedScale,
-                            resources.getString(R.string.new_temperament_requires_adapting_reference_note)
+                            resources.getString(
+                                R.string.new_temperament_requires_adapting_reference_note
+                            )
                         )
                     ) {
                         popUpTo(data) { inclusive = true }
@@ -321,11 +329,13 @@ fun NavGraphBuilder.mainGraph(
                 controller.navigate(
                     StretchTuningEditorGraphRoute(
                         stretchTuning.copy(
-                            name = GetTextFromString(when {
-                                copy && name == "" -> ""
-                                copy -> "$name (${resources.getString(R.string.copy_)})"
-                                else -> name
-                            }),
+                            name = GetTextFromString(
+                                when {
+                                    copy && name == "" -> ""
+                                    copy -> "$name (${resources.getString(R.string.copy_)})"
+                                    else -> name
+                                }
+                            ),
                             stableId = if (copy) StretchTuning.NO_STABLE_ID else stretchTuning.stableId
                         )
                     )
@@ -367,10 +377,7 @@ data object InstrumentsRoute
 
 // it seems that we cannot use complex arguments, so we must serialize ...
 @Serializable
-data class ReferenceFrequencyDialogRoute(
-    val serializedString: String,
-    val warning: String?
-) {
+data class ReferenceFrequencyDialogRoute(val serializedString: String, val warning: String?) {
     constructor(musicalScale: MusicalScale2, warning: String?) : this(
         Json.encodeToString(musicalScale),
         warning
@@ -382,21 +389,16 @@ data class ReferenceFrequencyDialogRoute(
 data object TemperamentDialogRoute
 
 @Serializable
-data class TemperamentInfoDialogRoute(
-    val serializedTemperament: String
-) {
+data class TemperamentInfoDialogRoute(val serializedTemperament: String) {
     constructor(temperament: Temperament3) : this(
         Json.encodeToString(temperament)
     )
-    fun obtainTemperament(): Temperament3 {
-        return Json.decodeFromString<Temperament3>(serializedTemperament)
-    }
+    fun obtainTemperament(): Temperament3 =
+        Json.decodeFromString<Temperament3>(serializedTemperament)
 }
 
 @Serializable
-data class RootNoteDialogRoute(
-    val serializedTemperament: String, val serializedRootNote: String
-) {
+data class RootNoteDialogRoute(val serializedTemperament: String, val serializedRootNote: String) {
     constructor(temperament: Temperament3, rootNote: MusicalNote) : this(
         Json.encodeToString(temperament),
         Json.encodeToString(rootNote)
@@ -407,5 +409,5 @@ data class RootNoteDialogRoute(
 
 @Serializable
 data object StretchTuningOverviewRoute
-//@Serializable
-//data object TestRoute
+// @Serializable
+// data object TestRoute

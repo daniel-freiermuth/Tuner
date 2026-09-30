@@ -83,7 +83,6 @@ fun InstrumentIconPicker(
 private fun InstrumentIconPickerTest() {
     TunerTheme {
         InstrumentIconPicker {
-
         }
     }
 }

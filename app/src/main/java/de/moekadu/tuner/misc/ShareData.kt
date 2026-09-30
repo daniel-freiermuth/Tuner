@@ -36,10 +36,13 @@ object ShareData {
         override fun parseResult(resultCode: Int, intent: Intent?) {
             return
         }
-
     }
 
-    private fun writeDataToCacheFile(context: Context, filename: String, dataAsString: String): Uri {
+    private fun writeDataToCacheFile(
+        context: Context,
+        filename: String,
+        dataAsString: String
+    ): Uri {
         val sharePath = File(context.cacheDir, "share").also { it.mkdir() }
         val sharedFile = File(sharePath.path, filename)
         // val fileContent = InstrumentIO.instrumentsListToString(context, instruments)
@@ -70,7 +73,9 @@ object ShareData {
             putExtra(
                 Intent.EXTRA_TITLE,
                 context.resources.getQuantityString(
-                    R.plurals.sharing_num_items, numberOfItems, numberOfItems
+                    R.plurals.sharing_num_items,
+                    numberOfItems,
+                    numberOfItems
                 )
             )
             type = "text/plain"

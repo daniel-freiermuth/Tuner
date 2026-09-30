@@ -8,22 +8,22 @@ import de.moekadu.tuner.resources.ResourcesBase
 import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.OctaveNotation
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.math.pow
-import kotlin.math.roundToInt
 
 @Singleton
 class PreferenceResources @Inject constructor(
     @ApplicationContext context: Context,
     @ApplicationScope val applicationScope: CoroutineScope
-): ResourcesBase("settings", context, applicationScope) {
+) : ResourcesBase("settings", context, applicationScope) {
     @Serializable
     data class Appearance(
         val mode: NightMode = NightMode.Auto,
@@ -35,7 +35,8 @@ class PreferenceResources @Inject constructor(
 
     // migrations
     private val migrationsFromV6CompletePref = createPreference(
-        "migrations_complete", false
+        "migrations_complete",
+        false
     )
     val migrationsFromV6Complete = migrationsFromV6CompletePref.asStateFlow()
     fun writeMigrationsFromV6Complete() {
@@ -44,7 +45,8 @@ class PreferenceResources @Inject constructor(
 
     // appearance
     private val appearancePref = createSerializablePreference(
-        "appearance", Appearance()
+        "appearance",
+        Appearance()
     )
     val appearance = appearancePref.asStateFlow()
     fun writeAppearance(appearance: Appearance) {
@@ -95,7 +97,7 @@ class PreferenceResources @Inject constructor(
         val currentEnharmonicVariant = notePrintOptions.value.enharmonicVariant
         writeNotePrintOptions(
             notePrintOptions.value.copy(
-                enharmonicVariant = if (currentEnharmonicVariant == 0) 1 else 0,
+                enharmonicVariant = if (currentEnharmonicVariant == 0) 1 else 0
             )
         )
     }
@@ -147,7 +149,8 @@ class PreferenceResources @Inject constructor(
 
     // pitch history duration
     private val pitchHistoryDurationPref = createPreference(
-        "pitch_history_duration", 1.5f
+        "pitch_history_duration",
+        1.5f
     )
     val pitchHistoryDuration = pitchHistoryDurationPref.asStateFlow()
     fun writePitchHistoryDuration(pitchHistoryDuration: Float) {
@@ -155,7 +158,8 @@ class PreferenceResources @Inject constructor(
     }
 
     private val pitchHistoryNumFaultyValuesPref = createPreference(
-        "pitch_history_num_faulty_values", 3
+        "pitch_history_num_faulty_values",
+        3
     )
     val pitchHistoryNumFaultyValues = pitchHistoryNumFaultyValuesPref.asStateFlow()
     fun writePitchHistoryNumFaultyValues(pitchHistoryNumFaultyValues: Int) {
@@ -175,7 +179,8 @@ class PreferenceResources @Inject constructor(
     }
 
     private val minHarmonicEnergyContentPref = createPreference(
-        "min_harmonic_energy_content", 0.1f
+        "min_harmonic_energy_content",
+        0.1f
     )
     val minHarmonicEnergyContent = minHarmonicEnergyContentPref.asStateFlow()
     fun writeMinHarmonicEnergyContent(minHarmonicEnergyContentPercent: Int) {
@@ -195,7 +200,8 @@ class PreferenceResources @Inject constructor(
     }
 
     private val waveWriterDurationInSecondsPref = createPreference(
-        "wave_writer_duration_in_seconds", 0
+        "wave_writer_duration_in_seconds",
+        0
     )
     val waveWriterDurationInSeconds = waveWriterDurationInSecondsPref.asStateFlow()
     fun writeWaveWriterDurationInSeconds(waveWriterDurationInSeconds: Int) {

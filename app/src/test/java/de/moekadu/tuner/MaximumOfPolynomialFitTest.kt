@@ -1,16 +1,16 @@
 package de.moekadu.tuner
 
 import de.moekadu.tuner.notedetection.getPeakOfPolynomialFit
+import kotlin.math.pow
 import org.junit.Assert
 import org.junit.Test
-import kotlin.math.pow
 
 class MaximumOfPolynomialFitTest {
 
     @Test
     fun testPeak() {
         val tPeak = 0.45f
-        val polynomial = {x: Float ->  -(x - tPeak).pow(2) + 0.23f}
+        val polynomial = { x: Float -> -(x - tPeak).pow(2) + 0.23f }
         val dt = 12.0f
         val tc = tPeak - 0.6f * dt
 
@@ -18,7 +18,8 @@ class MaximumOfPolynomialFitTest {
             polynomial(tc - dt),
             polynomial(tc),
             polynomial(tc + dt),
-            tc, dt
+            tc,
+            dt
         )
 
         Assert.assertEquals(tPeakFromFit, tPeak, 1e-4f * tPeak)

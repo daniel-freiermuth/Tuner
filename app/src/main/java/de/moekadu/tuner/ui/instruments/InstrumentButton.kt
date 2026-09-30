@@ -65,10 +65,11 @@ fun InstrumentButton(
             outline.lineWidth,
             if (errorMessage == null) outline.color else MaterialTheme.colorScheme.error
         ),
-        color = if (errorMessage == null)
+        color = if (errorMessage == null) {
             MaterialTheme.colorScheme.surface
-        else
-            MaterialTheme.colorScheme.errorContainer,
+        } else {
+            MaterialTheme.colorScheme.errorContainer
+        },
         modifier = modifier
     ) {
         Row(
@@ -76,7 +77,7 @@ fun InstrumentButton(
                 ButtonDefaults.MinHeight
             ),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Icon(
                 ImageVector.vectorResource(id = iconResourceId),
                 contentDescription = null,
@@ -87,9 +88,9 @@ fun InstrumentButton(
                         bottom = 8.dp
                     )
                     .size(36.dp)
-                    //.height(ButtonDefaults.MinHeight)
-                    //.aspectRatio(1f)
-                //tint = MaterialTheme.colorScheme.primary
+                // .height(ButtonDefaults.MinHeight)
+                // .aspectRatio(1f)
+                // tint = MaterialTheme.colorScheme.primary
             )
             Column(
                 modifier = Modifier.padding(ButtonDefaults.ContentPadding)
@@ -100,7 +101,7 @@ fun InstrumentButton(
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium,
                     overflow = TextOverflow.Ellipsis
-                    //color = MaterialTheme.colorScheme.primary
+                    // color = MaterialTheme.colorScheme.primary
                 )
                 if (errorMessage != null) {
                     Text(
@@ -132,10 +133,12 @@ private fun InstrumentButtonPreview() {
                         color = MaterialTheme.colorScheme.outline
                     )
                 )
-                Spacer(modifier = Modifier
-                    .height(20.dp)
-                    .width(10.dp)
-                    .background(MaterialTheme.colorScheme.error))
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(10.dp)
+                        .background(MaterialTheme.colorScheme.error)
+                )
             }
             Spacer(
                 modifier = Modifier
@@ -143,7 +146,6 @@ private fun InstrumentButtonPreview() {
                     .height(4.dp)
                     .background(MaterialTheme.colorScheme.error)
             )
-
         }
     }
 }
@@ -168,10 +170,12 @@ private fun InstrumentButtonPreview2() {
                     ),
                     errorMessage = "Some error"
                 )
-                Spacer(modifier = Modifier
-                    .height(20.dp)
-                    .width(10.dp)
-                    .background(MaterialTheme.colorScheme.error))
+                Spacer(
+                    modifier = Modifier
+                        .height(20.dp)
+                        .width(10.dp)
+                        .background(MaterialTheme.colorScheme.error)
+                )
             }
             Spacer(
                 modifier = Modifier
@@ -179,7 +183,6 @@ private fun InstrumentButtonPreview2() {
                     .height(4.dp)
                     .background(MaterialTheme.colorScheme.error)
             )
-
         }
     }
 }

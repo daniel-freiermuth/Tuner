@@ -30,12 +30,9 @@ import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.max
 
-class NumberFormatter(
-    locale: Locale,
-    private val precision: Int = 4
-) {
+class NumberFormatter(locale: Locale, private val precision: Int = 4) {
 
-    private val decimalFormat = DecimalFormat("0", DecimalFormatSymbols(locale)).apply{
+    private val decimalFormat = DecimalFormat("0", DecimalFormatSymbols(locale)).apply {
         roundingMode = RoundingMode.HALF_EVEN
     }
 
@@ -56,5 +53,5 @@ class NumberFormatter(
 fun rememberNumberFormatter(precision: Int = 4): NumberFormatter {
     val locale = LocalConfiguration.current.locales[0]
 
-    return remember(locale, precision) { NumberFormatter(locale, precision)}
+    return remember(locale, precision) { NumberFormatter(locale, precision) }
 }

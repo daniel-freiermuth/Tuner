@@ -51,9 +51,11 @@ fun SwitchPreference(
         headlineContent = {
             Text(name)
         },
-        supportingContent = supporting?.let {{
-            Text(it)
-        }},
+        supportingContent = supporting?.let {
+            {
+                Text(it)
+            }
+        },
         leadingContent = {
             Icon(ImageVector.vectorResource(id = iconId), null)
         },
@@ -73,7 +75,7 @@ private fun SwitchPreferencePreview() {
             SwitchPreference(
                 name = "My preference",
                 checked = checked,
-                onCheckChange = { checked = it},
+                onCheckChange = { checked = it },
                 iconId = R.drawable.ic_harmonic_energy,
                 supporting = null // "Extra text"
             )

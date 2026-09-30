@@ -25,7 +25,7 @@ class MusicalScaleNoteNamesTest {
                 MusicalNote(BaseNote.D, NoteModifier.None),
                 MusicalNote(BaseNote.D, NoteModifier.Sharp),
                 MusicalNote(BaseNote.E, NoteModifier.None),
-                MusicalNote(BaseNote.F, NoteModifier.None),
+                MusicalNote(BaseNote.F, NoteModifier.None)
             ),
             MusicalNote(BaseNote.A, NoteModifier.None, 4),
             MusicalNote(BaseNote.C, NoteModifier.None)
@@ -41,7 +41,7 @@ class MusicalScaleNoteNamesTest {
         assertEquals(4, scale.getNoteIndex(MusicalNote(BaseNote.C, NoteModifier.Sharp, 5)))
         assertEquals(16, scale.getNoteIndex(MusicalNote(BaseNote.C, NoteModifier.Sharp, 6)))
 
-        for (someIndex in -100 .. 100) {
+        for (someIndex in -100..100) {
             val someNote = scale.getNoteOfIndex(someIndex)
             val recoveredIndex = scale.getNoteIndex(someNote)
             println(someNote)

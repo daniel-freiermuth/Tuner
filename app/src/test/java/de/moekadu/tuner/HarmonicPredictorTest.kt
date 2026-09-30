@@ -1,8 +1,8 @@
 package de.moekadu.tuner
 
 import de.moekadu.tuner.notedetection.HarmonicPredictor
-import org.junit.Test
 import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class HarmonicPredictorTest {
     @Test
@@ -27,8 +27,7 @@ class HarmonicPredictorTest {
     }
 
     @Test
-    fun testPredictorNonlinear()
-    {
+    fun testPredictorNonlinear() {
         val predictor = HarmonicPredictor()
 
         val freqBase = 300f
