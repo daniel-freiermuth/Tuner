@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -79,6 +80,11 @@ detekt {
 // run UnsafeCallOnNullableType.
 tasks.withType<Detekt>().configureEach { baseline = detektBaseline }
 tasks.withType<DetektCreateBaselineTask>().configureEach { baseline = detektBaseline }
+
+ktlint {
+    // Style rules live in /.editorconfig.
+    version = libs.versions.ktlint.get()
+}
 
 dependencies {
     implementation(libs.androidx.core.ktx)
