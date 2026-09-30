@@ -15,6 +15,8 @@ espressoCore = "3.7.0"
 hilt = "2.60.1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
+ktlint = "1.8.0"
+ktlintGradle = "14.2.0"
 kotlinxCollectionsImmutable = "0.5.2"
 kotlinxCoroutinesCore = "1.11.0"
 kotlinxSerializationJson = "1.11.0"
@@ -68,5 +70,6 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin"}
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 
 #kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin"}
