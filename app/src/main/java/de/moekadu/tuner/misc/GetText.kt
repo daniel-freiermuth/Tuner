@@ -19,6 +19,7 @@
 package de.moekadu.tuner.misc
 
 import android.content.Context
+import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import kotlinx.serialization.Serializable
 
@@ -41,6 +42,14 @@ data class GetTextFromResId(@param:StringRes val id: Int) : GetText {
 @Serializable
 data class GetTextFromResIdWithIntArg(@param:StringRes val id: Int, val arg: Int) : GetText {
     override fun value(context: Context?) = context?.getString(id, arg) ?: ""
+}
+
+/** Plural resource, selected by [arg] and formatted with it. */
+@Serializable
+data class GetTextFromPluralsResIdWithIntArg(@param:PluralsRes val id: Int, val arg: Int) :
+    GetText {
+    override fun value(context: Context?) =
+        context?.resources?.getQuantityString(id, arg, arg) ?: ""
 }
 
 // /** String based on string or resource id.
