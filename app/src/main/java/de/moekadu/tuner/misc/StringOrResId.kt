@@ -33,7 +33,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StringOrResId(
     val string: String?,
-    @StringRes val resId: Int?
+    @param:StringRes val resId: Int?
 ) {
     /** Create a new value based on an explicit string.
      * @param string String as underlying value.

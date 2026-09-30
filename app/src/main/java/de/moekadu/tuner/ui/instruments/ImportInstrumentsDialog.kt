@@ -46,7 +46,7 @@ import kotlinx.collections.immutable.persistentListOf
 
 private data class ImportOption(
     val insertMode: InstrumentIO.InsertMode,
-    @StringRes val stringResource: Int
+    @param:StringRes val stringResource: Int
 )
 
 private val importOptions = persistentListOf(

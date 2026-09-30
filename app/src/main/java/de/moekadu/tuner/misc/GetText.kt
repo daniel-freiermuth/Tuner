@@ -37,14 +37,14 @@ data class GetTextFromString(
 
 @Serializable
 data class GetTextFromResId(
-    @StringRes val id: Int
+    @param:StringRes val id: Int
 ) : GetText {
     override fun value(context: Context?) = context?.getString(id) ?: ""
 }
 
 @Serializable
 data class GetTextFromResIdWithIntArg(
-    @StringRes val id: Int,
+    @param:StringRes val id: Int,
     val arg: Int
 ) : GetText {
     override fun value(context: Context?) = context?.getString(id, arg) ?: ""

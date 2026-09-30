@@ -40,7 +40,7 @@ import kotlin.random.Random
 @Singleton
 class InstrumentResources @Inject constructor(
     @ApplicationContext context: Context,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ) {
     val store = ResourcesDataStoreBase(context, "instruments")
 

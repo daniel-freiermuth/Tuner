@@ -83,7 +83,7 @@ interface EditableListPredefinedSection<T> {
 }
 
 class EditableListPredefinedSectionImmutable<T>(
-    @StringRes override val sectionStringResourceId: Int,
+    @param:StringRes override val sectionStringResourceId: Int,
     private val items: ImmutableList<T>,
     override val isExpanded: StateFlow<Boolean>,
     override val toggleExpanded: (isExpanded: Boolean) -> Unit
@@ -95,7 +95,7 @@ class EditableListPredefinedSectionImmutable<T>(
 @Stable
 class EditableListData<T>(
     val predefinedItemSections: ImmutableList<EditableListPredefinedSection<T>>,
-    @StringRes val editableItemsSectionResId: Int,
+    @param:StringRes val editableItemsSectionResId: Int,
     val editableItems: StateFlow<PersistentList<T>>,
     val editableItemsExpanded: StateFlow<Boolean>,
     val toggleEditableItemsExpanded: (Boolean) -> Unit,
