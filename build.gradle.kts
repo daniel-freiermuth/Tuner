@@ -8,6 +8,7 @@ plugins {
 //    alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.devtools.ksp) apply false
+    alias(libs.plugins.detekt) apply false
 
 //    id 'com.android.library' version '8.4.1' apply false
 

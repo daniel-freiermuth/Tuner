@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import io.gitlab.arturbosch.detekt.Detekt
+import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 
 plugins {
     alias(libs.plugins.android.application)
@@ -8,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.detekt)
 }
 
 android {
@@ -64,6 +67,18 @@ kotlin {
         allWarningsAsErrors = true
     }
 }
+
+val detektBaseline = rootProject.file("config/detekt/baseline.xml")
+detekt {
+    buildUponDefaultConfig = false
+    config.setFrom(rootProject.file("config/detekt/detekt.yml"))
+    baseline = detektBaseline
+}
+// Variant tasks (detektDebug, ...) would otherwise use baseline-<variant>.xml.
+// Regenerate with ./gradlew detektBaselineDebug: only the type-resolution tasks
+// run UnsafeCallOnNullableType.
+tasks.withType<Detekt>().configureEach { baseline = detektBaseline }
+tasks.withType<DetektCreateBaselineTask>().configureEach { baseline = detektBaseline }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
