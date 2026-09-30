@@ -114,7 +114,7 @@ class InstrumentResources @Inject constructor(
 
     val customInstrumentsExpanded = store.getPreferenceFlow(
         CUSTOM_INSTRUMENTS_EXPANDED_KEY,
-        CustomInstrumentExpandedDefault
+        CUSTOM_INSTRUMENT_EXPANDED_DEFAULT
     )
     fun writeCustomInstrumentsExpanded(expanded: Boolean) {
         applicationScope.launch {
@@ -124,7 +124,7 @@ class InstrumentResources @Inject constructor(
 
     val predefinedInstrumentsExpanded = store.getPreferenceFlow(
         PREDEFINED_INSTRUMENTS_EXPANDED_KEY,
-        PredefinedInstrumentExpandedDefault
+        PREDEFINED_INSTRUMENT_EXPANDED_DEFAULT
     )
     fun writePredefinedInstrumentsExpanded(expanded: Boolean) {
         applicationScope.launch {
@@ -203,8 +203,8 @@ class InstrumentResources @Inject constructor(
 
     companion object {
         private val CustomInstrumentsDefault = persistentListOf<Instrument>()
-        private const val CustomInstrumentExpandedDefault = true
-        private const val PredefinedInstrumentExpandedDefault = true
+        private const val CUSTOM_INSTRUMENT_EXPANDED_DEFAULT = true
+        private const val PREDEFINED_INSTRUMENT_EXPANDED_DEFAULT = true
 
         private val CURRENT_INSTRUMENT_KEY = stringPreferencesKey("current instrument")
         private val CUSTOM_INSTRUMENTS_KEY = stringPreferencesKey("custom instruments")

@@ -161,7 +161,8 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
     onGesture: suspend (centroid: Offset, pan: Offset, zoom: Size) -> Unit,
     onFling: suspend (velocity: Velocity) -> Unit,
     minimumCentroidSize: Dp = 5.dp,
-    maximumFlingVelocity: Dp = 4000.dp // dp / sec
+    // dp / sec
+    maximumFlingVelocity: Dp = 4000.dp
 ) = coroutineScope {
     awaitEachGesture {
         var zoomX = 1f
@@ -177,7 +178,8 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
         launch { onGestureStart() }
         do {
             val event = awaitPointerEvent()
-            val canceled = event.changes.fastAny { it.isConsumed } // && !event.changes.fastAny { it.pressed }
+            // && !event.changes.fastAny { it.pressed }
+            val canceled = event.changes.fastAny { it.isConsumed }
             if (!canceled) {
                 val zoomChange = event.calculateZoomComponentWise(minimumCentroidSize.roundToPx())
                 val centroid = event.calculateCentroid(useCurrent = true)

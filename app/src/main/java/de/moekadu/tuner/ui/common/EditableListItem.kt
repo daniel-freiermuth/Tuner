@@ -105,7 +105,11 @@ fun EditableListItem(
 
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = if (isActive) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surface
+        color = if (isActive) {
+            MaterialTheme.colorScheme.secondaryContainer
+        } else {
+            MaterialTheme.colorScheme.surface
+        }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

@@ -136,7 +136,8 @@ fun FifthJumpOverArrow(
     val density = LocalDensity.current
     val arrowHeightDp = with(density) { arrowHeight.toDp() }
     // val arrowHeight = 12.dp
-    val arrowWidthDp = ((arrowHeightDp * 43) / 50) // aspect 43:50 according to R.drawable.ic_fifths_arrow
+    // aspect 43:50 according to R.drawable.ic_fifths_arrow
+    val arrowWidthDp = ((arrowHeightDp * 43) / 50)
     Column(
         modifier = modifier.width(IntrinsicSize.Max),
         horizontalAlignment = Alignment.CenterHorizontally

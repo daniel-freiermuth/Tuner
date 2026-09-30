@@ -153,8 +153,8 @@ class PitchHistoryState(capacity: Int) {
             sampleRate: Int,
             windowSize: Int,
             overlap: Float
-        ) =
-            (duration / (windowSize.toFloat() / sampleRate.toFloat() * (1.0f - overlap))).roundToInt()
+        ) = (duration / (windowSize.toFloat() / sampleRate.toFloat() * (1.0f - overlap)))
+            .roundToInt()
     }
 }
 
@@ -242,7 +242,8 @@ fun PitchHistory(
             (targetNoteIndex - visibleRangeInIndices)..(targetNoteIndex + visibleRangeInIndices)
         } else if (targetNoteIndex == Int.MAX_VALUE) {
             val frequencyNoteIndex = musicalScale.getClosestNoteIndex(currentFrequency)
-            (frequencyNoteIndex - visibleRangeInIndices)..(frequencyNoteIndex + visibleRangeInIndices)
+            val lower = frequencyNoteIndex - visibleRangeInIndices
+            lower..(frequencyNoteIndex + visibleRangeInIndices)
         } else {
             val frequencyNoteIndex = musicalScale.getNoteIndex(currentFrequency)
             min(

@@ -95,7 +95,8 @@ class SimpleFrequencyDetector(
                 val result = frequencyDetectionResultCollector.collectResults(sampleData)
                 result.incRef()
                 frequencyDetectionResultsChannel.trySend(result)
-                sampleData.decRef() // sampleData is not needed anymore, so we can decrement ref to allow recycling
+                // sampleData is not needed anymore, so we can decrement ref to allow recycling
+                sampleData.decRef()
                 result.decRef()
             }
         }

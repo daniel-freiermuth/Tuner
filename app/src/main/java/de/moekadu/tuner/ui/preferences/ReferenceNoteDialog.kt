@@ -289,7 +289,7 @@ fun ReferenceNoteDialog(
                         selectedNoteIndex =
                             initialState.getNoteIndex2(note) - initialState.noteIndexBegin
                         frequencyAsString =
-                            decimalFormat.format(PreferenceResources.ReferenceFrequencyDefault)
+                            decimalFormat.format(PreferenceResources.REFERENCE_FREQUENCY_DEFAULT)
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

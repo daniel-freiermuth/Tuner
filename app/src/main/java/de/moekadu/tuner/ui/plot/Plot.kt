@@ -225,7 +225,11 @@ fun Plot(
             }
         }
         val resolvedViewPortRaw by animateRectAsState(
-            targetValue = if (gestureBasedViewPort.isActive) gestureBasedViewPort.viewPort else viewPort,
+            targetValue = if (gestureBasedViewPort.isActive) {
+                gestureBasedViewPort.viewPort
+            } else {
+                viewPort
+            },
             label = "animate viewport",
             animationSpec = if (gestureBasedViewPort.isActive) snap(0) else spring()
         )
@@ -246,7 +250,11 @@ fun Plot(
         val transformation by rememberUpdatedState(
             Transformation(
                 viewPortScreen,
-                if (gestureBasedViewPort.isActive) gestureBasedViewPort.viewPort else resolvedViewPortRaw,
+                if (gestureBasedViewPort.isActive) {
+                    gestureBasedViewPort.viewPort
+                } else {
+                    resolvedViewPortRaw
+                },
                 cornerRadiusPx
             )
         )

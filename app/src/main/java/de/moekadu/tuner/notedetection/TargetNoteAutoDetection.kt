@@ -57,7 +57,8 @@ class TargetNoteAutoDetection(
 
     private val sortedAndDistinctInstrumentStrings =
         SortedAndDistinctInstrumentStrings(this.instrument, musicalScale)
-    private val sortedAndDistinctNoteIndices get() = sortedAndDistinctInstrumentStrings.sortedAndDistinctNoteIndices
+    private val sortedAndDistinctNoteIndices get() =
+        sortedAndDistinctInstrumentStrings.sortedAndDistinctNoteIndices
     private val numDifferentNotes get() = sortedAndDistinctInstrumentStrings.numDifferentNotes
 
     /** We need some hysteresis effect, before we changing our current tone estimate
@@ -149,7 +150,8 @@ class TargetNoteAutoDetection(
      */
     private fun getFrequencyRangeWithinWhichWeReturnTheInputNote(note: MusicalNote?): FloatArray {
         when {
-            note == null || (!instrument.isChromatic && numDifferentNotes == 0) -> { // never return the input note
+            // never return the input note
+            note == null || (!instrument.isChromatic && numDifferentNotes == 0) -> {
 //                Log.v("Tuner", "TargetNoteAutoDetection: (!instrument.isChromatic && numDifferentNotes == 0)")
                 return floatArrayOf(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY)
             }
@@ -180,7 +182,8 @@ class TargetNoteAutoDetection(
                 return if (sortedStringListIndex < 0 ||
                     sortedAndDistinctNoteIndices[sortedStringListIndex] == Int.MAX_VALUE
                 ) {
-                    floatArrayOf(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY) // never return input note
+                    // never return input note
+                    floatArrayOf(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY)
                 } else {
                     setFrequencyRangeForInstrumentTarget(sortedStringListIndex)
                 }

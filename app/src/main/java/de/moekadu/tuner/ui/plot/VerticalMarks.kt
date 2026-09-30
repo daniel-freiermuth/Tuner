@@ -44,7 +44,8 @@ data class VerticalMark(
         val anchor: Anchor = Anchor.Center,
         val labelPosition: Float = 0.5f,
         val lineWidth: Dp = 1.dp,
-        val lineColor: Color = Color.Unspecified, // TODO: Color.Unspecified is not allowed, how to handle this?
+        // TODO: Color.Unspecified is not allowed, how to handle this?
+        val lineColor: Color = Color.Unspecified,
         val screenOffset: DpOffset = DpOffset.Zero
     )
     override fun Density.modifyParentData(parentData: Any?) = this@VerticalMark
