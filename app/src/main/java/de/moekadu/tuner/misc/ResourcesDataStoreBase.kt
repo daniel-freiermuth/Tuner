@@ -85,11 +85,7 @@ class ResourcesDataStoreBase(@ApplicationContext context: Context, filename: Str
             if (it == null) {
                 default
             } else {
-                try {
-                    Json.decodeFromString<T>(it)
-                } catch (ex: Exception) {
-                    default
-                }
+                readPersistedOrElse(read = { Json.decodeFromString<T>(it) }, fallback = { default })
             }
         }
         .stateIn(scope, SharingStarted.Eagerly, default)

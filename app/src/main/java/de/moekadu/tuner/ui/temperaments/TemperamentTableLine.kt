@@ -555,7 +555,7 @@ fun TemperamentTableLine(
 @Composable
 private fun TemperamentTableLinePreview() {
     TunerTheme {
-        val notes = remember { NoteNamesEDOGenerator.getNoteNames(12, null)!! }
+        val notes = remember { checkNotNull(NoteNamesEDOGenerator.getNoteNames(12, null)) }
 
         Column {
             notes.notes.forEachIndexed { index, note ->

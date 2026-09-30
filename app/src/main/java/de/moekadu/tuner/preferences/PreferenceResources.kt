@@ -32,6 +32,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.moekadu.tuner.hilt.ApplicationScope
+import de.moekadu.tuner.misc.readPersistedOrElse
 import de.moekadu.tuner.notedetection.WindowingFunction
 import de.moekadu.tuner.ui.notes.NotePrintOptions
 import javax.inject.Inject
@@ -275,11 +276,7 @@ class PreferenceResources @Inject constructor(
             if (s == null) {
                 default
             } else {
-                try {
-                    Json.decodeFromString<T>(s)
-                } catch (ex: Exception) {
-                    default
-                }
+                readPersistedOrElse(read = { Json.decodeFromString<T>(s) }, fallback = { default })
             }
         }
         .stateIn(scope, SharingStarted.Eagerly, default)

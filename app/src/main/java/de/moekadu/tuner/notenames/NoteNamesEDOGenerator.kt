@@ -158,7 +158,7 @@ private fun ExtendedModifier.toNoteModifier(): NoteModifier = when {
 
     sharpness == 3 && ups == 3 -> NoteModifier.SharpSharpSharpUpUpUp
 
-    else -> throw RuntimeException(
+    else -> throw IllegalArgumentException(
         "Unknown NoteModifier for sharpness = $sharpness and ups = $ups"
     )
 }
@@ -332,7 +332,7 @@ private fun generateNoteNamesImpl(notesPerOctave: Int): Array<MusicalNote> {
 
                     GeneralSecondIntervalItem.NOT_DEFINED -> BaseNote.None
 
-                    else -> throw RuntimeException(
+                    else -> error(
                         "Invalid base note step, note0Index=${secondIntervalItem.note0Index}"
                     )
                 }
@@ -343,7 +343,7 @@ private fun generateNoteNamesImpl(notesPerOctave: Int): Array<MusicalNote> {
 
                     GeneralSecondIntervalItem.NOT_DEFINED -> BaseNote.None
 
-                    else -> throw RuntimeException(
+                    else -> error(
                         "Invalid base note step, note1Index=${secondIntervalItem.note1Index}"
                     )
                 }

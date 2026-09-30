@@ -125,13 +125,22 @@ private fun sharpnessToModifier(sharpness: Int): NoteModifier? = when (sharpness
 
 private fun NoteModifier.toSharpness() = when (this) {
     NoteModifier.FlatFlatFlat -> -3
+
     NoteModifier.FlatFlat -> -2
+
     NoteModifier.Flat -> -1
+
     NoteModifier.None -> 0
+
     NoteModifier.Sharp -> 1
+
     NoteModifier.SharpSharp -> 2
+
     NoteModifier.SharpSharpSharp -> 3
-    else -> throw RuntimeException("NoteWithSharpness: Only modifiers without ups/downs allowed")
+
+    else -> throw IllegalArgumentException(
+        "NoteWithSharpness: Only modifiers without ups/downs allowed"
+    )
 }
 
 private fun BaseNote.toIndex() = when (this) {
@@ -149,7 +158,7 @@ private fun BaseNote.toIndex() = when (this) {
 
     BaseNote.B -> 6
 
-    BaseNote.None -> throw RuntimeException(
+    BaseNote.None -> throw IllegalArgumentException(
         "BaseNote.toIndex: Note allowed to call for BaseNote.None"
     )
 }

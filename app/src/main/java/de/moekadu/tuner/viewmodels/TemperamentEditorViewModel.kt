@@ -271,18 +271,17 @@ class TemperamentEditorViewModel @AssistedInject constructor(
             values.size - 1,
             null
         )
-        val useDefaultNoteNames = checkIfDefaultNoteNames(
-            noteNameList,
-            predefinedNoteNames?.notes
-        )
+        val defaultNoteNames = predefinedNoteNames?.notes?.takeIf {
+            checkIfDefaultNoteNames(noteNameList, it)
+        }
 
 //        val defaultReferenceNote = values.firstOrNull {
 //            (it.note?.base == BaseNote.A && it.note?.modifier == NoteModifier.None)
 //                    || (it.note?.enharmonicBase == BaseNote.A && it.note?.enharmonicModifier == NoteModifier.None)
 //        }?.note ?: values.firstOrNull{ it.note != null }?.note ?: return false
 
-        val noteNames = if (useDefaultNoteNames) {
-            predefinedNoteNames!!.notes
+        val noteNames = if (defaultNoteNames != null) {
+            defaultNoteNames
         } else {
             noteNameList.toTypedArray()
             // NoteNames2(

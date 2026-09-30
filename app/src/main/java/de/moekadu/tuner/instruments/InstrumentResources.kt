@@ -25,6 +25,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.misc.ResourcesDataStoreBase
+import de.moekadu.tuner.misc.readPersistedOrElse
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.random.Random
@@ -54,22 +55,22 @@ class InstrumentResources @Inject constructor(
         CURRENT_INSTRUMENT_KEY,
         predefinedInstruments[0]
     ) {
-        try {
-            val instrument = Json.decodeFromString<Instrument>(it)
-            if (instrument.isPredefined()) {
-                reloadPredefinedInstrumentIfNeeded(instrument, predefinedInstruments)
-            } else {
-                instrument
+        readPersistedOrElse(
+            read = {
+                val instrument = Json.decodeFromString<Instrument>(it)
+                if (instrument.isPredefined()) {
+                    reloadPredefinedInstrumentIfNeeded(instrument, predefinedInstruments)
+                } else {
+                    instrument
+                }
+            },
+            fallback = {
+                readPersistedOrElse(
+                    read = { Json.decodeFromString<InstrumentOld>(it).toNew() },
+                    fallback = { predefinedInstruments[0] }
+                )
             }
-        } catch (ex: IllegalArgumentException) {
-            try {
-                Json.decodeFromString<InstrumentOld>(it).toNew()
-            } catch (ex2: Exception) {
-                predefinedInstruments[0]
-            }
-        } catch (ex: Exception) {
-            instrumentDatabase[0]
-        }
+        )
     }
 
     fun writeCurrentInstrument(instrument: Instrument) {
@@ -87,11 +88,10 @@ class InstrumentResources @Inject constructor(
         CUSTOM_INSTRUMENTS_KEY,
         CustomInstrumentsDefault
     ) {
-        try {
-            Json.decodeFromString<Array<Instrument>>(it).toList().toPersistentList()
-        } catch (ex: Exception) {
-            CustomInstrumentsDefault
-        }
+        readPersistedOrElse(
+            read = { Json.decodeFromString<Array<Instrument>>(it).toList().toPersistentList() },
+            fallback = { CustomInstrumentsDefault }
+        )
     }
 
 //

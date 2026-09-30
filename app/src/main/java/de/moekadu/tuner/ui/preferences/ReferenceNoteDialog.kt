@@ -79,17 +79,16 @@ import java.text.ParsePosition
  * @param string String to be parsed.
  * @return String as float of null if failed.
  */
-private fun DecimalFormat.toFloatOrNull(string: String): Float? = try {
+private fun DecimalFormat.toFloatOrNull(string: String): Float? {
     val trimmed = string.trim()
     val position = ParsePosition(0)
+    // parse(String, ParsePosition) does not throw; it returns null if parsing fails.
     val result = this.parse(trimmed, position)?.toFloat()
-    if (position.index == trimmed.length) {
+    return if (position.index == trimmed.length) {
         result
     } else {
         null
     }
-} catch (ex: Exception) {
-    null
 }
 
 /** Interface for frequency detector as used by the RereferenceNoteDialog. */

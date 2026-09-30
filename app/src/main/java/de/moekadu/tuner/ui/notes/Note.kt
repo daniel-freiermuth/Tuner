@@ -622,14 +622,14 @@ fun NoteWithEnharmonic(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        val printDefault = musicalNote.base != BaseNote.None && noteAsString != null
-        val printEnharmonic = (
-            musicalNote.enharmonicBase != BaseNote.None &&
-                noteAsStringEnharmonic != null &&
-                properties != propertiesEnharmonic
-            )
-        if (printDefault) {
-            Text(text = noteAsString!!, color = colorResolved)
+        val defaultText = noteAsString?.takeIf { musicalNote.base != BaseNote.None }
+        val enharmonicText = noteAsStringEnharmonic?.takeIf {
+            musicalNote.enharmonicBase != BaseNote.None && properties != propertiesEnharmonic
+        }
+        val printDefault = defaultText != null
+        val printEnharmonic = enharmonicText != null
+        if (defaultText != null) {
+            Text(text = defaultText, color = colorResolved)
         }
         if (printDefault && printEnharmonic) {
             Text(
@@ -640,8 +640,8 @@ fun NoteWithEnharmonic(
                 style = style ?: LocalTextStyle.current
             )
         }
-        if (printEnharmonic) {
-            Text(text = noteAsStringEnharmonic!!, color = colorResolved)
+        if (enharmonicText != null) {
+            Text(text = enharmonicText, color = colorResolved)
         }
     }
 }
