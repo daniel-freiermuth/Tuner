@@ -240,6 +240,8 @@
     <string name="black_night_mode">Black background in dark mode</string>
     <string name="system_color_accents">Color accents from system</string>
     <string name="incorrect_temperament">Incompatible temperament!</string>
+    <string name="key_signature_sharp">Key signature: one more sharp or one less flat</string>
+    <string name="key_signature_flat">Key signature: one more flat or one less sharp</string>
     <string name="ok">OK</string>
     <string name="new_temperament_requires_adapting_reference_note">New temperament requires adapting the reference note!</string>
     <string name="comma_separator">,\ </string>

@@ -57,6 +57,10 @@ class InstrumentTunerViewModel @Inject constructor(
     override val musicalScale: StateFlow<MusicalScale2> get() = temperaments.musicalScale
     override val notePrintOptions: StateFlow<NotePrintOptions> get() = pref.notePrintOptions
     override val toleranceInCents: StateFlow<Int> get() = pref.toleranceInCents
+    override val keySignature: StateFlow<Int> get() = pref.keySignature
+    override fun onKeySignatureChanged(keySignature: Int) {
+        pref.writeKeySignature(keySignature)
+    }
 
     private var autodetectedTargetNote = musicalScale.value.referenceNote
     private var currentSmoothedFrequency = musicalScale.value.referenceFrequency
@@ -81,14 +85,14 @@ class InstrumentTunerViewModel @Inject constructor(
 
     override val instrument: StateFlow<Instrument> get() = instruments.currentInstrument
 
-    override var strings by mutableStateOf<ImmutableList<StringWithInfo>?>(
+    override var strings by mutableStateOf(
         instrument.value.strings.mapIndexed { index, note ->
             StringWithInfo(note, index) // , musicalScale.value.getNoteIndex(note))
         }.toImmutableList()
     )
         private set
 
-    override val stringsState = StringsState(-musicalScale.value.noteIndexBegin)
+    override val stringsState = StringsState(0)
 
     override fun onStringClicked(key: Int, note: MusicalNote) {
         selectedNoteKey = if (selectedNoteKey == key) null else key
@@ -168,7 +172,7 @@ class InstrumentTunerViewModel @Inject constructor(
                 musicalScale.value.noteIndexBegin + selectedNoteKey
             )
         } else {
-            strings?.find { it.key == selectedNoteKey }?.note ?: autodetectedTargetNote
+            strings.find { it.key == selectedNoteKey }?.note ?: autodetectedTargetNote
         }
 
         if (selectedNoteKey != null) {
