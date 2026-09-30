@@ -52,12 +52,12 @@ data class StringOrResId(val string: String?, @param:StringRes val resId: Int?) 
     } else if (resId != null && context != null) {
         context.getString(resId)
     } else if (resId != null) {
-        throw RuntimeException(
+        error(
             "StringOrResId: Value based on resource id needs context for" +
                 " resolving the string."
         )
     } else {
-        throw RuntimeException("StringOrResId: No valid string available.")
+        error("StringOrResId: No valid string available.")
     }
 
     fun toGetText(): GetText = if (resId != null) {

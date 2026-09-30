@@ -40,7 +40,9 @@ data class Temperament3RationalNumbersEDONames(
     override fun possibleRootNotes(): Array<MusicalNote> =
         NoteNamesEDOGenerator.possibleRootNotes(size)
     override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
-        NoteNamesEDOGenerator.getNoteNames(size, rootNote)!!
+        checkNotNull(NoteNamesEDOGenerator.getNoteNames(size, rootNote)) {
+            "Cannot generate note names for $size notes per octave"
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

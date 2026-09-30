@@ -1,8 +1,6 @@
 # Deny-level crash-safety rules. This file is used without detekt's default
 # config (buildUponDefaultConfig = false), so only the rules enabled here run
-# and any finding fails the build (maxIssues: 0).
-# Pre-existing findings are recorded in baseline.xml; regenerate it with
-# ./gradlew detektBaselineDebug after fixing some.
+# and any finding fails the build (maxIssues: 0). There is no baseline.
 
 build:
   maxIssues: 0

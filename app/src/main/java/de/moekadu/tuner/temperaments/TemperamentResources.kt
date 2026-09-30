@@ -27,6 +27,7 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.misc.DefaultValues
 import de.moekadu.tuner.misc.ResourcesDataStoreBase
+import de.moekadu.tuner.misc.readPersistedOrElse
 import de.moekadu.tuner.musicalscale.MusicalScale
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notenames.MusicalNote
@@ -81,18 +82,20 @@ class TemperamentResources @Inject constructor(
         CUSTOM_TEMPERAMENTS_KEY,
         CustomTemperamentsDefault
     ) {
-        try {
-            Json.decodeFromString<Array<Temperament3Custom>>(it).toList().toPersistentList()
-        } catch (ex: IllegalArgumentException) {
-            try {
-                Json.decodeFromString<Array<TemperamentWithNoteNames>>(it)
-                    .map { old -> old.toNew() }.toPersistentList()
-            } catch (ex: Exception) {
-                CustomTemperamentsDefault
+        readPersistedOrElse(
+            read = {
+                Json.decodeFromString<Array<Temperament3Custom>>(it).toList().toPersistentList()
+            },
+            fallback = {
+                readPersistedOrElse(
+                    read = {
+                        Json.decodeFromString<Array<TemperamentWithNoteNames>>(it)
+                            .map { old -> old.toNew() }.toPersistentList()
+                    },
+                    fallback = { CustomTemperamentsDefault }
+                )
             }
-        } catch (ex: Exception) {
-            CustomTemperamentsDefault
-        }
+        )
     }
 
     private val musicalScaleDefault = MusicalScale2(
@@ -108,27 +111,28 @@ class TemperamentResources @Inject constructor(
         MUSICAL_SCALE_KEY,
         musicalScaleDefault
     ) {
-        try {
-            // the "reload" will reload a temperament if it is a predefined temperament.
-            // this ensures that all string resources are updated correctly. For custom instruments
-            // this will just return the musical scale as it is.
-            reloadPredefinedTemperamentIfNeeded(
-                musicalScale = Json.decodeFromString<MusicalScale2>(it),
-                predefinedTemperaments = predefinedTemperaments
-            )
-        } catch (ex: IllegalArgumentException) {
-            try {
-//                Log.v("Tuner", "TemperamentResources: Trying to load old format scale")
+        readPersistedOrElse(
+            read = {
+                // the "reload" will reload a temperament if it is a predefined temperament.
+                // this ensures that all string resources are updated correctly. For custom
+                // instruments this will just return the musical scale as it is.
                 reloadPredefinedTemperamentIfNeeded(
-                    musicalScale = Json.decodeFromString<MusicalScale>(it).toNew(),
+                    musicalScale = Json.decodeFromString<MusicalScale2>(it),
                     predefinedTemperaments = predefinedTemperaments
                 )
-            } catch (ex: Exception) {
-                musicalScaleDefault
+            },
+            fallback = {
+                readPersistedOrElse(
+                    read = {
+                        reloadPredefinedTemperamentIfNeeded(
+                            musicalScale = Json.decodeFromString<MusicalScale>(it).toNew(),
+                            predefinedTemperaments = predefinedTemperaments
+                        )
+                    },
+                    fallback = { musicalScaleDefault }
+                )
             }
-        } catch (ex: Exception) {
-            musicalScaleDefault
-        }
+        )
     }
 //    val musicalScale = store.getSerializablePreferenceFlow(
 //        MUSICAL_SCALE_KEY,

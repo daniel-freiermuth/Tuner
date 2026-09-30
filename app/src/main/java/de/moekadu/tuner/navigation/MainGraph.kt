@@ -57,25 +57,6 @@ import de.moekadu.tuner.viewmodels.TemperamentDialog2ViewModel
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-@Composable
-private fun createTemperamentDialogViewModel(
-    controller: NavController,
-    backStackEntry: NavBackStackEntry
-): TemperamentDialog2ViewModel? {
-    val parentEntry = remember(backStackEntry) {
-        try {
-            controller.getBackStackEntry<TemperamentDialogRoute>()
-        } catch (ex: IllegalArgumentException) {
-            null
-        }
-    }
-    return if (parentEntry == null) {
-        null
-    } else {
-        hiltViewModel<TemperamentDialog2ViewModel>(parentEntry)
-    }
-}
-
 fun NavGraphBuilder.mainGraph(
     controller: NavController,
     onNavigateUpClicked: () -> Unit,
@@ -206,10 +187,7 @@ fun NavGraphBuilder.mainGraph(
 
     composable<TemperamentDialogRoute> { route ->
         val resources = LocalContext.current.resources
-        val viewModel: TemperamentDialog2ViewModel = createTemperamentDialogViewModel(
-            controller = controller,
-            backStackEntry = route
-        )!!
+        val viewModel: TemperamentDialog2ViewModel = hiltViewModel(route)
         val context = LocalContext.current
 
         TemperamentsDialog2(

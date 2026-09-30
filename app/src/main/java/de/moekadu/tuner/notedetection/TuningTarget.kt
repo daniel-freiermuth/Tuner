@@ -132,7 +132,9 @@ class TuningTargetComputer(
             previousTargetNote
         )
         // the returned note will always be non null for chromatic instruments and non-zero frequencies
-        val index = musicalScale.getNoteIndex2(chromaticTargetNote!!)
+        val index = musicalScale.getNoteIndex2(
+            checkNotNull(chromaticTargetNote) { "No chromatic target note for $frequency Hz" }
+        )
         return TuningTarget(
             chromaticTargetNote,
             musicalScale.getNoteFrequency(index),

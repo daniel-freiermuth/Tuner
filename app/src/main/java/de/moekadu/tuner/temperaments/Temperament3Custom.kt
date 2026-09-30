@@ -48,7 +48,7 @@ data class Temperament3Custom(
         if (ratio != null) {
             ratioToCents(ratio.toDouble())
         } else {
-            cents.getOrNull(it) ?: throw RuntimeException("Cent value not defined at index $it")
+            cents.getOrNull(it) ?: error("Cent value not defined at index $it")
         }
     }
 
@@ -67,7 +67,9 @@ data class Temperament3Custom(
 
     override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
         if (_noteNames.isNullOrEmpty() || _noteNames.size != size) {
-            NoteNamesEDOGenerator.getNoteNames(size, rootNote)!!
+            checkNotNull(NoteNamesEDOGenerator.getNoteNames(size, rootNote)) {
+                "Cannot generate note names for $size notes per octave"
+            }
         } else {
             val referenceNote = NoteNameHelpers.findDefaultReferenceNote(_noteNames)
             val octaveSwitchAt = _noteNames[0]

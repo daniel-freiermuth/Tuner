@@ -1,5 +1,3 @@
-import io.gitlab.arturbosch.detekt.Detekt
-import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -69,17 +67,10 @@ kotlin {
     }
 }
 
-val detektBaseline = rootProject.file("config/detekt/baseline.xml")
 detekt {
     buildUponDefaultConfig = false
     config.setFrom(rootProject.file("config/detekt/detekt.yml"))
-    baseline = detektBaseline
 }
-// Variant tasks (detektDebug, ...) would otherwise use baseline-<variant>.xml.
-// Regenerate with ./gradlew detektBaselineDebug: only the type-resolution tasks
-// run UnsafeCallOnNullableType.
-tasks.withType<Detekt>().configureEach { baseline = detektBaseline }
-tasks.withType<DetektCreateBaselineTask>().configureEach { baseline = detektBaseline }
 
 ktlint {
     // Style rules live in /.editorconfig.

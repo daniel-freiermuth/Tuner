@@ -295,7 +295,7 @@ fun NoteSelector(
 @Composable
 private fun NoteSelectorPreview() {
     TunerTheme {
-        val noteNameScale = remember { NoteNamesEDOGenerator.getNoteNames(53, null) }
+        val noteNameScale = remember { checkNotNull(NoteNamesEDOGenerator.getNoteNames(53, null)) }
 
         val notePrintOptions = remember {
             NotePrintOptions(
@@ -309,7 +309,7 @@ private fun NoteSelectorPreview() {
         Column {
             NoteSelector(
                 selectedIndex = selectedIndex,
-                notes = noteNameScale!!.notes,
+                notes = noteNameScale.notes,
                 notePrintOptions = notePrintOptions
             ) { selectedIndex = it }
             Spacer(modifier = Modifier.height(12.dp))
