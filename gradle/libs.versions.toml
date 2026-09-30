@@ -10,6 +10,7 @@ composeBom = "2025.07.00"
 coreKtx = "1.16.0"
 coreTesting = "1.1.1"
 datastore = "1.1.7"
+detekt = "1.23.8"
 espressoCore = "3.6.1"
 hilt = "2.56.2"
 junit = "4.13.2"
@@ -66,5 +67,6 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin"}
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 #kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin"}
