@@ -55,8 +55,8 @@ import de.moekadu.tuner.misc.ShareData
 import de.moekadu.tuner.misc.getFilenameFromUri
 import de.moekadu.tuner.misc.toastPotentialFileCheckError
 import de.moekadu.tuner.notenames.MusicalNote
-import de.moekadu.tuner.temperaments.RationalNumber
 import de.moekadu.tuner.temperaments.EditableTemperament
+import de.moekadu.tuner.temperaments.RationalNumber
 import de.moekadu.tuner.temperaments.Temperament3
 import de.moekadu.tuner.temperaments.Temperament3Custom
 import de.moekadu.tuner.temperaments.TemperamentIO
@@ -79,11 +79,7 @@ interface TemperamentsDialog2Data {
     val defaultTemperament: Temperament3
     fun proposeRootNote(temperament: Temperament3): MusicalNote
 
-    fun saveTemperaments(
-        context: Context,
-        uri: Uri,
-        temperaments: List<Temperament3Custom>
-    )
+    fun saveTemperaments(context: Context, uri: Uri, temperaments: List<Temperament3Custom>)
 }
 
 @Composable
@@ -95,13 +91,15 @@ private fun rememberImportExportCallbacks(
     val stateUpdated by rememberUpdatedState(newValue = state)
     val onLoadTemperamentsUpdated by rememberUpdatedState(newValue = onLoadTemperaments)
 
-    val saveTemperamentsLauncher =  rememberLauncherForActivityResult(
+    val saveTemperamentsLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("text/plain")
     ) { uri ->
         if (uri != null) {
             val temperaments = stateUpdated.listData.extractSelectedItems()
             stateUpdated.saveTemperaments(
-                context, uri, temperaments.filterIsInstance<Temperament3Custom>()
+                context,
+                uri,
+                temperaments.filterIsInstance<Temperament3Custom>()
             )
             stateUpdated.listData.clearSelectedItems()
             val filename = getFilenameFromUri(context, uri)
@@ -113,10 +111,14 @@ private fun rememberImportExportCallbacks(
                     temperaments.size,
                     filename
                 ),
-                Toast.LENGTH_LONG).show()
+                Toast.LENGTH_LONG
+            ).show()
         } else {
-            Toast.makeText(context,
-                R.string.failed_to_archive_items, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                R.string.failed_to_archive_items,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -142,12 +144,13 @@ private fun rememberImportExportCallbacks(
         }
     }
     return remember(context) {
-        object: OverflowMenuCallbacks {
+        object : OverflowMenuCallbacks {
             override fun onDeleteClicked() {
-                if (stateUpdated.listData.selectedItems.value.isNotEmpty())
+                if (stateUpdated.listData.selectedItems.value.isNotEmpty()) {
                     stateUpdated.listData.deleteSelectedItems()
-                else
+                } else {
                     stateUpdated.listData.deleteAllItems()
+                }
             }
             override fun onShareClicked() {
                 val temperaments = stateUpdated.listData.extractSelectedItems()
@@ -160,7 +163,7 @@ private fun rememberImportExportCallbacks(
                         TemperamentIO.temperamentsListToString(context, temperaments),
                         temperaments.size
                     )
-                    //val intent = ShareInstruments.createShareInstrumentsIntent(context, instruments)
+                    // val intent = ShareInstruments.createShareInstrumentsIntent(context, instruments)
                     shareTemperamentsLauncher.launch(intent)
                 }
             }
@@ -172,7 +175,7 @@ private fun rememberImportExportCallbacks(
                 }
             }
             override fun onImportClicked() {
-                importTemperamentsLauncher.launch(arrayOf("text/plain", "application/octet-stream"))  // text/plain or */*
+                importTemperamentsLauncher.launch(arrayOf("text/plain", "application/octet-stream")) // text/plain or */*
             }
             override fun onSettingsClicked() {
                 // onPreferenceButtonClicked()
@@ -185,7 +188,7 @@ private fun rememberImportExportCallbacks(
 fun TemperamentsDialog2(
     state: TemperamentsDialog2Data,
     modifier: Modifier = Modifier,
-    onEditTemperamentClicked: (temperament: Temperament3, copy: Boolean) -> Unit = { _, _ ->},
+    onEditTemperamentClicked: (temperament: Temperament3, copy: Boolean) -> Unit = { _, _ -> },
     onTemperamentClicked: (temperament: Temperament3, rootNote: MusicalNote) -> Unit = { _, _ -> },
     onLoadTemperaments: (temperaments: List<EditableTemperament>) -> Unit = { },
     onTemperamentInfoClicked: (temperament: Temperament3) -> Unit = { },
@@ -259,7 +262,10 @@ fun TemperamentsDialog2(
             Row {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        onTemperamentClicked(state.defaultTemperament, state.defaultTemperament.possibleRootNotes()[0])
+                        onTemperamentClicked(
+                            state.defaultTemperament,
+                            state.defaultTemperament.possibleRootNotes()[0]
+                        )
                     },
                     containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                     elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
@@ -276,7 +282,9 @@ fun TemperamentsDialog2(
                     onClick = {
                         onEditTemperamentClicked(
                             Temperament3Custom(
-                                _name = "", _abbreviation = "", _description = "",
+                                _name = "",
+                                _abbreviation = "",
+                                _description = "",
                                 cents = DoubleArray(13) { it * 100.0 },
                                 _rationalNumbers = arrayOf(),
                                 _noteNames = null,
@@ -335,10 +343,13 @@ fun TemperamentsDialog2(
                 onOptionsClicked = {
                     when (it) {
                         ListItemTask.Edit -> onEditTemperamentClicked(item, false)
+
                         ListItemTask.Copy -> onEditTemperamentClicked(item, true)
+
                         ListItemTask.Delete -> {
                             state.listData.deleteItems(persistentSetOf(item.stableId))
                         }
+
                         ListItemTask.Info -> onTemperamentInfoClicked(item)
                     }
                 },
@@ -354,26 +365,34 @@ fun TemperamentsDialog2(
 
 private class TestTemperamentDialog2Data : TemperamentsDialog2Data {
     private val testTemperament1 = Temperament3Custom(
-        _name = "Test1", _abbreviation = "T1", _description = "Describing Test 1",
-        cents = DoubleArray(13) { it * 100.0 }, _rationalNumbers = arrayOf(),
+        _name = "Test1",
+        _abbreviation = "T1",
+        _description = "Describing Test 1",
+        cents = DoubleArray(13) { it * 100.0 },
+        _rationalNumbers = arrayOf(),
         _noteNames = null,
         stableId = 1L
     )
 
     private val testTemperament2 = Temperament3Custom(
-        _name = "Test 2", _abbreviation = "T2", _description = "Describing Test 2",
+        _name = "Test 2",
+        _abbreviation = "T2",
+        _description = "Describing Test 2",
         cents = doubleArrayOf(
             0.0, 12.0, 140.0, 320.0, 410.0, 540.0, 610.0, 720.0, 810.0, 910.0, 1020.0, 1100.0, 1200.0
         ),
-        _rationalNumbers = arrayOf(), _noteNames = null,
+        _rationalNumbers = arrayOf(),
+        _noteNames = null,
         2L
     )
 
     private val testTemperament3 = Temperament3Custom(
-        _name = "Test 3", _abbreviation = "T3", _description = "Describing Test 3, ratios",
+        _name = "Test 3",
+        _abbreviation = "T3",
+        _description = "Describing Test 3, ratios",
         cents = doubleArrayOf(),
         _rationalNumbers = (0..12).map {
-            RationalNumber(12+it, 12)
+            RationalNumber(12 + it, 12)
         }.toTypedArray(),
         _noteNames = null,
         3L
@@ -402,9 +421,8 @@ private class TestTemperamentDialog2Data : TemperamentsDialog2Data {
         toggleEditableItemsExpanded = { customTemperamentsExpanded.value = it }
     )
 
-    override fun proposeRootNote(temperament: Temperament3): MusicalNote {
-       return temperament.possibleRootNotes()[0]
-    }
+    override fun proposeRootNote(temperament: Temperament3): MusicalNote =
+        temperament.possibleRootNotes()[0]
     override fun saveTemperaments(
         context: Context,
         uri: Uri,
@@ -424,4 +442,3 @@ private fun TemperamentsDialog2Preview() {
         )
     }
 }
-

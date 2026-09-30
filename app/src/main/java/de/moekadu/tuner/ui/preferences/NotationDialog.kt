@@ -111,7 +111,8 @@ private fun NotationDialogTest() {
             notePrintOptions = notePrintOptions,
             onNotationChange = { n, h ->
                 notePrintOptions = notePrintOptions.copy(
-                    notationType = n, helmholtzNotation = h
+                    notationType = n,
+                    helmholtzNotation = h
                 )
             }
         )

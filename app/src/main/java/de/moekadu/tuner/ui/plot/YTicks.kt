@@ -64,13 +64,13 @@ fun rememberTextLabelHeight(
     paddingTop: Dp = 0.dp,
     paddingBottom: Dp = 0.dp,
     textMeasurer: TextMeasurer = rememberTextMeasurer()
-): Float {
-    return remember(textMeasurer, density, paddingTop, paddingBottom, style) {
-        with(density) {
-            (textMeasurer.measure("X", style = style, density = density).size.height
-                    + paddingTop.toPx()
-                    + paddingBottom.toPx())
-        }
+): Float = remember(textMeasurer, density, paddingTop, paddingBottom, style) {
+    with(density) {
+        (
+            textMeasurer.measure("X", style = style, density = density).size.height +
+                paddingTop.toPx() +
+                paddingBottom.toPx()
+            )
     }
 }
 
@@ -85,10 +85,11 @@ private fun computeRange(
 ): TicksRange {
     val screenOffsetPx = with(density) { screenOffset.y.toPx() }
     val lineWidthPx = with(density) { lineWidth.toPx() }
-    val maxNumLabelsResolved = if (maxNumLabels <= 0)
+    val maxNumLabelsResolved = if (maxNumLabels <= 0) {
         (transformation.viewPortScreen.height / maxLabelHeight / 2f).roundToInt()
-    else
-       maxNumLabels
+    } else {
+        maxNumLabels
+    }
 
     val labelHeightScreen = Rect(
         0f,
@@ -105,19 +106,15 @@ private fun computeRange(
         maxNumLabelsResolved,
         labelHeightRaw
     )
-    //myLog("rememberRange: $labelHeightScreen, raw=${transformation.viewPortRaw}, screen=${transformation.viewPortScreen}, range=$range")
+    // myLog("rememberRange: $labelHeightScreen, raw=${transformation.viewPortRaw}, screen=${transformation.viewPortScreen}, range=$range")
     return range
 }
 
-private data class YTickLayoutData(val position: Float):
-    ParentDataModifier {
+private data class YTickLayoutData(val position: Float) : ParentDataModifier {
     override fun Density.modifyParentData(parentData: Any?) = this@YTickLayoutData
 }
 
-private data class MeasuredYTick(
-    val position: YTickLayoutData,
-    val placeable: Placeable
-)
+private data class MeasuredYTick(val position: YTickLayoutData, val placeable: Placeable)
 
 @Composable
 private fun YTickLabels(
@@ -135,7 +132,15 @@ private fun YTickLabels(
     Layout(
         content = {
             val density = LocalDensity.current
-            val range by remember(tickLevel, maxLabelHeight, lineWidth, screenOffset, maxNumLabels, density, transformation) {
+            val range by remember(
+                tickLevel,
+                maxLabelHeight,
+                lineWidth,
+                screenOffset,
+                maxNumLabels,
+                density,
+                transformation
+            ) {
                 derivedStateOf {
                     computeRange(
                         tickLevel,
@@ -152,7 +157,7 @@ private fun YTickLabels(
                 for (i in range.indexBegin until range.indexEnd) {
                     val y = tickLevel.getTickValue(range.level, i)
                     //          modifier       , level      , index, y
-                    key(i){ l(YTickLayoutData(y), range.level, i,     y) }
+                    key(i) { l(YTickLayoutData(y), range.level, i, y) }
                 }
             }
         },
@@ -173,7 +178,7 @@ private fun YTickLabels(
                 val yOffset = Offset(0f, it.position.position)
                 val yTransformed = transform.toScreen(yOffset).y
                 val vp = transform.viewPortScreen
-                val visible = yTransformed in vp.top.toFloat() .. vp.bottom.toFloat()
+                val visible = yTransformed in vp.top.toFloat()..vp.bottom.toFloat()
                 if (clipLabelToPlotWindow || visible) {
                     p.place(
                         anchor.place(
@@ -207,7 +212,15 @@ private fun YTicksLines(
         }
     }
     val density = LocalDensity.current
-    val range by remember(tickLevel, maxLabelHeight, lineWidth, screenOffset, maxNumLabels, density, transformation) {
+    val range by remember(
+        tickLevel,
+        maxLabelHeight,
+        lineWidth,
+        screenOffset,
+        maxNumLabels,
+        density,
+        transformation
+    ) {
         derivedStateOf {
             computeRange(
                 tickLevel,

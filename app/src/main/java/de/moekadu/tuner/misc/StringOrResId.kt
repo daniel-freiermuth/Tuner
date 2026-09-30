@@ -31,14 +31,12 @@ import kotlinx.serialization.Serializable
  * @param resId String resource id or null if string is not null.
  */
 @Serializable
-data class StringOrResId(
-    val string: String?,
-    @param:StringRes val resId: Int?
-) {
+data class StringOrResId(val string: String?, @param:StringRes val resId: Int?) {
     /** Create a new value based on an explicit string.
      * @param string String as underlying value.
      */
     constructor(string: String) : this(string, null)
+
     /** Create a new value based on an string resource id.
      * @param resId Resource id as underlying value.
      */
@@ -49,26 +47,22 @@ data class StringOrResId(
      *   based on resource ids.
      * @return String.
      */
-    fun value(context: Context?):  String {
-        return if (string != null) {
-            string
-        } else if (resId != null && context != null) {
-            context.getString(resId)
-        } else if (resId != null) {
-            throw RuntimeException(
-                "StringOrResId: Value based on resource id needs context for"
-                + " resolving the string."
-            )
-        } else {
-            throw RuntimeException("StringOrResId: No valid string available.")
-        }
+    fun value(context: Context?): String = if (string != null) {
+        string
+    } else if (resId != null && context != null) {
+        context.getString(resId)
+    } else if (resId != null) {
+        throw RuntimeException(
+            "StringOrResId: Value based on resource id needs context for" +
+                " resolving the string."
+        )
+    } else {
+        throw RuntimeException("StringOrResId: No valid string available.")
     }
 
-    fun toGetText(): GetText {
-        return if (resId != null)
-            GetTextFromResId(resId)
-        else
-            GetTextFromString(string ?: "")
-
+    fun toGetText(): GetText = if (resId != null) {
+        GetTextFromResId(resId)
+    } else {
+        GetTextFromString(string ?: "")
     }
 }

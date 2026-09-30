@@ -54,9 +54,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
-import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notenames.MusicalNote
+import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.temperaments.Temperament3
 import de.moekadu.tuner.ui.misc.rememberNumberFormatter
 import de.moekadu.tuner.ui.notes.CentAndRatioTable
@@ -79,14 +79,16 @@ fun RootNoteDialog(
     onDismiss: () -> Unit = {}
 ) {
     val rootNotes = remember(temperament) {
-         temperament.possibleRootNotes()
+        temperament.possibleRootNotes()
     }
 
-    var selectedRootNoteIndex by rememberSaveable { mutableIntStateOf(
-        rootNotes
-            .indexOfFirst { it.equalsIgnoreOctave(initialRootNote) }
-            .coerceAtLeast(0)
-    ) }
+    var selectedRootNoteIndex by rememberSaveable {
+        mutableIntStateOf(
+            rootNotes
+                .indexOfFirst { it.equalsIgnoreOctave(initialRootNote) }
+                .coerceAtLeast(0)
+        )
+    }
 
     val hasChainOfFifths = remember(temperament) {
         temperament.chainOfFifths() != null
@@ -163,9 +165,11 @@ fun RootNoteDialog(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                HorizontalDivider(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp))
+                HorizontalDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
                 Text(
                     stringResource(id = R.string.details),
                     // temperament.name.value(context),
@@ -208,7 +212,6 @@ fun RootNoteDialog(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
-
             }
         }
     )

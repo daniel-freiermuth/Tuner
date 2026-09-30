@@ -23,7 +23,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 class StretchTuning {
 
-    fun getStretchedFrequency(unstretchedFrequency: Double): Double {
-        return unstretchedFrequency
-    }
+    fun getStretchedFrequency(unstretchedFrequency: Double): Double = unstretchedFrequency
 }

@@ -96,12 +96,13 @@ fun QuickSettingsBar(
         ) {
             val abbreviation =
                 musicalScale.temperament.abbreviation.value(context).let { abbr ->
-                    if (abbr == "")
+                    if (abbr == "") {
                         musicalScale.temperament.name.value(context).let { nme ->
                             if (nme == "") "-" else nme
                         }
-                    else
+                    } else {
                         abbr
+                    }
                 }
 
             Text(
@@ -121,10 +122,11 @@ fun QuickSettingsBar(
         ) {
             Icon(
                 ImageVector.vectorResource(
-                    if (notePrintOptions.useEnharmonic)
+                    if (notePrintOptions.useEnharmonic) {
                         R.drawable.ic_prefer_flat_isflat
-                    else
+                    } else {
                         R.drawable.ic_prefer_flat_issharp
+                    }
                 ),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),

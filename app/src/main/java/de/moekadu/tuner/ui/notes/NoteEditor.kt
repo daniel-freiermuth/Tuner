@@ -29,7 +29,7 @@ import de.moekadu.tuner.notenames.NoteModifier
 private fun rememberMaxNoteSizeForNoteEditor(
     notePrintOptions: NotePrintOptions,
     fontSize: TextUnit
-) : DpSize {
+): DpSize {
     val baseNotes = remember {
         BaseNote.entries.filter { it != BaseNote.None }.map {
             MusicalNote(base = it, modifier = NoteModifier.None)
@@ -67,10 +67,8 @@ private fun rememberMaxNoteSizeForNoteEditor(
     return DpSize(
         maxBaseSize.width - maxNoNoteSize.width + maxModifierSize.width,
         maxModifierSize.height
-        )
+    )
 }
-
-
 
 @Composable
 fun NoteEditor(
@@ -78,7 +76,7 @@ fun NoteEditor(
     noteModifier: NoteModifier,
     modifier: Modifier = Modifier,
     notePrintOptions: NotePrintOptions = NotePrintOptions(),
-    onNoteChange: (BaseNote, NoteModifier) -> Unit = { _, _ ->}
+    onNoteChange: (BaseNote, NoteModifier) -> Unit = { _, _ -> }
 ) {
     val baseNotes = remember {
         BaseNote.entries.filter { it != BaseNote.None }.map {
@@ -86,7 +84,7 @@ fun NoteEditor(
         }.toTypedArray()
     }
     val baseNoteIndex = remember(base) {
-            BaseNote.entries.indexOf(base)
+        BaseNote.entries.indexOf(base)
     }
 //    val modifiedNotes = remember(baseNoteIndex) {
 //        NoteModifier.entries.map {
@@ -105,8 +103,8 @@ fun NoteEditor(
         }.toTypedArray()
     }
 
-    val modifierIndex = remember (noteModifier) {
-            NoteModifier.entries.indexOf(noteModifier)
+    val modifierIndex = remember(noteModifier) {
+        NoteModifier.entries.indexOf(noteModifier)
     }
     val note = remember(base, noteModifier) {
         MusicalNote(base, noteModifier)
@@ -195,9 +193,7 @@ fun NoteEditor(
 //            }
 //        }
 //    }
-
 }
-
 
 @Preview(widthDp = 200, heightDp = 200, showBackground = true)
 @Composable

@@ -54,14 +54,19 @@ fun NumberOfNotesDialog(
     initialNumberOfNotes: Int,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {},
-    onDoneClicked: (numberOfNotes: Int) -> Unit = {},
+    onDoneClicked: (numberOfNotes: Int) -> Unit = {}
 ) {
     val maxNumberOfNotes = 200
     var numberOfNotes by rememberSaveable(
-            stateSaver = TextFieldValue.Saver
-            ) { mutableStateOf(
-        TextFieldValue(initialNumberOfNotes.toString(), TextRange(initialNumberOfNotes.toString().length))
-    ) }
+        stateSaver = TextFieldValue.Saver
+    ) {
+        mutableStateOf(
+            TextFieldValue(
+                initialNumberOfNotes.toString(),
+                TextRange(initialNumberOfNotes.toString().length)
+            )
+        )
+    }
     val hasErrors by remember {
         derivedStateOf {
             val num = numberOfNotes.text.toIntOrNull()
@@ -111,8 +116,9 @@ fun NumberOfNotesDialog(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        if (!hasErrors)
+                        if (!hasErrors) {
                             onDoneClicked(numberOfNotes.text.toIntOrNull() ?: 12)
+                        }
                     }
                 ),
                 supportingText = if (maxValueExceeded) {

@@ -81,7 +81,7 @@ fun Preferences(
         canNavigateUp = true,
         onNavigateUpClicked = onNavigateUpClicked,
         title = stringResource(id = R.string.settings),
-        showPreferenceButton = false,
+        showPreferenceButton = false
     ) { paddingValues ->
         LazyColumn(
             modifier = Modifier.consumeWindowInsets(paddingValues),
@@ -154,7 +154,7 @@ fun Preferences(
                         val textStyle = LocalTextStyle.current
                         val summary = remember(musicalScale, resources, textStyle) {
                             buildAnnotatedString {
-                                //append(resources.getString(getTuningNameResourceId(musicalScale.temperamentType)))
+                                // append(resources.getString(getTuningNameResourceId(musicalScale.temperamentType)))
                                 append(musicalScale.temperament.name.value(context))
                                 append(resources.getString(R.string.comma_separator))
                                 append(
@@ -201,7 +201,9 @@ fun Preferences(
             item {
                 SimplePreference(
                     name = stringResource(id = R.string.notation),
-                    supporting = stringResource(id = notePrintOptions.notationType.stringResourceId),
+                    supporting = stringResource(
+                        id = notePrintOptions.notationType.stringResourceId
+                    ),
                     iconId = R.drawable.ic_solfege,
                     modifier = Modifier.clickable { onNotationClicked() }
                 )
@@ -255,11 +257,11 @@ fun Preferences(
                 val resources = LocalContext.current.resources
                 val summary = remember(windowSize, resources) {
                     "$windowSize " + resources.getString(R.string.samples) +
-                            " (" + resources.getString(R.string.minimum_frequency) +
-                            resources.getString(
-                                R.string.hertz,
-                                2 * pref.sampleRate / windowSize.toFloat()
-                            ) + ")"
+                        " (" + resources.getString(R.string.minimum_frequency) +
+                        resources.getString(
+                            R.string.hertz,
+                            2 * pref.sampleRate / windowSize.toFloat()
+                        ) + ")"
                 }
                 SliderPreference(
                     name = stringResource(id = R.string.window_size),
@@ -332,10 +334,11 @@ fun Preferences(
                 SliderPreference(
                     name = stringResource(id = R.string.capture),
                     value = duration.toFloat(),
-                    supporting = if (duration == 0)
+                    supporting = if (duration == 0) {
                         stringResource(R.string.no_capture_duration)
-                    else
-                        stringResource(R.string.capture_duration, duration),
+                    } else {
+                        stringResource(R.string.capture_duration, duration)
+                    },
                     valueRange = 0f..5f,
                     steps = 4,
                     onValueChange = { pref.writeWaveWriterDurationInSeconds(it.roundToInt()) },

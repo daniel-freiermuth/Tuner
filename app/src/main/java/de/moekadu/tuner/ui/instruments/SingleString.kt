@@ -77,7 +77,13 @@ fun SingleString(
     fontSize: TextUnit = TextUnit.Unspecified,
     onClick: () -> Unit = {}
 ) {
-    val colorResolved = if (color == Color.Unspecified) MaterialTheme.colorScheme.inverseSurface else color
+    val colorResolved = if (color ==
+        Color.Unspecified
+    ) {
+        MaterialTheme.colorScheme.inverseSurface
+    } else {
+        color
+    }
     val xAnimated: Float by animateFloatAsState(
         targetValue = (positionIndex + 0.5f) / numPositions,
         label = "label position"
@@ -103,23 +109,30 @@ fun SingleString(
 //            )
             Label(
                 content = {
-                    Note(note,
-                         notePrintOptions = notePrintOptions,
-                         fontSize = fontSize,
-                         color = contentColor
+                    Note(
+                        note,
+                        notePrintOptions = notePrintOptions,
+                        fontSize = fontSize,
+                        color = contentColor
                     )
                 },
-                modifier = if (labelSize == DpSize.Unspecified) Modifier else Modifier.size(labelSize),
+                modifier = if (labelSize ==
+                    DpSize.Unspecified
+                ) {
+                    Modifier
+                } else {
+                    Modifier.size(labelSize)
+                },
                 color = colorResolved,
                 onClick = onClick
             )
         },
-         modifier = modifier // .background(Color.Gray.copy(alpha=0.5f))
+        modifier = modifier // .background(Color.Gray.copy(alpha=0.5f))
     ) { measurables, constraints ->
-        val placeables = measurables.map { it.measure(constraints)}
+        val placeables = measurables.map { it.measure(constraints) }
 
-        val w = placeables.maxOf{ it.width }
-        val h = placeables.maxOf{ it.height }
+        val w = placeables.maxOf { it.width }
+        val h = placeables.maxOf { it.height }
 
         layout(w, h) {
 //            Log.v("Tuner", "SingleString: w=$w, h=$h,$labelSize ")
@@ -132,11 +145,9 @@ fun SingleString(
                 val x = ((w - 2 * outerPadding.toPx()) * xAnimated) + outerPadding.toPx()
                 place((x - width / 2).roundToInt(), 0)
             }
-
         }
     }
 }
-
 
 @Preview(showBackground = true, widthDp = 150)
 @Composable
@@ -146,7 +157,6 @@ private fun SingleStringPreview() {
         val notePrintOptions = NotePrintOptions()
 
         Column {
-
             repeat(4) {
                 SingleString(
                     note = note,

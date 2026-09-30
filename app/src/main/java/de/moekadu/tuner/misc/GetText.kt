@@ -29,28 +29,21 @@ sealed interface GetText {
 }
 
 @Serializable
-data class GetTextFromString(
-    val string: String
-) : GetText {
+data class GetTextFromString(val string: String) : GetText {
     override fun value(context: Context?) = string
 }
 
 @Serializable
-data class GetTextFromResId(
-    @param:StringRes val id: Int
-) : GetText {
+data class GetTextFromResId(@param:StringRes val id: Int) : GetText {
     override fun value(context: Context?) = context?.getString(id) ?: ""
 }
 
 @Serializable
-data class GetTextFromResIdWithIntArg(
-    @param:StringRes val id: Int,
-    val arg: Int
-) : GetText {
+data class GetTextFromResIdWithIntArg(@param:StringRes val id: Int, val arg: Int) : GetText {
     override fun value(context: Context?) = context?.getString(id, arg) ?: ""
 }
 
-///** String based on string or resource id.
+// /** String based on string or resource id.
 // *
 // * If sometimes predefined values are needed, which are based on resource id is used and sometimes
 // * user defined values are used which are defined by a string, this class can simplify the usage.
@@ -58,11 +51,11 @@ data class GetTextFromResIdWithIntArg(
 // * @param string String or null if resId is not null.
 // * @param resId String resource id or null if string is not null.
 // */
-//@Serializable
-//data class StringOrResId2(
+// @Serializable
+// data class StringOrResId2(
 //    val string: String?,
 //    @StringRes val resId: Int?
-//) {
+// ) {
 //    /** Create a new value based on an explicit string.
 //     * @param string String as underlying value.
 //     */
@@ -91,4 +84,4 @@ data class GetTextFromResIdWithIntArg(
 //            throw RuntimeException("StringOrResId: No valid string available.")
 //        }
 //    }
-//}
+// }

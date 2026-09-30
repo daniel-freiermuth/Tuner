@@ -36,7 +36,7 @@ fun NoteEditorSimple(
     octaveOffset: Int,
     modifier: Modifier = Modifier,
     notePrintOptions: NotePrintOptions = NotePrintOptions(),
-    onNoteChange: (BaseNote, NoteModifier, octaveOffset: Int) -> Unit = { _, _, _ ->}
+    onNoteChange: (BaseNote, NoteModifier, octaveOffset: Int) -> Unit = { _, _, _ -> }
 ) {
 //    Log.v("Tuner ", "NoteEditorSimple: base=$base, modifier = $noteModifier")
     val baseNotes = remember {
@@ -113,7 +113,8 @@ fun NoteEditorSimple(
                         )
                     },
                     shape = SegmentedButtonDefaults.itemShape(
-                        index = (index), count = options.size
+                        index = (index),
+                        count = options.size
                     )
                 ) {
                     Text(if (offset == 0) "0" else String.format("%+d", offset))
@@ -122,8 +123,6 @@ fun NoteEditorSimple(
         }
     }
 }
-
-
 
 @Preview(widthDp = 200, heightDp = 200, showBackground = true)
 @Composable

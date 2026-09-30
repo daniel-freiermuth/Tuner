@@ -37,21 +37,21 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.ui.theme.TunerTheme
 
-//data class HorizontalLinesPositions(
+// data class HorizontalLinesPositions(
 //    val size: Int,
 //    val y: (i: Int) -> Float
-//)
-class HorizontalLinesPositions(
-    val y: MutableList<Float> = mutableListOf()
-) {
+// )
+class HorizontalLinesPositions(val y: MutableList<Float> = mutableListOf()) {
     fun mutate(size: Int, y: (i: Int) -> Float): HorizontalLinesPositions {
         if (this.y.size == size) {
-            for (i in 0 until size)
+            for (i in 0 until size) {
                 this.y[i] = y(i)
+            }
         } else {
             this.y.clear()
-            for (i in 0 until size)
+            for (i in 0 until size) {
                 this.y.add(y(i))
+            }
         }
         return HorizontalLinesPositions(this.y)
     }
@@ -59,22 +59,22 @@ class HorizontalLinesPositions(
     fun mutate(y: FloatArray, from: Int = 0, to: Int = y.size): HorizontalLinesPositions {
         val size = to - from
         if (this.y.size == size) {
-            for (i in 0 until size)
-                this.y[i] = y[i+from]
+            for (i in 0 until size) {
+                this.y[i] = y[i + from]
+            }
         } else {
             this.y.clear()
-            for (i in 0 until size)
-                this.y.add(y[i+from])
+            for (i in 0 until size) {
+                this.y.add(y[i + from])
+            }
         }
         return HorizontalLinesPositions(this.y)
     }
     companion object {
-        fun create(size: Int, y: (i: Int) -> Float): HorizontalLinesPositions {
-            return HorizontalLinesPositions(MutableList(size){ y(it) })
-        }
-        fun create(y: FloatArray): HorizontalLinesPositions {
-            return HorizontalLinesPositions(y.toMutableList())
-        }
+        fun create(size: Int, y: (i: Int) -> Float): HorizontalLinesPositions =
+            HorizontalLinesPositions(MutableList(size) { y(it) })
+        fun create(y: FloatArray): HorizontalLinesPositions =
+            HorizontalLinesPositions(y.toMutableList())
     }
 }
 
@@ -87,26 +87,28 @@ fun HorizontalLines(
 ) {
     val c = color.takeOrElse { MaterialTheme.colorScheme.onSurface }
 
-    Spacer(modifier = Modifier
-        .fillMaxSize()
-        .drawBehind {
-            for (i in 0 until data.y.size) {
-                val transform = transformation()
-                val y = transform.toScreen(Offset(0f, data.y[i])).y
-                drawLine(
-                    c,
-                    Offset(transform.viewPortScreen.left.toFloat(), y),
-                    Offset(transform.viewPortScreen.right.toFloat(), y),
-                    strokeWidth = width.toPx()
-                )
+    Spacer(
+        modifier = Modifier
+            .fillMaxSize()
+            .drawBehind {
+                for (i in 0 until data.y.size) {
+                    val transform = transformation()
+                    val y = transform.toScreen(Offset(0f, data.y[i])).y
+                    drawLine(
+                        c,
+                        Offset(transform.viewPortScreen.left.toFloat(), y),
+                        Offset(transform.viewPortScreen.right.toFloat(), y),
+                        strokeWidth = width.toPx()
+                    )
+                }
             }
-        }
     )
 }
 
 @Composable
 private fun rememberTransformation(
-    screenWidth: Dp, screenHeight: Dp,
+    screenWidth: Dp,
+    screenHeight: Dp,
     viewPortRaw: Rect
 ): Transformation {
     val widthPx = with(LocalDensity.current) { screenWidth.roundToPx() }
@@ -137,5 +139,3 @@ private fun HorizontalLinePreview() {
         }
     }
 }
-
-

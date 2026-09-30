@@ -9,8 +9,10 @@ import kotlinx.serialization.Serializable
 sealed interface Temperament3 {
     /** Temperament name. */
     val name: GetText
+
     /** Short name for temperament. */
     val abbreviation: GetText
+
     /** Description of temperament. */
     val description: GetText
 
@@ -23,6 +25,7 @@ sealed interface Temperament3 {
      *  @return Cent values.
      */
     fun cents(): DoubleArray
+
     /** Values as rational number if available.
      * Something like [1/1, ..., 2/1].
      * This should also include the octave ratio (normally 2/1), so th size is

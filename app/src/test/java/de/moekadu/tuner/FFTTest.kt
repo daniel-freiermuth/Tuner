@@ -2,10 +2,10 @@ package de.moekadu.tuner
 
 import de.moekadu.tuner.notedetection.RealFFT
 import de.moekadu.tuner.notedetection.getFrequency
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import kotlin.math.cos
 import kotlin.math.sin
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class FFTTest {
     @Test
@@ -14,7 +14,10 @@ class FFTTest {
         val frequency = 1f
         val amp = 2f
         val offset = 2.3f
-        val samples = FloatArray(numSamples) {i -> offset + amp * sin(2 * kotlin.math.PI.toFloat() * frequency * i / numSamples.toFloat())}
+        val samples = FloatArray(numSamples) { i ->
+            offset +
+                amp * sin(2 * kotlin.math.PI.toFloat() * frequency * i / numSamples.toFloat())
+        }
         val fft = RealFFT(numSamples)
         val result = FloatArray(numSamples + 2)
         fft.fft(samples, result)
@@ -30,7 +33,10 @@ class FFTTest {
         val frequency = 2f
         val amp = 2f
         val offset = 2.3f
-        val samples = FloatArray(numSamples) {i -> offset + amp * cos(2 * kotlin.math.PI.toFloat() * frequency * i / numSamples.toFloat())}
+        val samples = FloatArray(numSamples) { i ->
+            offset +
+                amp * cos(2 * kotlin.math.PI.toFloat() * frequency * i / numSamples.toFloat())
+        }
         val fft = RealFFT(numSamples)
         val result = FloatArray(numSamples + 2)
         fft.fft(samples, result)

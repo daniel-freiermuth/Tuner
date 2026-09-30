@@ -52,6 +52,7 @@ private fun CoroutineScope.launchSnackbar(
         )
         when (result) {
             SnackbarResult.Dismissed -> {}
+
             SnackbarResult.ActionPerformed -> {
                 permission.launchPermissionRequest()
             }
@@ -66,22 +67,25 @@ fun rememberTunerAudioPermission(snackbarHostState: SnackbarHostState): Boolean 
 
     val reopenSnackbarChannel = remember { Channel<Boolean>(Channel.CONFLATED) }
     val permission = rememberPermissionState(permission = Manifest.permission.RECORD_AUDIO) {
-        if (!it)
+        if (!it) {
             reopenSnackbarChannel.trySend(false)
+        }
     }
-    val permissionGranted by remember { derivedStateOf { permission.status.isGranted }}
+    val permissionGranted by remember { derivedStateOf { permission.status.isGranted } }
 //    Log.v("Tuner", "MainGraph: 1: permissions_granted = ${permission.status.isGranted}, rational = ${permission.status.shouldShowRationale}")
 
     // TODO: relaunching seems to fail ...
     LaunchedEffect(permission.status, reopenSnackbarChannel) {
         if (!permission.status.isGranted) {
-            if (permission.status.shouldShowRationale)
+            if (permission.status.shouldShowRationale) {
                 launchSnackbar(context, snackbarHostState, permission)
-            else
+            } else {
                 permission.launchPermissionRequest()
+            }
 
-            for (reopen in reopenSnackbarChannel)
+            for (reopen in reopenSnackbarChannel) {
                 launchSnackbar(context, snackbarHostState, permission)
+            }
         }
     }
     return permissionGranted

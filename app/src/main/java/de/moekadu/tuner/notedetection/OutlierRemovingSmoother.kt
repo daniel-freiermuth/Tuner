@@ -35,18 +35,23 @@ class OutlierRemovingSmoothingBuffer(
     private val minValue: Float,
     private val maxValue: Float,
     private val maxRelativeDeviation: Float,
-    private val maxNumSuccessiveOutliers: Int) {
+    private val maxNumSuccessiveOutliers: Int
+) {
 
     /** Underlying memory to store values. */
     private val values = FloatArray(maxSize)
+
     /** Index in values-array, which refers to index 0 in our buffer class. */
     private var indexZero = 0
+
     /** Counter for counting the number of successive outliers. */
     var numSuccessiveOutliers = 0
         private set
+
     /** Current number of values stored in the buffer. */
     var size = 0
         private set
+
     /** Current mean value of the added values or 0f if there are no values. */
     var mean = 0f
         private set
@@ -67,11 +72,14 @@ class OutlierRemovingSmoothingBuffer(
      *  @return True, if the value was added, else false.
      */
     fun append(value: Float): Boolean {
-        if (maxSize == 0)
+        if (maxSize == 0) {
             return false
+        }
 
 //        Log.v("Tuner", "OutlierRemovingSmootherBuffer.append: value=$value, min=$minValue, max=$maxValue, deviation=${computeDeviation(value)}, maxRelativeDeviation=$maxRelativeDeviation}")
-        return if (value < minValue || value > maxValue || computeDeviation(value) > maxRelativeDeviation){
+        return if (value < minValue || value > maxValue ||
+            computeDeviation(value) > maxRelativeDeviation
+        ) {
 //            Log.v("Tuner", "OutlierRemovingSmootherBuffer.append: incrementOutlierCount")
             incrementOutlierCount()
             false
@@ -89,8 +97,9 @@ class OutlierRemovingSmoothingBuffer(
      */
     fun incrementOutlierCount() {
         numSuccessiveOutliers += 1
-        if (numSuccessiveOutliers > maxNumSuccessiveOutliers)
+        if (numSuccessiveOutliers > maxNumSuccessiveOutliers) {
             clear()
+        }
     }
 
     /** Get buffer value at given index.
@@ -107,8 +116,9 @@ class OutlierRemovingSmoothingBuffer(
      * @param value Value which will be added to the buffer.
      */
     private fun addValueToBuffer(value: Float) {
-        if (maxSize == 0)
+        if (maxSize == 0) {
             return
+        }
         val index = (indexZero + size) % maxSize
         values[index] = value
         val newSize = size + 1
@@ -126,8 +136,9 @@ class OutlierRemovingSmoothingBuffer(
     private fun computeMean(): Float {
         require(size > 0)
         var sum = 0f
-        for (i in 0 until size)
+        for (i in 0 until size) {
             sum += get(i)
+        }
         return sum / size
     }
 
@@ -135,11 +146,10 @@ class OutlierRemovingSmoothingBuffer(
      * @param value Value for which the deviation should be computed.
      * @return Relative deviation from the mean or 0f if the buffer is empty.
      */
-    private fun computeDeviation(value: Float): Float {
-        return if (size == 0)
-            0f
-        else
-            (value - mean).absoluteValue / mean.absoluteValue
+    private fun computeDeviation(value: Float): Float = if (size == 0) {
+        0f
+    } else {
+        (value - mean).absoluteValue / mean.absoluteValue
     }
 }
 
@@ -163,12 +173,20 @@ class OutlierRemovingSmoother(
     private val relativeDeviationToBeAnOutlier: Float = 0.1f,
     private val maxNumSuccessiveOutliers: Int = 1,
     minNumValuesForValidMean: Int = 2,
-    numBuffers: Int = 3) {
+    numBuffers: Int = 3
+) {
 
     private val minNumValuesForValidMean = min(minNumValuesForValidMean, size)
+
     /** Buffers which compute the mean value. */
     private val buffers = Array(numBuffers) {
-        OutlierRemovingSmoothingBuffer(size, minValue, maxValue, relativeDeviationToBeAnOutlier, maxNumSuccessiveOutliers)
+        OutlierRemovingSmoothingBuffer(
+            size,
+            minValue,
+            maxValue,
+            relativeDeviationToBeAnOutlier,
+            maxNumSuccessiveOutliers
+        )
     }
 
     /** Current smoothed value or 0f if there is no value. */
@@ -186,17 +204,21 @@ class OutlierRemovingSmoother(
         // append the value to the first available buffer, and all others just increment the
         // outlier count
         for (buffer in buffers) {
-            if (valueAppendedSuccessfully)
+            if (valueAppendedSuccessfully) {
                 buffer.incrementOutlierCount()
-            else
+            } else {
                 valueAppendedSuccessfully = buffer.append(value)
+            }
         }
 //        Log.v("Tuner", "OutlierRemovingSmoother.invoke: buffers[0].size=${buffers[0].size}, buffers[1].size=${buffers[1].size}")
 //        Log.v("Tuner", "OutlierRemovingSmoother.invoke: buffers[0].size=${buffers[0].size}, minNumValuesForValidMean=$minNumValuesForValidMean, maxSize=$size")
-        if (buffers[0].size < minNumValuesForValidMean)
+        if (buffers[0].size < minNumValuesForValidMean) {
             buffers.sortByDescending { it.size }
+        }
 
-        return if (buffers[0].numSuccessiveOutliers == 0 && buffers[0].size >= minNumValuesForValidMean) {
+        return if (buffers[0].numSuccessiveOutliers == 0 &&
+            buffers[0].size >= minNumValuesForValidMean
+        ) {
             smoothedValue = buffers[0].mean
             smoothedValue
         } else {

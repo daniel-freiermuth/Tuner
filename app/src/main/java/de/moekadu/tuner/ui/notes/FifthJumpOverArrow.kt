@@ -62,25 +62,31 @@ private fun fifthCorrectionString(resources: Resources, correction: FifthModific
     var r = correction.pythagoreanComma
     if (!r.isZero) {
         if (s.isNotEmpty()) {
-            if (r.numerator >= 0)
+            if (r.numerator >= 0) {
                 s.append(resources.getString(R.string.plus_correction))
-            else
+            } else {
                 s.append(resources.getString(R.string.minus_correction))
+            }
         } else if (r.numerator < 0) {
             s.append("-")
         }
         s.append(
-            resources.getString(R.string.pythagorean_comma, r.numerator.absoluteValue, r.denominator)
+            resources.getString(
+                R.string.pythagorean_comma,
+                r.numerator.absoluteValue,
+                r.denominator
+            )
         )
     }
 
     r = correction.syntonicComma
     if (!r.isZero) {
         if (s.isNotEmpty()) {
-            if (r.numerator >= 0)
+            if (r.numerator >= 0) {
                 s.append(resources.getString(R.string.plus_correction))
-            else
+            } else {
                 s.append(resources.getString(R.string.minus_correction))
+            }
         } else if (r.numerator < 0) {
             s.append("-")
         }
@@ -92,10 +98,11 @@ private fun fifthCorrectionString(resources: Resources, correction: FifthModific
     r = correction.schisma
     if (!r.isZero) {
         if (s.isNotEmpty()) {
-            if (r.numerator >= 0)
+            if (r.numerator >= 0) {
                 s.append(resources.getString(R.string.plus_correction))
-            else
+            } else {
                 s.append(resources.getString(R.string.minus_correction))
+            }
         } else if (r.numerator < 0) {
             s.append("-")
         }
@@ -127,18 +134,19 @@ fun FifthJumpOverArrow(
         LocalContentColor.current.takeOrElse { Color.Black }
     }
     val density = LocalDensity.current
-    val arrowHeightDp = with(density) {arrowHeight.toDp()}
-    //val arrowHeight = 12.dp
+    val arrowHeightDp = with(density) { arrowHeight.toDp() }
+    // val arrowHeight = 12.dp
     val arrowWidthDp = ((arrowHeightDp * 43) / 50) // aspect 43:50 according to R.drawable.ic_fifths_arrow
     Column(
         modifier = modifier.width(IntrinsicSize.Max),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val fifthCorrectionString = remember(fifthModification, resources) {
-            if (fifthModification != null)
+            if (fifthModification != null) {
                 fifthCorrectionString(resources, fifthModification)
-            else
+            } else {
                 "?"
+            }
         }
         Text(
             fifthCorrectionString,

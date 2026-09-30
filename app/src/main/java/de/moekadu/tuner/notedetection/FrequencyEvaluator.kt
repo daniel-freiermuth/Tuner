@@ -20,8 +20,8 @@ package de.moekadu.tuner.notedetection
 
 import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.misc.DefaultValues
-import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notenames.MusicalNote
 import kotlin.math.log10
 
 /** Result of FrequencyEvaluator.
@@ -72,7 +72,8 @@ class FrequencyEvaluator(
         numBuffers = 3
     )
 
-    private val tuningTargetComputer = TuningTargetComputer(musicalScale, instrument, toleranceInCents)
+    private val tuningTargetComputer =
+        TuningTargetComputer(musicalScale, instrument, toleranceInCents)
     private var currentTargetNote: MusicalNote? = null
     private var timeStepOfLastSuccessfulFrequencyDetection = 0
 
@@ -92,10 +93,11 @@ class FrequencyEvaluator(
 //            Log.v("Tuner", "FrequencyEvaluator.evaluate: noise = ${it.noise}, maxNoise=$maxNoise, f=${it.frequency}")
             val requiredEnergyLevel = 100 - sensitivity - 0.0001f // minus a very small number, to make sure, that a level of 0 always enables evaluation for sensitivity 100
 //            Log.v("Tuner", "FrequencyEvaluator.evaluate: energy = ${it.harmonicEnergyAbsolute} signalLevel = ${transformEnergyToLevelFrom0To100(it.harmonicEnergyAbsolute)}, required = $requiredEnergyLevel")
-            if (it.noise < maxNoise
-                && it.harmonicEnergyContentRelative >= minHarmonicEnergyContent
-                && transformEnergyToLevelFrom0To100(it.harmonicEnergyAbsolute) >= requiredEnergyLevel
-                ) {
+            if (it.noise < maxNoise &&
+                it.harmonicEnergyContentRelative >= minHarmonicEnergyContent &&
+                transformEnergyToLevelFrom0To100(it.harmonicEnergyAbsolute) >=
+                requiredEnergyLevel
+            ) {
                 smoothedFrequency = smoother(it.frequency)
 
 //                Log.v("Tuner", "FrequencyEvaluator.evaluate: smoothedFrequency=$smoothedFrequency")
@@ -131,7 +133,7 @@ class FrequencyEvaluator(
     }
 //    }.collect {
 //        ensureActive()
-////                Log.v("Tuner", "TunerViewModel: evaluating target: $it, $coroutineContext")
+// //                Log.v("Tuner", "TunerViewModel: evaluating target: $it, $coroutineContext")
 //        it.target?.let{ tuningTarget ->
 //            currentTargetNote = tuningTarget.note
 //            _tuningTarget.value = tuningTarget

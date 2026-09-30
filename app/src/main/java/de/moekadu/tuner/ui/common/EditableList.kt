@@ -57,6 +57,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.moekadu.tuner.R
 import de.moekadu.tuner.ui.theme.TunerTheme
+import kotlin.math.max
+import kotlin.math.min
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.PersistentList
@@ -70,8 +72,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import kotlin.math.max
-import kotlin.math.min
 
 interface EditableListPredefinedSection<T> {
     val sectionStringResourceId: Int
@@ -107,10 +107,7 @@ class EditableListData<T>(
     val selectedItems get() = _selectedItems.asStateFlow()
 
     /** Backup info when items are deleted. */
-    data class ItemsDeletedInfo<T>(
-        val backup: PersistentList<T>,
-        val numDeleted: Int = 0
-    )
+    data class ItemsDeletedInfo<T>(val backup: PersistentList<T>, val numDeleted: Int = 0)
     val editableItemsBackup = Channel<ItemsDeletedInfo<T>>(
         Channel.CONFLATED
     )
@@ -122,7 +119,8 @@ class EditableListData<T>(
     val editableListStartIndex = if (predefinedItemSections.sumOf { it.size } == 0) 0 else 1
 
     val lazyListState = LazyListState()
-    //val initiateScrollChannel = Channel<Int>(Channel.CONFLATED)
+
+    // val initiateScrollChannel = Channel<Int>(Channel.CONFLATED)
     val initiateScrollChannel = Channel<Pair<Int, Int>>(Channel.CONFLATED)
 
     val numNonEmptyPredefinedLists = predefinedItemSections.count { it.size > 0 }
@@ -139,10 +137,11 @@ class EditableListData<T>(
     }
 
     fun toggleSelection(id: Long) {
-        if (selectedItems.value.contains(id))
+        if (selectedItems.value.contains(id)) {
             _selectedItems.value = selectedItems.value.remove(id)
-        else
+        } else {
             _selectedItems.value = selectedItems.value.add(id)
+        }
     }
 
     fun clearSelectedItems() {
@@ -152,15 +151,16 @@ class EditableListData<T>(
     fun moveSelectedItemsUp(): Boolean {
         val original = editableItems.value
         val selected = selectedItems.value
-        if (original.size <= 1 || selected.isEmpty())
+        if (original.size <= 1 || selected.isEmpty()) {
             return false
+        }
         var changed = false
         var minChangedIndex = Int.MAX_VALUE
         var maxChangedIndex = -1
         val modified = original.mutate { items ->
             for (i in 1 until original.size) {
                 val item = original[i]
-                val itemPrev = items[i-1]
+                val itemPrev = items[i - 1]
                 val itemKey = getStableId(item)
                 val itemPrevKey = getStableId(itemPrev)
                 if (selected.contains(itemKey) && !selected.contains(itemPrevKey)) {
@@ -182,7 +182,8 @@ class EditableListData<T>(
 
             scrollTo(
                 minChangedIndex + editableListStartIndex,
-                maxChangedIndex + editableListStartIndex)
+                maxChangedIndex + editableListStartIndex
+            )
         }
 
         return changed
@@ -191,8 +192,9 @@ class EditableListData<T>(
     fun moveSelectedItemsDown(): Boolean {
         val original = editableItems.value
         val selected = selectedItems.value
-        if (original.size <= 1 || selected.isEmpty())
+        if (original.size <= 1 || selected.isEmpty()) {
             return false
+        }
         var changed = false
         var minChangedIndex = Int.MAX_VALUE
         var maxChangedIndex = -1
@@ -200,7 +202,7 @@ class EditableListData<T>(
         val modified = original.mutate { items ->
             for (i in original.size - 2 downTo 0) {
                 val item = original[i]
-                val itemNext = items[i+1]
+                val itemNext = items[i + 1]
                 val itemKey = getStableId(item)
                 val itemNextKey = getStableId(itemNext)
                 if (selected.contains(itemKey) && !selected.contains(itemNextKey)) {
@@ -234,8 +236,9 @@ class EditableListData<T>(
         setNewItems(modified)
 
         _selectedItems.value = selectedItems.value.clear()
-        if (modified.isEmpty() && predefinedItemSections.size == 1)
+        if (modified.isEmpty() && predefinedItemSections.size == 1) {
             predefinedItemSections[0].toggleExpanded(true)
+        }
 
         if (backup.size != modified.size) {
             editableItemsBackup.trySend(
@@ -251,8 +254,9 @@ class EditableListData<T>(
         val backup = editableItems.value
         setNewItems(persistentListOf())
         _selectedItems.value = selectedItems.value.clear()
-        if (predefinedItemSections.size == 1)
+        if (predefinedItemSections.size == 1) {
             predefinedItemSections[0].toggleExpanded(true)
+        }
 
         if (backup.size > 0) {
             editableItemsBackup.trySend(ItemsDeletedInfo(backup = backup, numDeleted = backup.size))
@@ -262,15 +266,15 @@ class EditableListData<T>(
     fun extractSelectedItems(): List<T> {
         val allItems = this.editableItems.value
         val selectedKeys = this.selectedItems.value
-        return if (selectedKeys.isEmpty())
+        return if (selectedKeys.isEmpty()) {
             allItems
-        else
+        } else {
             editableItems.value.filter { selectedKeys.contains(getStableId(it)) }
+        }
     }
 
     fun scrollTo(index: Int) {
         initiateScrollChannel.trySend(Pair(index, index))
-
     }
     fun scrollTo(index1: Int, index2: Int) {
         initiateScrollChannel.trySend(Pair(index1, index2))
@@ -294,8 +298,10 @@ private suspend fun LazyListState.niceAnimatedScroll(index1: Int, index2: Int, o
 //    Log.v("Metronome", "EditableListData.niceAnimatedScroll: index elem1 = ${layoutInfo.visibleItemsInfo.getOrNull(1)?.index}, offset elem1 = ${layoutInfo.visibleItemsInfo.getOrNull(1)?.offset}")
 //    Log.v("Metronome", "EditableListData.niceAnimatedScroll: index elem2 = ${layoutInfo.visibleItemsInfo.getOrNull(2)?.index}, offset elem2 = ${layoutInfo.visibleItemsInfo.getOrNull(2)?.offset}")
 
-    val visibleItemMin = layoutInfo.visibleItemsInfo.firstOrNull { it.offset + it.size > 0 } ?: return
-    val visibleItemMax = layoutInfo.visibleItemsInfo.lastOrNull { it.offset < offsetBottom } ?: return
+    val visibleItemMin =
+        layoutInfo.visibleItemsInfo.firstOrNull { it.offset + it.size > 0 } ?: return
+    val visibleItemMax =
+        layoutInfo.visibleItemsInfo.lastOrNull { it.offset < offsetBottom } ?: return
 
 //    Log.v("Metronome", "EditableListData.niceAnimatedScroll: visibleMin=${visibleItemMin.index}, visibleMax=${visibleItemMax.index}, index1=$index1, index2=$index2 ")
 
@@ -377,9 +383,8 @@ private const val CONTENT_TYPE_SECTION = 1
 private const val CONTENT_TYPE_EMPTY_MESSAGE = 2
 private const val CONTENT_TYPE_ITEM = 3
 
-
 @Composable
-fun <T>EditableList(
+fun <T> EditableList(
     state: EditableListData<T>,
     modifier: Modifier = Modifier,
     onActivateItemClicked: (T) -> Unit = { },
@@ -397,7 +402,7 @@ fun <T>EditableList(
     val snackbarHostStateUpdated by rememberUpdatedState(newValue = snackbarHostState)
     val overScrollPx = with(LocalDensity.current) { 4.dp.roundToPx() }
     val predefinedExpanded by state.predefinedSectionsExpanded.collectAsStateWithLifecycle(
-        Array(state.predefinedItemSections.size){ false }
+        Array(state.predefinedItemSections.size) { false }
     )
 
     LaunchedEffect(state.initiateScrollChannel) {
@@ -405,7 +410,9 @@ fun <T>EditableList(
         for (index in state.initiateScrollChannel) {
 //            Log.v("Tuner", "EditableList: initiating scroll to index = $index")
             state.lazyListState.niceAnimatedScroll(
-                index.first, index.second, overScrollPx
+                index.first,
+                index.second,
+                overScrollPx
             )
         }
     }
@@ -417,15 +424,17 @@ fun <T>EditableList(
             launch {
                 val result = snackbarHostStateUpdated?.showSnackbar(
                     resources.getQuantityString(
-                        R.plurals.items_deleted, delete.numDeleted, delete.numDeleted
+                        R.plurals.items_deleted,
+                        delete.numDeleted,
+                        delete.numDeleted
                     ),
                     actionLabel = resources.getString(R.string.undo),
                     duration = SnackbarDuration.Long
                 )
                 when (result) {
                     SnackbarResult.Dismissed -> {}
-                    SnackbarResult.ActionPerformed -> {
 
+                    SnackbarResult.ActionPerformed -> {
                         val currentItems = state.editableItems.value
                         val backupItems = delete.backup
                         val firstChangedIndex = backupItems.zip(currentItems).indexOfFirst {
@@ -443,6 +452,7 @@ fun <T>EditableList(
                             overScrollPx
                         )
                     }
+
                     null -> {}
                 }
             }
@@ -460,10 +470,12 @@ fun <T>EditableList(
         state = state.lazyListState
     ) {
         val showSections = (
-                (editableItems.size + state.numNonEmptyPredefinedLists) > 1 ||
-                        state.numNonEmptyPredefinedLists > 1
-                )
-        if (editableItems.isEmpty() && state.numNonEmptyPredefinedLists == 0 && noItemsMessage != null) {
+            (editableItems.size + state.numNonEmptyPredefinedLists) > 1 ||
+                state.numNonEmptyPredefinedLists > 1
+            )
+        if (editableItems.isEmpty() && state.numNonEmptyPredefinedLists == 0 &&
+            noItemsMessage != null
+        ) {
             item(contentType = CONTENT_TYPE_EMPTY_MESSAGE) {
                 Box(
                     Modifier.fillMaxWidth().padding(vertical = 8.dp),
@@ -508,12 +520,15 @@ fun <T>EditableList(
                             )
                             .pointerInput(Unit) {
                                 detectTapGestures(
-                                    onLongPress = { state.toggleSelection(state.getStableId(listItem)) },
+                                    onLongPress = {
+                                        state.toggleSelection(state.getStableId(listItem))
+                                    },
                                     onTap = {
-                                        if (selectedItems.size >= 1)
+                                        if (selectedItems.size >= 1) {
                                             state.toggleSelection(state.getStableId(listItem))
-                                        else
+                                        } else {
                                             onActivateItemClicked(listItem)
+                                        }
                                     },
                                     onPress = {
                                         val press = PressInteraction.Press(it)
@@ -540,8 +555,11 @@ fun <T>EditableList(
                 }
             }
 
-            if (predefinedExpanded[predefinedListIndex]
-                || (predefinedList.size > 0 && editableItems.isEmpty() && state.numNonEmptyPredefinedLists == 1)
+            if (predefinedExpanded[predefinedListIndex] ||
+                (
+                    predefinedList.size > 0 && editableItems.isEmpty() &&
+                        state.numNonEmptyPredefinedLists == 1
+                    )
             ) {
                 items(
                     count = predefinedList.size,
@@ -564,7 +582,6 @@ fun <T>EditableList(
                             }
                     )
                 }
-
             }
         }
     }
@@ -608,7 +625,7 @@ private fun EditableListTest() {
                 TestItem("B", 2L),
                 TestItem("C", 3L),
                 TestItem("D", 4L),
-            TestItem("E", 5L)
+                TestItem("E", 5L)
             )
         )
     }
@@ -622,7 +639,7 @@ private fun EditableListTest() {
 
     val listData = EditableListData(
         predefinedItemsList,
-        getStableId = {it.key},
+        getStableId = { it.key },
         editableItemsSectionResId = R.string.custom_item,
         editableItems = editableItems,
         editableItemsExpanded = editableItemsExpanded,
@@ -633,13 +650,13 @@ private fun EditableListTest() {
     TunerTheme {
         EditableList(
             state = listData,
-            onActivateItemClicked = { activeItem.value = it },
+            onActivateItemClicked = { activeItem.value = it }
         ) { item, info, modifier ->
             Row(modifier.padding(12.dp)) {
                 Text(
                     item.title,
                     color = if (info.isSelected) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
-                    )
+                )
             }
         }
     }

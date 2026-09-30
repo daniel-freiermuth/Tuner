@@ -19,11 +19,11 @@
 package de.moekadu.tuner.notedetection
 
 import de.moekadu.tuner.misc.MemoryPool
-import kotlinx.coroutines.channels.Channel
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlinx.coroutines.channels.Channel
 
 /** Class which collects all results in the process of frequency detection.
  * @param sizeOfTimeSeries Number of samples, which are stored in the time series.
@@ -42,7 +42,8 @@ class FrequencyDetectionCollectedResults(val sizeOfTimeSeries: Int, val sampleRa
      */
     val frequencySpectrum = FrequencySpectrum(
         (sizeOfTimeSeries + 1),
-        RealFFT.getFrequency(1, 2 * sizeOfTimeSeries, timeSeries.dt)) // factor 2 since we will zero-pad input
+        RealFFT.getFrequency(1, 2 * sizeOfTimeSeries, timeSeries.dt)
+    ) // factor 2 since we will zero-pad input
 
     /** Frame position on which the previousSpectrum is based on. -1 if there is not previous spectrum.n*/
     var previousFramePosition = -1
@@ -53,7 +54,8 @@ class FrequencyDetectionCollectedResults(val sizeOfTimeSeries: Int, val sampleRa
     val previousSpectrum = FrequencySpectrum(frequencySpectrum.size, frequencySpectrum.df)
 
     /** Functor for obtaining peak frequencies with increased accuracy. */
-    val accuratePeakFrequency = AccurateSpectrumPeakFrequency(previousSpectrum, frequencySpectrum, 0f)
+    val accuratePeakFrequency =
+        AccurateSpectrumPeakFrequency(previousSpectrum, frequencySpectrum, 0f)
 
     /** Auto correlation of the time series. */
     val autoCorrelation = AutoCorrelation(sizeOfTimeSeries + 1, timeSeries.dt)
@@ -62,7 +64,7 @@ class FrequencyDetectionCollectedResults(val sizeOfTimeSeries: Int, val sampleRa
     var noise = 0.0f
 
     /** Detected frequency based on the autocorrelation. */
-    val correlationBasedFrequency = CorrelationBasedFrequency(0f , 0f, 0f)
+    val correlationBasedFrequency = CorrelationBasedFrequency(0f, 0f, 0f)
 
     /** Object, storing the found harmonic frequencies of the signal. */
     val harmonics = Harmonics(sizeOfTimeSeries)
@@ -78,9 +80,11 @@ class FrequencyDetectionCollectedResults(val sizeOfTimeSeries: Int, val sampleRa
 
     /** Quick access of the base frequency, obtained through the harmonics in the frequency spectrum. */
     val frequency
-        get() = if (harmonicStatistics.frequency != 0f)
+        get() = if (harmonicStatistics.frequency != 0f) {
             harmonicStatistics.frequency
-        else correlationBasedFrequency.frequency
+        } else {
+            correlationBasedFrequency.frequency
+        }
 
     /** Inharmonicity of the tone. */
     var inharmonicity = 0f
@@ -105,15 +109,21 @@ class FrequencyDetectionResultCollector(
     private val maxGapBetweenHarmonics: Int, // = 10,
     private val maxNumHarmonicsForInharmonicity: Int, // = 8,
     private val windowType: WindowingFunction, //  = WindowingFunction.Tophat,
-    private val acousticWeighting: AcousticWeighting, // = AcousticCWeighting()
+    private val acousticWeighting: AcousticWeighting // = AcousticCWeighting()
 ) {
     private val collectedResultsMemory = MemoryPoolFrequencyDetectionCollectedResults()
     private val spectrumAndCorrelationMemory = MemoryPoolCorrelation()
     private val inharmonicityDetectorMemory = MemoryPoolInharmonicityDetector()
-    private var previousResultsBuffer = Channel<MemoryPool<FrequencyDetectionCollectedResults>.RefCountedMemory>(Channel.CONFLATED)
+    private var previousResultsBuffer =
+        Channel<MemoryPool<FrequencyDetectionCollectedResults>.RefCountedMemory>(Channel.CONFLATED)
 
-    suspend fun collectResults(sampleData: MemoryPool<SampleData>.RefCountedMemory): MemoryPool<FrequencyDetectionCollectedResults>.RefCountedMemory {
-        val collectedResults = collectedResultsMemory.get(sampleData.memory.size, sampleData.memory.sampleRate)
+    suspend fun collectResults(
+        sampleData: MemoryPool<SampleData>.RefCountedMemory
+    ): MemoryPool<FrequencyDetectionCollectedResults>.RefCountedMemory {
+        val collectedResults = collectedResultsMemory.get(
+            sampleData.memory.size,
+            sampleData.memory.sampleRate
+        )
 
         val previousResults = previousResultsBuffer.tryReceive().getOrNull()
         copyPreviousResultsToNewResults(previousResults?.memory, collectedResults.memory)
@@ -129,13 +139,22 @@ class FrequencyDetectionResultCollector(
             collectedResults.memory.frequencySpectrum
         )
 
-        collectedResults.memory.noise = 1f - collectedResults.memory.autoCorrelation[1] / collectedResults.memory.autoCorrelation[0]
+        collectedResults.memory.noise =
+            1f -
+            collectedResults.memory.autoCorrelation[1] /
+            collectedResults.memory.autoCorrelation[0]
 
         // set time shift for accurate frequencies
-        collectedResults.memory.accuratePeakFrequency.timeShiftBetweenSpecs = if (collectedResults.memory.previousFramePosition == 0)
-            0f
-        else
-            collectedResults.memory.timeSeries.dt * (collectedResults.memory.timeSeries.framePosition - collectedResults.memory.previousFramePosition)
+        collectedResults.memory.accuratePeakFrequency.timeShiftBetweenSpecs =
+            if (collectedResults.memory.previousFramePosition == 0) {
+                0f
+            } else {
+                collectedResults.memory.timeSeries.dt *
+                    (
+                        collectedResults.memory.timeSeries.framePosition -
+                            collectedResults.memory.previousFramePosition
+                        )
+            }
         // Log.v("Tuner", "CollectedResults.collectResults: frameShift at frame ${collectedResults.memory.timeSeries.framePosition} = ${collectedResults.memory.timeSeries.framePosition - collectedResults.memory.previousFramePosition}")
 
         findCorrelationBasedFrequency(
@@ -175,23 +194,29 @@ class FrequencyDetectionResultCollector(
             collectedResults.memory.harmonics.sort()
 
             collectedResults.memory.harmonicStatistics.evaluate(
-                collectedResults.memory.harmonics, acousticWeighting
-            )
-
-            collectedResults.memory.harmonicEnergyContentRelative = computeEnergyContentOfHarmonicsInSignalRelative(
-                collectedResults.memory.harmonics,
-                collectedResults.memory.frequencySpectrum.amplitudeSpectrumSquared
-            )
-            collectedResults.memory.harmonicEnergyAbsolute = computeEnergyContentOfHarmonicsInSignalAbsolute(
-                collectedResults.memory.harmonics,
-                collectedResults.memory.frequencySpectrum.amplitudeSpectrumSquared
-            )
-
-            val inharmonicityDetector = inharmonicityDetectorMemory.get(maxNumHarmonicsForInharmonicity)
-            collectedResults.memory.inharmonicity = inharmonicityDetector.memory.computeInharmonicity(
                 collectedResults.memory.harmonics,
                 acousticWeighting
             )
+
+            collectedResults.memory.harmonicEnergyContentRelative =
+                computeEnergyContentOfHarmonicsInSignalRelative(
+                    collectedResults.memory.harmonics,
+                    collectedResults.memory.frequencySpectrum.amplitudeSpectrumSquared
+                )
+            collectedResults.memory.harmonicEnergyAbsolute =
+                computeEnergyContentOfHarmonicsInSignalAbsolute(
+                    collectedResults.memory.harmonics,
+                    collectedResults.memory.frequencySpectrum.amplitudeSpectrumSquared
+                )
+
+            val inharmonicityDetector = inharmonicityDetectorMemory.get(
+                maxNumHarmonicsForInharmonicity
+            )
+            collectedResults.memory.inharmonicity =
+                inharmonicityDetector.memory.computeInharmonicity(
+                    collectedResults.memory.harmonics,
+                    acousticWeighting
+                )
             inharmonicityDetector.decRef()
         } else {
             collectedResults.memory.harmonics.clear()
@@ -199,8 +224,10 @@ class FrequencyDetectionResultCollector(
             collectedResults.memory.inharmonicity = 0f
         }
 
-        if (collectedResults.incRef()) // increment ref count to avoid recycling while its in the previousResultsBuffer
+        if (collectedResults.incRef()) {
+            // increment ref count to avoid recycling while its in the previousResultsBuffer
             previousResultsBuffer.trySend(collectedResults)
+        }
 
         return collectedResults
     }
@@ -209,9 +236,13 @@ class FrequencyDetectionResultCollector(
         previousResults: FrequencyDetectionCollectedResults?,
         newResults: FrequencyDetectionCollectedResults
     ) {
-        if (previousResults != null && previousResults.sizeOfTimeSeries == newResults.sizeOfTimeSeries) {
+        if (previousResults != null &&
+            previousResults.sizeOfTimeSeries == newResults.sizeOfTimeSeries
+        ) {
             newResults.previousFramePosition = previousResults.timeSeries.framePosition
-            previousResults.frequencySpectrum.spectrum.copyInto(newResults.previousSpectrum.spectrum)
+            previousResults.frequencySpectrum.spectrum.copyInto(
+                newResults.previousSpectrum.spectrum
+            )
         } else {
             newResults.previousFramePosition = -1
         }
@@ -220,8 +251,8 @@ class FrequencyDetectionResultCollector(
     private fun computeTimeSeriesStandardDeviation(timeSeries: TimeSeries): Float {
         val average = timeSeries.values.average().toFloat()
         return sqrt(
-            timeSeries.values.fold(0f) { sum, element -> sum + (element - average).pow(2)}
-                    / timeSeries.values.size
+            timeSeries.values.fold(0f) { sum, element -> sum + (element - average).pow(2) } /
+                timeSeries.values.size
         )
     }
 
@@ -232,7 +263,9 @@ class FrequencyDetectionResultCollector(
     }
 
     private suspend fun computeSpectrumAndCorrelation(
-        sampleData: SampleData, autoCorrelation: AutoCorrelation, spectrum: FrequencySpectrum
+        sampleData: SampleData,
+        autoCorrelation: AutoCorrelation,
+        spectrum: FrequencySpectrum
     ) {
         val spectrumAndCorrelation = spectrumAndCorrelationMemory.get(sampleData.size, windowType)
         spectrumAndCorrelation.memory.correlate(
@@ -249,17 +282,19 @@ class FrequencyDetectionResultCollector(
         var maxValueSpectrum = Float.NEGATIVE_INFINITY
         for (i in spectrum.amplitudeSpectrumSquared.indices) {
             spectrum.amplitudeSpectrumSquared[i] = normalizationFactor * (
-                    spectrum.spectrum[2 * i].pow(2) + spectrum.spectrum[2 * i + 1].pow(2)
-                    )
+                spectrum.spectrum[2 * i].pow(2) + spectrum.spectrum[2 * i + 1].pow(2)
+                )
             minValueSpectrum = min(minValueSpectrum, spectrum.amplitudeSpectrumSquared[i])
             maxValueSpectrum = max(maxValueSpectrum, spectrum.amplitudeSpectrumSquared[i])
         }
-        val scalingFactorSpectrum = if (maxValueSpectrum == minValueSpectrum)
+        val scalingFactorSpectrum = if (maxValueSpectrum == minValueSpectrum) {
             1.0f
-        else
+        } else {
             1.0f / (maxValueSpectrum - minValueSpectrum)
+        }
         spectrum.amplitudeSpectrumSquared.forEachIndexed { index, ampSqr ->
-            spectrum.plottingSpectrumNormalized[index] = scalingFactorSpectrum * (ampSqr - minValueSpectrum)
+            spectrum.plottingSpectrumNormalized[index] =
+                scalingFactorSpectrum * (ampSqr - minValueSpectrum)
         }
 
         var minValueCorrelation = Float.POSITIVE_INFINITY
@@ -268,12 +303,14 @@ class FrequencyDetectionResultCollector(
             minValueCorrelation = min(minValueCorrelation, corr)
             maxValueCorrelation = max(maxValueCorrelation, corr)
         }
-        val scalingFactorCorrelation = if (maxValueCorrelation == minValueCorrelation)
+        val scalingFactorCorrelation = if (maxValueCorrelation == minValueCorrelation) {
             1.0f
-        else
+        } else {
             1.0f / (maxValueCorrelation - minValueCorrelation)
+        }
         autoCorrelation.values.forEachIndexed { index, corr ->
-            autoCorrelation.plotValuesNormalized[index] =  scalingFactorCorrelation * (corr - minValueCorrelation)
+            autoCorrelation.plotValuesNormalized[index] =
+                scalingFactorCorrelation * (corr - minValueCorrelation)
         }
         autoCorrelation.plotValuesNormalizedZero = -scalingFactorCorrelation * minValueCorrelation
 

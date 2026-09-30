@@ -20,8 +20,8 @@ package de.moekadu.tuner.notedetection
 
 import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.instruments.InstrumentIcon
-import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.temperaments.centsToRatio
 import de.moekadu.tuner.temperaments.ratioToCents
 import kotlin.math.absoluteValue
@@ -54,10 +54,22 @@ class TuningTargetComputer(
     instrument: Instrument?,
     private val toleranceInCents: Float
 ) {
-    private val instrument = instrument ?: Instrument(name = "", nameResource = null, strings = arrayOf(), icon = InstrumentIcon.entries[0], stableId = 0, isChromatic = true)
-    private val sortedAndDistinctInstrumentStrings = SortedAndDistinctInstrumentStrings(this.instrument, musicalScale)
-    private val targetNoteAutoDetection = TargetNoteAutoDetection(musicalScale, instrument, toleranceInCents)
-    private val targetNoteAutoDetectionChromatic = TargetNoteAutoDetection(musicalScale, null, toleranceInCents)
+    private val instrument =
+        instrument
+            ?: Instrument(
+                name = "",
+                nameResource = null,
+                strings = arrayOf(),
+                icon = InstrumentIcon.entries[0],
+                stableId = 0,
+                isChromatic = true
+            )
+    private val sortedAndDistinctInstrumentStrings =
+        SortedAndDistinctInstrumentStrings(this.instrument, musicalScale)
+    private val targetNoteAutoDetection =
+        TargetNoteAutoDetection(musicalScale, instrument, toleranceInCents)
+    private val targetNoteAutoDetectionChromatic =
+        TargetNoteAutoDetection(musicalScale, null, toleranceInCents)
 
     /** Find tuning target.
      * @param frequency Frequency for which the target should be found.
@@ -69,19 +81,21 @@ class TuningTargetComputer(
     operator fun invoke(
         frequency: Float,
         previousTargetNote: MusicalNote?,
-        userDefinedTargetNote: MusicalNote?): TuningTarget {
-
+        userDefinedTargetNote: MusicalNote?
+    ): TuningTarget {
         // check if we directly can use the user defined note and return if yes
         if (userDefinedTargetNote != null) {
-            //val index = musicalScale.getNoteIndex(userDefinedTargetNote)
+            // val index = musicalScale.getNoteIndex(userDefinedTargetNote)
             val indices = musicalScale.getMatchingNoteIndices(userDefinedTargetNote)
             if (indices.isNotEmpty()) {
                 val index = findBestMatch(frequency, indices, previousTargetNote)
-            //if (index != Int.MAX_VALUE) {
+                // if (index != Int.MAX_VALUE) {
                 return TuningTarget(
                     userDefinedTargetNote,
                     musicalScale.getNoteFrequency(index),
-                    isPartOfInstrument = sortedAndDistinctInstrumentStrings.isNotePartOfInstrument(userDefinedTargetNote),
+                    isPartOfInstrument = sortedAndDistinctInstrumentStrings.isNotePartOfInstrument(
+                        userDefinedTargetNote
+                    ),
                     instrumentHasNoStrings = !instrument.isChromatic && instrument.strings.isEmpty()
                 )
             }
@@ -92,13 +106,15 @@ class TuningTargetComputer(
             return TuningTarget(
                 musicalScale.referenceNote,
                 musicalScale.referenceFrequency,
-                isPartOfInstrument = sortedAndDistinctInstrumentStrings.isNotePartOfInstrument(musicalScale.referenceNote),
+                isPartOfInstrument = sortedAndDistinctInstrumentStrings.isNotePartOfInstrument(
+                    musicalScale.referenceNote
+                ),
                 instrumentHasNoStrings = !instrument.isChromatic && instrument.strings.isEmpty()
             )
         }
 
         val detectedTargetNote = targetNoteAutoDetection.detect(frequency, previousTargetNote)
-        //Log.v("Tuner", "TuningTarget: detectedTargetNote=$detectedTargetNote, f=$frequency")
+        // Log.v("Tuner", "TuningTarget: detectedTargetNote=$detectedTargetNote, f=$frequency")
         // found note which is part of instrument
         if (detectedTargetNote != null) {
             val index = musicalScale.getNoteIndex2(detectedTargetNote)
@@ -111,7 +127,10 @@ class TuningTargetComputer(
         }
 
         // no instrument note available, return the closest chromatic
-        val chromaticTargetNote = targetNoteAutoDetectionChromatic.detect(frequency, previousTargetNote)
+        val chromaticTargetNote = targetNoteAutoDetectionChromatic.detect(
+            frequency,
+            previousTargetNote
+        )
         // the returned note will always be non null for chromatic instruments and non-zero frequencies
         val index = musicalScale.getNoteIndex2(chromaticTargetNote!!)
         return TuningTarget(
@@ -123,30 +142,31 @@ class TuningTargetComputer(
     }
 
     private fun findBestMatch(
-        frequency: Float, musicalScaleIndices: IntArray, previousTargetNote: MusicalNote?
-    ): Int {
-        return if (musicalScaleIndices.size == 2) {
-            val f0 = musicalScale.getNoteFrequency(musicalScaleIndices[0])
-            val f1 = musicalScale.getNoteFrequency(musicalScaleIndices[1])
-            val distInCents = ratioToCents(f0 / f1).absoluteValue
-            // normally use toleranceInCents as tolerance, but the distance should be be
-            // significantly smaller than the note distance.
-            val tolerance = min(distInCents / 4,  toleranceInCents)
-            var dist0 = ratioToCents(f0 / frequency).absoluteValue
-            var dist1 = ratioToCents(f1 / frequency).absoluteValue
-            if (previousTargetNote != null) {
-                val previousTargetNoteIndex = musicalScale.getNoteIndex2(previousTargetNote)
-                if (musicalScaleIndices[0] == previousTargetNoteIndex)
-                    dist0 -= tolerance
-                else if (musicalScaleIndices[1] == previousTargetNoteIndex)
-                    dist1 -= tolerance
+        frequency: Float,
+        musicalScaleIndices: IntArray,
+        previousTargetNote: MusicalNote?
+    ): Int = if (musicalScaleIndices.size == 2) {
+        val f0 = musicalScale.getNoteFrequency(musicalScaleIndices[0])
+        val f1 = musicalScale.getNoteFrequency(musicalScaleIndices[1])
+        val distInCents = ratioToCents(f0 / f1).absoluteValue
+        // normally use toleranceInCents as tolerance, but the distance should be be
+        // significantly smaller than the note distance.
+        val tolerance = min(distInCents / 4, toleranceInCents)
+        var dist0 = ratioToCents(f0 / frequency).absoluteValue
+        var dist1 = ratioToCents(f1 / frequency).absoluteValue
+        if (previousTargetNote != null) {
+            val previousTargetNoteIndex = musicalScale.getNoteIndex2(previousTargetNote)
+            if (musicalScaleIndices[0] == previousTargetNoteIndex) {
+                dist0 -= tolerance
+            } else if (musicalScaleIndices[1] == previousTargetNoteIndex) {
+                dist1 -= tolerance
             }
-            if (dist0 < dist1) musicalScaleIndices[0] else musicalScaleIndices[1]
-        } else {
-            // this refers the the case that we have one note.
-            // more than 2 note should never happen, if notes in musical scale are unique.
-            // so a correct handling for this is not implemented.
-            musicalScaleIndices[0]
         }
+        if (dist0 < dist1) musicalScaleIndices[0] else musicalScaleIndices[1]
+    } else {
+        // this refers the the case that we have one note.
+        // more than 2 note should never happen, if notes in musical scale are unique.
+        // so a correct handling for this is not implemented.
+        musicalScaleIndices[0]
     }
 }

@@ -33,10 +33,7 @@ import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.ui.theme.TunerTheme
 
 @Composable
-fun Section(
-    title: String,
-    modifier: Modifier = Modifier
-) {
+fun Section(title: String, modifier: Modifier = Modifier) {
     ListItem(
         headlineContent = {
             Text(

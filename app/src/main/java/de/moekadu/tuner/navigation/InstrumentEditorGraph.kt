@@ -45,8 +45,10 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
-private fun createViewModel(controller: NavController, backStackEntry: NavBackStackEntry)
-: InstrumentEditorViewModel {
+private fun createViewModel(
+    controller: NavController,
+    backStackEntry: NavBackStackEntry
+): InstrumentEditorViewModel {
     val parentEntry = remember(backStackEntry) {
         controller.getBackStackEntry<InstrumentEditorGraphRoute>()
     }
@@ -77,8 +79,9 @@ fun NavGraphBuilder.instrumentEditorGraph(
             val permissionGranted = rememberTunerAudioPermission(snackbarHostState)
 
             LifecycleResumeEffect(permissionGranted) {
-                if (permissionGranted)
+                if (permissionGranted) {
                     viewModel.startTuner()
+                }
                 onPauseOrDispose { viewModel.stopTuner() }
             }
             InstrumentEditor(
@@ -111,18 +114,16 @@ fun NavGraphBuilder.instrumentEditorGraph(
 @Serializable
 data class InstrumentEditorGraphRoute(val instrumentSerialized: String) {
 
-    fun getInstrument(): Instrument {
-        return Json.decodeFromString<Instrument>(instrumentSerialized)
-    }
+    fun getInstrument(): Instrument = Json.decodeFromString<Instrument>(instrumentSerialized)
     companion object {
-        fun create(instrument: Instrument): InstrumentEditorGraphRoute {
-            return InstrumentEditorGraphRoute(
-                Json.encodeToString<Instrument>(instrument)
-            )
-        }
+        fun create(instrument: Instrument): InstrumentEditorGraphRoute = InstrumentEditorGraphRoute(
+            Json.encodeToString<Instrument>(instrument)
+        )
     }
 }
+
 @Serializable
 data object InstrumentEditorRoute
+
 @Serializable
 data object IconPickerRoute

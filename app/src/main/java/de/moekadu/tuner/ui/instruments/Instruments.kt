@@ -63,10 +63,10 @@ import de.moekadu.tuner.misc.toastPotentialFileCheckError
 import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
-import de.moekadu.tuner.ui.common.EditableListPredefinedSectionImmutable
 import de.moekadu.tuner.ui.common.EditableList
 import de.moekadu.tuner.ui.common.EditableListData
 import de.moekadu.tuner.ui.common.EditableListItem
+import de.moekadu.tuner.ui.common.EditableListPredefinedSectionImmutable
 import de.moekadu.tuner.ui.common.ListItemTask
 import de.moekadu.tuner.ui.common.OverflowMenu
 import de.moekadu.tuner.ui.common.OverflowMenuCallbacks
@@ -89,7 +89,7 @@ fun Instruments(
     modifier: Modifier = Modifier,
     notePrintOptions: NotePrintOptions = NotePrintOptions(),
     onInstrumentClicked: (instrument: Instrument) -> Unit = { },
-    onEditInstrumentClicked: (instrument: Instrument, copy: Boolean) -> Unit = {_,_ -> },
+    onEditInstrumentClicked: (instrument: Instrument, copy: Boolean) -> Unit = { _, _ -> },
     onCreateNewInstrumentClicked: () -> Unit = {},
     onNavigateUpClicked: () -> Unit = {},
     onLoadInstruments: (instruments: List<Instrument>) -> Unit = {},
@@ -118,10 +118,14 @@ fun Instruments(
                     instruments.size,
                     filename
                 ),
-                Toast.LENGTH_LONG).show()
+                Toast.LENGTH_LONG
+            ).show()
         } else {
-            Toast.makeText(context,
-                R.string.failed_to_archive_items, Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                context,
+                R.string.failed_to_archive_items,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
     val shareInstrumentLauncher = rememberLauncherForActivityResult(
@@ -143,12 +147,13 @@ fun Instruments(
         }
     }
 
-    val overflowCallbacks = object: OverflowMenuCallbacks {
+    val overflowCallbacks = object : OverflowMenuCallbacks {
         override fun onDeleteClicked() {
-            if (state.listData.selectedItems.value.isNotEmpty())
+            if (state.listData.selectedItems.value.isNotEmpty()) {
                 state.listData.deleteSelectedItems()
-            else
+            } else {
                 state.listData.deleteAllItems()
+            }
         }
         override fun onShareClicked() {
             val instruments = state.listData.extractSelectedItems()
@@ -161,15 +166,16 @@ fun Instruments(
                     InstrumentIO.instrumentsListToString(context, instruments),
                     instruments.size
                 )
-                //val intent = ShareInstruments.createShareInstrumentsIntent(context, instruments)
+                // val intent = ShareInstruments.createShareInstrumentsIntent(context, instruments)
                 shareInstrumentLauncher.launch(intent)
             }
         }
         override fun onExportClicked() {
-            if (state.listData.editableItems.value.isEmpty())
+            if (state.listData.editableItems.value.isEmpty()) {
                 Toast.makeText(context, R.string.database_empty, Toast.LENGTH_LONG).show()
-            else
+            } else {
                 saveInstrumentLauncher.launch("tuner.txt")
+            }
         }
         override fun onImportClicked() {
             importInstrumentLauncher.launch(arrayOf("text/plain"))
@@ -248,7 +254,7 @@ fun Instruments(
             ),
             onActivateItemClicked = onInstrumentClicked,
             snackbarHostState = snackbarHostState
-        ) { item ,itemInfo, itemModifier ->
+        ) { item, itemInfo, itemModifier ->
             EditableListItem(
                 title = { Text(item.getNameString(context)) },
                 description = {
@@ -274,10 +280,13 @@ fun Instruments(
                 onOptionsClicked = {
                     when (it) {
                         ListItemTask.Edit -> onEditInstrumentClicked(item, false)
+
                         ListItemTask.Copy -> onEditInstrumentClicked(item, true)
+
                         ListItemTask.Delete -> {
                             state.listData.deleteItems(persistentSetOf(item.stableId))
                         }
+
                         ListItemTask.Info -> {}
                     }
                 },
@@ -288,7 +297,6 @@ fun Instruments(
                 hasInfo = false
             )
         }
-
     }
 }
 
@@ -299,7 +307,7 @@ private val testInstrument1 = Instrument(
         MusicalNote(BaseNote.A, NoteModifier.None, octave = 4),
         MusicalNote(BaseNote.G, NoteModifier.None, octave = 4),
         MusicalNote(BaseNote.D, NoteModifier.Sharp, octave = 3),
-        MusicalNote(BaseNote.E, NoteModifier.None, octave = 2),
+        MusicalNote(BaseNote.E, NoteModifier.None, octave = 2)
     ),
     icon = InstrumentIcon.guitar,
     1L,
@@ -329,7 +337,7 @@ private class TestInstrumentsData : InstrumentsData {
 
     val predefinedInstruments = persistentListOf(
         testInstrument1.copy(stableId = -1),
-        testInstrument2.copy(stableId = -2),
+        testInstrument2.copy(stableId = -2)
     )
     val predefinedInstrumentsExpanded = MutableStateFlow(true)
 
@@ -369,12 +377,11 @@ private class TestInstrumentsData : InstrumentsData {
     override fun saveInstruments(context: Context, uri: Uri, instruments: List<Instrument>) {}
 }
 
-
 @Preview(widthDp = 300, heightDp = 700, showBackground = true)
 @Composable
 private fun InstrumentsPreview() {
     TunerTheme {
-        val data = remember{ TestInstrumentsData() }
+        val data = remember { TestInstrumentsData() }
         Instruments(state = data)
     }
 }

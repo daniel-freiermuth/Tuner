@@ -5,9 +5,9 @@ import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteNameHelpers
 import de.moekadu.tuner.notenames.NoteNames2
 import de.moekadu.tuner.notenames.NoteNamesEDOGenerator
+import kotlin.math.max
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlin.math.max
 
 /** User defined (or custom) temperaments.
  * @param _name Temperament name.
@@ -33,38 +33,40 @@ data class Temperament3Custom(
 ) : Temperament3 {
     @Transient
     override val name = GetTextFromString(_name)
+
     @Transient
     override val abbreviation = GetTextFromString(_abbreviation)
+
     @Transient
     override val description = GetTextFromString(_description)
+
     @Transient
     override val size = max(_rationalNumbers.size, cents.size) - 1
 
-    override fun cents(): DoubleArray {
-        return DoubleArray(size + 1) {
-            val ratio = _rationalNumbers.getOrNull(it)
-            if (ratio != null)
-                ratioToCents(ratio.toDouble())
-            else
-                cents.getOrNull(it) ?: throw RuntimeException("Cent value not defined at index $it")
+    override fun cents(): DoubleArray = DoubleArray(size + 1) {
+        val ratio = _rationalNumbers.getOrNull(it)
+        if (ratio != null) {
+            ratioToCents(ratio.toDouble())
+        } else {
+            cents.getOrNull(it) ?: throw RuntimeException("Cent value not defined at index $it")
         }
     }
 
     override fun chainOfFifths(): ChainOfFifths? = null
 
     override fun equalOctaveDivision(): Int? = null
-    override fun rationalNumbers(): Array<RationalNumber>? {
-        return if (_rationalNumbers.size != size || _rationalNumbers.contains(null))
+    override fun rationalNumbers(): Array<RationalNumber>? =
+        if (_rationalNumbers.size != size || _rationalNumbers.contains(null)) {
             null
-        else
+        } else {
             _rationalNumbers.requireNoNulls()
-    }
+        }
 
-    override fun possibleRootNotes(): Array<MusicalNote>
-            = _noteNames ?: NoteNamesEDOGenerator.possibleRootNotes(size)
+    override fun possibleRootNotes(): Array<MusicalNote> =
+        _noteNames ?: NoteNamesEDOGenerator.possibleRootNotes(size)
 
-    override fun noteNames(rootNote: MusicalNote?): NoteNames2 {
-        return if (_noteNames.isNullOrEmpty() || _noteNames.size != size) {
+    override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
+        if (_noteNames.isNullOrEmpty() || _noteNames.size != size) {
             NoteNamesEDOGenerator.getNoteNames(size, rootNote)!!
         } else {
             val referenceNote = NoteNameHelpers.findDefaultReferenceNote(_noteNames)
@@ -74,13 +76,12 @@ data class Temperament3Custom(
                 .coerceAtLeast(0) // don't reorder if root note is not found, should not happen
             // this rotates the array, such that element at shiftLeft is at position 0
             val names = (
-                    _noteNames.sliceArray(shiftLeft until _noteNames.size) +
-                            _noteNames.sliceArray(0 until shiftLeft)
-                    )
+                _noteNames.sliceArray(shiftLeft until _noteNames.size) +
+                    _noteNames.sliceArray(0 until shiftLeft)
+                )
 
             NoteNames2(names, referenceNote, octaveSwitchAt)
         }
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -97,7 +98,9 @@ data class Temperament3Custom(
         if (_noteNames != null) {
             if (other._noteNames == null) return false
             if (!_noteNames.contentEquals(other._noteNames)) return false
-        } else if (other._noteNames != null) return false
+        } else if (other._noteNames != null) {
+            return false
+        }
 
         return true
     }

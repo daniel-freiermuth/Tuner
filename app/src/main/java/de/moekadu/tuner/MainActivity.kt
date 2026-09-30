@@ -29,10 +29,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.runtime.DisposableEffect
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -48,12 +48,12 @@ import de.moekadu.tuner.misc.FileCheck
 import de.moekadu.tuner.misc.toastPotentialFileCheckError
 import de.moekadu.tuner.navigation.InstrumentsRoute
 import de.moekadu.tuner.navigation.TemperamentDialogRoute
+import de.moekadu.tuner.navigation.TemperamentEditorGraphRoute
 import de.moekadu.tuner.navigation.TunerRoute
 import de.moekadu.tuner.navigation.instrumentEditorGraph
-import de.moekadu.tuner.navigation.preferenceGraph
 import de.moekadu.tuner.navigation.mainGraph
+import de.moekadu.tuner.navigation.preferenceGraph
 import de.moekadu.tuner.navigation.temperamentEditorGraph
-import de.moekadu.tuner.navigation.TemperamentEditorGraphRoute
 import de.moekadu.tuner.preferences.NightMode
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.preferences.migrateFromV6
@@ -63,10 +63,10 @@ import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.temperaments.hasErrors
 import de.moekadu.tuner.temperaments.toTemperament3Custom
 import de.moekadu.tuner.ui.theme.TunerTheme
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -92,16 +92,18 @@ class MainActivity : ComponentActivity() {
             migrateFromV6(this@MainActivity, pref, temperaments, instruments)
         }
 
-        if (savedInstanceState == null)
+        if (savedInstanceState == null) {
             handleFileLoadingIntent(intent)
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 pref.screenAlwaysOn.collect {
-                    if (it)
+                    if (it) {
                         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                    else
+                    } else {
                         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+                    }
                 }
             }
         }
@@ -137,7 +139,10 @@ class MainActivity : ComponentActivity() {
                         controller.navigate(TemperamentDialogRoute)
 //                         controller.navigate(TemperamentsManagerRoute(temperaments.musicalScale.value.temperament.stableId))
                         loadTemperaments(
-                            controller, temperamentList, temperaments, this@MainActivity
+                            controller,
+                            temperamentList,
+                            temperaments,
+                            this@MainActivity
                         )
                     }
                 }
@@ -172,7 +177,10 @@ class MainActivity : ComponentActivity() {
                         },
                         onLoadTemperaments = { temperamentList ->
                             loadTemperaments(
-                                controller, temperamentList, temperaments, this@MainActivity
+                                controller,
+                                temperamentList,
+                                temperaments,
+                                this@MainActivity
                             )
                         }
                     )
@@ -210,24 +218,31 @@ class MainActivity : ComponentActivity() {
     private fun handleFileLoadingIntent(intent: Intent?) {
 //        Log.v("Tuner", "MainActivity2.onNewIntent: action=${intent?.action}")
         val uri = intent?.data
-        if ((intent?.action == Intent.ACTION_SEND || intent?.action == Intent.ACTION_VIEW) && uri != null) {
+        if ((intent?.action == Intent.ACTION_SEND || intent?.action == Intent.ACTION_VIEW) &&
+            uri != null
+        ) {
 //            Log.v("Tuner", "MainActivity2.onNewIntent: intent=${intent.data}")
             val (stateInstruments, instruments) = InstrumentIO.readInstrumentsFromFile(
-                this, uri
+                this,
+                uri
             )
             val (stateTemperaments, temperaments) = TemperamentIO.readTemperamentsFromFile(
-                this, uri
+                this,
+                uri
             )
             when {
                 stateInstruments == FileCheck.Ok && instruments.isNotEmpty() -> {
                     loadInstrumentIntentChannel.trySend(instruments)
                 }
+
                 stateTemperaments == FileCheck.Ok && temperaments.isNotEmpty() -> {
                     loadTemperamentIntentChannel.trySend(temperaments)
                 }
+
                 stateInstruments == FileCheck.Empty || stateTemperaments == FileCheck.Empty -> {
                     FileCheck.Empty.toastPotentialFileCheckError(this, uri)
                 }
+
                 else -> {
                     FileCheck.Invalid.toastPotentialFileCheckError(this, uri)
                 }
@@ -246,7 +261,9 @@ private fun loadTemperaments(
         Toast.makeText(
             context,
             context.resources.getQuantityString(
-                R.plurals.load_temperaments, temperamentList.size, temperamentList.size
+                R.plurals.load_temperaments,
+                temperamentList.size,
+                temperamentList.size
             ),
             Toast.LENGTH_LONG
         ).show()
@@ -280,4 +297,3 @@ private fun loadInstruments(
     ).show()
     instrumentResources.appendInstruments(instrumentList)
 }
-

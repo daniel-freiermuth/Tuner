@@ -20,13 +20,13 @@ package de.moekadu.tuner.ui.common
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
@@ -70,12 +70,15 @@ enum class ListItemTask {
 
 private fun numMenuOptions(readOnly: Boolean, isCopyable: Boolean, hasInfo: Boolean): Int {
     var count = 0
-    if (hasInfo)
+    if (hasInfo) {
         ++count // enable info
-    if (isCopyable)
+    }
+    if (isCopyable) {
         ++count // enable copy
-    if (!readOnly)
-        count += 2  // enable edit and delete
+    }
+    if (!readOnly) {
+        count += 2 // enable edit and delete
+    }
     return count
 }
 
@@ -92,12 +95,13 @@ fun EditableListItem(
     isCopyable: Boolean = true, // disable copy-option
     hasInfo: Boolean = false
 ) {
-    val variantColor = if (isActive)
+    val variantColor = if (isActive) {
         MaterialTheme.colorScheme.onSecondaryContainer
-    else
+    } else {
         MaterialTheme.colorScheme.onSurfaceVariant
+    }
 
-    var menuExpanded by remember{ mutableStateOf(false) }
+    var menuExpanded by remember { mutableStateOf(false) }
 
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -138,7 +142,7 @@ fun EditableListItem(
                 CompositionLocalProvider(
                     LocalTextStyle provides MaterialTheme.typography.bodyMedium,
                     LocalContentColor provides variantColor
-                )  {
+                ) {
                     description()
                 }
             }
@@ -147,7 +151,7 @@ fun EditableListItem(
                 if (numOptions == 1 && isCopyable) {
                     IconButton(
                         onClick = { onOptionsClicked(ListItemTask.Copy) },
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
                         Icon(
                             ImageVector.vectorResource(id = R.drawable.ic_copy),
@@ -158,7 +162,7 @@ fun EditableListItem(
                 } else if (numOptions == 1 && hasInfo) {
                     IconButton(
                         onClick = { onOptionsClicked(ListItemTask.Info) },
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
                         Icon(
                             Icons.Default.Info,
@@ -166,11 +170,10 @@ fun EditableListItem(
                             tint = variantColor
                         )
                     }
-
                 } else if (numOptions > 1) {
                     IconButton(
                         onClick = { menuExpanded = true },
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
                         Icon(
                             Icons.Default.MoreVert,
@@ -180,7 +183,7 @@ fun EditableListItem(
                     }
                     DropdownMenu(
                         expanded = menuExpanded,
-                        onDismissRequest = { menuExpanded = false },
+                        onDismissRequest = { menuExpanded = false }
                     ) {
                         if (hasInfo) {
                             DropdownMenuItem(
@@ -267,7 +270,6 @@ private fun EditableListItemPreview() {
                     )
                 }
             )
-
         }
     }
 }

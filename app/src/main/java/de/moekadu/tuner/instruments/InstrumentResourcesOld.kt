@@ -23,14 +23,14 @@ import android.content.Context.MODE_PRIVATE
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class InstrumentResourcesOld @Inject constructor(
-    @ApplicationContext context: Context
-) {
-    private val sharedPreferences = context.getSharedPreferences("instrument resources", MODE_PRIVATE)
+class InstrumentResourcesOld @Inject constructor(@ApplicationContext context: Context) {
+    private val sharedPreferences = context.getSharedPreferences(
+        "instrument resources",
+        MODE_PRIVATE
+    )
 
 //    /** Predefined instruments, this is simply and no database, since it never changes. */
     private val predefinedInstruments: List<Instrument> = instrumentDatabase
-
 
     val predefinedInstrumentsExpanded get() = getBoolean(PREDEFINED_SECTION_EXPANDED_KEY)
     val customInstrumentsExpanded get() = getBoolean(CUSTOM_SECTION_EXPANDED_KEY)
@@ -40,24 +40,27 @@ class InstrumentResourcesOld @Inject constructor(
     }
     val currentInstrument get() = getLong(CURRENT_INSTRUMENT_ID_KEY)?.let { key ->
         customInstruments?.let { instruments ->
-            instruments.firstOrNull{ it.stableId == key }
+            instruments.firstOrNull { it.stableId == key }
         } ?: predefinedInstruments.firstOrNull { it.stableId == key }
     }
 
-    private fun getBoolean(key: String) = if(sharedPreferences.contains(key))
+    private fun getBoolean(key: String) = if (sharedPreferences.contains(key)) {
         sharedPreferences.getBoolean(key, false)
-    else
+    } else {
         null
+    }
 
-    private fun getLong(key: String) = if(sharedPreferences.contains(key))
+    private fun getLong(key: String) = if (sharedPreferences.contains(key)) {
         sharedPreferences.getLong(key, 0L)
-    else
+    } else {
         null
+    }
 
-    private fun getString(key: String) = if(sharedPreferences.contains(key))
+    private fun getString(key: String) = if (sharedPreferences.contains(key)) {
         sharedPreferences.getString(key, null)
-    else
+    } else {
         null
+    }
 
     companion object {
         const val CUSTOM_SECTION_EXPANDED_KEY = "custom_section_expanded"

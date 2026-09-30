@@ -20,20 +20,16 @@ package de.moekadu.tuner.notedetection
 
 import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.instruments.InstrumentIcon
-import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notenames.MusicalNote
 import kotlin.math.log
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-private fun ratioToCents(ratio: Float): Float {
-    return (1200.0 * log(ratio.toDouble(), 2.0)).toFloat()
-}
+private fun ratioToCents(ratio: Float): Float = (1200.0 * log(ratio.toDouble(), 2.0)).toFloat()
 
-private fun centsToRatio(cents: Float): Float {
-    return (2.0.pow(cents / 1200.0)).toFloat()
-}
+private fun centsToRatio(cents: Float): Float = (2.0.pow(cents / 1200.0)).toFloat()
 
 /** Target note detector.
  * @param musicalScale Musical scale.
@@ -46,11 +42,21 @@ class TargetNoteAutoDetection(
     private val musicalScale: MusicalScale2,
     instrument: Instrument?,
     private val toleranceInCents: Float
-    ) {
+) {
 
-    private val instrument = instrument ?: Instrument(name = "", nameResource = null, strings = arrayOf(), icon = InstrumentIcon.entries[0], stableId = 0, isChromatic = true)
+    private val instrument =
+        instrument
+            ?: Instrument(
+                name = "",
+                nameResource = null,
+                strings = arrayOf(),
+                icon = InstrumentIcon.entries[0],
+                stableId = 0,
+                isChromatic = true
+            )
 
-    private val sortedAndDistinctInstrumentStrings = SortedAndDistinctInstrumentStrings(this.instrument, musicalScale)
+    private val sortedAndDistinctInstrumentStrings =
+        SortedAndDistinctInstrumentStrings(this.instrument, musicalScale)
     private val sortedAndDistinctNoteIndices get() = sortedAndDistinctInstrumentStrings.sortedAndDistinctNoteIndices
     private val numDifferentNotes get() = sortedAndDistinctInstrumentStrings.numDifferentNotes
 
@@ -85,13 +91,15 @@ class TargetNoteAutoDetection(
      *   enharmonics/nonenharmoncics).
      */
     fun detect(frequency: Float, previousNote: MusicalNote? = null): MusicalNote? {
-        if (frequency <= 0f || (!instrument.isChromatic && numDifferentNotes == 0))
+        if (frequency <= 0f || (!instrument.isChromatic && numDifferentNotes == 0)) {
             return null
+        }
 
         val frequencyRange = getFrequencyRangeWithinWhichWeReturnTheInputNote(previousNote)
 //        Log.v("Tuner", "TargetNoteAutoDetection: frequencyRange=${frequencyRange[0]}--${frequencyRange[1]}, frequency=$frequency")
-        if (frequency in frequencyRange[0] .. frequencyRange[1]
-            && sortedAndDistinctInstrumentStrings.isNotePartOfInstrument(previousNote)) {
+        if (frequency in frequencyRange[0]..frequencyRange[1] &&
+            sortedAndDistinctInstrumentStrings.isNotePartOfInstrument(previousNote)
+        ) {
             return previousNote
         }
 
@@ -100,22 +108,31 @@ class TargetNoteAutoDetection(
             instrument.isChromatic -> {
                 val noteIndex = musicalScale.getClosestNoteIndex(frequency)
                 musicalScale.getNote(noteIndex)
-                //musicalScale.getClosestNote(frequency)
+                // musicalScale.getClosestNote(frequency)
             }
+
             numDifferentNotes == 1 -> {
                 musicalScale.getNote(sortedAndDistinctNoteIndices[0])
             }
+
             else -> {
                 val exactNoteIndex = musicalScale.getNoteIndex(frequency)
-                var index = sortedAndDistinctNoteIndices.binarySearchBy(exactNoteIndex) { it.toFloat() }
-                //var index = instrument.stringsSorted.binarySearch(exactNoteIndex)
-                if (index < 0)
+                var index = sortedAndDistinctNoteIndices.binarySearchBy(exactNoteIndex) {
+                    it.toFloat()
+                }
+                // var index = instrument.stringsSorted.binarySearch(exactNoteIndex)
+                if (index < 0) {
                     index = -(index + 1)
+                }
 
                 val uniqueNoteListIndex = when {
                     index == 0 -> 0
+
                     index >= numDifferentNotes -> numDifferentNotes - 1
-                    exactNoteIndex - sortedAndDistinctNoteIndices[index - 1] < sortedAndDistinctNoteIndices[index] - exactNoteIndex -> index - 1
+
+                    exactNoteIndex - sortedAndDistinctNoteIndices[index - 1] <
+                        sortedAndDistinctNoteIndices[index] - exactNoteIndex -> index - 1
+
                     else -> index
                 }
                 musicalScale.getNote(sortedAndDistinctNoteIndices[uniqueNoteListIndex])
@@ -136,26 +153,33 @@ class TargetNoteAutoDetection(
 //                Log.v("Tuner", "TargetNoteAutoDetection: (!instrument.isChromatic && numDifferentNotes == 0)")
                 return floatArrayOf(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY)
             }
+
             instrument.isChromatic -> {
 //                Log.v("Tuner", "TargetNoteAutoDetection: instrument.isChromatic")
                 val noteIndex = musicalScale.getNoteIndex2(note)
-                if (noteIndex == Int.MAX_VALUE)
+                if (noteIndex == Int.MAX_VALUE) {
                     return floatArrayOf(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY)
+                }
 //                Log.v("Tuner", "TargetNoteAutoDetection.getFrequencyRangeWithinWhichWeReturnTheInputNote: note=$note, noteIndex=$noteIndex")
                 return setFrequencyRangeForChromaticTarget(noteIndex)
             }
+
             numDifferentNotes <= 1 -> { // always return the input note
 //                Log.v("Tuner", "TargetNoteAutoDetection: numDifferentNotes <= 1, instrument=$instrument")
                 return floatArrayOf(Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY)
             }
+
             else -> {
 //                Log.v("Tuner", "TargetNoteAutoDetection: else")
                 val noteIndex = musicalScale.getNoteIndex2(note)
-                if (noteIndex == Int.MAX_VALUE)
+                if (noteIndex == Int.MAX_VALUE) {
                     return floatArrayOf(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY)
+                }
                 val sortedStringListIndex = sortedAndDistinctNoteIndices.binarySearch(noteIndex)
 
-                return if (sortedStringListIndex < 0 || sortedAndDistinctNoteIndices[sortedStringListIndex] == Int.MAX_VALUE) {
+                return if (sortedStringListIndex < 0 ||
+                    sortedAndDistinctNoteIndices[sortedStringListIndex] == Int.MAX_VALUE
+                ) {
                     floatArrayOf(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY) // never return input note
                 } else {
                     setFrequencyRangeForInstrumentTarget(sortedStringListIndex)
@@ -163,6 +187,7 @@ class TargetNoteAutoDetection(
             }
         }
     }
+
     /** Set frequencyRange for targetNoteIndex.
      *
      * Lets say, we have the following scenario where M1-M5 are just references used later in the text:
@@ -189,21 +214,30 @@ class TargetNoteAutoDetection(
      * @return Array with min and max frequency of range.
      */
     private fun setFrequencyRangeForChromaticTarget(targetNoteIndex: Int): FloatArray {
-
         val centerFrequency = musicalScale.getNoteFrequency(targetNoteIndex)
 
-        val lowerFrequencyDeviationBased = musicalScale.getNoteFrequency(targetNoteIndex - relativeDeviationForChangingTarget)
-        val upperFrequencyDeviationBased = musicalScale.getNoteFrequency(targetNoteIndex + relativeDeviationForChangingTarget)
+        val lowerFrequencyDeviationBased = musicalScale.getNoteFrequency(
+            targetNoteIndex - relativeDeviationForChangingTarget
+        )
+        val upperFrequencyDeviationBased = musicalScale.getNoteFrequency(
+            targetNoteIndex + relativeDeviationForChangingTarget
+        )
 
         val frequencyOfLowerTarget = musicalScale.getNoteFrequency(targetNoteIndex - 1)
         val frequencyOfUpperTarget = musicalScale.getNoteFrequency(targetNoteIndex + 1)
 
         // in the picture above these are the cents between M3 and M4, as well as between M3 and M2
-        val centsToLowerTargetBound = ratioToCents(centerFrequency / frequencyOfLowerTarget) - toleranceInCents
-        val centsToUpperTargetBound = ratioToCents(frequencyOfUpperTarget / centerFrequency) - toleranceInCents
+        val centsToLowerTargetBound =
+            ratioToCents(centerFrequency / frequencyOfLowerTarget) - toleranceInCents
+        val centsToUpperTargetBound =
+            ratioToCents(frequencyOfUpperTarget / centerFrequency) - toleranceInCents
 
-        val lowerFrequencyCentBased = centerFrequency / centsToRatio(min(minimumCentDeviationBeforeChangingTarget, centsToLowerTargetBound))
-        val upperFrequencyCentBased = centerFrequency * centsToRatio(min(minimumCentDeviationBeforeChangingTarget, centsToUpperTargetBound))
+        val lowerFrequencyCentBased =
+            centerFrequency /
+                centsToRatio(min(minimumCentDeviationBeforeChangingTarget, centsToLowerTargetBound))
+        val upperFrequencyCentBased =
+            centerFrequency *
+                centsToRatio(min(minimumCentDeviationBeforeChangingTarget, centsToUpperTargetBound))
 
         return floatArrayOf(
             min(lowerFrequencyDeviationBased, lowerFrequencyCentBased),
@@ -216,19 +250,33 @@ class TargetNoteAutoDetection(
      * @return Array with min and max frequency of range.
      */
     private fun setFrequencyRangeForInstrumentTarget(sortedStringListIndex: Int): FloatArray {
-
-        val centerFrequency = musicalScale.getNoteFrequency(sortedAndDistinctNoteIndices[sortedStringListIndex])
+        val centerFrequency = musicalScale.getNoteFrequency(
+            sortedAndDistinctNoteIndices[sortedStringListIndex]
+        )
 
         val lowerFrequency = if (sortedStringListIndex == 0) {
             Float.NEGATIVE_INFINITY
         } else {
             val lowerFrequencyDeviationBased = musicalScale.getNoteFrequency(
-                (1.0f - relativeDeviationForChangingTarget) * sortedAndDistinctNoteIndices[sortedStringListIndex]
-                        + relativeDeviationForChangingTarget * sortedAndDistinctNoteIndices[sortedStringListIndex - 1])
-            val frequencyOfLowerTarget = musicalScale.getNoteFrequency(sortedAndDistinctNoteIndices[sortedStringListIndex - 1])
+                (1.0f - relativeDeviationForChangingTarget) *
+                    sortedAndDistinctNoteIndices[sortedStringListIndex] +
+                    relativeDeviationForChangingTarget *
+                    sortedAndDistinctNoteIndices[sortedStringListIndex - 1]
+            )
+            val frequencyOfLowerTarget = musicalScale.getNoteFrequency(
+                sortedAndDistinctNoteIndices[
+                    sortedStringListIndex -
+                        1
+                ]
+            )
             // in the picture above these are the cents between M3 and M4, as well as between M3 and M2
-            val centsToLowerTargetBound = ratioToCents(centerFrequency / frequencyOfLowerTarget) - toleranceInCents
-            val lowerFrequencyCentBased = centerFrequency / centsToRatio(min(minimumCentDeviationBeforeChangingTarget, centsToLowerTargetBound))
+            val centsToLowerTargetBound =
+                ratioToCents(centerFrequency / frequencyOfLowerTarget) - toleranceInCents
+            val lowerFrequencyCentBased =
+                centerFrequency /
+                    centsToRatio(
+                        min(minimumCentDeviationBeforeChangingTarget, centsToLowerTargetBound)
+                    )
             min(lowerFrequencyDeviationBased, lowerFrequencyCentBased)
         }
 
@@ -236,12 +284,24 @@ class TargetNoteAutoDetection(
             Float.POSITIVE_INFINITY
         } else {
             val upperFrequencyDeviationBased = musicalScale.getNoteFrequency(
-                (1.0f - relativeDeviationForChangingTarget) * sortedAndDistinctNoteIndices[sortedStringListIndex]
-                        + relativeDeviationForChangingTarget * sortedAndDistinctNoteIndices[sortedStringListIndex + 1]
+                (1.0f - relativeDeviationForChangingTarget) *
+                    sortedAndDistinctNoteIndices[sortedStringListIndex] +
+                    relativeDeviationForChangingTarget *
+                    sortedAndDistinctNoteIndices[sortedStringListIndex + 1]
             )
-            val frequencyOfUpperTarget = musicalScale.getNoteFrequency(sortedAndDistinctNoteIndices[sortedStringListIndex + 1])
-            val centsToUpperTargetBound = ratioToCents(frequencyOfUpperTarget / centerFrequency) - toleranceInCents
-            val upperFrequencyCentBased = centerFrequency * centsToRatio(min(minimumCentDeviationBeforeChangingTarget, centsToUpperTargetBound))
+            val frequencyOfUpperTarget = musicalScale.getNoteFrequency(
+                sortedAndDistinctNoteIndices[
+                    sortedStringListIndex +
+                        1
+                ]
+            )
+            val centsToUpperTargetBound =
+                ratioToCents(frequencyOfUpperTarget / centerFrequency) - toleranceInCents
+            val upperFrequencyCentBased =
+                centerFrequency *
+                    centsToRatio(
+                        min(minimumCentDeviationBeforeChangingTarget, centsToUpperTargetBound)
+                    )
             max(upperFrequencyDeviationBased, upperFrequencyCentBased)
         }
         return floatArrayOf(lowerFrequency, upperFrequency)

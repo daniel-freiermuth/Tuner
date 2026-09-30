@@ -41,66 +41,67 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class ResourcesDataStoreBase(
-    @ApplicationContext context: Context,
-    filename: String
-) {
+class ResourcesDataStoreBase(@ApplicationContext context: Context, filename: String) {
     val dataStore = PreferenceDataStoreFactory.create(
         corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() })
     ) { context.preferencesDataStoreFile(filename) }
 
     val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    fun<T> getPreferenceFlow(key: Preferences.Key<T>, default: T): StateFlow<T> {
-        return dataStore.data
-            .catch {
+    fun <T> getPreferenceFlow(key: Preferences.Key<T>, default: T): StateFlow<T> = dataStore.data
+        .catch {
 //                Log.v("Tuner", "PreferenceResources2: except: $it, $key")
-                if (it is IOException) {
-                    emit(emptyPreferences())
-                }else {
-                    throw it
-                }
+            if (it is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw it
             }
-            .map {
+        }
+        .map {
 //                Log.v("Tuner", "PreferenceRessources2: $key ${it[key]}")
-                it[key] ?: default
-            }
-            .stateIn(scope, SharingStarted.Eagerly, default)
-    }
-    fun<K, T> getTransformablePreferenceFlow(key: Preferences.Key<K>, default: T, transform: (K) -> T): StateFlow<T> {
-        return dataStore.data
-            .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
-            .map { it[key] }
-            .distinctUntilChanged()
-            .map {
-                if (it == null) default else transform(it)
-            }
-            .stateIn(scope, SharingStarted.Eagerly, default)
-    }
-    inline fun<reified T> getSerializablePreferenceFlow(key: Preferences.Key<String>, default: T): StateFlow<T> {
-        return dataStore.data
-            .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
-            .map { it[key] }
-            .distinctUntilChanged()
-            .map {
-                if (it == null) {
+            it[key] ?: default
+        }
+        .stateIn(scope, SharingStarted.Eagerly, default)
+    fun <K, T> getTransformablePreferenceFlow(
+        key: Preferences.Key<K>,
+        default: T,
+        transform: (K) -> T
+    ): StateFlow<T> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[key] }
+        .distinctUntilChanged()
+        .map {
+            if (it == null) default else transform(it)
+        }
+        .stateIn(scope, SharingStarted.Eagerly, default)
+    inline fun <reified T> getSerializablePreferenceFlow(
+        key: Preferences.Key<String>,
+        default: T
+    ): StateFlow<T> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[key] }
+        .distinctUntilChanged()
+        .map {
+            if (it == null) {
+                default
+            } else {
+                try {
+                    Json.decodeFromString<T>(it)
+                } catch (ex: Exception) {
                     default
-                } else {
-                    try {
-                        Json.decodeFromString<T>(it)
-                    } catch(ex: Exception) {
-                        default
-                    }
                 }
             }
-            .stateIn(scope, SharingStarted.Eagerly, default)
-    }
+        }
+        .stateIn(scope, SharingStarted.Eagerly, default)
 
-    suspend fun<T> writePreference(key: Preferences.Key<T>, value: T) {
+    suspend fun <T> writePreference(key: Preferences.Key<T>, value: T) {
         dataStore.edit { it[key] = value }
     }
 
-    suspend inline fun<reified T> writeSerializablePreference(key: Preferences.Key<String>, value: T) {
+    suspend inline fun <reified T> writeSerializablePreference(
+        key: Preferences.Key<String>,
+        value: T
+    ) {
         dataStore.edit {
             it[key] = Json.encodeToString(value)
         }
@@ -112,5 +113,4 @@ class ResourcesDataStoreBase(
             dataStore.data.first()
         }
     }
-
 }

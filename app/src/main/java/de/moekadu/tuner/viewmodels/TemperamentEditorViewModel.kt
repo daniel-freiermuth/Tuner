@@ -24,19 +24,20 @@ import kotlinx.collections.immutable.toPersistentList
  * @param temperament Temperament, based on which the table will be created.
  * @return List with fits the given temperament.
  */
-private fun temperamentToTable(temperament: EditableTemperament)
-        : PersistentList<TemperamentTableLineState>
-{
+private fun temperamentToTable(
+    temperament: EditableTemperament
+): PersistentList<TemperamentTableLineState> {
     val numberOfNotesPerOctave = temperament.noteLines.size - 1
     // use default note names if there is no note name given for any line (and if default notes are available)
-    val defaultNoteNames = if (temperament.noteLines.firstOrNull { it?.note != null } == null)
+    val defaultNoteNames = if (temperament.noteLines.firstOrNull { it?.note != null } == null) {
         NoteNamesEDOGenerator.getNoteNames(numberOfNotesPerOctave, null)
-    else
+    } else {
         null
+    }
 
     return temperament.noteLines.mapIndexed { index, noteLine ->
         val note = defaultNoteNames?.getOrNull(index % numberOfNotesPerOctave)
-            ?:noteLine?.note
+            ?: noteLine?.note
         val octave = when {
             note == null -> 4 + (index / numberOfNotesPerOctave)
             note.octave == Int.MAX_VALUE -> 4 + (index / numberOfNotesPerOctave)
@@ -50,12 +51,13 @@ private fun temperamentToTable(temperament: EditableTemperament)
             noteLine?.ratio,
             isFirstLine = index == 0,
             isOctaveLine = index == temperament.noteLines.size - 1,
-            decreasingValueError = if (index == 0)
+            decreasingValueError = if (index == 0) {
                 false
-            else if (cent != null && centPrevious != null)
+            } else if (cent != null && centPrevious != null) {
                 cent <= centPrevious
-            else
-                false,
+            } else {
+                false
+            },
             duplicateNoteError = false // this will be set later inside the view model
         )
     }.toPersistentList()
@@ -67,20 +69,21 @@ private fun temperamentToTable(temperament: EditableTemperament)
  *   within this list.
  * @return Summary about if there were errors or not.
  */
-private fun checkAndSetValueOrderingErrors(values: PersistentList<TemperamentTableLineState>)
-: TemperamentValidityChecks.ValueOrdering {
-    return TemperamentValidityChecks.checkValueOrderingErrors(
-        values.size,
-        { values[it].obtainCent() },
-        { i, e -> values[i].changeDecreasingValueError(e) }
-    )
-}
+private fun checkAndSetValueOrderingErrors(
+    values: PersistentList<TemperamentTableLineState>
+): TemperamentValidityChecks.ValueOrdering = TemperamentValidityChecks.checkValueOrderingErrors(
+    values.size,
+    { values[it].obtainCent() },
+    { i, e -> values[i].changeDecreasingValueError(e) }
+)
 
-private fun checkAndSetNoteNameErrors(values: PersistentList<TemperamentTableLineState>): TemperamentValidityChecks.NoteNameError {
-    return TemperamentValidityChecks.checkNoteNameErrors(
-        values.size, {values[it].note}, { i, e ->values[i].changeDuplicateNoteError(e) }
-    )
-}
+private fun checkAndSetNoteNameErrors(
+    values: PersistentList<TemperamentTableLineState>
+): TemperamentValidityChecks.NoteNameError = TemperamentValidityChecks.checkNoteNameErrors(
+    values.size,
+    { values[it].note },
+    { i, e -> values[i].changeDuplicateNoteError(e) }
+)
 
 /** Check if list of notes is the same as the default note names.
  * @param noteNameList List of notes to be checked.
@@ -88,7 +91,8 @@ private fun checkAndSetNoteNameErrors(values: PersistentList<TemperamentTableLin
  * @return True if the list is the same as the default note names, else false
  */
 private fun checkIfDefaultNoteNames(
-    noteNameList: List<MusicalNote>, defaultNames: Array<MusicalNote>?
+    noteNameList: List<MusicalNote>,
+    defaultNames: Array<MusicalNote>?
 ): Boolean {
     var useDefaultNoteNames = true
 
@@ -105,11 +109,12 @@ private fun checkIfDefaultNoteNames(
     return useDefaultNoteNames
 }
 
-@HiltViewModel (assistedFactory = TemperamentEditorViewModel.Factory::class)
+@HiltViewModel(assistedFactory = TemperamentEditorViewModel.Factory::class)
 class TemperamentEditorViewModel @AssistedInject constructor(
     @Assisted temperament: EditableTemperament,
     val pref: TemperamentResources
-) : ViewModel(), TemperamentEditorState {
+) : ViewModel(),
+    TemperamentEditorState {
     @AssistedFactory
     interface Factory {
         fun create(temperament: EditableTemperament): TemperamentEditorViewModel
@@ -138,8 +143,8 @@ class TemperamentEditorViewModel @AssistedInject constructor(
     private var valueOrderingError = checkAndSetValueOrderingErrors(temperamentValues.value)
     private var noteNameError = checkAndSetNoteNameErrors(temperamentValues.value)
     private var _hasErrors = mutableStateOf(
-        valueOrderingError != TemperamentValidityChecks.ValueOrdering.Increasing
-                || noteNameError != TemperamentValidityChecks.NoteNameError.None
+        valueOrderingError != TemperamentValidityChecks.ValueOrdering.Increasing ||
+            noteNameError != TemperamentValidityChecks.NoteNameError.None
     )
     override val hasErrors: State<Boolean>
         get() = _hasErrors
@@ -154,9 +159,17 @@ class TemperamentEditorViewModel @AssistedInject constructor(
     override fun onNoteNameClicked(index: Int, enharmonic: Boolean) {
         temperamentValues.value.forEachIndexed { i, value ->
             value.setNoteEditor(
-                if (i != index
-                    || (!enharmonic && value.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard)
-                    || (enharmonic && value.noteEditorState == TemperamentTableLineState.NoteEditorState.Enharmonic)
+                if (i != index ||
+                    (
+                        !enharmonic &&
+                            value.noteEditorState ==
+                            TemperamentTableLineState.NoteEditorState.Standard
+                        ) ||
+                    (
+                        enharmonic &&
+                            value.noteEditorState ==
+                            TemperamentTableLineState.NoteEditorState.Enharmonic
+                        )
                 ) {
                     TemperamentTableLineState.NoteEditorState.Off
                 } else if (enharmonic) {
@@ -176,33 +189,37 @@ class TemperamentEditorViewModel @AssistedInject constructor(
 
     private fun checkAndSetError() {
         _hasErrors.value = (
-                valueOrderingError != TemperamentValidityChecks.ValueOrdering.Increasing
-                        || noteNameError != TemperamentValidityChecks.NoteNameError.None
-                )
+            valueOrderingError != TemperamentValidityChecks.ValueOrdering.Increasing ||
+                noteNameError != TemperamentValidityChecks.NoteNameError.None
+            )
     }
 
     fun changeNumberOfValues(numberOfValues: Int) {
-        val oldTemperamentValues  = temperamentValues.value
+        val oldTemperamentValues = temperamentValues.value
         val oldNumValues = oldTemperamentValues.size - 1 // num notes per octave + octave note
 
-        if (temperamentValues.value.size == oldNumValues)
+        if (temperamentValues.value.size == oldNumValues) {
             return
+        }
 
         val newNoteNames = NoteNamesEDOGenerator.getNoteNames(numberOfValues, null)
         _temperamentValues.value = List(numberOfValues + 1) {
             TemperamentTableLineState(
-                note = if (it == numberOfValues)
+                note = if (it == numberOfValues) {
                     newNoteNames?.getOrNull(0)?.copy(octave = 5)
-                else
-                    newNoteNames?.getOrNull(it)?.copy(octave = 4),
-                cent = if (it == numberOfValues)
+                } else {
+                    newNoteNames?.getOrNull(it)?.copy(octave = 4)
+                },
+                cent = if (it == numberOfValues) {
                     oldTemperamentValues.lastOrNull()?.cent
-                else
-                    oldTemperamentValues.getOrNull(it)?.cent,
-                ratio = if (it == numberOfValues)
+                } else {
+                    oldTemperamentValues.getOrNull(it)?.cent
+                },
+                ratio = if (it == numberOfValues) {
                     oldTemperamentValues.lastOrNull()?.ratio
-                else
-                    oldTemperamentValues.getOrNull(it)?.ratio,
+                } else {
+                    oldTemperamentValues.getOrNull(it)?.ratio
+                },
                 isFirstLine = it == 0,
                 isOctaveLine = it == numberOfValues,
                 decreasingValueError = false,
@@ -251,10 +268,12 @@ class TemperamentEditorViewModel @AssistedInject constructor(
             it.note ?: return false
         }
         val predefinedNoteNames = NoteNamesEDOGenerator.getNoteNames(
-            values.size - 1, null
+            values.size - 1,
+            null
         )
         val useDefaultNoteNames = checkIfDefaultNoteNames(
-            noteNameList, predefinedNoteNames?.notes
+            noteNameList,
+            predefinedNoteNames?.notes
         )
 
 //        val defaultReferenceNote = values.firstOrNull {
@@ -266,7 +285,7 @@ class TemperamentEditorViewModel @AssistedInject constructor(
             predefinedNoteNames!!.notes
         } else {
             noteNameList.toTypedArray()
-            //NoteNames2(
+            // NoteNames2(
 //                notes = noteNameList.toTypedArray(),
 //                defaultReferenceNote =  defaultReferenceNote,
 //                firstNoteOfOctave = noteNameList[0]
@@ -293,7 +312,7 @@ class TemperamentEditorViewModel @AssistedInject constructor(
             _description = description.value,
             cents = cents.toDoubleArray(),
             _rationalNumbers = ratios.toTypedArray(),
-            //equalOctaveDivision = if (hasEqualDivisions) cents.size - 1 else null,
+            // equalOctaveDivision = if (hasEqualDivisions) cents.size - 1 else null,
             _noteNames = noteNames,
             stableId = stableId
         )
@@ -302,5 +321,4 @@ class TemperamentEditorViewModel @AssistedInject constructor(
 
         return true
     }
-
 }

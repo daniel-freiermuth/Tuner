@@ -18,13 +18,16 @@
 */
 package de.moekadu.tuner.instruments
 
-import android.util.Log
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.misc.ResourcesDataStoreBase
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.random.Random
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
@@ -33,9 +36,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.random.Random
 
 @Singleton
 class InstrumentResources @Inject constructor(
@@ -51,7 +51,8 @@ class InstrumentResources @Inject constructor(
 //    )
 
     val currentInstrument = store.getTransformablePreferenceFlow(
-        CURRENT_INSTRUMENT_KEY, predefinedInstruments[0]
+        CURRENT_INSTRUMENT_KEY,
+        predefinedInstruments[0]
     ) {
         try {
             val instrument = Json.decodeFromString<Instrument>(it)
@@ -60,13 +61,13 @@ class InstrumentResources @Inject constructor(
             } else {
                 instrument
             }
-        } catch(ex: IllegalArgumentException) {
+        } catch (ex: IllegalArgumentException) {
             try {
                 Json.decodeFromString<InstrumentOld>(it).toNew()
-            } catch (ex2: Exception ){
+            } catch (ex2: Exception) {
                 predefinedInstruments[0]
             }
-        } catch(ex: Exception) {
+        } catch (ex: Exception) {
             instrumentDatabase[0]
         }
     }
@@ -83,15 +84,16 @@ class InstrumentResources @Inject constructor(
     //        CUSTOM_INSTRUMENTS_KEY, CustomInstrumentsDefault
     //    )
     val customInstruments = store.getTransformablePreferenceFlow(
-        CUSTOM_INSTRUMENTS_KEY, CustomInstrumentsDefault
+        CUSTOM_INSTRUMENTS_KEY,
+        CustomInstrumentsDefault
     ) {
         try {
             Json.decodeFromString<Array<Instrument>>(it).toList().toPersistentList()
-
-        } catch(ex: Exception) {
+        } catch (ex: Exception) {
             CustomInstrumentsDefault
         }
     }
+
 //
 //    suspend fun writeCustomInstruments(instruments: ImmutableList<Instrument>) {
 //        store.writeSerializablePreference(CUSTOM_INSTRUMENTS_KEY, ImmutableListWrapper(instruments))
@@ -102,15 +104,17 @@ class InstrumentResources @Inject constructor(
         val modifiedCurrentInstrument = instruments.firstOrNull {
             it.stableId == currentInstrumentId
         }
-        if (modifiedCurrentInstrument != null)
+        if (modifiedCurrentInstrument != null) {
             writeCurrentInstrument(modifiedCurrentInstrument)
+        }
         applicationScope.launch {
             store.writeSerializablePreference(CUSTOM_INSTRUMENTS_KEY, instruments.toTypedArray())
         }
     }
 
     val customInstrumentsExpanded = store.getPreferenceFlow(
-        CUSTOM_INSTRUMENTS_EXPANDED_KEY, CustomInstrumentExpandedDefault
+        CUSTOM_INSTRUMENTS_EXPANDED_KEY,
+        CustomInstrumentExpandedDefault
     )
     fun writeCustomInstrumentsExpanded(expanded: Boolean) {
         applicationScope.launch {
@@ -119,7 +123,8 @@ class InstrumentResources @Inject constructor(
     }
 
     val predefinedInstrumentsExpanded = store.getPreferenceFlow(
-        PREDEFINED_INSTRUMENTS_EXPANDED_KEY, PredefinedInstrumentExpandedDefault
+        PREDEFINED_INSTRUMENTS_EXPANDED_KEY,
+        PredefinedInstrumentExpandedDefault
     )
     fun writePredefinedInstrumentsExpanded(expanded: Boolean) {
         applicationScope.launch {
@@ -129,18 +134,20 @@ class InstrumentResources @Inject constructor(
 
     /** Add instrument if stable id does not exist, else replace it.*/
     fun addNewOrReplaceInstrument(instrument: Instrument) {
-        val newInstrument = if (instrument.stableId == Instrument.NO_STABLE_ID)
+        val newInstrument = if (instrument.stableId == Instrument.NO_STABLE_ID) {
             instrument.copy(stableId = getNewStableId())
-        else
+        } else {
             instrument
+        }
 
         val oldInstruments = customInstruments.value
         val newInstruments = oldInstruments.mutate { mutated ->
             val index = oldInstruments.indexOfFirst { it.stableId == instrument.stableId }
-            if (index >= 0)
+            if (index >= 0) {
                 mutated[index] = newInstrument
-            else
+            } else {
                 mutated.add(newInstrument)
+            }
         }
         writeCustomInstruments(newInstruments)
     }
@@ -180,12 +187,17 @@ class InstrumentResources @Inject constructor(
 //        writeCustomInstruments(newInstrumentList)
 //    }
 
-    private fun getNewStableId(existingInstruments: List<Instrument> = customInstruments.value): Long {
+    private fun getNewStableId(
+        existingInstruments: List<Instrument> = customInstruments.value
+    ): Long {
         val currentKey = currentInstrument.value.stableId
         while (true) {
             val stableId = Random.nextLong(0, Long.MAX_VALUE - 1)
-            if ((currentKey != stableId) && (existingInstruments.firstOrNull {it.stableId == stableId} == null))
+            if ((currentKey != stableId) &&
+                (existingInstruments.firstOrNull { it.stableId == stableId } == null)
+            ) {
                 return stableId
+            }
         }
     }
 

@@ -40,7 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import de.moekadu.tuner.R
 
-interface OverflowMenuCallbacks{
+interface OverflowMenuCallbacks {
     fun onDeleteClicked()
     fun onShareClicked()
     fun onExportClicked()
@@ -49,10 +49,7 @@ interface OverflowMenuCallbacks{
 }
 
 @Composable
-fun OverflowMenu(
-    callbacks: OverflowMenuCallbacks,
-    showSettings: Boolean = true
-) {
+fun OverflowMenu(callbacks: OverflowMenuCallbacks, showSettings: Boolean = true) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     Box {
         IconButton(onClick = {

@@ -17,7 +17,7 @@ class MusicalScaleFrequenciesTest {
 
         val frequencies = MusicalScaleFrequencies.create(
             cents,
-             0,
+            0,
             referenceFrequency,
             frequencyMin,
             frequencyMax,
@@ -35,7 +35,7 @@ class MusicalScaleFrequenciesTest {
 
         // check equal temperament frequencies
         for (i in frequencies.indexStart + 1 until frequencies.indexEnd) {
-            val previousFrequency = frequencies[i-1].toDouble()
+            val previousFrequency = frequencies[i - 1].toDouble()
             val frequency = frequencies[i].toDouble()
             val frequencyEqualTemperament = centsToFrequency(100.0, previousFrequency)
             assertEquals(frequency, frequencyEqualTemperament, 1e-3)
@@ -183,6 +183,5 @@ class MusicalScaleFrequenciesTest {
         val frequencyEnd5 = frequencies[frequencies.indexEnd + 4f]
         val frequencyEnd5Check = centsToFrequency(500.0, frequencyEnd.toDouble())
         assertEquals(frequencyEnd5Check, frequencyEnd5.toDouble(), 1e-2)
-
     }
-    }
+}

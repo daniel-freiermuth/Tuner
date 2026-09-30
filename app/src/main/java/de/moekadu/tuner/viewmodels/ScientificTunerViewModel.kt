@@ -29,13 +29,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.instruments.instrumentChromatic
+import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.FrequencyDetectionCollectedResults
 import de.moekadu.tuner.notedetection.FrequencyEvaluationResult
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notedetection.checkTuning
-import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.notenames.MusicalNote
-import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.tuner.Tuner
 import de.moekadu.tuner.ui.notes.NotePrintOptions
@@ -44,18 +44,19 @@ import de.moekadu.tuner.ui.plot.LineCoordinates
 import de.moekadu.tuner.ui.plot.VerticalLinesPositions
 import de.moekadu.tuner.ui.screens.ScientificTunerData
 import de.moekadu.tuner.ui.tuning.PitchHistoryState
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class ScientificTunerViewModel @Inject constructor (
+class ScientificTunerViewModel @Inject constructor(
     val pref: PreferenceResources,
     val temperaments: TemperamentResources,
     @param:ApplicationScope val applicationScope: CoroutineScope
-) : ViewModel(), ScientificTunerData {
+) : ViewModel(),
+    ScientificTunerData {
     override val musicalScale: StateFlow<MusicalScale2> get() = temperaments.musicalScale
     override val notePrintOptions: StateFlow<NotePrintOptions> get() = pref.notePrintOptions
     override val sampleRate: Int get() = pref.sampleRate
@@ -63,25 +64,25 @@ class ScientificTunerViewModel @Inject constructor (
 
     override var frequencyPlotData by mutableStateOf(LineCoordinates())
     override var harmonicFrequencies by mutableStateOf(VerticalLinesPositions())
-    override val frequencyPlotGestureBasedViewPort: GestureBasedViewPort
-            = GestureBasedViewPort()
+    override val frequencyPlotGestureBasedViewPort: GestureBasedViewPort =
+        GestureBasedViewPort()
 
     override var correlationPlotData by mutableStateOf(LineCoordinates())
     override var correlationPlotDataYZeroPosition by mutableFloatStateOf(0f)
-    override val correlationPlotGestureBasedViewPort: GestureBasedViewPort
-            = GestureBasedViewPort()
+    override val correlationPlotGestureBasedViewPort: GestureBasedViewPort =
+        GestureBasedViewPort()
 
     override var pitchHistoryState: PitchHistoryState = PitchHistoryState(
         computePitchHistorySize()
     )
 
-    override val pitchHistoryGestureBasedViewPort: GestureBasedViewPort
-            = GestureBasedViewPort()
+    override val pitchHistoryGestureBasedViewPort: GestureBasedViewPort =
+        GestureBasedViewPort()
     override var tuningState by mutableStateOf(TuningState.Unknown)
     override var currentFrequency: Float?
-            by mutableStateOf(null)
+        by mutableStateOf(null)
     override var targetNote: MusicalNote
-            by mutableStateOf(musicalScale.value.referenceNote)
+        by mutableStateOf(musicalScale.value.referenceNote)
 
     private val instrumentChromaticFlow = MutableStateFlow(instrumentChromatic)
     private val tuner = Tuner(
@@ -97,7 +98,8 @@ class ScientificTunerViewModel @Inject constructor (
                     result.frequencySpectrum.plottingSpectrumNormalized
                 )
                 harmonicFrequencies = harmonicFrequencies.mutate(
-                    result.harmonics.size, { result.harmonics[it].frequency }
+                    result.harmonics.size,
+                    { result.harmonics[it].frequency }
                 )
 
                 // Set correlation plot
@@ -122,14 +124,15 @@ class ScientificTunerViewModel @Inject constructor (
                         )
                     }
                 }
-                //Log.v("Tuner", "ScientificTunerViewModel: dt = ${result.timeSinceThereIsNoFrequencyDetectionResult}")
-                if (result.timeSinceThereIsNoFrequencyDetectionResult > DURATION_FOR_MARKING_NOTEDETECTION_AS_INACTIVE)
+                // Log.v("Tuner", "ScientificTunerViewModel: dt = ${result.timeSinceThereIsNoFrequencyDetectionResult}")
+                if (result.timeSinceThereIsNoFrequencyDetectionResult >
+                    DURATION_FOR_MARKING_NOTEDETECTION_AS_INACTIVE
+                ) {
                     tuningState = TuningState.Unknown
+                }
             }
-
         }
     )
-
 
     init {
         viewModelScope.launch {
@@ -181,5 +184,4 @@ class ScientificTunerViewModel @Inject constructor (
     companion object {
         const val DURATION_FOR_MARKING_NOTEDETECTION_AS_INACTIVE = 0.5f // in seconds
     }
-
 }

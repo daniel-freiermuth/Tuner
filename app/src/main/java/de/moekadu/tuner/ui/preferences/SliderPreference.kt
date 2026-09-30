@@ -53,22 +53,24 @@ fun SliderPreference(
         headlineContent = {
             Text(name)
         },
-        supportingContent = supporting?.let {{
-            Column {
-                Text(it)
-                Slider(
-                    value = value,
-                    onValueChange = onValueChange,
-                    valueRange = valueRange,
-                    steps = steps
-                )
+        supportingContent = supporting?.let {
+            {
+                Column {
+                    Text(it)
+                    Slider(
+                        value = value,
+                        onValueChange = onValueChange,
+                        valueRange = valueRange,
+                        steps = steps
+                    )
 
 //                Slider(
 //                    value = 0.5f,
 //                    onValueChange = {}
 //                )
+                }
             }
-        }},
+        },
         leadingContent = {
             Icon(ImageVector.vectorResource(id = iconId), null)
         },
@@ -81,7 +83,7 @@ fun SliderPreference(
 private fun SliderPreferencePreview() {
     TunerTheme {
         Column(modifier = Modifier.fillMaxSize()) {
-            var value by remember { mutableFloatStateOf(50f)}
+            var value by remember { mutableFloatStateOf(50f) }
             SliderPreference(
                 value = value,
                 valueRange = 0f..100f,

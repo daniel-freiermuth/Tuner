@@ -41,8 +41,9 @@ class SimpleFrequencyDetector(
         scope.launch {
             channel.consumeAsFlow()
                 .collectLatest { command ->
-                    if (isActive && command == Command.Reconnect)
+                    if (isActive && command == Command.Reconnect) {
                         run()
+                    }
                     // Log.v("Tuner", "Tuner: after 'if run'")
                 }
         }
@@ -117,8 +118,9 @@ class SimpleFrequencyDetector(
                 }
                 .flowOn(Dispatchers.Default)
                 .collect {
-                    if (it > 0f)
+                    if (it > 0f) {
                         onFrequencyAvailable(it)
+                    }
                 }
         }
     }

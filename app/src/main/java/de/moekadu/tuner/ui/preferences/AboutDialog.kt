@@ -36,10 +36,7 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.ui.theme.TunerTheme
 
 @Composable
-fun AboutDialog(
-    modifier: Modifier = Modifier,
-    onDismiss: () -> Unit = {}
-) {
+fun AboutDialog(modifier: Modifier = Modifier, onDismiss: () -> Unit = {}) {
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {

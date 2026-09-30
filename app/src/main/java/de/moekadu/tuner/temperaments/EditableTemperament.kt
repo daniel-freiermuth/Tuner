@@ -41,12 +41,10 @@ class EditableTemperament(
         /** Obtain cent value from cent or ratio, what is available.
          * @return Cent value, or null, if neither cent nor ratio is available.
          */
-        fun resolveCentValue(): Double? {
-            return when {
-                ratio != null -> ratioToCents(ratio.toDouble())
-                cent != null -> cent
-                else -> null
-            }
+        fun resolveCentValue(): Double? = when {
+            ratio != null -> ratioToCents(ratio.toDouble())
+            cent != null -> cent
+            else -> null
         }
     }
 }
@@ -61,15 +59,15 @@ fun Temperament3.toEditableTemperament(
     context: Context,
     name: String? = null,
     stableId: Long? = null
-    ): EditableTemperament {
-
+): EditableTemperament {
     val rootNoteResolved = possibleRootNotes()[0]
     val noteNamesResolved = noteNames(rootNoteResolved)
     val _cents = cents()
-    val _ratiosCustom = if (this is Temperament3Custom)
+    val _ratiosCustom = if (this is Temperament3Custom) {
         _rationalNumbers
-    else
+    } else {
         null
+    }
     val _ratios = rationalNumbers()
     val noteLines = Array<EditableTemperament.NoteLineContents?>(size + 1) {
         val octave = 4 + it / size
@@ -90,14 +88,17 @@ fun Temperament3.toEditableTemperament(
 }
 
 fun EditableTemperament.hasErrors(): Boolean {
-    if (noteLines.isEmpty())
+    if (noteLines.isEmpty()) {
         return true
+    }
     // check that all lines could be successfully parsed
-    if (noteLines.contains(null))
+    if (noteLines.contains(null)) {
         return true
+    }
     // check that there is a valid cent or ratio value
-    if (noteLines.firstOrNull { it?.cent == null && it?.ratio == null  } != null)
+    if (noteLines.firstOrNull { it?.cent == null && it?.ratio == null } != null) {
         return true
+    }
     // check that values are increasing
     val orderingError = TemperamentValidityChecks.checkValueOrderingErrors(
         noteLines.size,
@@ -108,29 +109,34 @@ fun EditableTemperament.hasErrors(): Boolean {
         },
         null
     )
-    if (orderingError != TemperamentValidityChecks.ValueOrdering.Increasing)
+    if (orderingError != TemperamentValidityChecks.ValueOrdering.Increasing) {
         return true
+    }
     // check if we can use predefined notes
     val predefinedNotes = NoteNamesEDOGenerator.getNoteNames(
-        noteLines.size - 1, null
+        noteLines.size - 1,
+        null
     )
 
-    if (predefinedNotes != null)
+    if (predefinedNotes != null) {
         return false
+    }
     // if predefined notes are not possible, check the validity of the user defined notes
     val noteNameError = TemperamentValidityChecks.checkNoteNameErrors(
         noteLines.size,
         { noteLines[it]?.note },
         null
     )
-    if (noteNameError != TemperamentValidityChecks.NoteNameError.None)
+    if (noteNameError != TemperamentValidityChecks.NoteNameError.None) {
         return true
+    }
     return false
 }
 
 fun EditableTemperament.toTemperament3Custom(): Temperament3Custom? {
-    if (noteLines.isEmpty())
+    if (noteLines.isEmpty()) {
         return null
+    }
 
     // fill different arrays
     val numberOfNotesPerOctave = noteLines.size - 1
@@ -140,10 +146,11 @@ fun EditableTemperament.toTemperament3Custom(): Temperament3Custom? {
 
     for (line in noteLines) {
         ratios.add(line?.ratio)
-        val centFromRatio = if (line?.ratio != null)
+        val centFromRatio = if (line?.ratio != null) {
             ratioToCents(line.ratio.toDouble())
-        else
+        } else {
             null
+        }
         val cent = line?.cent ?: centFromRatio ?: return null
         cents.add(cent)
         notes.add(line?.note)
@@ -151,8 +158,9 @@ fun EditableTemperament.toTemperament3Custom(): Temperament3Custom? {
 
     // resolve note names, we try to use predefined note names
     val predefinedNotes = NoteNamesEDOGenerator.getNoteNames(numberOfNotesPerOctave, null)
-    if (notes.contains(null) && predefinedNotes == null)
+    if (notes.contains(null) && predefinedNotes == null) {
         return null
+    }
 
     val resolvedNotes = if (notes.contains(null)) {
         null // this branch uses the predefined notes, which happens by specifying null
@@ -205,19 +213,18 @@ fun EditableTemperament.toTemperament3Custom(): Temperament3Custom? {
 }
 
 // TODO: this should be be somehow be part of the MusicalNote class itself!
-private fun notesEqualCheck(note: MusicalNote?, other: MusicalNote?): Boolean {
-    return (note?.base == other?.base &&
-            note?.modifier == other?.modifier &&
-            note?.octaveOffset == other?.octaveOffset &&
-            note?.enharmonicBase == other?.enharmonicBase &&
-            note?.enharmonicModifier == other?.enharmonicModifier &&
-            note?.enharmonicOctaveOffset == other?.enharmonicOctaveOffset
-            )
-}
+private fun notesEqualCheck(note: MusicalNote?, other: MusicalNote?): Boolean = (
+    note?.base == other?.base &&
+        note?.modifier == other?.modifier &&
+        note?.octaveOffset == other?.octaveOffset &&
+        note?.enharmonicBase == other?.enharmonicBase &&
+        note?.enharmonicModifier == other?.enharmonicModifier &&
+        note?.enharmonicOctaveOffset == other?.enharmonicOctaveOffset
+    )
 
-//private fun detectReferenceNote(notes: List<MusicalNote?>): MusicalNote? {
+// private fun detectReferenceNote(notes: List<MusicalNote?>): MusicalNote? {
 //    return notes.firstOrNull{
 //        (it?.base == BaseNote.A && it.modifier == NoteModifier.None) ||
 //                (it?.enharmonicBase == BaseNote.A && it.enharmonicModifier == NoteModifier.None)
 //    } ?: notes.firstOrNull { it != null }
-//}
+// }

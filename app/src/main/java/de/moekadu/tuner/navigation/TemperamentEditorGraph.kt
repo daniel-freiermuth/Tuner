@@ -32,16 +32,18 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.temperaments.EditableTemperament
-import de.moekadu.tuner.ui.temperaments.TemperamentEditor
 import de.moekadu.tuner.ui.temperaments.NumberOfNotesDialog
+import de.moekadu.tuner.ui.temperaments.TemperamentEditor
 import de.moekadu.tuner.viewmodels.TemperamentEditorViewModel
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
-private fun createViewModel(controller: NavController, backStackEntry: NavBackStackEntry)
-        : TemperamentEditorViewModel {
+private fun createViewModel(
+    controller: NavController,
+    backStackEntry: NavBackStackEntry
+): TemperamentEditorViewModel {
     val parentEntry = remember(backStackEntry) {
         controller.getBackStackEntry<TemperamentEditorGraphRoute>()
     }
@@ -50,7 +52,6 @@ private fun createViewModel(controller: NavController, backStackEntry: NavBackSt
         parentEntry
     ) { factory -> factory.create(temperament) }
 }
-
 
 fun NavGraphBuilder.temperamentEditorGraph(
     controller: NavController,
@@ -90,15 +91,12 @@ fun NavGraphBuilder.temperamentEditorGraph(
 }
 
 @Serializable
-data class TemperamentEditorGraphRoute(
-    val serializedEditableTemperament: String,
-    ) {
+data class TemperamentEditorGraphRoute(val serializedEditableTemperament: String) {
     constructor(temperament: EditableTemperament) : this(
         Json.encodeToString(temperament)
     )
-    fun getEditableTemperament(): EditableTemperament {
-        return Json.decodeFromString<EditableTemperament>(serializedEditableTemperament)
-    }
+    fun getEditableTemperament(): EditableTemperament =
+        Json.decodeFromString<EditableTemperament>(serializedEditableTemperament)
 }
 
 @Serializable
