@@ -57,7 +57,11 @@ fun EditableListSection(
         trailingContent = {
             IconButton(onClick = { onExpandClicked(!expanded) }) {
                 Icon(
-                    if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    if (expanded) {
+                        Icons.Default.KeyboardArrowUp
+                    } else {
+                        Icons.Default.KeyboardArrowDown
+                    },
                     contentDescription = "collapse"
                 )
             }

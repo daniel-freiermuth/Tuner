@@ -119,13 +119,13 @@ private data class LineCache(
     private var coordinatesScreen = mutableListOf<Offset>()
 
     init {
-        _update(coordinates, transformation, init = true)
+        updateCache(coordinates, transformation, init = true)
     }
 
     fun update(coordinates: LineCoordinates, transformation: Transformation): List<Offset> =
-        _update(coordinates, transformation, init = false)
+        updateCache(coordinates, transformation, init = false)
 
-    private fun _update(
+    private fun updateCache(
         coordinates: LineCoordinates,
         transformation: Transformation,
         init: Boolean

@@ -655,7 +655,11 @@ private fun EditableListTest() {
             Row(modifier.padding(12.dp)) {
                 Text(
                     item.title,
-                    color = if (info.isSelected) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                    color = if (info.isSelected) {
+                        MaterialTheme.colorScheme.error
+                    } else {
+                        MaterialTheme.colorScheme.primary
+                    }
                 )
             }
         }

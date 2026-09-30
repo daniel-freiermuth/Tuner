@@ -21,6 +21,9 @@ package de.moekadu.tuner.instruments
 import androidx.annotation.DrawableRes
 import de.moekadu.tuner.R
 
+// Entry names are persisted (instrument export files, saved preferences), so they must not be
+// renamed.
+@Suppress("ktlint:standard:enum-entry-name-case")
 enum class InstrumentIcon(@param:DrawableRes val resourceId: Int) {
     guitar(R.drawable.ic_guitar),
     ukulele(R.drawable.ic_ukulele),

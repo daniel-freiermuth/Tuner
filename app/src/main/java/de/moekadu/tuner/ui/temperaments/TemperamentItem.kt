@@ -48,8 +48,10 @@ fun TemperamentItem(
     onOptionsClicked: (temperament: Temperament3, task: ListItemTask) -> Unit = { _, _ -> },
     isActive: Boolean = false,
     isSelected: Boolean = false,
-    readOnly: Boolean = false, // disable delete/edit options
-    isCopyable: Boolean = true // disable copy-option
+    // disable delete/edit options
+    readOnly: Boolean = false,
+    // disable copy-option
+    isCopyable: Boolean = true
 ) {
     val context = LocalContext.current
     val name = temperament.name.value(context)

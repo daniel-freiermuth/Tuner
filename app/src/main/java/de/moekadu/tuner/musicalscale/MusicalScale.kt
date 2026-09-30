@@ -44,19 +44,19 @@ data class MusicalScale(
     fun toNew(): MusicalScale2 {
         val newTemperament = temperament.toNew(noteNames)
         val possibleRootNames = newTemperament.possibleRootNotes()
-        val _rootNote = possibleRootNames.firstOrNull {
+        val resolvedRootNote = possibleRootNames.firstOrNull {
             it.match(rootNote, ignoreOctave = true)
         }
-        val _noteNames = newTemperament.noteNames(_rootNote)
-        val _referenceNote = if (_noteNames.hasNote(referenceNote)) {
+        val resolvedNoteNames = newTemperament.noteNames(resolvedRootNote)
+        val resolvedReferenceNote = if (resolvedNoteNames.hasNote(referenceNote)) {
             referenceNote
         } else {
-            _noteNames.defaultReferenceNote
+            resolvedNoteNames.defaultReferenceNote
         }
         return MusicalScale2(
             temperament = temperament.toNew(noteNames),
-            _rootNote = _rootNote,
-            _referenceNote = _referenceNote,
+            _rootNote = resolvedRootNote,
+            _referenceNote = resolvedReferenceNote,
             referenceFrequency = referenceFrequency,
             frequencyMin = frequencyMin,
             frequencyMax = frequencyMax,

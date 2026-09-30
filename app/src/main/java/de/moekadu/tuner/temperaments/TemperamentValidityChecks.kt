@@ -85,13 +85,14 @@ object TemperamentValidityChecks {
 
     /** Errors with note names. */
     enum class NoteNameError {
+        /** No error. */
         None,
 
-        /**< No error */
+        /** Note name appears more than once. */
         Duplicates,
 
-        /**< Note name appears more than once */
-        Undefined /**< Note name is not defined. */
+        /** Note name is not defined. */
+        Undefined
     }
 
     /** Check for problems with note names.

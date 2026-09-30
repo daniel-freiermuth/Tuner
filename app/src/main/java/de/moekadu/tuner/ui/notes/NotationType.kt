@@ -25,24 +25,24 @@ import de.moekadu.tuner.notenames.NoteModifier
 
 /** Available note notation types. */
 enum class NotationType(@param:StringRes val stringResourceId: Int) {
+    /** Default C, D, E, .... */
     Standard(R.string.notation_standard),
 
-    /**< Default C, D, E, ....*/
+    /** C, D, E, ..., but using a B and never a H. */
     International(R.string.notation_international),
 
-    /**< C, D, E, ..., but using a B and never a H. */
+    /** Solfege. */
     Solfege(R.string.notation_solfege),
 
-    /**< Solfege. */
+    /** Carnatic Indian notation. */
     Carnatic(R.string.notation_carnatic),
 
-    /**< Carnatic Indian notation. */
+    /** Hindustani Indian notation. */
     Hindustani(R.string.notation_hindustani),
 
-    /**< Hindustani Indian notation. */
+    /** Byzantine notation system. */
     Byzantine(R.string.notation_byzantine),
 
-    /**< Byzantine notation system. */
     Vietnamese(R.string.notation_vietnamese)
 }
 

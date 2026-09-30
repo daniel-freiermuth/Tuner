@@ -18,7 +18,13 @@
 */
 package de.moekadu.tuner.notedetection
 
-import kotlin.math.*
+import kotlin.math.absoluteValue
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 /** Details about a single harmonics.
  * @param harmonicNumber Harmonic number.
@@ -252,8 +258,8 @@ private fun Harmonics.rating(): Float {
     if (size == 0) {
         return 0f
     }
-    val EXPONENT = 0.4f
-    val ADDITIONAL_CONTRIBUTION = 0.05f
+    val exponent = 0.4f
+    val additionalContribution = 0.05f
 
     var harmonicSum = 0.0f
     var frequencySum = 0.0f
@@ -265,8 +271,8 @@ private fun Harmonics.rating(): Float {
         maximumAmplitude = max(maximumAmplitude, h.spectrumAmplitudeSquared)
         frequencySum += h.frequency / h.harmonicNumber
     }
-    harmonicSum += this.size * maximumAmplitude.pow(0.25f) * ADDITIONAL_CONTRIBUTION
-    return (frequencySum / size).pow(EXPONENT) * harmonicSum
+    harmonicSum += this.size * maximumAmplitude.pow(0.25f) * additionalContribution
+    return (frequencySum / size).pow(exponent) * harmonicSum
 }
 
 /** Find a good starting point of a spectrum peak for the harmonic search.
@@ -293,7 +299,9 @@ fun findSuitableSpectrumPeak(
     val minimumFactorOverMean = 3f
 
     val meanRadiusMax = max(1, (frequencyBase / (2.0 * spectrum.df)).roundToInt())
-    val meanRadius = min(meanRadiusMax, 5) // TODO: check if using e.g. 10 is better, in python reference,the spectrum was not zeropadded, so df is smaller here
+    // TODO: check if using e.g. 10 is better, in python reference,the spectrum was not zeropadded,
+    // so df is smaller here
+    val meanRadius = min(meanRadiusMax, 5)
 
     val frequencyOfGlobalMax = accurateSpectrumPeakFrequency[globalMaximumIndex]
     val harmonicOfGlobalMax = (frequencyOfGlobalMax / frequencyBase).roundToInt()
@@ -502,7 +510,8 @@ fun Harmonics.findHarmonicsFromSpectrum2(
     maxNumFail: Int = 2,
     relativePeakThreshold: Float = 5e-3f
 ) {
-    val MEAN_RADIUS_LIMIT = 15 // consider higher value like 30, since in python reference, the spectrum was not zeropadded
+    // consider higher value like 30, since in python reference, the spectrum was not zeropadded
+    val meanRadiusLimit = 15
     clear()
 
     val df = spectrum.df
@@ -524,7 +533,7 @@ fun Harmonics.findHarmonicsFromSpectrum2(
         harmonicTolerance * initialHarmonic.spectrumIndex / initialHarmonic.harmonicNumber + 1
         )
     val meanRadiusMax = max(1, (frequencyBase / (2 * df)).roundToInt())
-    val meanRadius = min(meanRadiusMax, MEAN_RADIUS_LIMIT)
+    val meanRadius = min(meanRadiusMax, meanRadiusLimit)
 
     val threshold = ampSpecSqr[globalMaximumIndex] * relativePeakThreshold
     val predictor = HarmonicPredictor().apply {
@@ -591,11 +600,11 @@ fun Harmonics.findBestMatchingHarmonics(
     maxNumFail: Int = 2,
     relativePeakThreshold: Float = 5e-3f
 ) {
-    val LOWEST_SUBHARMONIC = 6
-    val HIGHEST_HIGHER_HARMONIC = 2
-    // correlation at a base frequency must have at least CORRELATION_PEAK_FACTOR * initialPeak
+    val lowestSubharmonic = 6
+    val highestHigherHarmonic = 2
+    // correlation at a base frequency must have at least correlationPeakFactor * initialPeak
     // the value to be valid.
-    val CORRELATION_PEAK_FACTOR = 0.3f
+    val correlationPeakFactor = 0.3f
 
     var bestHarmonics = this
     bestHarmonics.clear()
@@ -615,9 +624,9 @@ fun Harmonics.findBestMatchingHarmonics(
     val probableBaseFrequency = correlationBasedFrequency.frequency
 
     val subharmonic =
-        min(LOWEST_SUBHARMONIC, ceil(probableBaseFrequency / frequencyMin).toInt() - 1)
+        min(lowestSubharmonic, ceil(probableBaseFrequency / frequencyMin).toInt() - 1)
     val higherHarmonic = min(
-        HIGHEST_HIGHER_HARMONIC,
+        highestHigherHarmonic,
         ceil(frequencyMax / probableBaseFrequency).toInt() - 1
     )
 
@@ -632,7 +641,7 @@ fun Harmonics.findBestMatchingHarmonics(
         val correlationInitialPeak = correlationBasedFrequency.correlationAtTimeShift
 
         if (closestIndex < correlation.size &&
-            correlation[closestIndex] > CORRELATION_PEAK_FACTOR * correlationInitialPeak
+            correlation[closestIndex] > correlationPeakFactor * correlationInitialPeak
         ) {
             val initialHarmonic = findSuitableSpectrumPeak(
                 frequencyBase = freqBase,

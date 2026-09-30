@@ -69,19 +69,19 @@ data class Temperament(
         }
     } else {
 //            Log.v("Tuner", "Temperament.toNew: using temperament as custom, cents.size=${cents.size}")
-        val _cents = if (equalOctaveDivision != null) {
+        val customCents = if (equalOctaveDivision != null) {
             DoubleArray(equalOctaveDivision + 1) {
                 it * 1200.0 / equalOctaveDivision.toDouble()
             }
         } else {
             cents
         }
-//            Log.v("Tuner", "Temperament.toNew: using temperament as custom, _cents.size=${_cents.size}, noteName.size=${noteNames.size}")
+//            Log.v("Tuner", "Temperament.toNew: using temperament as custom, customCents.size=${customCents.size}, noteName.size=${noteNames.size}")
         Temperament3Custom(
             _name = name.value(null),
             _abbreviation = abbreviation.value(null),
             _description = description.value(null),
-            cents = _cents,
+            cents = customCents,
             _rationalNumbers = arrayOf(),
             _noteNames = noteNames.notes,
             stableId = stableId

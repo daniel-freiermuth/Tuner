@@ -179,7 +179,9 @@ fun CircleOfFifthTable(
                         FifthJumpOverArrow(
                             fifthModification = fifthModification,
                             style = MaterialTheme.typography.labelSmall,
-                            arrowHeight = noteTypography.fontSize / 5 * 3, // the factor is trial and error, meaning, that for other fonts it could look bad
+                            // the factor is trial and error, meaning, that for other fonts it could
+                            // look bad
+                            arrowHeight = noteTypography.fontSize / 5 * 3,
                             modifier = Modifier
                                 .padding(bottom = (bottomToBaselineDistance))
                                 .graphicsLayer {
@@ -206,7 +208,9 @@ fun CircleOfFifthTable(
                 FifthJumpOverArrow(
                     fifthModification = null,
                     style = MaterialTheme.typography.labelSmall,
-                    arrowHeight = noteTypography.fontSize / 5 * 3, // the factor is trial and error, meaning, that for other fonts it could look bad
+                    // the factor is trial and error, meaning, that for other fonts it could look
+                    // bad
+                    arrowHeight = noteTypography.fontSize / 5 * 3,
                     modifier = Modifier.padding(bottom = (bottomToBaselineDistance))
                 )
             }

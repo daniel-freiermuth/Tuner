@@ -93,13 +93,14 @@ class PreferenceResources @Inject constructor(
     }
 
     // keep screen on
-    val screenAlwaysOn = getPreferenceFlow(SCREEN_ALWAYS_ON, ScreenAlwaysOnDefault)
+    val screenAlwaysOn = getPreferenceFlow(SCREEN_ALWAYS_ON, SCREEN_ALWAYS_ON_DEFAULT)
     fun writeScreenAlwaysOn(screenAlwaysOn: Boolean) {
         writePreference(SCREEN_ALWAYS_ON, screenAlwaysOn)
     }
 
     // display on lock screen
-    val displayOnLockScreen = getPreferenceFlow(DISPLAY_ON_LOCK_SCREEN, DisplayOnLockScreenDefault)
+    val displayOnLockScreen =
+        getPreferenceFlow(DISPLAY_ON_LOCK_SCREEN, DISPLAY_ON_LOCK_SCREEN_DEFAULT)
     fun writeDisplayOnLockScreen(displayOnLockScreen: Boolean) {
         writePreference(DISPLAY_ON_LOCK_SCREEN, displayOnLockScreen)
     }
@@ -121,7 +122,7 @@ class PreferenceResources @Inject constructor(
     }
 
     // scientific mode
-    val scientificMode = getPreferenceFlow(SCIENTIFIC_MODE_KEY, ScientificModeDefault)
+    val scientificMode = getPreferenceFlow(SCIENTIFIC_MODE_KEY, SCIENTIFIC_MODE_DEFAULT)
     fun writeScientificMode(scientificMode: Boolean) {
         writePreference(SCIENTIFIC_MODE_KEY, scientificMode)
     }
@@ -219,14 +220,14 @@ class PreferenceResources @Inject constructor(
         scope.launch {
             dataStore.edit {
                 it[APPEARANCE_KEY] = Json.encodeToString(AppearanceDefault)
-                it[SCREEN_ALWAYS_ON] = ScreenAlwaysOnDefault
+                it[SCREEN_ALWAYS_ON] = SCREEN_ALWAYS_ON_DEFAULT
 //                it[TEMPERAMENT_AND_REFERENCE_NOTE_KEY] = Json.encodeToString(
 //                    MusicalScaleProperties.create(MusicalScaleDefault)
 //                )
                 it[TOLERANCE_IN_CENTS_KEY] = ToleranceInCentsDefault
                 it[NOTE_PRINT_OPTIONS_KEY] = Json.encodeToString(NotePrintOptionsDefault)
                 it[SENSITIVITY_KEY] = SensitivityDefault
-                it[SCIENTIFIC_MODE_KEY] = ScientificModeDefault
+                it[SCIENTIFIC_MODE_KEY] = SCIENTIFIC_MODE_DEFAULT
                 it[NUM_MOVING_AVERAGE_KEY] = NumMovingAverageDefault
                 it[WINDOW_SIZE_KEY] = WindowSizeExponentDefault
                 it[WINDOWING_KEY] = WindowingDefault.name
@@ -309,13 +310,13 @@ class PreferenceResources @Inject constructor(
     }
 
     companion object {
-        const val ReferenceFrequencyDefault = 440f
+        const val REFERENCE_FREQUENCY_DEFAULT = 440f
 
         private val AppearanceDefault = Appearance()
-        private const val ScreenAlwaysOnDefault = false
-        private const val DisplayOnLockScreenDefault = false
+        private const val SCREEN_ALWAYS_ON_DEFAULT = false
+        private const val DISPLAY_ON_LOCK_SCREEN_DEFAULT = false
         private val NotePrintOptionsDefault = NotePrintOptions()
-        private const val ScientificModeDefault = false
+        private const val SCIENTIFIC_MODE_DEFAULT = false
 
 //        private val MusicalScaleDefault = MusicalScaleFactory.create(TemperamentType.EDO12)
         private val WindowingDefault = WindowingFunction.Tophat

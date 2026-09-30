@@ -175,7 +175,8 @@ private fun rememberImportExportCallbacks(
                 }
             }
             override fun onImportClicked() {
-                importTemperamentsLauncher.launch(arrayOf("text/plain", "application/octet-stream")) // text/plain or */*
+                // text/plain or */*
+                importTemperamentsLauncher.launch(arrayOf("text/plain", "application/octet-stream"))
             }
             override fun onSettingsClicked() {
                 // onPreferenceButtonClicked()
@@ -379,7 +380,8 @@ private class TestTemperamentDialog2Data : TemperamentsDialog2Data {
         _abbreviation = "T2",
         _description = "Describing Test 2",
         cents = doubleArrayOf(
-            0.0, 12.0, 140.0, 320.0, 410.0, 540.0, 610.0, 720.0, 810.0, 910.0, 1020.0, 1100.0, 1200.0
+            0.0, 12.0, 140.0, 320.0, 410.0, 540.0, 610.0,
+            720.0, 810.0, 910.0, 1020.0, 1100.0, 1200.0
         ),
         _rationalNumbers = arrayOf(),
         _noteNames = null,

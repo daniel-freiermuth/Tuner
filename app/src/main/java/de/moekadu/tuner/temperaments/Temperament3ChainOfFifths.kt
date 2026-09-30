@@ -33,21 +33,21 @@ data class Temperament3ChainOfFifthsNoEnharmonics(
     val uniqueIdentifier: String
 ) : Temperament3 {
     @Transient
-    private val _chainOfFifths = ChainOfFifths(fifths, rootIndex)
+    private val fifthsChain = ChainOfFifths(fifths, rootIndex)
 
     @Transient
     override val size = fifths.size + 1
 
     override fun cents(): DoubleArray =
-        _chainOfFifths.getSortedRatios().map { ratioToCents(it) }.toDoubleArray() +
+        fifthsChain.getSortedRatios().map { ratioToCents(it) }.toDoubleArray() +
             doubleArrayOf(1200.0)
-    override fun chainOfFifths(): ChainOfFifths = _chainOfFifths
+    override fun chainOfFifths(): ChainOfFifths = fifthsChain
     override fun equalOctaveDivision(): Int? = null
     override fun rationalNumbers(): Array<RationalNumber>? = null
     override fun possibleRootNotes(): Array<MusicalNote> =
         NoteNamesChainOfFifthsGenerator.possibleRootNotes()
     override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
-        NoteNamesChainOfFifthsGenerator.getNoteNames(_chainOfFifths, rootNote)!!
+        NoteNamesChainOfFifthsGenerator.getNoteNames(fifthsChain, rootNote)!!
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -101,16 +101,16 @@ data class Temperament3ChainOfFifthsEDONames(
     val uniqueIdentifier: String
 ) : Temperament3 {
     @Transient
-    private val _chainOfFifths = ChainOfFifths(fifths, rootIndex)
+    private val fifthsChain = ChainOfFifths(fifths, rootIndex)
 
     @Transient
     override val size = fifths.size + 1
 
     override fun cents(): DoubleArray =
-        _chainOfFifths.getSortedRatios().map { ratioToCents(it) }.toDoubleArray() +
+        fifthsChain.getSortedRatios().map { ratioToCents(it) }.toDoubleArray() +
             doubleArrayOf(1200.0)
 
-    override fun chainOfFifths(): ChainOfFifths = _chainOfFifths
+    override fun chainOfFifths(): ChainOfFifths = fifthsChain
     override fun equalOctaveDivision(): Int? = null
     override fun rationalNumbers(): Array<RationalNumber>? = null
     override fun possibleRootNotes(): Array<MusicalNote> =

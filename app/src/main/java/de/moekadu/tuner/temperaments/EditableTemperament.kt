@@ -62,20 +62,20 @@ fun Temperament3.toEditableTemperament(
 ): EditableTemperament {
     val rootNoteResolved = possibleRootNotes()[0]
     val noteNamesResolved = noteNames(rootNoteResolved)
-    val _cents = cents()
-    val _ratiosCustom = if (this is Temperament3Custom) {
+    val centsResolved = cents()
+    val customRatiosResolved = if (this is Temperament3Custom) {
         _rationalNumbers
     } else {
         null
     }
-    val _ratios = rationalNumbers()
+    val ratiosResolved = rationalNumbers()
     val noteLines = Array<EditableTemperament.NoteLineContents?>(size + 1) {
         val octave = 4 + it / size
         val noteIndex = it % size
         EditableTemperament.NoteLineContents(
             noteNamesResolved[noteIndex].copy(octave = octave),
-            _cents[it],
-            _ratios?.getOrNull(it) ?: _ratiosCustom?.getOrNull(it)
+            centsResolved[it],
+            ratiosResolved?.getOrNull(it) ?: customRatiosResolved?.getOrNull(it)
         )
     }
     return EditableTemperament(

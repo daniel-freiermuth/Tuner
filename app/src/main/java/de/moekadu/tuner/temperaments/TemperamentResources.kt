@@ -54,7 +54,7 @@ class TemperamentResources @Inject constructor(
 
     val edoTemperamentsExpanded = store.getPreferenceFlow(
         EDO_TEMPERAMENTS_EXPANDED_KEY,
-        EdoTemperamentsExpandedDefault
+        EDO_TEMPERAMENTS_EXPANDED_DEFAULT
     )
     val edoTemperaments = object : EditableListPredefinedSection<Temperament3> {
         private val minEdo = 5
@@ -146,7 +146,7 @@ class TemperamentResources @Inject constructor(
 
     val customTemperamentsExpanded = store.getPreferenceFlow(
         CUSTOM_TEMPERAMENTS_EXPANDED_KEY,
-        CustomTemperamentsExpandedDefault
+        CUSTOM_TEMPERAMENTS_EXPANDED_DEFAULT
     )
 
     fun resetAllSettings() {
@@ -176,7 +176,7 @@ class TemperamentResources @Inject constructor(
 
     val predefinedTemperamentsExpanded = store.getPreferenceFlow(
         PREDEFINED_TEMPERAMENTS_EXPANDED_KEY,
-        PredefinedTemperamentsExpandedDefault
+        PREDEFINED_TEMPERAMENTS_EXPANDED_DEFAULT
     )
     fun writePredefinedTemperamentsExpanded(expanded: Boolean) {
         applicationScope.launch {
@@ -328,9 +328,9 @@ class TemperamentResources @Inject constructor(
 
     companion object {
         private val CustomTemperamentsDefault = persistentListOf<Temperament3Custom>()
-        private const val EdoTemperamentsExpandedDefault = true
-        private const val CustomTemperamentsExpandedDefault = true
-        private const val PredefinedTemperamentsExpandedDefault = true
+        private const val EDO_TEMPERAMENTS_EXPANDED_DEFAULT = true
+        private const val CUSTOM_TEMPERAMENTS_EXPANDED_DEFAULT = true
+        private const val PREDEFINED_TEMPERAMENTS_EXPANDED_DEFAULT = true
 
         private val MUSICAL_SCALE_KEY = stringPreferencesKey("musical scale")
         private val CUSTOM_TEMPERAMENTS_KEY = stringPreferencesKey("custom temperaments")
