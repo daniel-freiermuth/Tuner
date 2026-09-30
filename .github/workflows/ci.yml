@@ -32,7 +32,7 @@ jobs:
 
       # Kotlin warnings are errors (allWarningsAsErrors), so compiling every
       # source set is itself a gate.
-      - name: ktlint, detekt, Android lint, unit tests
+      - name: ktlint, detekt, Android lint, unit tests, debug APK
         run: >
           ./gradlew --stacktrace
           ktlintCheck
@@ -40,6 +40,14 @@ jobs:
           lintDebug
           compileDebugAndroidTestKotlin
           testDebugUnitTest
+          assembleDebug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tuner-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
 
       - name: Upload reports
         if: failure()
