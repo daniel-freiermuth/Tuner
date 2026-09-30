@@ -267,21 +267,10 @@ private data class TemperamentAndReferenceNoteFromPreference(
             if (values.size != 4) {
                 return null
             }
-            val temperamentType = try {
-                TemperamentTypeOld.valueOf(values[0])
-            } catch (ex: IllegalArgumentException) {
-                TemperamentTypeOld.EDO12
-            }
-            val rootNote = try {
-                MusicalNote.fromString(values[1])
-            } catch (ex: RuntimeException) {
-                return null
-            }
-            val referenceNote = try {
-                MusicalNote.fromString(values[2])
-            } catch (ex: RuntimeException) {
-                return null
-            }
+            val temperamentType = TemperamentTypeOld.entries.firstOrNull { it.name == values[0] }
+                ?: TemperamentTypeOld.EDO12
+            val rootNote = MusicalNote.fromStringOrNull(values[1]) ?: return null
+            val referenceNote = MusicalNote.fromStringOrNull(values[2]) ?: return null
             val referenceFrequency = if (values[3].toFloatOrNull() == null) {
                 return null
             } else {
@@ -308,7 +297,7 @@ private fun indexToTolerance2(index: Int): Int = when (index) {
     5 -> 10
     6 -> 15
     7 -> 20
-    else -> throw RuntimeException("Invalid index for tolerance")
+    else -> throw IllegalArgumentException("Invalid index for tolerance")
 }
 
 /** Compute pitch history duration in seconds based on a percent value.

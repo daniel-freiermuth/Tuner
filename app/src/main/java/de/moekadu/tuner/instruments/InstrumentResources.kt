@@ -3,6 +3,7 @@ package de.moekadu.tuner.instruments
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import de.moekadu.tuner.hilt.ApplicationScope
+import de.moekadu.tuner.misc.readPersistedOrElse
 import de.moekadu.tuner.resources.ResourcesBase
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,11 +31,10 @@ class InstrumentResources @Inject constructor(
             reloadPredefinedInstrumentIfNeeded(instrument, predefinedInstruments)
         },
         onDeserializationFailure = {
-            try {
-                Json.decodeFromString<InstrumentOld>(it).toNew()
-            } catch (_: Exception) {
-                predefinedInstruments[0]
-            }
+            readPersistedOrElse(
+                read = { Json.decodeFromString<InstrumentOld>(it).toNew() },
+                fallback = { predefinedInstruments[0] }
+            )
         }
     )
     val currentInstrument = currentInstrumentPref.asStateFlow()

@@ -23,11 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -61,25 +59,6 @@ import de.moekadu.tuner.viewmodels.StretchTuningOverviewViewModel
 import de.moekadu.tuner.viewmodels.TemperamentDialog2ViewModel
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-
-@Composable
-private fun createTemperamentDialogViewModel(
-    controller: NavController,
-    backStackEntry: NavBackStackEntry
-): TemperamentDialog2ViewModel? {
-    val parentEntry = remember(backStackEntry) {
-        try {
-            controller.getBackStackEntry<TemperamentDialogRoute>()
-        } catch (_: IllegalArgumentException) {
-            null
-        }
-    }
-    return if (parentEntry == null) {
-        null
-    } else {
-        hiltViewModel<TemperamentDialog2ViewModel>(parentEntry)
-    }
-}
 
 fun NavGraphBuilder.mainGraph(
     controller: NavController,
@@ -217,10 +196,7 @@ fun NavGraphBuilder.mainGraph(
 
     composable<TemperamentDialogRoute> { route ->
         val resources = LocalResources.current
-        val viewModel: TemperamentDialog2ViewModel = createTemperamentDialogViewModel(
-            controller = controller,
-            backStackEntry = route
-        )!!
+        val viewModel: TemperamentDialog2ViewModel = hiltViewModel(route)
 
         TemperamentsDialog2(
             state = viewModel,

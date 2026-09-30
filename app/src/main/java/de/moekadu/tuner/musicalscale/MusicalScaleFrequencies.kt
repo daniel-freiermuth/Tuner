@@ -115,7 +115,7 @@ class MusicalScaleFrequencies(
                 log10(closestFrequency / frequency) /
                 log10(closestFrequency / get(closestIndex + 1))
         } else {
-            throw RuntimeException("cannot find tone index")
+            error("cannot find tone index")
         }
     }
 

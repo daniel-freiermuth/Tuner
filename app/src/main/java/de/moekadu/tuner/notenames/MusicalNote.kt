@@ -195,14 +195,16 @@ data class MusicalNote(
             )
     }
     companion object {
-        /** Parse a string (which normally is created with "asString" and return the resulting note. */
-        fun fromString(string: String): MusicalNote {
+        /** Parse a string (which normally is created with "asString").
+         * @return The resulting note, or null if the string cannot be parsed.
+         */
+        fun fromStringOrNull(string: String): MusicalNote? {
             val className = "MusicalNote"
             if (string.length < className.length + 2 ||
                 string.substring(0, className.length + 1) != "$className(" ||
                 string.substring(string.length - 1, string.length) != ")"
             ) {
-                throw RuntimeException("$className.fromString: $string cannot be parsed")
+                return null
             }
             val contentString = string.substring(className.length + 1, string.length - 1)
             var base = BaseNote.None
@@ -216,24 +218,32 @@ data class MusicalNote(
             contentString.split(",").forEach {
                 val keyAndValue = it.split("=")
                 if (keyAndValue.size != 2) {
-                    throw RuntimeException("$className.fromString: $it is no valid key-value pair")
+                    return null
                 }
+                val value = keyAndValue[1]
                 when (keyAndValue[0]) {
-                    "base" -> base = BaseNote.valueOf(keyAndValue[1])
+                    "base" ->
+                        base =
+                            BaseNote.entries.firstOrNull { e -> e.name == value } ?: return null
 
-                    "modifier" -> modifier = NoteModifier.valueOf(keyAndValue[1])
+                    "modifier" ->
+                        modifier =
+                            NoteModifier.entries.firstOrNull { e -> e.name == value } ?: return null
 
-                    "octave" -> octave = keyAndValue[1].toInt()
+                    "octave" -> octave = value.toIntOrNull() ?: return null
 
-                    "octaveOffset" -> octaveOffset = keyAndValue[1].toInt()
+                    "octaveOffset" -> octaveOffset = value.toIntOrNull() ?: return null
 
-                    "enharmonicBase" -> enharmonicBase = BaseNote.valueOf(keyAndValue[1])
+                    "enharmonicBase" ->
+                        enharmonicBase =
+                            BaseNote.entries.firstOrNull { e -> e.name == value } ?: return null
 
                     "enharmonicModifier" ->
                         enharmonicModifier =
-                            NoteModifier.valueOf(keyAndValue[1])
+                            NoteModifier.entries.firstOrNull { e -> e.name == value } ?: return null
 
-                    "enharmonicOctaveOffset" -> enharmonicOctaveOffset = keyAndValue[1].toInt()
+                    "enharmonicOctaveOffset" ->
+                        enharmonicOctaveOffset = value.toIntOrNull() ?: return null
                 }
             }
             return MusicalNote(

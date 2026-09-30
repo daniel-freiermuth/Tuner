@@ -44,9 +44,5 @@ enum class InstrumentIcon(@param:DrawableRes val resourceId: Int) {
 
 fun String.toInstrumentIcon(): InstrumentIcon {
     val s = this.replace(" ", "_")
-    return try {
-        InstrumentIcon.valueOf(s)
-    } catch (ex: IllegalArgumentException) {
-        InstrumentIcon.entries[0]
-    }
+    return InstrumentIcon.entries.firstOrNull { it.name == s } ?: InstrumentIcon.entries[0]
 }

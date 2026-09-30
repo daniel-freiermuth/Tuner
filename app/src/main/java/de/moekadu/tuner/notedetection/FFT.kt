@@ -95,9 +95,7 @@ class FFT(val size: Int) {
 
     init {
         val sizeCheck = 1 shl nBits
-        if (size != sizeCheck) {
-            throw kotlin.RuntimeException("RealFFT size must be a power of 2 but $size given.")
-        }
+        require(size == sizeCheck) { "RealFFT size must be a power of 2 but $size given." }
         val halfSize = size / 2
 
         val fac: Float = -2.0f * PI.toFloat() / size

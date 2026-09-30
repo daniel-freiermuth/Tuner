@@ -304,15 +304,9 @@ object InstrumentIO {
                 return arrayOf()
             }
             val musicalNoteArrayAsString = string.substring(posStart + 1, pos - 1)
-            return try {
-                musicalNoteArrayAsString.split(";").map {
-                    MusicalNote.fromString(it.trim())
-                }.toTypedArray()
-            } catch (_: NumberFormatException) {
-                null
-            } catch (_: IllegalArgumentException) {
-                null
-            }
+            return musicalNoteArrayAsString.split(";").map {
+                MusicalNote.fromStringOrNull(it.trim()) ?: return null
+            }.toTypedArray()
         }
     }
 

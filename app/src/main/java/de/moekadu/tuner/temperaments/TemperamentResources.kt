@@ -23,6 +23,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import de.moekadu.tuner.R
 import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.misc.DefaultValues
+import de.moekadu.tuner.misc.readPersistedOrElse
 import de.moekadu.tuner.musicalscale.MusicalScale
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notenames.MusicalNote
@@ -339,18 +340,19 @@ class TemperamentResources @Inject constructor(
             )
         },
         onDeserializationFailure = { serialized ->
-            try {
-                val scale2 = reloadPredefinedTemperamentIfNeeded(
-                    musicalScale = Json.decodeFromString<MusicalScale>(serialized).toNew(),
-                    predefinedTemperaments = predefinedTemperaments
-                )
-                reloadPredefinedStretchTuningIfNecessary(
-                    musicalScale = scale2,
-                    predefinedStretchTunings = predefinedStretchTunings
-                )
-            } catch (_: Exception) {
-                musicalScaleDefault
-            }
+            readPersistedOrElse(
+                read = {
+                    val scale2 = reloadPredefinedTemperamentIfNeeded(
+                        musicalScale = Json.decodeFromString<MusicalScale>(serialized).toNew(),
+                        predefinedTemperaments = predefinedTemperaments
+                    )
+                    reloadPredefinedStretchTuningIfNecessary(
+                        musicalScale = scale2,
+                        predefinedStretchTunings = predefinedStretchTunings
+                    )
+                },
+                fallback = { musicalScaleDefault }
+            )
         }
     )
 

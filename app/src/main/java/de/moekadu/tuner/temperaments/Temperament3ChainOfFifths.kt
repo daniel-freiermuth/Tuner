@@ -47,7 +47,9 @@ data class Temperament3ChainOfFifthsNoEnharmonics(
     override fun possibleRootNotes(): Array<MusicalNote> =
         NoteNamesChainOfFifthsGenerator.possibleRootNotes()
     override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
-        NoteNamesChainOfFifthsGenerator.getNoteNames(fifthsChain, rootNote)!!
+        checkNotNull(NoteNamesChainOfFifthsGenerator.getNoteNames(fifthsChain, rootNote)) {
+            "Cannot generate note names for chain of fifths temperament"
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -116,7 +118,9 @@ data class Temperament3ChainOfFifthsEDONames(
     override fun possibleRootNotes(): Array<MusicalNote> =
         NoteNamesEDOGenerator.possibleRootNotes(fifths.size + 1)
     override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
-        NoteNamesEDOGenerator.getNoteNames(fifths.size + 1, rootNote)!!
+        checkNotNull(NoteNamesEDOGenerator.getNoteNames(fifths.size + 1, rootNote)) {
+            "Cannot generate note names for ${fifths.size + 1} notes per octave"
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

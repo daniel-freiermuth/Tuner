@@ -42,5 +42,7 @@ data class Temperament3EDO(override val stableId: Long, val notesPerOctave: Int)
     override fun possibleRootNotes(): Array<MusicalNote> =
         NoteNamesEDOGenerator.possibleRootNotes(notesPerOctave)
     override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
-        NoteNamesEDOGenerator.getNoteNames(notesPerOctave, rootNote)!!
+        checkNotNull(NoteNamesEDOGenerator.getNoteNames(notesPerOctave, rootNote)) {
+            "Cannot generate note names for $notesPerOctave notes per octave"
+        }
 }

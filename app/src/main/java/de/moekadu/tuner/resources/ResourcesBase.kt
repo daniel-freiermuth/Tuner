@@ -150,7 +150,7 @@ open class ResourcesBase(
 
         private fun readFromPrefs(prefs: Preferences): Boolean? = try {
             prefs[key]
-        } catch (ex: ClassCastException) {
+        } catch (_: ClassCastException) {
             null
         }
     }
@@ -179,7 +179,7 @@ open class ResourcesBase(
         }
         private fun readFromPrefs(prefs: Preferences): Int? = try {
             prefs[key]
-        } catch (ex: ClassCastException) {
+        } catch (_: ClassCastException) {
             null
         }
     }
@@ -208,7 +208,7 @@ open class ResourcesBase(
         }
         private fun readFromPrefs(prefs: Preferences): Float? = try {
             prefs[key]
-        } catch (ex: ClassCastException) {
+        } catch (_: ClassCastException) {
             null
         }
     }
@@ -237,7 +237,7 @@ open class ResourcesBase(
         }
         private fun readFromPrefs(prefs: Preferences): String? = try {
             prefs[key]
-        } catch (ex: ClassCastException) {
+        } catch (_: ClassCastException) {
             null
         }
     }
