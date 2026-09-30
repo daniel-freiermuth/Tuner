@@ -55,7 +55,7 @@ import kotlinx.serialization.Serializable
 @Immutable
 data class Instrument(
     private val name: String,
-    @StringRes private val nameResource: Int?,
+    @param:StringRes private val nameResource: Int?,
     val strings: Array<MusicalNote>,
     val icon: InstrumentIcon,
     val stableId: Long,

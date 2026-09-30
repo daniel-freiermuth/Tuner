@@ -54,7 +54,7 @@ import javax.inject.Inject
 class ScientificTunerViewModel @Inject constructor (
     val pref: PreferenceResources,
     val temperaments: TemperamentResources,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ) : ViewModel(), ScientificTunerData {
     override val musicalScale: StateFlow<MusicalScale2> get() = temperaments.musicalScale
     override val notePrintOptions: StateFlow<NotePrintOptions> get() = pref.notePrintOptions

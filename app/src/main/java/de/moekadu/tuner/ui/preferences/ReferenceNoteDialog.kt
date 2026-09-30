@@ -133,7 +133,7 @@ fun ReferenceNoteDialog(
     val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         LocalConfiguration.current.locales[0]
     } else {
-        LocalConfiguration.current.locale
+        @Suppress("DEPRECATION") LocalConfiguration.current.locale
     }
     val decimalFormat = rememberNumberFormatter()
     var frequencyAsString by rememberSaveable {

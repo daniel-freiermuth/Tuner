@@ -24,7 +24,7 @@ import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.NoteModifier
 
 /** Available note notation types. */
-enum class NotationType(@StringRes val stringResourceId: Int) {
+enum class NotationType(@param:StringRes val stringResourceId: Int) {
     Standard(R.string.notation_standard), /**< Default C, D, E, ....*/
     International(R.string.notation_international),  /**< C, D, E, ..., but using a B and never a H. */
     Solfege(R.string.notation_solfege), /**< Solfege. */

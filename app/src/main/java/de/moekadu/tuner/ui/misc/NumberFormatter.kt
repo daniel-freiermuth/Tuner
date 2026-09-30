@@ -51,7 +51,7 @@ fun rememberNumberFormatter(precision: Int = 4): NumberFormatter {
     val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         LocalConfiguration.current.locales[0]
     } else {
-        LocalConfiguration.current.locale
+        @Suppress("DEPRECATION") LocalConfiguration.current.locale
     }
     return remember(locale, precision) { NumberFormatter(locale, precision)}
 }

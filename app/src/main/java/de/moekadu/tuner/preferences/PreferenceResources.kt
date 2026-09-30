@@ -55,7 +55,7 @@ import kotlin.math.roundToInt
 @Singleton
 class PreferenceResources @Inject constructor (
     @ApplicationContext context: Context,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ) {
     private val dataStore = PreferenceDataStoreFactory.create(
         corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() })

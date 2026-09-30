@@ -47,7 +47,7 @@ import kotlin.random.Random
 @Singleton
 class TemperamentResources @Inject constructor(
     @ApplicationContext context: Context,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ){
     val store = ResourcesDataStoreBase(context, "temperaments")
 

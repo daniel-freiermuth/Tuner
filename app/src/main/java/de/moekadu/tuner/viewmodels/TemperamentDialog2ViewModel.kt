@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TemperamentDialog2ViewModel @Inject constructor(
     val pref: TemperamentResources,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ) : TemperamentsDialog2Data, ViewModel() {
     private val musicalScale = pref.musicalScale.value
 
