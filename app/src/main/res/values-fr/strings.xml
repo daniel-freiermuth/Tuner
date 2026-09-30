@@ -22,11 +22,13 @@
     <string name="pitch_history_num_faulty_values">Allez à la nouvelle hauteur</string>
     <plurals name="pitch_history_num_faulty_values_summary">
         <item quantity="one">Aller directement à la nouvelle valeur de la hauteur</item>
+        <item quantity="many">Après %d valeurs similaires de hauteur</item>
         <item quantity="other">Après %d valeurs similaires de hauteur</item>
     </plurals>
     <string name="num_moving_average">Moyenne glissante</string>
     <plurals name="num_moving_average_summary">
         <item quantity="one">Pas de moyenne</item>
+        <item quantity="many">Moyenne sur %d valeurs de hauteur</item>
         <item quantity="other">Moyenne sur %d valeurs de hauteur</item>
     </plurals>
     <string name="about">À propos</string>
@@ -88,6 +90,7 @@
     <string name="database_empty">Il n’y a pas d’élément à enregistrer.</string>
     <plurals name="load_instruments">
         <item quantity="one">Chargement d’%d instrument</item>
+        <item quantity="many">Chargement de %d instruments</item>
         <item quantity="other">Chargement de %d instruments</item>
     </plurals>
     <string name="replace_current_list">Remplacer la liste actuelle</string>
@@ -96,6 +99,7 @@
     <string name="share">Partager les instruments</string>
     <plurals name="sharing_num_items">
         <item quantity="one">Partager %d élément</item>
+        <item quantity="many">Partager %d éléments</item>
         <item quantity="other">Partager %d éléments</item>
     </plurals>
     <string name="load_from_disk">Charger les éléments depuis un fichier</string>
@@ -108,7 +112,11 @@
 <!--    <string name="equal_temperament_12">Gamme tempérée</string>-->
 <!--    <string name="equal_temperament_12_desc">12 notes par octave</string>-->
     <string name="equal_temperament_x">Tempérament %d intervalles égaux</string>
-    <string name="equal_temperament_x_desc">%d notes par octave</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d note par octave</item>
+        <item quantity="many">%d notes par octave</item>
+        <item quantity="other">%d notes par octave</item>
+    </plurals>
 
     <!--    <string name="equal_temperament_17">Tempérament 17 intervalles égaux</string>-->
 <!--    <string name="equal_temperament_17_desc">17 notes par octave</string>-->

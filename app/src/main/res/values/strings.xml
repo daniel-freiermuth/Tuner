@@ -141,8 +141,6 @@
     <string name="cello_cgda">Cello</string>
     <string name="double_bass_eadg">Double bass</string>
     <string name="equal_temperament_12" translatable="false">Equal temperament</string>
-    <string name="equal_temperament_12_desc" translatable="false">12 notes per octave</string>
-    <string name="equal_temperament_12_abbr" translatable="false">EDO 12</string>
 <!--    <string name="equal_temperament_17">Equal temperament 17</string>-->
 <!--    <string name="equal_temperament_17_desc">17 notes per octave</string>-->
 <!--    <string name="equal_temperament_17_abbr">EDO 17</string>-->
@@ -171,7 +169,10 @@
 <!--    <string name="equal_temperament_53_desc">53 notes per octave</string>-->
 <!--    <string name="equal_temperament_53_abbr">EDO 53</string>-->
     <string name="equal_temperament_x">Equal temperament %d</string>
-    <string name="equal_temperament_x_desc">%d notes per octave</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d note per octave</item>
+        <item quantity="other">%d notes per octave</item>
+    </plurals>
     <string name="equal_temperament_x_abbr">EDO %d</string>
     <string name="pythagorean_tuning">Pythagorean tuning</string>
     <string name="pythagorean_tuning_abbr">Pythagorean</string>

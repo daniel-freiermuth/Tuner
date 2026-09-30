@@ -83,7 +83,12 @@
 <!--    <string name="equal_temperament_12">Rovnoměrně temperované ladění</string>-->
 <!--    <string name="equal_temperament_12_desc">12 not na oktávu</string>-->
     <string name="equal_temperament_x">Rovnoměrně temperované ladění %d</string>
-    <string name="equal_temperament_x_desc">%d not na oktávu</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d nota na oktávu</item>
+        <item quantity="few">%d noty na oktávu</item>
+        <item quantity="many">%d noty na oktávu</item>
+        <item quantity="other">%d not na oktávu</item>
+    </plurals>
 <!--    <string name="equal_temperament_17">Rovnoměrně temperované ladění 17</string>-->
 <!--    <string name="equal_temperament_19">Rovnoměrně temperované ladění 19</string>-->
 <!--    <string name="equal_temperament_22">Rovnoměrně temperované ladění 22</string>-->

@@ -38,13 +38,10 @@
     <string name="autocorrelation">autokorreláció</string>
     <string name="pitch_history">hangmagasság-előzmények</string>
     <string name="spectrum">spektrum</string>
-    <string name="cent" translatable="false">%+d&#x200A;&#162;</string>
-    <string name="cent_nosign" translatable="false">%d&#x200A;&#162;</string>
     <string name="keep_screen_on">Képernyő bekapcsolva tartása</string>
     <string name="samples">minták</string>
     <string name="scientific_mode">Tudományos mód</string>
     <string name="tolerance_in_cents">Tűrés</string>
-    <string name="tolerance_summary" translatable="false">&#177;%d&#x200A;&#162;</string>
     <string name="expert">Szakértő</string>
     <string name="basic">Alapvetők</string>
     <string name="others">Egyebek</string>
@@ -72,13 +69,6 @@
     <string name="a_solfege">lá</string>
     <string name="b_solfege">ti</string>
 
-    <string name="c_note_international" translatable="false">C</string>
-    <string name="d_note_international" translatable="false">D</string>
-    <string name="e_note_international" translatable="false">E</string>
-    <string name="f_note_international" translatable="false">F</string>
-    <string name="g_note_international" translatable="false">G</string>
-    <string name="a_note_international" translatable="false">A</string>
-    <string name="b_note_international" translatable="false">B</string>
 
     <string name="notation">Jelölés</string>
     <string name="notation_standard">Alapértelmezett (A-H-C-…)</string>
@@ -136,7 +126,10 @@
 <!--    <string name="equal_temperament_12_desc">12 hangjegy oktávonként</string>-->
 <!--    <string name="equal_temperament_12_abbr">EDO 12</string>-->
     <string name="equal_temperament_x">%d hangjegyes kiegyenlített hangolás</string>
-    <string name="equal_temperament_x_desc">%d hangjegy oktávonként</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d hangjegy oktávonként</item>
+        <item quantity="other">%d hangjegy oktávonként</item>
+    </plurals>
     <string name="equal_temperament_x_abbr">EDO %d</string>
 
     <!--    <string name="equal_temperament_17">17 hangjegyes kiegyenlített hangolás</string>-->
@@ -169,7 +162,7 @@
     <string name="pythagorean_tuning">Püthagoraszi hangolás</string>
     <string name="pythagorean_tuning_abbr">Püthagoraszi</string>
     <string name="pure_tuning">Tiszta hangolás</string>
-    <string name="pure_tuning_desc">Ötfokú, asszimetrikus skála</string>
+    <string name="pure_tuning_desc">Ötfokú, aszimmetrikus skála</string>
     <string name="pure_tuning_abbr">Kiegyenlített</string>
     <string name="quarter_comma_mean_tone">¼ kommás középhang</string>
     <string name="quarter_comma_mean_tone_desc">Tiszta nagytercek</string>
@@ -181,7 +174,7 @@
     <string name="fifth_comma_mean_tone_desc">Tiszta diatónikus félhangok</string>
     <string name="fifth_comma_mean_tone_abbr">⅕ kommás középhang</string>
     <string name="werckmeister_iii">Werckmeister III</string>
-    <string name="werckmeister_iii_desc">¼ kommás kommás osztások</string>
+    <string name="werckmeister_iii_desc">¼ kommás osztások</string>
     <string name="werckmeister_iii_abbr">Werckmeister III</string>
     <string name="werckmeister_iv">Werckmeister IV</string>
     <string name="werckmeister_iv_desc">⅓ kommás felosztások</string>
@@ -223,8 +216,6 @@
     <string name="pythagorean_comma">%d\u2044%d&#x200A;pC</string>
     <string name="syntonic_comma">%d\u2044%d&#x200A;sC</string>
     <string name="schisma">%d\u2044%d&#x200A;sch</string>
-    <string name="plus_correction" translatable="false">" + "</string>
-    <string name="minus_correction" translatable="false">" - "</string>
     <string name="pythagorean_comma_desc">pC: püthagoraszi komma, 531441\u2044524288\nsC: szintonikus komma, 81\u204480\nsch: szkizma, 32805\u204432768</string>
     <string name="circle_of_fifths">Kvintkör</string>
     <string name="set_default">Alaphelyzetbe állítás</string>
@@ -239,39 +230,10 @@
     <string name="capture_duration">Felvétel hossza: %d&#x200A;s</string>
     <string name="no_capture_duration">Felvétel letiltása</string>
     <string name="sa_carnatic">Sza</string>
-    <string name="ri1_carnatic" translatable="false">Ri₁</string>
-    <string name="ri2_carnatic" translatable="false">Ri₂</string>
-    <string name="ga1_carnatic" translatable="false">Ga₁</string>
-    <string name="ga2_carnatic" translatable="false">Ga₂</string>
-    <string name="ma1_carnatic" translatable="false">Ma₁</string>
-    <string name="ma2_carnatic" translatable="false">Ma₂</string>
-    <string name="pa_carnatic" translatable="false">Pa</string>
-    <string name="dha1_carnatic" translatable="false">Dha₁</string>
-    <string name="dha2_carnatic" translatable="false">Dha₂</string>
-    <string name="ni1_carnatic" translatable="false">Ni₁</string>
-    <string name="ni2_carnatic" translatable="false">Ni₂</string>
     <string name="notation_carnatic">Karnátikus</string>
     <string name="sa_hindustani" translatable="false">Sza</string>
-    <string name="re1_hindustani" translatable="false">Re₁</string>
-    <string name="re2_hindustani" translatable="false">Re₂</string>
-    <string name="ga1_hindustani" translatable="false">Ga₁</string>
-    <string name="ga2_hindustani" translatable="false">Ga₂</string>
-    <string name="ma1_hindustani" translatable="false">Ma₁</string>
-    <string name="ma2_hindustani" translatable="false">Ma₂</string>
-    <string name="pa_hindustani" translatable="false">Pa</string>
-    <string name="dha1_hindustani" translatable="false">Dha₁</string>
-    <string name="dha2_hindustani" translatable="false">Dha₂</string>
-    <string name="ni1_hindustani" translatable="false">Ni₁</string>
-    <string name="ni2_hindustani" translatable="false">Ni₂</string>
     <string name="notation_hindustani">Hindusztáni</string>
 
-    <string name="ni_byzantine" translatable="false">Νη</string>
-    <string name="pa_byzantine" translatable="false">Πα</string>
-    <string name="vou_byzantine" translatable="false">Βου</string>
-    <string name="gha_byzantine" translatable="false">Γα</string>
-    <string name="dhi_byzantine" translatable="false">Δι</string>
-    <string name="ke_byzantine" translatable="false">Κε</string>
-    <string name="zo_byzantine" translatable="false">Ζω</string>
     <string name="notation_byzantine">Bizánci</string>
 
 

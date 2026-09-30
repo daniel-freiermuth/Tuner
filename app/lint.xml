@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Findings that were checked and are false positives here. -->
+<lint>
+    <issue id="ImpliedQuantity">
+        <!-- In French, "one" also matches 0, but both sliders using these plurals start at 1. -->
+        <ignore path="src/main/res/values-fr/strings.xml" />
+    </issue>
+    <issue id="PluralsCandidate">
+        <!-- "Maximum value of %d exceeded": the number is not a count of anything. -->
+        <ignore regexp="\(&quot;exceeded&quot;\)" />
+    </issue>
+    <issue id="Untranslatable">
+        <!-- Hungarian spelling of the Hindustani syllable "Sa". -->
+        <ignore regexp="&quot;sa_hindustani&quot;.*&quot;hu&quot;" />
+    </issue>
+    <issue id="VectorPath">
+        <!-- Small instrument icons; the rasterized result is cached after the first draw. -->
+        <ignore path="src/main/res/drawable/ic_tar.xml" />
+        <ignore path="src/main/res/drawable/ic_violin.xml" />
+    </issue>
+</lint>
