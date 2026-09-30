@@ -41,15 +41,29 @@ private fun restrictViewPortToLimits(viewPort: Rect, viewPortLimits: Rect?): Rec
             left = viewPort.left,
             top = viewPort.top,
             right = if (viewPort.width.absoluteValue > viewPortLimits.width) {
-                if (viewPort.width > 0) viewPort.left + viewPortLimits.width else viewPort.left - viewPortLimits.width
+                if (viewPort.width >
+                    0
+                ) {
+                    viewPort.left + viewPortLimits.width
+                } else {
+                    viewPort.left -
+                        viewPortLimits.width
+                }
             } else {
                 viewPort.right
             },
             bottom = if (viewPort.height.absoluteValue > viewPortLimits.height) {
-                if (viewPort.height > 0) viewPort.top + viewPortLimits.height else viewPort.top - viewPortLimits.height
+                if (viewPort.height >
+                    0
+                ) {
+                    viewPort.top + viewPortLimits.height
+                } else {
+                    viewPort.top -
+                        viewPortLimits.height
+                }
             } else {
                 viewPort.bottom
-            },
+            }
         )
 
         // make sure, that left/top don't exceed limits
@@ -86,7 +100,8 @@ class GestureBasedViewPort {
         isActive = true
         viewPortRawAnimation.snapTo(viewPort)
         viewPortRawAnimation.animateDecay(
-            Rect(velocity.x, velocity.y, velocity.x, velocity.y), animationDecay
+            Rect(velocity.x, velocity.y, velocity.x, velocity.y),
+            animationDecay
         ) {
             val targetInLimits = restrictViewPortToLimits(value, limits)
             viewPort = targetInLimits

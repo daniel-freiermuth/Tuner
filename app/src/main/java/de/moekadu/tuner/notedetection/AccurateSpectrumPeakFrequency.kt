@@ -49,21 +49,23 @@ class AccurateSpectrumPeakFrequency(
      * Is spec1 and spec2 is given, this will not return df*spec_index, but a more accurate
      * approximation at a spectrum peak.
      * @param index Spectrum peak index, where the frequency should be computed.
-     * @return  Frequency.
+     * @return Frequency.
      */
     operator fun get(index: Int): Float {
         val freqLowAccuracy = index * df
-        if (spec1 == null || spec2 == null || timeShiftBetweenSpecs == 0f)
+        if (spec1 == null || spec2 == null || timeShiftBetweenSpecs == 0f) {
             return freqLowAccuracy
+        }
 
         val phase1 = atan2(spec1.imag(index), spec1.real(index))
         val phase2 = atan2(spec2.imag(index), spec2.real(index))
 
         var dPhase = phase2 - phase1
-        if (dPhase < PI)
+        if (dPhase < PI) {
             dPhase += 2 * PI.toFloat()
-        else if (dPhase > PI.toFloat())
+        } else if (dPhase > PI.toFloat()) {
             dPhase -= 2 * PI.toFloat()
+        }
 
         val numWaves = (timeShiftBetweenSpecs * freqLowAccuracy - dPhase / (2 * PI.toFloat())).roundToInt()
 

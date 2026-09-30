@@ -11,6 +11,8 @@ data class NotePrintOptionsOld(
     val notationType: NotationType = NotationType.Standard
 ) {
     enum class SharpFlatPreference {
-        Sharp, Flat, None
+        Sharp,
+        Flat,
+        None
     }
 }

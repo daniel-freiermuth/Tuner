@@ -11,18 +11,25 @@ package de.moekadu.tuner.notedetection
 class HarmonicPredictor {
     /** Sum of frequency * harmonicNumber */
     private var sumFh = 0f
+
     /** Sum of frequency * harmonicNumber**2 */
     private var sumFh2 = 0f
+
     /** Sum of harmonicNumber**2 */
     private var sumH2 = 0f
+
     /** Sum of harmonicNumber**3 */
     private var sumH3 = 0f
+
     /** Sum of harmonicNumber**4 */
     private var sumH4 = 0f
+
     /** Alpha factor of modelling function */
     private var alpha = 0f
+
     /** Beta factor of modelling function */
     private var beta = 0f
+
     /** Base frequency of modelling function */
     private var f1 = 0f
 
@@ -37,6 +44,7 @@ class HarmonicPredictor {
         beta = 0f
         f1 = 0f
     }
+
     /** Add new harmonic to the modelling function.
      * @param harmonicNumber Harmonic number.
      * @param frequency Frequency of harmonic.
@@ -64,7 +72,5 @@ class HarmonicPredictor {
      * @param harmonicNumber harmonic number.
      * @return Predicted frequency.
      */
-    fun predict(harmonicNumber: Int): Float {
-        return f1 * harmonicNumber * (1 + beta * harmonicNumber)
-    }
+    fun predict(harmonicNumber: Int): Float = f1 * harmonicNumber * (1 + beta * harmonicNumber)
 }

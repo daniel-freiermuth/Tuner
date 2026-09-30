@@ -33,9 +33,7 @@ data class Harmonic(
     var spectrumAmplitudeSquared: Float
 ) : Comparable<Harmonic> {
     /** Define ordering for harmonics which is based on harmonic number. */
-    override fun compareTo(other: Harmonic): Int {
-        return harmonicNumber - other.harmonicNumber
-    }
+    override fun compareTo(other: Harmonic): Int = harmonicNumber - other.harmonicNumber
 }
 
 /** Container, storing several harmonics.
@@ -57,8 +55,9 @@ class Harmonics(maxCapacity: Int) {
 
     /** Sort the harmonics according to the harmonic number. */
     fun sort() {
-        if (!isSorted)
+        if (!isSorted) {
             harmonics.sort(0, size)
+        }
     }
 
     /** Add a new harmonic to the container.
@@ -67,15 +66,21 @@ class Harmonics(maxCapacity: Int) {
      * @param spectrumIndex Index in spectrum of the harmonic.
      * @param spectrumAmplitudeSquared Value of squared amplitude spectrum at given index.
      */
-    fun addHarmonic(harmonicNumber: Int, frequency: Float, spectrumIndex: Int, spectrumAmplitudeSquared: Float) {
+    fun addHarmonic(
+        harmonicNumber: Int,
+        frequency: Float,
+        spectrumIndex: Int,
+        spectrumAmplitudeSquared: Float
+    ) {
         require(size < harmonics.size)
         harmonics[size].harmonicNumber = harmonicNumber
         harmonics[size].frequency = frequency
         harmonics[size].spectrumIndex = spectrumIndex
         harmonics[size].spectrumAmplitudeSquared = spectrumAmplitudeSquared
         size += 1
-        if (size > 1 && isSorted)
-            isSorted = (harmonics[size-1].harmonicNumber >= harmonics[size-2].harmonicNumber)
+        if (size > 1 && isSorted) {
+            isSorted = (harmonics[size - 1].harmonicNumber >= harmonics[size - 2].harmonicNumber)
+        }
     }
 
     /** Get harmonic at given container index.
@@ -94,9 +99,10 @@ class Harmonics(maxCapacity: Int) {
     }
 
     /** Adopt harmonics from other class. */
-    fun adopt(other: Harmonics){
-        if (other === this)
+    fun adopt(other: Harmonics) {
+        if (other === this) {
             return
+        }
         clear()
         for (i in 0 until other.size) {
             addHarmonic(
@@ -131,7 +137,9 @@ class Harmonics(maxCapacity: Int) {
  */
 fun findGlobalMaximumIndex(indexBegin: Int, indexEnd: Int, values: FloatArray): Int {
     // functor for local maximum check
-    val isLocalMax = {i: Int, data: FloatArray -> data[i] >= data[i-1] && data[i] >= data[i+1]}
+    val isLocalMax = { i: Int, data: FloatArray ->
+        data[i] >= data[i - 1] && data[i] >= data[i + 1]
+    }
     var globalMaximumIndex = -1
     var globalMaximumValue = Float.NEGATIVE_INFINITY
     val indexBeginResolved = max(indexBegin, 1)
@@ -170,8 +178,9 @@ fun findLocalMaximumIndex(
 ): Int {
     val beginIndex = max(ceil(center - searchRadius).toInt(), 1)
     val endIndex = min(floor(center + searchRadius).toInt() + 1, values.size - 1)
-    if (endIndex <= beginIndex)
+    if (endIndex <= beginIndex) {
         return -1
+    }
 
     var maximumValue = values[beginIndex]
     var maximumValueIndex = beginIndex
@@ -181,24 +190,30 @@ fun findLocalMaximumIndex(
             maximumValueIndex = i
         }
     }
-    if (values[maximumValueIndex - 1] >= maximumValue || values[maximumValueIndex + 1] >= maximumValue)
+    if (values[maximumValueIndex - 1] >= maximumValue ||
+        values[maximumValueIndex + 1] >= maximumValue
+    ) {
         return -1
+    }
 
     val meanIndexBegin = max(maximumValueIndex - meanRadius, 0)
     val meanIndexEnd = min(maximumValueIndex + meanRadius + 1, values.size)
-    if (meanIndexEnd <= meanIndexBegin)
+    if (meanIndexEnd <= meanIndexBegin) {
         return -1
+    }
 
     var average = 0.0f
     if (meanIndexEnd - meanIndexBegin > 1) {
-        for (i in meanIndexBegin until meanIndexEnd)
+        for (i in meanIndexBegin until meanIndexEnd) {
             average += values[i]
+        }
         average -= maximumValue
         average /= meanIndexEnd - meanIndexBegin - 1
     }
 
-    if (maximumValue < max(average * minimumFactorOverMean, threshold))
+    if (maximumValue < max(average * minimumFactorOverMean, threshold)) {
         return -1
+    }
     return maximumValueIndex
 }
 
@@ -210,21 +225,22 @@ fun findLocalMaximumIndex(
  * - divisible by 3 (or of course multiples of 3)
  * @return true if there is a common divisor, else false.
  */
-fun Harmonics.hasCommonDivisors(): Boolean {
-    return ((size == 1 && this[0].harmonicNumber > 1) ||
-            allHarmonicsDividableBy(2) ||
-            allHarmonicsDividableBy(3)
-            )
-}
+fun Harmonics.hasCommonDivisors(): Boolean = (
+    (size == 1 && this[0].harmonicNumber > 1) ||
+        allHarmonicsDividableBy(2) ||
+        allHarmonicsDividableBy(3)
+    )
 
 /** Check if all harmonics can be divided by a given factor.
  * @param factor Factor.
  * @return true if all harmonics can be divided by the factor, else false.
  */
 private fun Harmonics.allHarmonicsDividableBy(factor: Int): Boolean {
-    for (i in 0 until size)
-        if (this[i].harmonicNumber % factor > 0)
+    for (i in 0 until size) {
+        if (this[i].harmonicNumber % factor > 0) {
             return false
+        }
+    }
     return true
 }
 
@@ -233,8 +249,9 @@ private fun Harmonics.allHarmonicsDividableBy(factor: Int): Boolean {
  * @return Rating value.
  */
 private fun Harmonics.rating(): Float {
-    if (size == 0)
+    if (size == 0) {
         return 0f
+    }
     val EXPONENT = 0.4f
     val ADDITIONAL_CONTRIBUTION = 0.05f
 
@@ -247,7 +264,6 @@ private fun Harmonics.rating(): Float {
         harmonicSum += h.spectrumAmplitudeSquared.pow(0.25f)
         maximumAmplitude = max(maximumAmplitude, h.spectrumAmplitudeSquared)
         frequencySum += h.frequency / h.harmonicNumber
-
     }
     harmonicSum += this.size * maximumAmplitude.pow(0.25f) * ADDITIONAL_CONTRIBUTION
     return (frequencySum / size).pow(EXPONENT) * harmonicSum
@@ -282,8 +298,8 @@ fun findSuitableSpectrumPeak(
     val frequencyOfGlobalMax = accurateSpectrumPeakFrequency[globalMaximumIndex]
     val harmonicOfGlobalMax = (frequencyOfGlobalMax / frequencyBase).roundToInt()
 
-    val harmonicErrorMaxHarmonic
-            = (harmonicOfGlobalMax - frequencyOfGlobalMax / frequencyBase).absoluteValue
+    val harmonicErrorMaxHarmonic =
+        (harmonicOfGlobalMax - frequencyOfGlobalMax / frequencyBase).absoluteValue
 
     if (harmonicErrorMaxHarmonic < harmonicTolerance && harmonicOfGlobalMax > 0) {
         return Harmonic(
@@ -305,8 +321,9 @@ fun findSuitableSpectrumPeak(
 
     for (harmonic in 1 until maxHarmonic) {
         val freq = frequencyBase * harmonic
-        if (freq > frequencyMax)
+        if (freq > frequencyMax) {
             break
+        }
 
         val maximumIndex = findLocalMaximumIndex(
             values = spectrum.amplitudeSpectrumSquared,
@@ -342,11 +359,10 @@ fun findSuitableSpectrumPeak(
             globalMaximumIndex,
             spectrum.amplitudeSpectrumSquared[globalMaximumIndex]
         )
-    } else  {
+    } else {
         harmonicOfSmallestError
     }
 }
-
 
 /** Extract harmonics from a spectrum
  *
@@ -388,36 +404,58 @@ fun findHarmonicsFromSpectrum(
     val indexEnd = min(ampSpecSqr.size, floor(frequencyMax / df).toInt() + 1)
     val globalMaximumIndex = findGlobalMaximumIndex(indexBegin, indexEnd, ampSpecSqr)
 
-    if (globalMaximumIndex < 1)
+    if (globalMaximumIndex < 1) {
         return
+    }
 
     val frequencyOfGlobalMax = accurateSpectrumPeakFrequency[globalMaximumIndex]
     val harmonicOfGlobalMax = (frequencyOfGlobalMax / frequency).roundToInt()
 
-    if (harmonicOfGlobalMax == 0)
+    if (harmonicOfGlobalMax == 0) {
         return
+    }
 
-    harmonics.addHarmonic(harmonicOfGlobalMax, frequencyOfGlobalMax, globalMaximumIndex, ampSpecSqr[globalMaximumIndex])
+    harmonics.addHarmonic(
+        harmonicOfGlobalMax,
+        frequencyOfGlobalMax,
+        globalMaximumIndex,
+        ampSpecSqr[globalMaximumIndex]
+    )
 
     val searchRadius = harmonicTolerance * globalMaximumIndex / harmonicOfGlobalMax
     val meanRadius = max(1, (globalMaximumIndex / (2f * harmonicOfGlobalMax)).roundToInt())
 
-    for (increment in -1 .. 1 step 2) { // this just means, do it once for -1 and once for 1
+    for (increment in -1..1 step 2) { // this just means, do it once for -1 and once for 1
         var previouslyFoundHarmonicResult = harmonics[0] // this is the global maximum
         var probableHarmonicNumber = previouslyFoundHarmonicResult.harmonicNumber + increment
         var numFail = 0
 
         while (numFail < maxNumFail && probableHarmonicNumber > 0) {
-            val freq1 = previouslyFoundHarmonicResult.frequency / previouslyFoundHarmonicResult.harmonicNumber
+            val freq1 =
+                previouslyFoundHarmonicResult.frequency /
+                    previouslyFoundHarmonicResult.harmonicNumber
             val freqX = freq1 * probableHarmonicNumber
             val centerIndexFloat = freqX / df
 
-            val maximumIndex = findLocalMaximumIndex(ampSpecSqr, centerIndexFloat, searchRadius, minimumFactorOverLocalMean, meanRadius)
+            val maximumIndex =
+                findLocalMaximumIndex(
+                    ampSpecSqr,
+                    centerIndexFloat,
+                    searchRadius,
+                    minimumFactorOverLocalMean,
+                    meanRadius
+                )
             if (maximumIndex > 0 && maximumIndex != previouslyFoundHarmonicResult.spectrumIndex) {
                 val actualFreqX = accurateSpectrumPeakFrequency[maximumIndex]
-                if (actualFreqX < frequencyMin || actualFreqX > frequencyMax)
+                if (actualFreqX < frequencyMin || actualFreqX > frequencyMax) {
                     break
-                harmonics.addHarmonic(probableHarmonicNumber, actualFreqX, maximumIndex, ampSpecSqr[maximumIndex])
+                }
+                harmonics.addHarmonic(
+                    probableHarmonicNumber,
+                    actualFreqX,
+                    maximumIndex,
+                    ampSpecSqr[maximumIndex]
+                )
                 previouslyFoundHarmonicResult = harmonics[harmonics.size - 1]
                 numFail = 0
             } else if (freqX < frequencyMin || freqX > frequencyMax) {
@@ -471,8 +509,9 @@ fun Harmonics.findHarmonicsFromSpectrum2(
     val ampSpecSqr = spectrum.amplitudeSpectrumSquared
     val frequencyBase = initialHarmonic.frequency / initialHarmonic.harmonicNumber
 
-    if (globalMaximumIndex < 1)
+    if (globalMaximumIndex < 1) {
         return
+    }
 
     addHarmonic(
         initialHarmonic.harmonicNumber,
@@ -482,8 +521,8 @@ fun Harmonics.findHarmonicsFromSpectrum2(
     )
 
     val searchRadius = (
-            harmonicTolerance * initialHarmonic.spectrumIndex / initialHarmonic.harmonicNumber + 1
-            )
+        harmonicTolerance * initialHarmonic.spectrumIndex / initialHarmonic.harmonicNumber + 1
+        )
     val meanRadiusMax = max(1, (frequencyBase / (2 * df)).roundToInt())
     val meanRadius = min(meanRadiusMax, MEAN_RADIUS_LIMIT)
 
@@ -492,7 +531,7 @@ fun Harmonics.findHarmonicsFromSpectrum2(
         add(initialHarmonic.harmonicNumber, initialHarmonic.frequency)
     }
 
-    for (increment in -1 .. 1 step 2) { // this just means, do it once for -1 and once for 1
+    for (increment in -1..1 step 2) { // this just means, do it once for -1 and once for 1
         var previouslyFoundHarmonicResult = initialHarmonic
         var probableHarmonicNumber = previouslyFoundHarmonicResult.harmonicNumber + increment
         var numFail = 0
@@ -511,12 +550,13 @@ fun Harmonics.findHarmonicsFromSpectrum2(
             )
             if (maximumIndex > 0 && maximumIndex != previouslyFoundHarmonicResult.spectrumIndex) {
                 val actualFreqX = accurateSpectrumPeakFrequency[maximumIndex]
-                if (actualFreqX < frequencyMin || actualFreqX > frequencyMax)
+                if (actualFreqX < frequencyMin || actualFreqX > frequencyMax) {
                     break
+                }
                 val lowerBound = freqX - harmonicTolerance * frequencyBase
                 val upperBound = freqX + harmonicTolerance * frequencyBase
 
-                if (actualFreqX in lowerBound .. upperBound) {
+                if (actualFreqX in lowerBound..upperBound) {
                     addHarmonic(
                         probableHarmonicNumber,
                         actualFreqX,
@@ -566,27 +606,34 @@ fun Harmonics.findBestMatchingHarmonics(
         indexEnd = min(spectrum.size, floor(frequencyMax / spectrum.df).toInt() + 1),
         values = spectrum.amplitudeSpectrumSquared
     )
-    if (globalMaximumIndex <= 0)
+    if (globalMaximumIndex <= 0) {
         return
+    }
 
     var bestRating = 0f
 
     val probableBaseFrequency = correlationBasedFrequency.frequency
 
-    val subharmonic = min(LOWEST_SUBHARMONIC, ceil(probableBaseFrequency / frequencyMin).toInt() - 1)
-    val higherHarmonic = min(HIGHEST_HIGHER_HARMONIC, ceil(frequencyMax / probableBaseFrequency).toInt() - 1)
+    val subharmonic =
+        min(LOWEST_SUBHARMONIC, ceil(probableBaseFrequency / frequencyMin).toInt() - 1)
+    val higherHarmonic = min(
+        HIGHEST_HIGHER_HARMONIC,
+        ceil(frequencyMax / probableBaseFrequency).toInt() - 1
+    )
 
-    for (harmonicVariant in -(subharmonic-1) .. higherHarmonic) {
-        val freqBase = if (harmonicVariant < 0)
+    for (harmonicVariant in -(subharmonic - 1)..higherHarmonic) {
+        val freqBase = if (harmonicVariant < 0) {
             probableBaseFrequency / (-harmonicVariant + 1) //  i.e. / 2, / 3, ...
-        else
+        } else {
             probableBaseFrequency * (harmonicVariant + 1) // i.e.  * 1, * 2, ...
+        }
 
         val closestIndex = (1f / (freqBase * correlation.dt)).roundToInt()
         val correlationInitialPeak = correlationBasedFrequency.correlationAtTimeShift
 
         if (closestIndex < correlation.size &&
-            correlation[closestIndex] > CORRELATION_PEAK_FACTOR * correlationInitialPeak) {
+            correlation[closestIndex] > CORRELATION_PEAK_FACTOR * correlationInitialPeak
+        ) {
             val initialHarmonic = findSuitableSpectrumPeak(
                 frequencyBase = freqBase,
                 frequencyMax = frequencyMax,
@@ -624,25 +671,35 @@ fun Harmonics.findBestMatchingHarmonics(
     adopt(bestHarmonics)
 }
 
-fun computeEnergyContentOfHarmonicsInSignalRelative(harmonics: Harmonics, ampspecSqr: FloatArray, radius: Int = 1): Float {
+fun computeEnergyContentOfHarmonicsInSignalRelative(
+    harmonics: Harmonics,
+    ampspecSqr: FloatArray,
+    radius: Int = 1
+): Float {
     val totalEnergy = ampspecSqr.sumOf { it.toDouble() }
     var harmonicEnergy = 0.0
-    for ( i in 0 until harmonics.size) {
+    for (i in 0 until harmonics.size) {
         val startIndex = max(0, harmonics[i].spectrumIndex - radius)
         val endIndex = min(ampspecSqr.size, harmonics[i].spectrumIndex + radius + 1)
-        for (j in startIndex until endIndex)
+        for (j in startIndex until endIndex) {
             harmonicEnergy += ampspecSqr[j]
+        }
     }
     return (harmonicEnergy / totalEnergy).toFloat()
 }
 
-fun computeEnergyContentOfHarmonicsInSignalAbsolute(harmonics: Harmonics, ampspecSqr: FloatArray, radius: Int = 1): Float {
+fun computeEnergyContentOfHarmonicsInSignalAbsolute(
+    harmonics: Harmonics,
+    ampspecSqr: FloatArray,
+    radius: Int = 1
+): Float {
     var harmonicEnergy = 0.0f
-    for ( i in 0 until harmonics.size) {
+    for (i in 0 until harmonics.size) {
         val startIndex = max(0, harmonics[i].spectrumIndex - radius)
         val endIndex = min(ampspecSqr.size, harmonics[i].spectrumIndex + radius + 1)
-        for (j in startIndex until endIndex)
+        for (j in startIndex until endIndex) {
             harmonicEnergy += ampspecSqr[j]
+        }
     }
     return harmonicEnergy
 }

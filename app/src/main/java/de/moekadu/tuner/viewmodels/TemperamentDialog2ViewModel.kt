@@ -14,18 +14,19 @@ import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.ui.common.EditableListData
 import de.moekadu.tuner.ui.common.EditableListPredefinedSectionImmutable
 import de.moekadu.tuner.ui.temperaments.TemperamentsDialog2Data
+import javax.inject.Inject
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class TemperamentDialog2ViewModel @Inject constructor(
     val pref: TemperamentResources,
     @param:ApplicationScope val applicationScope: CoroutineScope
-) : TemperamentsDialog2Data, ViewModel() {
+) : ViewModel(),
+    TemperamentsDialog2Data {
     private val musicalScale = pref.musicalScale.value
 
     private val activeTemperament = MutableStateFlow(musicalScale.temperament)
@@ -72,9 +73,10 @@ class TemperamentDialog2ViewModel @Inject constructor(
         val rootNote = pref.musicalScale.value.rootNote
         val rootNoteInTemperament =
             temperament.possibleRootNotes().firstOrNull { it.equalsIgnoreOctave(rootNote) } == null
-        return if (rootNoteInTemperament)
+        return if (rootNoteInTemperament) {
             rootNote
-        else
+        } else {
             temperament.possibleRootNotes()[0]
+        }
     }
 }

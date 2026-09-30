@@ -38,7 +38,7 @@ import kotlinx.collections.immutable.ImmutableList
 data class VerticalMark(
     val position: Float,
     val settings: Settings,
-    val content: @Composable (modifier: Modifier) -> Unit,
+    val content: @Composable (modifier: Modifier) -> Unit
 ) : ParentDataModifier {
     data class Settings(
         val anchor: Anchor = Anchor.Center,
@@ -50,10 +50,7 @@ data class VerticalMark(
     override fun Density.modifyParentData(parentData: Any?) = this@VerticalMark
 }
 
-private data class MeasuredVerticalMark(
-    val placeable: Placeable,
-    val mark: VerticalMark
-)
+private data class MeasuredVerticalMark(val placeable: Placeable, val mark: VerticalMark)
 
 @Composable
 private fun VerticalMarkLines(
@@ -72,11 +69,11 @@ private fun VerticalMarkLines(
                         mark.settings.lineColor, // TODO: resolve Color.Unspecified
                         Offset(
                             xTransformed,
-                            transformationInstance.viewPortScreen.top.toFloat(),
+                            transformationInstance.viewPortScreen.top.toFloat()
                         ),
                         Offset(
                             xTransformed,
-                            transformationInstance.viewPortScreen.bottom.toFloat(),
+                            transformationInstance.viewPortScreen.bottom.toFloat()
                         ),
                         strokeWidth = mark.settings.lineWidth.toPx()
                     )
@@ -92,7 +89,8 @@ private fun VerticalMarkLabels(
     clipLabelsToWindow: Boolean,
     transformation: () -> Transformation
 ) {
-    Layout(modifier = Modifier.fillMaxSize(),
+    Layout(
+        modifier = Modifier.fillMaxSize(),
         content = {
             marks.forEach { it.content(it) }
         }
@@ -101,8 +99,10 @@ private fun VerticalMarkLabels(
             val maxHeight = measureables.maxOf { it.minIntrinsicHeight(Int.MAX_VALUE) }
             val maxWidth = measureables.maxOf { it.maxIntrinsicWidth(maxHeight) }
             constraints.copy(
-                minWidth = maxWidth, minHeight = maxHeight,
-                maxWidth = maxWidth, maxHeight = maxHeight
+                minWidth = maxWidth,
+                minHeight = maxHeight,
+                maxWidth = maxWidth,
+                maxHeight = maxHeight
             )
         } else {
             constraints.copy(minWidth = 0, minHeight = 0)
@@ -121,12 +121,13 @@ private fun VerticalMarkLabels(
                 val xTransformed = transform.toScreen(xOffset).x
                 val vp = transform.viewPortScreen
                 val settings = mark.settings
-                val visible = xTransformed in vp.left.toFloat() .. vp.right.toFloat()
+                val visible = xTransformed in vp.left.toFloat()..vp.right.toFloat()
                 if (clipLabelsToWindow || visible) {
                     p.place(
                         settings.anchor.place(
                             xTransformed + settings.screenOffset.x.toPx(),
-                            vp.top + (1f - settings.labelPosition) * vp.height + settings.screenOffset.y.toPx(),
+                            vp.top + (1f - settings.labelPosition) * vp.height +
+                                settings.screenOffset.y.toPx(),
                             p.width.toFloat(),
                             p.height.toFloat(),
                             0f,
@@ -138,7 +139,6 @@ private fun VerticalMarkLabels(
         }
     }
 }
-
 
 @Composable
 fun VerticalMarks(

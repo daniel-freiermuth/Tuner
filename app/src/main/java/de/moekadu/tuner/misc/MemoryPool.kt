@@ -47,8 +47,7 @@ import kotlinx.coroutines.sync.withLock
 }
 
  */
-class MemoryPool<T>(capacity: Int = 10)
-{
+class MemoryPool<T>(capacity: Int = 10) {
     inner class RefCountedMemory(val memory: T) {
         private var refCount = 1
         private val mutex = Mutex()
@@ -61,8 +60,9 @@ class MemoryPool<T>(capacity: Int = 10)
          *   anymore.
          */
         suspend inline fun <R> with(f: (T) -> R): R? {
-            if (!incRef())
+            if (!incRef()) {
                 return null
+            }
             val result = f(memory)
             decRef()
             return result
@@ -72,14 +72,12 @@ class MemoryPool<T>(capacity: Int = 10)
          * @return True, if we successfully incremented the count. False if the underlying memory
          *   does not exist anymore.
          */
-        suspend fun incRef(): Boolean {
-            return mutex.withLock {
-                if (refCount == 0) {
-                    false
-                } else {
-                    ++refCount
-                    true
-                }
+        suspend fun incRef(): Boolean = mutex.withLock {
+            if (refCount == 0) {
+                false
+            } else {
+                ++refCount
+                true
             }
         }
 
@@ -87,8 +85,9 @@ class MemoryPool<T>(capacity: Int = 10)
         suspend fun decRef() {
             mutex.withLock {
                 --refCount
-                if (refCount == 0)
+                if (refCount == 0) {
                     this@MemoryPool.recycle(this)
+                }
             }
         }
     }
@@ -115,8 +114,9 @@ class MemoryPool<T>(capacity: Int = 10)
         var memory: T?
         while (true) {
             memory = memoryChannel.tryReceive().getOrNull()
-            if (memory == null || checker(memory))
+            if (memory == null || checker(memory)) {
                 break
+            }
         }
 
         return if (memory == null) {

@@ -166,7 +166,7 @@ fun TemperamentEditor(
                         }
                     },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
             }
             item {
@@ -236,7 +236,7 @@ private class TemperamentEditorStateTest : TemperamentEditorState {
     override fun modifyDescription(value: String) {
         description.value = value
     }
-    
+
     override val temperamentValues = mutableStateOf(
         (0..numberOfValues.intValue).map { index ->
             TemperamentTableLineState(
@@ -259,9 +259,17 @@ private class TemperamentEditorStateTest : TemperamentEditorState {
     override fun onNoteNameClicked(index: Int, enharmonic: Boolean) {
         temperamentValues.value.forEachIndexed { i, value ->
             value.setNoteEditor(
-                if (i != index
-                    || (!enharmonic && value.noteEditorState == TemperamentTableLineState.NoteEditorState.Standard)
-                    || (enharmonic && value.noteEditorState == TemperamentTableLineState.NoteEditorState.Enharmonic)
+                if (i != index ||
+                    (
+                        !enharmonic &&
+                            value.noteEditorState ==
+                            TemperamentTableLineState.NoteEditorState.Standard
+                        ) ||
+                    (
+                        enharmonic &&
+                            value.noteEditorState ==
+                            TemperamentTableLineState.NoteEditorState.Enharmonic
+                        )
                 ) {
                     TemperamentTableLineState.NoteEditorState.Off
                 } else if (enharmonic) {
@@ -285,7 +293,6 @@ private class TemperamentEditorStateTest : TemperamentEditorState {
         }
     }
 }
-
 
 @Preview(widthDp = 300, heightDp = 600, showBackground = true)
 @Preview(widthDp = 600, heightDp = 300, showBackground = true)

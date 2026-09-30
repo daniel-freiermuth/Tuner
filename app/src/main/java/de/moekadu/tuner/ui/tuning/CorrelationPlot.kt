@@ -35,8 +35,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
-import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.ui.common.Label
 import de.moekadu.tuner.ui.plot.Anchor
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
@@ -48,9 +48,9 @@ import de.moekadu.tuner.ui.plot.TickLevelDeltaBased
 import de.moekadu.tuner.ui.plot.VerticalMark
 import de.moekadu.tuner.ui.plot.rememberTextLabelWidth
 import de.moekadu.tuner.ui.theme.TunerTheme
+import kotlin.math.pow
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlin.math.pow
 
 @Composable
 fun CorrelationPlot(
@@ -88,7 +88,7 @@ fun CorrelationPlot(
         )
     }
     val maximumTimeShift = remember(correlationPlotData) {
-        //correlationPlotData.timeShift(correlationPlotData.size - 1)
+        // correlationPlotData.timeShift(correlationPlotData.size - 1)
         correlationPlotData.coordinates.lastOrNull()?.x ?: 100f
     }
 
@@ -112,9 +112,9 @@ fun CorrelationPlot(
         lockY = true
     ) {
         val resolutions = remember {
-           //floatArrayOf(0.0001f, 0.0002f, 0.0004f, 0.0008f, 0.0016f, 0.0032f, 0.0064f, 0.0128f, 0.0256f)
-            //floatArrayOf(0.0256f, 0.0128f, 0.0064f, 0.0032f, 0.0016f, 0.0008f, 0.0004f, 0.0002f, 0.0001f)
-            //floatArrayOf(0.0016f, 0.0008f, 0.0004f, 0.0002f, 0.0001f) // TODO: get this right,
+            // floatArrayOf(0.0001f, 0.0002f, 0.0004f, 0.0008f, 0.0016f, 0.0032f, 0.0064f, 0.0128f, 0.0256f)
+            // floatArrayOf(0.0256f, 0.0128f, 0.0064f, 0.0032f, 0.0016f, 0.0008f, 0.0004f, 0.0002f, 0.0001f)
+            // floatArrayOf(0.0016f, 0.0008f, 0.0004f, 0.0002f, 0.0001f) // TODO: get this right,
             FloatArray(100) { 0.0001f * 2f.pow(it / 8f) }.toList().toImmutableList()
         }
         val tickLevel = remember {
@@ -136,7 +136,7 @@ fun CorrelationPlot(
         val longestTick = remember(resources) {
             resources.getString(R.string.hertz_1f, 1.0f / resolutions[1])
         }
-        //Log.v("Tuner", "Longest tick: $longestTick")
+        // Log.v("Tuner", "Longest tick: $longestTick")
         XTicks(
             tickLevel = tickLevel,
             maxLabelWidth = rememberTextLabelWidth(
@@ -151,12 +151,12 @@ fun CorrelationPlot(
             clipLabelToPlotWindow = false
         ) { m, _, _, x ->
             val w = rememberTextLabelWidth(testString = longestTick)
-            //val widthDp = with(LocalDensity.current) { w.toDp() }
+            // val widthDp = with(LocalDensity.current) { w.toDp() }
             val text = if (x == 0f) "" else stringResource(id = R.string.hertz_1f, 1 / x)
-            //val text = longestTick
+            // val text = longestTick
             Text(
                 text,
-                modifier = m, //.width(widthDp).background(MaterialTheme.colorScheme.error),
+                modifier = m, // .width(widthDp).background(MaterialTheme.colorScheme.error),
                 textAlign = TextAlign.Center,
                 style = tickLabelStyle,
                 color = tickLabelColor
@@ -188,7 +188,7 @@ fun CorrelationPlot(
                             lineWidth = frequencyMarkLineWidth,
                             lineColor = frequencyMarkLineColor
                         )
-                    ) {markModifier ->
+                    ) { markModifier ->
                         Label(
                             content = {
                                 Text(
@@ -213,14 +213,16 @@ private fun CorrelationPlotPreview() {
     TunerTheme {
         val timeShifts = remember { FloatArray(20) { 0.0004f * it } }
         // TODO: we now expect normalized data here.
-        val correlations = remember { floatArrayOf(
-            10f, 7f, 4f, 2f, 1f, -1f, -3f, -3f, -2f, 2f,
-            3f, 4f, 3.8f, 3f, 2f, -1f, 0f, 1f, 0f, 0.3f,
-        ) }
+        val correlations = remember {
+            floatArrayOf(
+                10f, 7f, 4f, 2f, 1f, -1f, -3f, -3f, -2f, 2f,
+                3f, 4f, 3.8f, 3f, 2f, -1f, 0f, 1f, 0f, 0.3f
+            )
+        }
         val correlationPlotDataYZeroPosition = 0f
         val data = remember {
             LineCoordinates.create(timeShifts, correlations)
-            //CorrelationPlotData(timeShifts.size, { timeShifts[it] }, { correlations[it] })
+            // CorrelationPlotData(timeShifts.size, { timeShifts[it] }, { correlations[it] })
         }
 
         val musicalScale = remember { MusicalScale2.createTestEdo12() }
@@ -232,7 +234,7 @@ private fun CorrelationPlotPreview() {
             targetNote = targetNote,
             musicalScale = musicalScale,
             plotWindowPadding = DpRect(left = 3.dp, top = 4.dp, right = 6.dp, bottom = 20.dp),
-            currentFrequency = 500f,
+            currentFrequency = 500f
         )
     }
 }

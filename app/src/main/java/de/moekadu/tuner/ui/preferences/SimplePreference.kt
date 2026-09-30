@@ -44,9 +44,11 @@ fun SimplePreference(
         headlineContent = {
             Text(name)
         },
-        supportingContent = supporting?.let {{
-            Text(it)
-        }},
+        supportingContent = supporting?.let {
+            {
+                Text(it)
+            }
+        },
         leadingContent = {
             Icon(ImageVector.vectorResource(id = iconId), null)
         },
@@ -59,7 +61,7 @@ fun SimplePreference(
     name: String,
     @DrawableRes iconId: Int,
     supporting: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     ListItem(
         headlineContent = {
@@ -72,7 +74,6 @@ fun SimplePreference(
         modifier = modifier
     )
 }
-
 
 @Preview(widthDp = 400, heightDp = 200, showBackground = true)
 @Composable

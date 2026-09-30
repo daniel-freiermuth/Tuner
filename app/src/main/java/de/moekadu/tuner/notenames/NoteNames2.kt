@@ -38,57 +38,45 @@ data class NoteNames2(
      * @param note Note for which the index is required.
      * @return Indices of notes within the notes-array.
      */
-    fun getMatchingNoteIndices(note: MusicalNote): IntArray {
-        return notes.indices.filter { index ->
-            notes[index].match(note, ignoreOctave = true)
-        }.toIntArray()
-    }
+    fun getMatchingNoteIndices(note: MusicalNote): IntArray = notes.indices.filter { index ->
+        notes[index].match(note, ignoreOctave = true)
+    }.toIntArray()
 
     /** Obtain note at given index.
      * @param index Index of note.
      * @return Note.
      */
-    operator fun get(index: Int): MusicalNote {
-        return notes[index]
-    }
+    operator fun get(index: Int): MusicalNote = notes[index]
 
     /** Obtain note at given index if it exists else null.
      * @param index Index of note.
      * @return Note or null if it does not exist.
      */
-    fun getOrNull(index: Int): MusicalNote? {
-        return notes.getOrNull(index)
-    }
+    fun getOrNull(index: Int): MusicalNote? = notes.getOrNull(index)
 
     /** Get new note name scale, where base note and enharmonics are switched.
      * This will not change name, description or stableIds, since it effectively are the same
      * notes.
      * @return New note name scale where base notes are exchanged with the enharmonics.
      */
-    fun switchEnharmonics(): NoteNames2 {
-        return NoteNames2(
-            notes = notes.map { it.switchEnharmonic() }.toTypedArray(),
-            defaultReferenceNote = defaultReferenceNote.switchEnharmonic(),
-            octaveSwitchIndex = octaveSwitchIndex.switchEnharmonic()
-        )
-    }
+    fun switchEnharmonics(): NoteNames2 = NoteNames2(
+        notes = notes.map { it.switchEnharmonic() }.toTypedArray(),
+        defaultReferenceNote = defaultReferenceNote.switchEnharmonic(),
+        octaveSwitchIndex = octaveSwitchIndex.switchEnharmonic()
+    )
 
     /** Check if a given note is part of the note names array.
      * @param note Note. Octave index is ignored.
      * @return True if note is part of the note names array, else false.
      */
-    fun hasNote(note: MusicalNote): Boolean {
-        return notes.any{ it.equalsIgnoreOctave(note) }
-    }
+    fun hasNote(note: MusicalNote): Boolean = notes.any { it.equalsIgnoreOctave(note) }
 
     /** Check if a given note has a matching note.
      * @note Octave index is ignored.
      * @param note Note for which we find a match.
      * @return True if note matches any note names array, else false.
      */
-    fun hasMatch(note: MusicalNote): Boolean {
-        return notes.any{ it.match(note, ignoreOctave = true) }
-    }
+    fun hasMatch(note: MusicalNote): Boolean = notes.any { it.match(note, ignoreOctave = true) }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

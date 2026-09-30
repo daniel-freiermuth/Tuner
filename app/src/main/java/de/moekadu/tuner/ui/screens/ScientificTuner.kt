@@ -64,9 +64,9 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.getFilenameFromUri
+import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
-import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.misc.TunerScaffold
 import de.moekadu.tuner.ui.misc.rememberTunerAudioPermission
 import de.moekadu.tuner.ui.notes.NotePrintOptions
@@ -146,18 +146,23 @@ fun ScientificTuner(
             data.writeStoredWaveWriterSnapshot(context, uri, data.sampleRate)
             val filename = getFilenameFromUri(context, uri)
             Toast.makeText(
-                context, context.getString(R.string.writing_wave_file, filename), Toast.LENGTH_LONG
+                context,
+                context.getString(R.string.writing_wave_file, filename),
+                Toast.LENGTH_LONG
             ).show()
         } else {
             Toast.makeText(
-                context, context.getString(R.string.failed_writing_wave_file), Toast.LENGTH_LONG
+                context,
+                context.getString(R.string.failed_writing_wave_file),
+                Toast.LENGTH_LONG
             ).show()
         }
     }
 
     LifecycleResumeEffect(permissionGranted) {
-        if (permissionGranted)
+        if (permissionGranted) {
             data.startTuner()
+        }
         onPauseOrDispose { data.stopTuner() }
     }
     TunerScaffold(
@@ -229,9 +234,11 @@ fun ScientificTunerPortrait(
         val musicalScaleAsState by data.musicalScale.collectAsStateWithLifecycle()
         val notePrintOptionsAsState by data.notePrintOptions.collectAsStateWithLifecycle()
         val toleranceInCentsAsState by data.toleranceInCents.collectAsStateWithLifecycle()
-        val noteNames by remember { derivedStateOf {
-            musicalScaleAsState.temperament.noteNames(musicalScaleAsState.rootNote)
-        }}
+        val noteNames by remember {
+            derivedStateOf {
+                musicalScaleAsState.temperament.noteNames(musicalScaleAsState.rootNote)
+            }
+        }
         val tickHeightPx = rememberTextLabelHeight(tunerPlotStyle.tickFontStyle)
         val tickHeightDp = with(LocalDensity.current) { tickHeightPx.toDp() }
         val noteWidthDp = rememberMaxNoteSize(
@@ -240,9 +247,9 @@ fun ScientificTunerPortrait(
             fontSize = tunerPlotStyle.stringFontStyle.fontSize,
             octaveRange = musicalScaleAsState.getNote(
                 musicalScaleAsState.noteIndexBegin
-            ).octave .. musicalScaleAsState.getNote(
-                        musicalScaleAsState.noteIndexEnd - 1
-                    ).octave
+            ).octave..musicalScaleAsState.getNote(
+                musicalScaleAsState.noteIndexEnd - 1
+            ).octave
         ).width + 8.dp + 4.dp
         val scope = rememberCoroutineScope()
 
@@ -270,9 +277,12 @@ fun ScientificTunerPortrait(
                     },
                 gestureBasedViewPort = data.frequencyPlotGestureBasedViewPort,
                 currentFrequency = data.currentFrequency,
-                harmonicFrequencies =  data.harmonicFrequencies,
+                harmonicFrequencies = data.harmonicFrequencies,
                 plotWindowPadding = DpRect(
-                    bottom = tickHeightDp, top = 0.dp, left = tunerPlotStyle.margin, right = noteWidthDp
+                    bottom = tickHeightDp,
+                    top = 0.dp,
+                    left = tunerPlotStyle.margin,
+                    right = noteWidthDp
                 ),
                 lineWidth = tunerPlotStyle.plotLineWidth,
                 lineColor = tunerPlotStyle.plotLineColor,
@@ -284,10 +294,11 @@ fun ScientificTunerPortrait(
                 frequencyMarkTextStyle = tunerPlotStyle.extraMarkTextStyle,
                 harmonicLineWidth = tunerPlotStyle.extraMarkLineWidth,
                 harmonicLineColor = tunerPlotStyle.extraMarkLineColor,
-                plotWindowOutline = if (data.frequencyPlotGestureBasedViewPort.isActive)
+                plotWindowOutline = if (data.frequencyPlotGestureBasedViewPort.isActive) {
                     tunerPlotStyle.plotWindowOutlineDuringGesture
-                else
+                } else {
                     tunerPlotStyle.plotWindowOutline
+                }
             )
         }
 
@@ -316,7 +327,10 @@ fun ScientificTunerPortrait(
                 currentFrequency = data.currentFrequency,
                 gestureBasedViewPort = data.correlationPlotGestureBasedViewPort,
                 plotWindowPadding = DpRect(
-                    bottom = tickHeightDp, top = 0.dp, left = tunerPlotStyle.margin, right = noteWidthDp
+                    bottom = tickHeightDp,
+                    top = 0.dp,
+                    left = tunerPlotStyle.margin,
+                    right = noteWidthDp
                 ),
                 lineWidth = tunerPlotStyle.plotLineWidth,
                 lineColor = tunerPlotStyle.plotLineColor,
@@ -326,10 +340,11 @@ fun ScientificTunerPortrait(
                 frequencyMarkLineWidth = tunerPlotStyle.extraMarkLineWidth,
                 frequencyMarkLineColor = tunerPlotStyle.extraMarkLineColor,
                 frequencyMarkTextStyle = tunerPlotStyle.extraMarkTextStyle,
-                plotWindowOutline = if (data.correlationPlotGestureBasedViewPort.isActive)
+                plotWindowOutline = if (data.correlationPlotGestureBasedViewPort.isActive) {
                     tunerPlotStyle.plotWindowOutlineDuringGesture
-                else
+                } else {
                     tunerPlotStyle.plotWindowOutline
+                }
             )
         }
 
@@ -359,7 +374,10 @@ fun ScientificTunerPortrait(
                 targetNote = data.targetNote,
                 toleranceInCents = toleranceInCentsAsState,
                 plotWindowPadding = DpRect(
-                    bottom = tunerPlotStyle.margin, top = 0.dp, left = tunerPlotStyle.margin, right = noteWidthDp
+                    bottom = tunerPlotStyle.margin,
+                    top = 0.dp,
+                    left = tunerPlotStyle.margin,
+                    right = noteWidthDp
                 ),
                 lineWidth = tunerPlotStyle.plotLineWidth,
                 lineColor = tunerPlotStyle.plotLineColor,
@@ -374,7 +392,7 @@ fun ScientificTunerPortrait(
                 colorOnInTune = tunerPlotStyle.onPositiveColor,
                 colorOnOutOfTune = tunerPlotStyle.onNegativeColor,
                 colorOnInactive = tunerPlotStyle.onInactiveColor,
-                //centDeviationColor = tunerPlotStyle.tickLabelColor,
+                // centDeviationColor = tunerPlotStyle.tickLabelColor,
                 centDeviationStyle = tunerPlotStyle.toleranceTickFontStyle,
                 toleranceLineColor = tunerPlotStyle.toleranceColor,
                 toleranceLabelStyle = tunerPlotStyle.toleranceTickFontStyle,
@@ -382,10 +400,11 @@ fun ScientificTunerPortrait(
                 tickLineWidth = tunerPlotStyle.tickLineWidth,
                 tickLineColor = tunerPlotStyle.tickLineColor,
                 tickLabelStyle = tunerPlotStyle.stringFontStyle,
-                plotWindowOutline = if (data.pitchHistoryGestureBasedViewPort.isActive)
+                plotWindowOutline = if (data.pitchHistoryGestureBasedViewPort.isActive) {
                     tunerPlotStyle.plotWindowOutlineDuringGesture
-                else
+                } else {
                     tunerPlotStyle.plotWindowOutline
+                }
             )
         }
     }
@@ -403,9 +422,11 @@ fun ScientificTunerLandscape(
         val notePrintOptionsAsState by data.notePrintOptions.collectAsStateWithLifecycle()
         val musicalScaleAsState by data.musicalScale.collectAsStateWithLifecycle()
         val toleranceInCentsAsState by data.toleranceInCents.collectAsStateWithLifecycle()
-        val noteNames by remember { derivedStateOf {
-            musicalScaleAsState.temperament.noteNames(musicalScaleAsState.rootNote)
-        }}
+        val noteNames by remember {
+            derivedStateOf {
+                musicalScaleAsState.temperament.noteNames(musicalScaleAsState.rootNote)
+            }
+        }
         val tickHeightPx = rememberTextLabelHeight(tunerPlotStyle.tickFontStyle)
         val tickHeightDp = with(LocalDensity.current) { tickHeightPx.toDp() }
         val noteWidthDp = rememberMaxNoteSize(
@@ -464,10 +485,11 @@ fun ScientificTunerLandscape(
                     frequencyMarkTextStyle = tunerPlotStyle.extraMarkTextStyle,
                     harmonicLineWidth = tunerPlotStyle.extraMarkLineWidth,
                     harmonicLineColor = tunerPlotStyle.extraMarkLineColor,
-                    plotWindowOutline = if (data.frequencyPlotGestureBasedViewPort.isActive)
+                    plotWindowOutline = if (data.frequencyPlotGestureBasedViewPort.isActive) {
                         tunerPlotStyle.plotWindowOutlineDuringGesture
-                    else
+                    } else {
                         tunerPlotStyle.plotWindowOutline
+                    }
                 )
             }
 
@@ -507,13 +529,13 @@ fun ScientificTunerLandscape(
                     frequencyMarkLineWidth = tunerPlotStyle.extraMarkLineWidth,
                     frequencyMarkLineColor = tunerPlotStyle.extraMarkLineColor,
                     frequencyMarkTextStyle = tunerPlotStyle.extraMarkTextStyle,
-                    plotWindowOutline = if (data.correlationPlotGestureBasedViewPort.isActive)
+                    plotWindowOutline = if (data.correlationPlotGestureBasedViewPort.isActive) {
                         tunerPlotStyle.plotWindowOutlineDuringGesture
-                    else
+                    } else {
                         tunerPlotStyle.plotWindowOutline
+                    }
                 )
             }
-
         }
 
         Column(modifier = Modifier.weight(0.5f)) {
@@ -560,7 +582,7 @@ fun ScientificTunerLandscape(
                 colorOnInTune = tunerPlotStyle.onPositiveColor,
                 colorOnOutOfTune = tunerPlotStyle.onNegativeColor,
                 colorOnInactive = tunerPlotStyle.onInactiveColor,
-                //centDeviationColor = tunerPlotStyle.tickLabelColor,
+                // centDeviationColor = tunerPlotStyle.tickLabelColor,
                 centDeviationStyle = tunerPlotStyle.toleranceTickFontStyle,
                 toleranceLineColor = tunerPlotStyle.toleranceColor,
                 toleranceLabelStyle = tunerPlotStyle.toleranceTickFontStyle,
@@ -568,44 +590,44 @@ fun ScientificTunerLandscape(
                 tickLineWidth = tunerPlotStyle.tickLineWidth,
                 tickLineColor = tunerPlotStyle.tickLineColor,
                 tickLabelStyle = tunerPlotStyle.stringFontStyle,
-                plotWindowOutline = if (data.pitchHistoryGestureBasedViewPort.isActive)
+                plotWindowOutline = if (data.pitchHistoryGestureBasedViewPort.isActive) {
                     tunerPlotStyle.plotWindowOutlineDuringGesture
-                else
+                } else {
                     tunerPlotStyle.plotWindowOutline
+                }
             )
         }
     }
 }
 
 class TestScientificTunerData : ScientificTunerData {
-    override val musicalScale: StateFlow<MusicalScale2>
-            = MutableStateFlow(MusicalScale2.createTestEdo12())
+    override val musicalScale: StateFlow<MusicalScale2> =
+        MutableStateFlow(MusicalScale2.createTestEdo12())
 
-    override val notePrintOptions: StateFlow<NotePrintOptions>
-        = MutableStateFlow(NotePrintOptions())
+    override val notePrintOptions: StateFlow<NotePrintOptions> =
+        MutableStateFlow(NotePrintOptions())
 
     override val sampleRate = 44100
 
-    override val toleranceInCents: StateFlow<Int>
-        = MutableStateFlow(10)
-    override val frequencyPlotData =LineCoordinates.create(
+    override val toleranceInCents: StateFlow<Int> =
+        MutableStateFlow(10)
+    override val frequencyPlotData = LineCoordinates.create(
         floatArrayOf(0f, 200f, 400f, 600f, 800f, 1000f, 1200f, 1400f, 1600f, 1800f, 2000f),
         floatArrayOf(0.1f, 0.2f, 1f, 0.7f, 0.1f, 0.2f, 0f, 0.6f, 0.1f, 0.0f, 0.04f)
     )
-    override val harmonicFrequencies: VerticalLinesPositions
-        = VerticalLinesPositions.create(2) { floatArrayOf(405f, 432f)[it] }
-    override val frequencyPlotGestureBasedViewPort: GestureBasedViewPort
-            = GestureBasedViewPort()
+    override val harmonicFrequencies: VerticalLinesPositions =
+        VerticalLinesPositions.create(2) { floatArrayOf(405f, 432f)[it] }
+    override val frequencyPlotGestureBasedViewPort: GestureBasedViewPort =
+        GestureBasedViewPort()
 
     override val correlationPlotData = LineCoordinates.create(
         floatArrayOf(0f, 0.001f, 0.002f, 0.003f, 0.004f, 0.005f, 0.006f, 0.007f),
-        floatArrayOf(1f, 0.9f, 0.6f, 0.2f, 0.1f,0.6f, 0.5f, 0.2f)
+        floatArrayOf(1f, 0.9f, 0.6f, 0.2f, 0.1f, 0.6f, 0.5f, 0.2f)
     )
     override val correlationPlotDataYZeroPosition = 0.3f
 
-
-    override val correlationPlotGestureBasedViewPort: GestureBasedViewPort
-            = GestureBasedViewPort()
+    override val correlationPlotGestureBasedViewPort: GestureBasedViewPort =
+        GestureBasedViewPort()
 
     override var pitchHistoryState: PitchHistoryState = PitchHistoryState(
         5
@@ -621,14 +643,14 @@ class TestScientificTunerData : ScientificTunerData {
         addFrequency(435f)
     }
 
-    override val pitchHistoryGestureBasedViewPort: GestureBasedViewPort
-            = GestureBasedViewPort()
+    override val pitchHistoryGestureBasedViewPort: GestureBasedViewPort =
+        GestureBasedViewPort()
     override var tuningState: TuningState
-            by mutableStateOf(TuningState.TooLow)
+        by mutableStateOf(TuningState.TooLow)
     override val currentFrequency: Float?
-            by mutableFloatStateOf(412f)
+        by mutableFloatStateOf(412f)
     override var targetNote: MusicalNote
-            by mutableStateOf(musicalScale.value.referenceNote)
+        by mutableStateOf(musicalScale.value.referenceNote)
 
     override val waveWriterDuration = MutableStateFlow(1)
 

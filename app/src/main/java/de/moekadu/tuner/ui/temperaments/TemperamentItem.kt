@@ -45,7 +45,7 @@ import de.moekadu.tuner.ui.theme.TunerTheme
 fun TemperamentItem(
     temperament: Temperament3,
     modifier: Modifier = Modifier,
-    onOptionsClicked: (temperament: Temperament3, task: ListItemTask) -> Unit = { _, _ ->},
+    onOptionsClicked: (temperament: Temperament3, task: ListItemTask) -> Unit = { _, _ -> },
     isActive: Boolean = false,
     isSelected: Boolean = false,
     readOnly: Boolean = false, // disable delete/edit options
@@ -53,7 +53,7 @@ fun TemperamentItem(
 ) {
     val context = LocalContext.current
     val name = temperament.name.value(context)
-    val iconTextSize = with(LocalDensity.current) {18.dp.toSp()}
+    val iconTextSize = with(LocalDensity.current) { 18.dp.toSp() }
     EditableListItem(
         title = {
             Text(name)
@@ -97,7 +97,7 @@ private fun TemperamentItemPreview() {
                 _name = "Name 1",
                 _abbreviation = "Abbr",
                 _description = "The description of the first",
-                cents = DoubleArray(13) { it * 100.0},
+                cents = DoubleArray(13) { it * 100.0 },
                 _rationalNumbers = arrayOf(),
                 _noteNames = null,
                 stableId = 1L
@@ -108,7 +108,7 @@ private fun TemperamentItemPreview() {
                 _name = "Name 2",
                 _abbreviation = "A2",
                 _description = "The description of the second",
-                cents = DoubleArray(13) { it * 100.0},
+                cents = DoubleArray(13) { it * 100.0 },
                 _rationalNumbers = arrayOf(),
                 _noteNames = null,
                 stableId = 1L

@@ -48,71 +48,65 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-//data class LineCoordinates(
+// data class LineCoordinates(
 //    val size: Int,
 //    val x: (i: Int) -> Float,
 //    val y: (i: Int) -> Float,
-//)
+// )
 
-
-class LineCoordinates(
-    val coordinates: MutableList<Offset> = mutableListOf()
-) {
+class LineCoordinates(val coordinates: MutableList<Offset> = mutableListOf()) {
     val size get() = coordinates.size
 
-    fun mutate(size: Int, x: (i: Int) -> Float, y: (i: Int) -> Float): LineCoordinates {
-        return if (this.size == size) {
-            for (i in 0 until size)
+    fun mutate(size: Int, x: (i: Int) -> Float, y: (i: Int) -> Float): LineCoordinates =
+        if (this.size == size) {
+            for (i in 0 until size) {
                 coordinates[i] = Offset(x(i), y(i))
+            }
             LineCoordinates(coordinates)
         } else {
             create(size, x, y)
         }
+
+    fun mutate(x: FloatArray, y: FloatArray): LineCoordinates = if (x.size == size) {
+        for (i in 0 until size) {
+            coordinates[i] = Offset(x[i], y[i])
+        }
+        LineCoordinates(coordinates)
+    } else {
+        create(x, y)
     }
 
-    fun mutate(x: FloatArray, y: FloatArray): LineCoordinates {
-        return if (x.size == size) {
-            for (i in 0 until size)
-                coordinates[i] = Offset(x[i], y[i])
-            LineCoordinates(coordinates)
-        } else {
-            create(x, y)
+    fun mutate(y: FloatArray): LineCoordinates = if (coordinates.size == size) {
+        for (i in 0 until size) {
+            coordinates[i] = Offset(i.toFloat(), y[i])
         }
-    }
-
-    fun mutate(y: FloatArray): LineCoordinates {
-        return if (coordinates.size == size) {
-            for (i in 0 until size)
-                coordinates[i] = Offset(i.toFloat(), y[i])
-            LineCoordinates(coordinates)
-        } else {
-            create(y)
-        }
+        LineCoordinates(coordinates)
+    } else {
+        create(y)
     }
 
     companion object {
-        fun create(size: Int, x: (i: Int) -> Float, y: (i: Int) -> Float): LineCoordinates {
-            return LineCoordinates(MutableList(size){ Offset(x(it), y(it)) })
-        }
-        fun create(x: FloatArray, y: FloatArray): LineCoordinates {
-            return LineCoordinates(MutableList(x.size){ Offset(x[it], y[it]) })
-        }
-        fun create(y: FloatArray): LineCoordinates {
-            return LineCoordinates(MutableList(y.size){ Offset(it.toFloat(), y[it]) })
-        }
+        fun create(size: Int, x: (i: Int) -> Float, y: (i: Int) -> Float): LineCoordinates =
+            LineCoordinates(MutableList(size) { Offset(x(it), y(it)) })
+        fun create(x: FloatArray, y: FloatArray): LineCoordinates =
+            LineCoordinates(MutableList(x.size) { Offset(x[it], y[it]) })
+        fun create(y: FloatArray): LineCoordinates =
+            LineCoordinates(MutableList(y.size) { Offset(it.toFloat(), y[it]) })
     }
 }
 
 private fun findCoordinateIndexBegin(xMin: Float, coordinates: List<Offset>): Int {
     var iMin = coordinates.binarySearchBy(xMin) { it.x }
-    if (iMin < 0)
+    if (iMin < 0) {
         iMin = max(0, -iMin - 2)
+    }
     return iMin
 }
 private fun findCoordinateIndexEnd(xMax: Float, coordinates: List<Offset>): Int {
     var iMax = coordinates.binarySearchBy(xMax) { it.x }
-    if (iMax < 0)
-        iMax = -iMax-1
+    if (iMax < 0) {
+        iMax = -iMax - 1
+    }
     return iMax
 }
 
@@ -120,7 +114,7 @@ private data class LineCache(
     private var coordinates: LineCoordinates,
     private var transformation: Transformation
 ) {
-    //val path = Path()
+    // val path = Path()
     private var numCoordinates = 0
     private var coordinatesScreen = mutableListOf<Offset>()
 
@@ -128,18 +122,21 @@ private data class LineCache(
         _update(coordinates, transformation, init = true)
     }
 
-    fun update(coordinates: LineCoordinates, transformation: Transformation): List<Offset> {
-        return _update(coordinates, transformation, init = false)
-    }
+    fun update(coordinates: LineCoordinates, transformation: Transformation): List<Offset> =
+        _update(coordinates, transformation, init = false)
 
-    private fun _update(coordinates: LineCoordinates, transformation: Transformation, init: Boolean)
-            :List<Offset>{
-        if (coordinates == this.coordinates && transformation == this.transformation && !init)
+    private fun _update(
+        coordinates: LineCoordinates,
+        transformation: Transformation,
+        init: Boolean
+    ): List<Offset> {
+        if (coordinates == this.coordinates && transformation == this.transformation && !init) {
             return coordinatesScreen.subList(0, numCoordinates)
+        }
         this.coordinates = coordinates
         this.transformation = transformation
 
-        //path.rewind()
+        // path.rewind()
         val rawMin = min(transformation.viewPortRaw.right, transformation.viewPortRaw.left)
         val rawMax = max(transformation.viewPortRaw.right, transformation.viewPortRaw.left)
         val iBegin = findCoordinateIndexBegin(rawMin, coordinates.coordinates)
@@ -150,8 +147,9 @@ private data class LineCache(
                 transformation.toScreen(coordinates.coordinates[iBegin + it])
             }
         } else {
-            for (i in 0 until numCoordinates)
+            for (i in 0 until numCoordinates) {
                 coordinatesScreen[i] = transformation.toScreen(coordinates.coordinates[iBegin + i])
+            }
         }
 //        if (coordinates.size > 0) {
 //            path.moveTo(coordinates.x(0), coordinates.y(0))
@@ -164,70 +162,63 @@ private data class LineCache(
         return coordinatesScreen.subList(0, numCoordinates)
     }
 }
+
 @Composable
-fun Line(
-    data: LineCoordinates,
-    brush: Brush,
-    width: Dp,
-    transformation: () -> Transformation
-) {
-    Spacer(modifier = Modifier
-        .fillMaxSize()
-        .drawWithCache {
-            val cachedData = LineCache(data, transformation())
-            onDrawBehind {
-                val points = cachedData.update(data, transformation())
-                drawPoints(
-                    points,
-                    PointMode.Polygon, //PointMode.Lines,
-                    brush = brush,
-                    strokeWidth = width.toPx()
-                )
+fun Line(data: LineCoordinates, brush: Brush, width: Dp, transformation: () -> Transformation) {
+    Spacer(
+        modifier = Modifier
+            .fillMaxSize()
+            .drawWithCache {
+                val cachedData = LineCache(data, transformation())
+                onDrawBehind {
+                    val points = cachedData.update(data, transformation())
+                    drawPoints(
+                        points,
+                        PointMode.Polygon, // PointMode.Lines,
+                        brush = brush,
+                        strokeWidth = width.toPx()
+                    )
 //                drawPath(
 //                    cachedData.path,
 //                    color = c,
 //                    style = Stroke(width = width.toPx())
 //                )
+                }
             }
-        }
     )
 }
 
 @Composable
-fun Line(
-    data: LineCoordinates,
-    color: Color,
-    width: Dp,
-    transformation: () -> Transformation
-) {
+fun Line(data: LineCoordinates, color: Color, width: Dp, transformation: () -> Transformation) {
     val c = color.takeOrElse { MaterialTheme.colorScheme.onSurface }
 
-    Spacer(modifier = Modifier
-        .fillMaxSize()
-        .drawWithCache {
-            val cachedData = LineCache(data, transformation())
-            onDrawBehind {
-                val points = cachedData.update(data, transformation())
-                drawPoints(
-                    points,
-                    PointMode.Polygon, //PointMode.Lines,
-                    color = c,
-                    strokeWidth = width.toPx()
-                )
+    Spacer(
+        modifier = Modifier
+            .fillMaxSize()
+            .drawWithCache {
+                val cachedData = LineCache(data, transformation())
+                onDrawBehind {
+                    val points = cachedData.update(data, transformation())
+                    drawPoints(
+                        points,
+                        PointMode.Polygon, // PointMode.Lines,
+                        color = c,
+                        strokeWidth = width.toPx()
+                    )
 //                drawPath(
 //                    cachedData.path,
 //                    color = c,
 //                    style = Stroke(width = width.toPx())
 //                )
+                }
             }
-        }
     )
 }
-
 
 @Composable
 private fun rememberTransformation(
-    screenWidth: Dp, screenHeight: Dp,
+    screenWidth: Dp,
+    screenHeight: Dp,
     viewPortRaw: Rect
 ): Transformation {
     val widthPx = with(LocalDensity.current) { screenWidth.roundToPx() }
@@ -246,9 +237,12 @@ private fun LinePreview() {
         BoxWithConstraints {
             val x = remember { floatArrayOf(0f, 1f, 2f, 3f, 4f) }
             val y = remember { floatArrayOf(3f, 1f, 2f, -2f, 0f) }
-            val coords = remember { LineCoordinates.create(
-                size = 5, x = { x[it] }, y = { y[it] }
-            )
+            val coords = remember {
+                LineCoordinates.create(
+                    size = 5,
+                    x = { x[it] },
+                    y = { y[it] }
+                )
 //                LineCoordinates(
 //                    size = 5, x = { x[it] }, y = { y[it] }
 //                )
@@ -271,9 +265,12 @@ private fun LineBrushPreview() {
         BoxWithConstraints {
             val x = remember { floatArrayOf(0f, 1f, 2f, 3f, 4f) }
             val y = remember { floatArrayOf(3f, 1f, 2f, -2f, 0f) }
-            val coords = remember { LineCoordinates.create(
-                size = 5, x = { x[it] }, y = { y[it] }
-            )
+            val coords = remember {
+                LineCoordinates.create(
+                    size = 5,
+                    x = { x[it] },
+                    y = { y[it] }
+                )
 //                LineCoordinates(
 //                    size = 5, x = { x[it] }, y = { y[it] }
 //                )
@@ -283,8 +280,8 @@ private fun LineBrushPreview() {
                     MaterialTheme.colorScheme.error,
                     MaterialTheme.colorScheme.surface,
                     MaterialTheme.colorScheme.secondary,
-                    MaterialTheme.colorScheme.primary,
-                ),
+                    MaterialTheme.colorScheme.primary
+                )
             )
             val transformation = rememberTransformation(
                 screenWidth = maxWidth,
@@ -311,10 +308,11 @@ private fun LinePreview2() {
                 Text("New values")
             }
             BoxWithConstraints {
-
                 val coords = remember {
                     LineCoordinates.create(
-                        size = numValues, x = { x[it] }, y = { y[it] }
+                        size = numValues,
+                        x = { x[it] },
+                        y = { y[it] }
                     )
 //                    LineCoordinates(
 //                        size = numValues, x = { x[it] }, y = { y[it] }
@@ -323,10 +321,11 @@ private fun LinePreview2() {
                 val transformation = rememberTransformation(
                     screenWidth = maxWidth,
                     screenHeight = maxHeight,
-                    viewPortRaw = Rect(0f, 1f, 0.01f*numValues.toFloat(), 0f)
+                    viewPortRaw = Rect(0f, 1f, 0.01f * numValues.toFloat(), 0f)
                 )
 
-                Line(coords,
+                Line(
+                    coords,
                     MaterialTheme.colorScheme.primary,
                     2.dp,
                     { transformation }
@@ -335,5 +334,3 @@ private fun LinePreview2() {
         }
     }
 }
-
-

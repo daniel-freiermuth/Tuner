@@ -30,11 +30,10 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.round
 import kotlinx.collections.immutable.ImmutableList
 
-
 data class PointMark(
     val position: Offset,
     val settings: Settings,
-    val content: @Composable (modifier: Modifier) -> Unit,
+    val content: @Composable (modifier: Modifier) -> Unit
 ) : ParentDataModifier {
     data class Settings(
         val anchor: Anchor = Anchor.Center,
@@ -43,10 +42,7 @@ data class PointMark(
     override fun Density.modifyParentData(parentData: Any?) = this@PointMark
 }
 
-private data class MeasuredPointMark(
-    val placeable: Placeable,
-    val mark: PointMark
-)
+private data class MeasuredPointMark(val placeable: Placeable, val mark: PointMark)
 
 @Composable
 private fun PointMarkLabels(
@@ -54,7 +50,8 @@ private fun PointMarkLabels(
     sameSizeLabels: Boolean,
     transformation: () -> Transformation
 ) {
-    Layout(modifier = Modifier.fillMaxSize(),
+    Layout(
+        modifier = Modifier.fillMaxSize(),
         content = {
             marks.forEach { it.content(it) }
         }
@@ -63,8 +60,10 @@ private fun PointMarkLabels(
             val maxHeight = measureables.maxOf { it.minIntrinsicHeight(Int.MAX_VALUE) }
             val maxWidth = measureables.maxOf { it.maxIntrinsicWidth(maxHeight) }
             constraints.copy(
-                minWidth = maxWidth, minHeight = maxHeight,
-                maxWidth = maxWidth, maxHeight = maxHeight
+                minWidth = maxWidth,
+                minHeight = maxHeight,
+                maxWidth = maxWidth,
+                maxHeight = maxHeight
             )
         } else {
             constraints.copy(minWidth = 0, minHeight = 0)
@@ -76,7 +75,7 @@ private fun PointMarkLabels(
 
         layout(constraints.maxWidth, constraints.maxHeight) {
             val transform = transformation()
-            placeables.forEach {measuredMark ->
+            placeables.forEach { measuredMark ->
                 val p = measuredMark.placeable
                 val mark = measuredMark.mark
                 val positionScreen = transform.toScreen(mark.position)

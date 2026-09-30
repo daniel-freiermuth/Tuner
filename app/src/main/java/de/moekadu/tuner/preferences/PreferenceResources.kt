@@ -34,6 +34,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.notedetection.WindowingFunction
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -47,13 +51,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.math.pow
-import kotlin.math.roundToInt
 
 @Singleton
-class PreferenceResources @Inject constructor (
+class PreferenceResources @Inject constructor(
     @ApplicationContext context: Context,
     @param:ApplicationScope val applicationScope: CoroutineScope
 ) {
@@ -62,7 +62,7 @@ class PreferenceResources @Inject constructor (
     ) { context.preferencesDataStoreFile("settings") }
 
     private val scope = CoroutineScope(applicationScope.coroutineContext + Dispatchers.IO)
-    //private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    // private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     @Serializable
     data class Appearance(
@@ -105,17 +105,19 @@ class PreferenceResources @Inject constructor (
     }
 
     // note print options
-    val notePrintOptions = getSerializablePreferenceFlow(
-        NOTE_PRINT_OPTIONS_KEY, NotePrintOptionsDefault)
+    val notePrintOptions =
+        getSerializablePreferenceFlow(NOTE_PRINT_OPTIONS_KEY, NotePrintOptionsDefault)
     fun writeNotePrintOptions(notePrintOptions: NotePrintOptions) {
         writeSerializablePreference(NOTE_PRINT_OPTIONS_KEY, notePrintOptions)
     }
 
     fun switchEnharmonicPreference() {
         val currentUseEnharmonic = notePrintOptions.value.useEnharmonic
-        writeNotePrintOptions(notePrintOptions.value.copy(
-            useEnharmonic = !currentUseEnharmonic
-        ))
+        writeNotePrintOptions(
+            notePrintOptions.value.copy(
+                useEnharmonic = !currentUseEnharmonic
+            )
+        )
     }
 
     // scientific mode
@@ -138,8 +140,8 @@ class PreferenceResources @Inject constructor (
 
     // windowing
     val windowing = getTransformablePreferenceFlow(WINDOWING_KEY, WindowingDefault) {
-            WindowingFunction.valueOf(it)
-        }
+        WindowingFunction.valueOf(it)
+    }
     fun writeWindowing(windowing: WindowingFunction) {
         writePreference(WINDOWING_KEY, windowing.name)
     }
@@ -151,19 +153,24 @@ class PreferenceResources @Inject constructor (
     }
 
     // window size
-    val windowSize = getTransformablePreferenceFlow(WINDOW_SIZE_KEY, WindowSizeDefault) { 2f.pow(it).roundToInt() }
+    val windowSize =
+        getTransformablePreferenceFlow(WINDOW_SIZE_KEY, WindowSizeDefault) {
+            2f.pow(it).roundToInt()
+        }
     val windowSizeExponent = getPreferenceFlow(WINDOW_SIZE_KEY, WindowSizeExponentDefault)
 
     fun writeWindowSize(windowSizeExponent: Int) {
         writePreference(WINDOW_SIZE_KEY, windowSizeExponent)
     }
 
-    val pitchHistoryDuration = getPreferenceFlow(PITCH_HISTORY_DURATION_KEY, PitchHistoryDurationDefault)
+    val pitchHistoryDuration =
+        getPreferenceFlow(PITCH_HISTORY_DURATION_KEY, PitchHistoryDurationDefault)
     fun writePitchHistoryDuration(pitchHistoryDuration: Float) {
         writePreference(PITCH_HISTORY_DURATION_KEY, pitchHistoryDuration)
     }
 
-    val pitchHistoryNumFaultyValues = getPreferenceFlow(PITCH_HISTORY_NUM_FAULTY_VALUES_KEY, PitchHistoryNumFaultyValuesDefault)
+    val pitchHistoryNumFaultyValues =
+        getPreferenceFlow(PITCH_HISTORY_NUM_FAULTY_VALUES_KEY, PitchHistoryNumFaultyValuesDefault)
     fun writePitchHistoryNumFaultyValues(pitchHistoryNumFaultyValues: Int) {
         writePreference(PITCH_HISTORY_NUM_FAULTY_VALUES_KEY, pitchHistoryNumFaultyValues)
     }
@@ -173,12 +180,19 @@ class PreferenceResources @Inject constructor (
         writePreference(NUM_MOVING_AVERAGE_KEY, numMovingAverage)
     }
 
-    val maxNoise = getTransformablePreferenceFlow(MAX_NOISE_KEY, MaxNoiseDefault){ it / 100f }
+    val maxNoise = getTransformablePreferenceFlow(MAX_NOISE_KEY, MaxNoiseDefault) { it / 100f }
     fun writeMaxNoise(maxNoisePercent: Int) {
         writePreference(MAX_NOISE_KEY, maxNoisePercent)
     }
 
-    val minHarmonicEnergyContent = getTransformablePreferenceFlow(MIN_HARMONIC_ENERGY_CONTENT_KEY, MinHarmonicEnergyContentDefault) { it / 100f }
+    val minHarmonicEnergyContent =
+        getTransformablePreferenceFlow(
+            MIN_HARMONIC_ENERGY_CONTENT_KEY,
+            MinHarmonicEnergyContentDefault
+        ) {
+            it /
+                100f
+        }
     fun writeMinHarmonicEnergyContent(minHarmonicEnergyContentPercent: Int) {
         writePreference(MIN_HARMONIC_ENERGY_CONTENT_KEY, minHarmonicEnergyContentPercent)
     }
@@ -193,8 +207,9 @@ class PreferenceResources @Inject constructor (
         writePreference(TOLERANCE_IN_CENTS_KEY, toleranceInCents)
     }
 
-    val waveWriterDurationInSeconds= getPreferenceFlow(
-        WAVE_WRITER_DURATION_IN_SECONDS_KEY, WaveWriterDurationInSecondsDefault
+    val waveWriterDurationInSeconds = getPreferenceFlow(
+        WAVE_WRITER_DURATION_IN_SECONDS_KEY,
+        WaveWriterDurationInSecondsDefault
     )
     fun writeWaveWriterDurationInSeconds(waveWriterDurationInSeconds: Int) {
         writePreference(WAVE_WRITER_DURATION_IN_SECONDS_KEY, waveWriterDurationInSeconds)
@@ -223,8 +238,8 @@ class PreferenceResources @Inject constructor (
         }
     }
 
-    private fun<T> getPreferenceFlow(key: Preferences.Key<T>, default: T): StateFlow<T> {
-        return dataStore.data
+    private fun <T> getPreferenceFlow(key: Preferences.Key<T>, default: T): StateFlow<T> =
+        dataStore.data
             .catch {
 //                Log.v("Tuner", "PreferenceResources2: except: $it, $key")
                 if (it is IOException) {
@@ -238,41 +253,46 @@ class PreferenceResources @Inject constructor (
                 it[key] ?: default
             }
             .stateIn(scope, SharingStarted.Eagerly, default)
-    }
-    private fun<K, T> getTransformablePreferenceFlow(key: Preferences.Key<K>, default: T, transform: (K) -> T): StateFlow<T> {
-        return dataStore.data
-            .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
-            .map {
-                val s = it[key]
-                if (s == null) default else transform(s)
-            }
-            .stateIn(scope, SharingStarted.Eagerly, default)
-    }
-    private inline fun<reified T> getSerializablePreferenceFlow(key: Preferences.Key<String>, default: T): StateFlow<T> {
-        return dataStore.data
-            .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
-            .map {
-                val s = it[key]
-                if (s == null) {
+    private fun <K, T> getTransformablePreferenceFlow(
+        key: Preferences.Key<K>,
+        default: T,
+        transform: (K) -> T
+    ): StateFlow<T> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map {
+            val s = it[key]
+            if (s == null) default else transform(s)
+        }
+        .stateIn(scope, SharingStarted.Eagerly, default)
+    private inline fun <reified T> getSerializablePreferenceFlow(
+        key: Preferences.Key<String>,
+        default: T
+    ): StateFlow<T> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map {
+            val s = it[key]
+            if (s == null) {
+                default
+            } else {
+                try {
+                    Json.decodeFromString<T>(s)
+                } catch (ex: Exception) {
                     default
-                } else {
-                    try {
-                        Json.decodeFromString<T>(s)
-                    } catch(ex: Exception) {
-                        default
-                    }
                 }
             }
-            .stateIn(scope, SharingStarted.Eagerly, default)
-    }
+        }
+        .stateIn(scope, SharingStarted.Eagerly, default)
 
-    private fun<T> writePreference(key: Preferences.Key<T>, value: T) {
+    private fun <T> writePreference(key: Preferences.Key<T>, value: T) {
         scope.launch {
             dataStore.edit { it[key] = value }
         }
     }
 
-    private inline fun<reified T> writeSerializablePreference(key: Preferences.Key<String>, value: T) {
+    private inline fun <reified T> writeSerializablePreference(
+        key: Preferences.Key<String>,
+        value: T
+    ) {
         scope.launch {
             dataStore.edit {
                 it[key] = Json.encodeToString(value)
@@ -296,11 +316,12 @@ class PreferenceResources @Inject constructor (
         private const val DisplayOnLockScreenDefault = false
         private val NotePrintOptionsDefault = NotePrintOptions()
         private const val ScientificModeDefault = false
+
 //        private val MusicalScaleDefault = MusicalScaleFactory.create(TemperamentType.EDO12)
         private val WindowingDefault = WindowingFunction.Tophat
         private val OverlapDefault = 25f / 100f
         private val WindowSizeExponentDefault = 12
-        private val WindowSizeDefault = 2f.pow(WindowSizeExponentDefault).roundToInt()  // = 4096
+        private val WindowSizeDefault = 2f.pow(WindowSizeExponentDefault).roundToInt() // = 4096
         private val PitchHistoryDurationDefault = 1.5f
         private val PitchHistoryNumFaultyValuesDefault = 3
         private val NumMovingAverageDefault = 5
@@ -312,25 +333,32 @@ class PreferenceResources @Inject constructor (
 
         private val APPEARANCE_KEY = stringPreferencesKey("appearance")
         private val SCREEN_ALWAYS_ON = booleanPreferencesKey("screenon")
-        private val DISPLAY_ON_LOCK_SCREEN =  booleanPreferencesKey("onlockscreen")
+        private val DISPLAY_ON_LOCK_SCREEN = booleanPreferencesKey("onlockscreen")
         private val NOTE_PRINT_OPTIONS_KEY = stringPreferencesKey("note_print_options")
+
 //        const val PREFER_FLAT_KEY = "prefer_flat"
 //        const val SOLFEGE_KEY = "solfege"
         private val SCIENTIFIC_MODE_KEY = booleanPreferencesKey("scientific_mode")
+
 //        private val NOTATION_KEY = stringPreferencesKey("notation")
-        private val TEMPERAMENT_AND_REFERENCE_NOTE_KEY = stringPreferencesKey("temperament_and_reference_note")
+        private val TEMPERAMENT_AND_REFERENCE_NOTE_KEY =
+            stringPreferencesKey("temperament_and_reference_note")
         private val WINDOWING_KEY = stringPreferencesKey("windowing")
         private val OVERLAP_KEY = intPreferencesKey("overlap")
         private val WINDOW_SIZE_KEY = intPreferencesKey("window_size_exponent")
         private val PITCH_HISTORY_DURATION_KEY = floatPreferencesKey("pitch_history_duration")
-        private val PITCH_HISTORY_NUM_FAULTY_VALUES_KEY = intPreferencesKey("pitch_history_num_faulty_values")
+        private val PITCH_HISTORY_NUM_FAULTY_VALUES_KEY =
+            intPreferencesKey("pitch_history_num_faulty_values")
+
 //        const val USE_HINT_KEY = "use_hint"
         private val NUM_MOVING_AVERAGE_KEY = intPreferencesKey("num_moving_average")
         private val MAX_NOISE_KEY = intPreferencesKey("max_noise")
-        private val MIN_HARMONIC_ENERGY_CONTENT_KEY = intPreferencesKey("min_harmonic_energy_content")
+        private val MIN_HARMONIC_ENERGY_CONTENT_KEY =
+            intPreferencesKey("min_harmonic_energy_content")
         private val SENSITIVITY_KEY = intPreferencesKey("sensitivity")
         private val TOLERANCE_IN_CENTS_KEY = intPreferencesKey("tolerance_in_cents")
-        private val WAVE_WRITER_DURATION_IN_SECONDS_KEY = intPreferencesKey("wave_writer_duration_in_seconds")
+        private val WAVE_WRITER_DURATION_IN_SECONDS_KEY =
+            intPreferencesKey("wave_writer_duration_in_seconds")
 
         private val MIGRATIONS_FROM_V6_KEY = booleanPreferencesKey("migrations_complete")
 //        const val INSTRUMENT_ID_KEY = "instrument_id"

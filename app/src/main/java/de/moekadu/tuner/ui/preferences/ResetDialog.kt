@@ -35,11 +35,7 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.ui.theme.TunerTheme
 
 @Composable
-fun ResetDialog(
-    onReset: () -> Unit,
-    modifier: Modifier = Modifier,
-    onDismiss: () -> Unit = {}
-) {
+fun ResetDialog(onReset: () -> Unit, modifier: Modifier = Modifier, onDismiss: () -> Unit = {}) {
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {

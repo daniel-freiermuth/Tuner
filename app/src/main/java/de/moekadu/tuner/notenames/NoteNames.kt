@@ -29,10 +29,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 @Immutable
-data class NoteNames(
-    val notes: Array<MusicalNote>,
-    val defaultReferenceNote: MusicalNote
-) {
+data class NoteNames(val notes: Array<MusicalNote>, val defaultReferenceNote: MusicalNote) {
     /** Number of notes. */
     val size get() = notes.size
 
@@ -51,37 +48,29 @@ data class NoteNames(
      * @param index Index of note.
      * @return Note.
      */
-    operator fun get(index: Int): MusicalNote {
-        return notes[index]
-    }
+    operator fun get(index: Int): MusicalNote = notes[index]
 
     /** Obtain note at given index if it exists else null.
      * @param index Index of note.
      * @return Note or null if it does not exist.
      */
-    fun getOrNull(index: Int): MusicalNote? {
-        return notes.getOrNull(index)
-    }
+    fun getOrNull(index: Int): MusicalNote? = notes.getOrNull(index)
 
     /** Get new note name scale, where base note and enharmonics are switched.
      * This will not change name, description or stableIds, since it effectively are the same
      * notes.
      * @return New note name scale where base notes are exchanged with the enharmonics.
      */
-    fun switchEnharmonics(): NoteNames {
-        return NoteNames(
-            notes.map { it.switchEnharmonic() }.toTypedArray(),
-            defaultReferenceNote.switchEnharmonic()
-        )
-    }
+    fun switchEnharmonics(): NoteNames = NoteNames(
+        notes.map { it.switchEnharmonic() }.toTypedArray(),
+        defaultReferenceNote.switchEnharmonic()
+    )
 
     /** Check if a given note is part of the note names array.
      * @param note Note. Octave index is ignored.
      * @return True if note is part of the note names array, else false.
      */
-    fun hasNote(note: MusicalNote): Boolean {
-        return notes.any{ it.equalsIgnoreOctave(note) }
-    }
+    fun hasNote(note: MusicalNote): Boolean = notes.any { it.equalsIgnoreOctave(note) }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -101,12 +90,10 @@ data class NoteNames(
     }
 }
 
-fun NoteNames.toNew(): NoteNames2 {
-    return NoteNames2(notes, defaultReferenceNote, notes[0])
-}
+fun NoteNames.toNew(): NoteNames2 = NoteNames2(notes, defaultReferenceNote, notes[0])
 
-private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
-    return when (numberOfNotesPerOctave) {
+private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? =
+    when (numberOfNotesPerOctave) {
         // 12 tones
         12 -> {
             val notes = arrayOf(
@@ -151,6 +138,7 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
 
             NoteNames(notes, notes[9].copy(octave = 4))
         }
+
         // 15 tones
         15 -> {
             val notes = arrayOf(
@@ -178,11 +166,12 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                 MusicalNote(base = BaseNote.A, modifier = NoteModifier.None),
                 MusicalNote(base = BaseNote.A, modifier = NoteModifier.Sharp),
                 MusicalNote(base = BaseNote.B, modifier = NoteModifier.Flat),
-                MusicalNote(base = BaseNote.B, modifier = NoteModifier.None),
+                MusicalNote(base = BaseNote.B, modifier = NoteModifier.None)
             )
 
             NoteNames(notes, notes[11].copy(octave = 4))
         }
+
         // 17 tone
         17 -> {
             val notes = arrayOf(
@@ -208,11 +197,12 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                 MusicalNote(base = BaseNote.A, modifier = NoteModifier.NaturalUp),
                 MusicalNote(base = BaseNote.B, modifier = NoteModifier.NaturalDown),
                 //
-                MusicalNote(base = BaseNote.B, modifier = NoteModifier.None),
+                MusicalNote(base = BaseNote.B, modifier = NoteModifier.None)
             )
 
             NoteNames(notes, notes[13].copy(octave = 4))
         }
+
         // 19 tone
         19 -> {
             val notes = arrayOf(
@@ -256,6 +246,7 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
 
             NoteNames(notes, notes[14].copy(octave = 4))
         }
+
         // 22 tone
         22 -> {
             val notes = arrayOf(
@@ -311,11 +302,12 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                 ),
                 MusicalNote(base = BaseNote.B, modifier = NoteModifier.NaturalDown),
                 //
-                MusicalNote(base = BaseNote.B, modifier = NoteModifier.None),
+                MusicalNote(base = BaseNote.B, modifier = NoteModifier.None)
             )
 
             NoteNames(notes, notes[17].copy(octave = 4))
         }
+
         // 24 tone
         24 -> {
             val notes = arrayOf(
@@ -384,11 +376,12 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                     enharmonicBase = BaseNote.C,
                     enharmonicModifier = NoteModifier.NaturalDown,
                     enharmonicOctaveOffset = 1
-                ),
+                )
             )
 
             NoteNames(notes, notes[18].copy(octave = 4))
         }
+
         // 27 tone
         27 -> {
             val notes = arrayOf(
@@ -424,12 +417,13 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                 MusicalNote(base = BaseNote.B, modifier = NoteModifier.NaturalDownDown),
                 MusicalNote(base = BaseNote.B, modifier = NoteModifier.NaturalDown),
                 //
-                MusicalNote(base = BaseNote.B, modifier = NoteModifier.None),
+                MusicalNote(base = BaseNote.B, modifier = NoteModifier.None)
             )
 
             NoteNames(notes, notes[21].copy(octave = 4))
         }
-    // 29 tone
+
+        // 29 tone
         29 -> {
             val notes = arrayOf(
                 MusicalNote(base = BaseNote.C, modifier = NoteModifier.None),
@@ -527,11 +521,12 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                     enharmonicBase = BaseNote.C,
                     enharmonicModifier = NoteModifier.NaturalDown,
                     enharmonicOctaveOffset = 1
-                ),
+                )
             )
 
             NoteNames(notes, notes[22].copy(octave = 4))
         }
+
         // 31 tone
         31 -> {
             val notes = arrayOf(
@@ -575,11 +570,12 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                     base = BaseNote.C,
                     modifier = NoteModifier.NaturalDown,
                     octaveOffset = 1
-                ),
+                )
             )
 
             NoteNames(notes, notes[23].copy(octave = 4))
         }
+
         // 41 tone
         41 -> {
             val notes = arrayOf(
@@ -733,11 +729,12 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                     base = BaseNote.C,
                     modifier = NoteModifier.NaturalDown,
                     octaveOffset = 1
-                ),
+                )
             )
 
             NoteNames(notes, notes[31].copy(octave = 4))
         }
+
         // 53 tone
         53 -> {
             val notes = arrayOf(
@@ -766,7 +763,7 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                     base = BaseNote.C,
                     modifier = NoteModifier.SharpUp,
                     enharmonicBase = BaseNote.D,
-                    enharmonicModifier = NoteModifier.FlatUpUp,
+                    enharmonicModifier = NoteModifier.FlatUpUp
                 ),
                 MusicalNote(base = BaseNote.D, modifier = NoteModifier.NaturalDownDown),
                 MusicalNote(base = BaseNote.D, modifier = NoteModifier.NaturalDown),
@@ -914,14 +911,13 @@ private fun getSuitableNoteNames(numberOfNotesPerOctave: Int): NoteNames? {
                     base = BaseNote.C,
                     modifier = NoteModifier.NaturalDown,
                     octaveOffset = 1
-                ),
+                )
             )
 
             NoteNames(notes, notes[40].copy(octave = 4))
         }
+
         else -> {
             null
         }
     }
-}
-

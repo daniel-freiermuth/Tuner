@@ -25,7 +25,7 @@ object TemperamentValidityChecks {
     enum class ValueOrdering {
         Increasing,
         Unordered,
-        Undefined,
+        Undefined
     }
 
     /** Check cent/ratio values for correctness
@@ -41,16 +41,18 @@ object TemperamentValidityChecks {
         numberOfNotes: Int,
         obtainCent: (index: Int) -> Double?,
         decreasingValueCallback: ((index: Int, isValueDecreasing: Boolean) -> Unit)?
-    ) : ValueOrdering {
+    ): ValueOrdering {
         if (numberOfNotes < 2) {
             if (decreasingValueCallback != null) {
-                for (i in 0 until numberOfNotes)
+                for (i in 0 until numberOfNotes) {
                     decreasingValueCallback(i, false)
+                }
             }
             return ValueOrdering.Increasing
         }
-        if (decreasingValueCallback != null)
+        if (decreasingValueCallback != null) {
             decreasingValueCallback(0, false)
+        }
 
         var error = ValueOrdering.Increasing
 
@@ -59,19 +61,23 @@ object TemperamentValidityChecks {
             val cent = obtainCent(i)
 //        Log.v("Tuner", "checkAndSetValueOrderingErrors: $i : centPrev=$centPrevious, cent=$cent")
             if (centPrevious == null || cent == null) {
-                if (decreasingValueCallback != null)
+                if (decreasingValueCallback != null) {
                     decreasingValueCallback(i, false)
+                }
                 // undefined outrules other errors
                 error = ValueOrdering.Undefined
             } else if (cent <= centPrevious) {
-                if (decreasingValueCallback != null)
+                if (decreasingValueCallback != null) {
                     decreasingValueCallback(i, true)
+                }
                 // do not overwrite an undefined-error
-                if (error != ValueOrdering.Undefined)
+                if (error != ValueOrdering.Undefined) {
                     error = ValueOrdering.Unordered
+                }
             } else {
-                if (decreasingValueCallback != null)
+                if (decreasingValueCallback != null) {
                     decreasingValueCallback(i, false)
+                }
             }
         }
         return error
@@ -79,8 +85,12 @@ object TemperamentValidityChecks {
 
     /** Errors with note names. */
     enum class NoteNameError {
-        None, /**< No error */
-        Duplicates, /**< Note name appears more than once */
+        None,
+
+        /**< No error */
+        Duplicates,
+
+        /**< Note name appears more than once */
         Undefined /**< Note name is not defined. */
     }
 
@@ -111,15 +121,17 @@ object TemperamentValidityChecks {
                     if (noteNext != null && note.match(noteNext, ignoreOctave = true)) {
                         duplicateNoteErrors[i] = true
                         duplicateNoteErrors[j] = true
-                        if (error != NoteNameError.Undefined)
+                        if (error != NoteNameError.Undefined) {
                             error = NoteNameError.Duplicates
+                        }
                     }
                 }
             }
         }
         if (duplicateNoteCallback != null) {
-            for (i in 0 until numberOfNotes - 1)
+            for (i in 0 until numberOfNotes - 1) {
                 duplicateNoteCallback(i, duplicateNoteErrors[i])
+            }
         }
 
         return error

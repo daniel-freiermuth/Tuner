@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
-import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.ui.common.Label
 import de.moekadu.tuner.ui.plot.Anchor
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
@@ -48,19 +48,19 @@ import de.moekadu.tuner.ui.plot.rememberTextLabelWidth
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlinx.collections.immutable.persistentListOf
 
-//class FrequencyPlotModel(musicalScale: MusicalScale) {
+// class FrequencyPlotModel(musicalScale: MusicalScale) {
 //    var frequencyPlotData by mutableStateOf(FrequencyPlotData(0, { 0f }, { 0f }))
 //    var targetNote by mutableStateOf(musicalScale.referenceNote)
 //    var currentFrequency by mutableStateOf<Float?>(null)
 //    var harmonicFrequencies by mutableStateOf<VerticalLinesPositions?>(null)
 //    val gestureBasedViewPort = GestureBasedViewPort()
-//}
+// }
 
-//data class FrequencyPlotData(
+// data class FrequencyPlotData(
 //    val size: Int,
 //    val frequency: (i: Int) -> Float,
 //    val amplitude: (i: Int) -> Float,
-//)
+// )
 @Composable
 fun FrequencyPlot(
     frequencyPlotData: LineCoordinates,
@@ -101,7 +101,7 @@ fun FrequencyPlot(
     }
     val maximumFrequency = remember(frequencyPlotData) {
         frequencyPlotData.coordinates.lastOrNull()?.x ?: 100f
-        //frequencyPlotData.frequency(frequencyPlotData.size - 1)
+        // frequencyPlotData.frequency(frequencyPlotData.size - 1)
     }
 
     val viewPortLimits = remember(maximumFrequency) {
@@ -124,9 +124,11 @@ fun FrequencyPlot(
         lockY = true
     ) {
         val tickLevel = remember(maximumFrequency) {
-            TickLevelDeltaBased(persistentListOf(
-                10f, 20f, 25f, 50f, 100f, 200f, 250f, 500f, 1000f, 2000f, 2500f, 5000f, 10000f
-            ))
+            TickLevelDeltaBased(
+                persistentListOf(
+                    10f, 20f, 25f, 50f, 100f, 200f, 250f, 500f, 1000f, 2000f, 2500f, 5000f, 10000f
+                )
+            )
         }
         XTicks(
             tickLevel = tickLevel,
@@ -176,7 +178,7 @@ fun FrequencyPlot(
                             lineWidth = frequencyMarkLineWidth,
                             lineColor = frequencyMarkLineColor
                         )
-                    ) {markModifier ->
+                    ) { markModifier ->
                         Label(
                             content = {
                                 Text(
@@ -200,13 +202,15 @@ fun FrequencyPlot(
 private fun FrequencyPlotPreview() {
     TunerTheme {
         val frequencies = remember { FloatArray(20) { 200f * it } }
-        val amplitudes = remember { floatArrayOf(
-            0f, 1f, 2f, 2f, 1f, 7f, 5f, 2f, 1f, 0.3f,
-            1f, 2f, 3f, 3f, 5f, 2f, 1f, 2f, 0f, 0.3f,
-        ) }
+        val amplitudes = remember {
+            floatArrayOf(
+                0f, 1f, 2f, 2f, 1f, 7f, 5f, 2f, 1f, 0.3f,
+                1f, 2f, 3f, 3f, 5f, 2f, 1f, 2f, 0f, 0.3f
+            )
+        }
         val data = remember {
             LineCoordinates.create(frequencies, amplitudes)
-            //FrequencyPlotData(frequencies.size, { frequencies[it] }, { amplitudes[it] })
+            // FrequencyPlotData(frequencies.size, { frequencies[it] }, { amplitudes[it] })
         }
         val harmonicFrequencyData = remember {
             VerticalLinesPositions.create(floatArrayOf(300f, 510f, 800f))

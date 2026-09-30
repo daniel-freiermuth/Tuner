@@ -68,8 +68,7 @@ fun predefinedTemperaments(): ArrayList<Temperament3> {
     return temperaments
 }
 
-fun predefinedTemperamentEDO(notesPerOctave: Int, stableId: Long)
-        = Temperament3EDO(
+fun predefinedTemperamentEDO(notesPerOctave: Int, stableId: Long) = Temperament3EDO(
     stableId = stableId,
     notesPerOctave = notesPerOctave
 )
@@ -90,7 +89,7 @@ fun predefinedTemperamentPythagorean(stableId: Long) = Temperament3ChainOfFifths
         FifthModification(), // D  - A
         FifthModification(), // A  - E
         FifthModification(), // E  - B
-        FifthModification(), // B  - F#
+        FifthModification() // B  - F#
     ),
     rootIndex = 5,
     uniqueIdentifier = "pythagorean"
@@ -119,104 +118,102 @@ fun predefinedTemperamentPure(stableId: Long) = Temperament3RationalNumbersEDONa
     uniqueIdentifier = "pure"
 )
 
-fun predefinedTemperamentQuarterCommaMeanTone(stableId: Long)
-        = Temperament3ChainOfFifthsNoEnharmonics(
-    name = GetTextFromResId(R.string.quarter_comma_mean_tone),
-    abbreviation = GetTextFromResId(R.string.quarter_comma_mean_tone_abbr),
-    description = GetTextFromResId(R.string.quarter_comma_mean_tone_desc),
-    stableId = stableId,
-    fifths = arrayOf(
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // Eb - Bb
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // Bb - F
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // F  - C
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // C  - G <- root
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // G  - D
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // D  - A
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // A  - E
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // E  - B
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // B  - F#
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // F# - C#
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // C# - G#
-    ),
-    rootIndex = 3,
-    uniqueIdentifier = "quarter comma mean tone"
-)
+fun predefinedTemperamentQuarterCommaMeanTone(stableId: Long) =
+    Temperament3ChainOfFifthsNoEnharmonics(
+        name = GetTextFromResId(R.string.quarter_comma_mean_tone),
+        abbreviation = GetTextFromResId(R.string.quarter_comma_mean_tone_abbr),
+        description = GetTextFromResId(R.string.quarter_comma_mean_tone_desc),
+        stableId = stableId,
+        fifths = arrayOf(
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // Eb - Bb
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // Bb - F
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // F  - C
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // C  - G <- root
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // G  - D
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // D  - A
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // A  - E
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // E  - B
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // B  - F#
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // F# - C#
+            FifthModification(syntonicComma = RationalNumber(-1, 4)) // C# - G#
+        ),
+        rootIndex = 3,
+        uniqueIdentifier = "quarter comma mean tone"
+    )
 
-fun predefinedTemperamentExtendedQuarterCommaMeanTone(stableId: Long)
-        = Temperament3ChainOfFifthsNoEnharmonics(
-    name = GetTextFromResId(R.string.extended_quarter_comma_mean_tone),
-    abbreviation = GetTextFromResId(R.string.extended_quarter_comma_mean_tone_abbr),
-    description = GetTextFromResId(R.string.extended_quarter_comma_mean_tone_desc),
-    stableId = stableId,
-    fifths = arrayOf(
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // Ab - Eb
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // Eb - Bb
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // Bb - F
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // F  - C
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // C  - G <- root
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // G  - D
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // D  - A
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // A  - E
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // E  - B
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // B  - F#
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // F# - C#
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // C# - G#
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // G# - D#
-        FifthModification(syntonicComma = RationalNumber(-1, 4)), // D# - A#
-    ),
-    rootIndex = 4,
-    uniqueIdentifier = "extended quarter comma mean tone"
-)
+fun predefinedTemperamentExtendedQuarterCommaMeanTone(stableId: Long) =
+    Temperament3ChainOfFifthsNoEnharmonics(
+        name = GetTextFromResId(R.string.extended_quarter_comma_mean_tone),
+        abbreviation = GetTextFromResId(R.string.extended_quarter_comma_mean_tone_abbr),
+        description = GetTextFromResId(R.string.extended_quarter_comma_mean_tone_desc),
+        stableId = stableId,
+        fifths = arrayOf(
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // Ab - Eb
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // Eb - Bb
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // Bb - F
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // F  - C
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // C  - G <- root
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // G  - D
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // D  - A
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // A  - E
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // E  - B
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // B  - F#
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // F# - C#
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // C# - G#
+            FifthModification(syntonicComma = RationalNumber(-1, 4)), // G# - D#
+            FifthModification(syntonicComma = RationalNumber(-1, 4)) // D# - A#
+        ),
+        rootIndex = 4,
+        uniqueIdentifier = "extended quarter comma mean tone"
+    )
 
-fun predefinedTemperamentThirdCommaMeanTone(stableId: Long)
-        = Temperament3ChainOfFifthsNoEnharmonics(
-    name = GetTextFromResId(R.string.third_comma_mean_tone),
-    abbreviation = GetTextFromResId(R.string.third_comma_mean_tone_abbr),
-    description = GetTextFromResId(R.string.third_comma_mean_tone_desc),
-    stableId = stableId,
-    fifths = arrayOf(
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // Eb - Bb
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // Bb - F
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // F  - C
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // C  - G <- root
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // G  - D
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // D  - A
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // A  - E
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // E  - B
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // B  - F#
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // F# - C#
-        FifthModification(syntonicComma = RationalNumber(-1, 3)), // C# - G#
-    ),
-    rootIndex = 3,
-    uniqueIdentifier = "third comma mean tone"
-)
+fun predefinedTemperamentThirdCommaMeanTone(stableId: Long) =
+    Temperament3ChainOfFifthsNoEnharmonics(
+        name = GetTextFromResId(R.string.third_comma_mean_tone),
+        abbreviation = GetTextFromResId(R.string.third_comma_mean_tone_abbr),
+        description = GetTextFromResId(R.string.third_comma_mean_tone_desc),
+        stableId = stableId,
+        fifths = arrayOf(
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // Eb - Bb
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // Bb - F
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // F  - C
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // C  - G <- root
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // G  - D
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // D  - A
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // A  - E
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // E  - B
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // B  - F#
+            FifthModification(syntonicComma = RationalNumber(-1, 3)), // F# - C#
+            FifthModification(syntonicComma = RationalNumber(-1, 3)) // C# - G#
+        ),
+        rootIndex = 3,
+        uniqueIdentifier = "third comma mean tone"
+    )
 
+fun predefinedTemperamentFifthCommaMeanTone(stableId: Long) =
+    Temperament3ChainOfFifthsNoEnharmonics(
+        name = GetTextFromResId(R.string.fifth_comma_mean_tone),
+        abbreviation = GetTextFromResId(R.string.fifth_comma_mean_tone_abbr),
+        description = GetTextFromResId(R.string.fifth_comma_mean_tone_desc),
+        stableId = stableId,
+        fifths = arrayOf(
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // Eb - Bb
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // Bb - F
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // F  - C
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // C  - G <- root
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // G  - D
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // D  - A
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // A  - E
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // E  - B
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // B  - F#
+            FifthModification(syntonicComma = RationalNumber(-1, 5)), // F# - C#
+            FifthModification(syntonicComma = RationalNumber(-1, 5)) // C# - G#
+        ),
+        rootIndex = 3,
+        uniqueIdentifier = "fifth comma mean tone"
+    )
 
-fun predefinedTemperamentFifthCommaMeanTone(stableId: Long)
-        = Temperament3ChainOfFifthsNoEnharmonics(
-    name = GetTextFromResId(R.string.fifth_comma_mean_tone),
-    abbreviation = GetTextFromResId(R.string.fifth_comma_mean_tone_abbr),
-    description = GetTextFromResId(R.string.fifth_comma_mean_tone_desc),
-    stableId = stableId,
-    fifths = arrayOf(
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // Eb - Bb
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // Bb - F
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // F  - C
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // C  - G <- root
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // G  - D
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // D  - A
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // A  - E
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // E  - B
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // B  - F#
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // F# - C#
-        FifthModification(syntonicComma = RationalNumber(-1, 5)), // C# - G#
-    ),
-    rootIndex = 3,
-    uniqueIdentifier = "fifth comma mean tone"
-)
-
-fun predefinedTemperamentWerckmeisterIII(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentWerckmeisterIII(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.werckmeister_iii),
     abbreviation = GetTextFromResId(R.string.werckmeister_iii_abbr),
     description = GetTextFromResId(R.string.werckmeister_iii_desc),
@@ -225,68 +222,87 @@ fun predefinedTemperamentWerckmeisterIII(stableId: Long)
         FifthModification(pythagoreanComma = RationalNumber(-1, 4)), // C     - G
         FifthModification(pythagoreanComma = RationalNumber(-1, 4)), // G     - D
         FifthModification(pythagoreanComma = RationalNumber(-1, 4)), // D     - A
-        FifthModification(),                                                             // A      - E
-        FifthModification(),                                                             // E     - B
+        FifthModification(), // A      - E
+        FifthModification(), // E     - B
         FifthModification(pythagoreanComma = RationalNumber(-1, 4)), // B     - F#/Gb
-        FifthModification(),                                                             // F#/Gb - C#/Db
-        FifthModification(),                                                             // C#/Db - G#/Ab
-        FifthModification(),                                                             // G#/Ab - D#/Eb
-        FifthModification(),                                                             // D#/Eb - A#/Bb
-        FifthModification(),                                                             // A#/Bb - F
+        FifthModification(), // F#/Gb - C#/Db
+        FifthModification(), // C#/Db - G#/Ab
+        FifthModification(), // G#/Ab - D#/Eb
+        FifthModification(), // D#/Eb - A#/Bb
+        FifthModification() // A#/Bb - F
     ),
     rootIndex = 0,
     uniqueIdentifier = "werckmeister iii"
 )
 
-fun predefinedTemperamentWerckmeisterIV(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentWerckmeisterIV(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.werckmeister_iv),
     abbreviation = GetTextFromResId(R.string.werckmeister_iv_abbr),
     description = GetTextFromResId(R.string.werckmeister_iv_desc),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
-        /* GD */ FifthModification(),
-        /* DA */ FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
-        /* AE */ FifthModification(),
-        /* EB */ FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
-        /* BF# */ FifthModification(),
-        /* F#C# */ FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
-        /* C#G# */ FifthModification(),
-        /* G#E# */ FifthModification(pythagoreanComma = RationalNumber(1, 3)),
-        /* EbBb */ FifthModification(pythagoreanComma = RationalNumber(1, 3)),
-        /* BbF */ FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
+        /* CG */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
+        /* GD */
+        FifthModification(),
+        /* DA */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
+        /* AE */
+        FifthModification(),
+        /* EB */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
+        /* BF# */
+        FifthModification(),
+        /* F#C# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 3)),
+        /* C#G# */
+        FifthModification(),
+        /* G#E# */
+        FifthModification(pythagoreanComma = RationalNumber(1, 3)),
+        /* EbBb */
+        FifthModification(pythagoreanComma = RationalNumber(1, 3)),
+        /* BbF */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 3))
     ),
     rootIndex = 0,
     uniqueIdentifier = "werckmeister iv"
 )
 
-fun predefinedTemperamentWerckmeisterV(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentWerckmeisterV(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.werckmeister_v),
     abbreviation = GetTextFromResId(R.string.werckmeister_v_abbr),
     description = GetTextFromResId(R.string.werckmeister_v_desc),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(),
-        /* GD */ FifthModification(),
-        /* DA */ FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
-        /* AE */ FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
-        /* EB */ FifthModification(),
-        /* BF# */ FifthModification(),
-        /* F#C# */ FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
-        /* C#G# */ FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
-        /* G#Eb */ FifthModification(pythagoreanComma = RationalNumber(1, 4)),
-        /* EbBb */ FifthModification(),
-        /* BbF */ FifthModification(),
-        //FC = FifthModification(pythagoreanComma = RationalNumber(-1, 4))
+        /* CG */
+        FifthModification(),
+        /* GD */
+        FifthModification(),
+        /* DA */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
+        /* AE */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
+        /* EB */
+        FifthModification(),
+        /* BF# */
+        FifthModification(),
+        /* F#C# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
+        /* C#G# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
+        /* G#Eb */
+        FifthModification(pythagoreanComma = RationalNumber(1, 4)),
+        /* EbBb */
+        FifthModification(),
+        /* BbF */
+        FifthModification()
+        // FC = FifthModification(pythagoreanComma = RationalNumber(-1, 4))
     ),
     rootIndex = 0,
     uniqueIdentifier = "werckmeister v"
 )
 
-fun predefinedTemperamentWerckmeisterVI(stableId: Long)
-        = Temperament3RationalNumbersEDONames(
+fun predefinedTemperamentWerckmeisterVI(stableId: Long) = Temperament3RationalNumbersEDONames(
     GetTextFromResId(R.string.werckmeister_vi),
     GetTextFromResId(R.string.werckmeister_vi_abbr),
     GetTextFromResId(R.string.werckmeister_vi_desc),
@@ -303,78 +319,108 @@ fun predefinedTemperamentWerckmeisterVI(stableId: Long)
         RationalNumber(196, 117), // A
         RationalNumber(196, 110), // Bb
         RationalNumber(196, 104), // B
-        RationalNumber(2, 1), // C2
+        RationalNumber(2, 1) // C2
     ),
     stableId = stableId,
     uniqueIdentifier = "werckmeister vi"
 )
 
-fun predefinedTemperamentKirnberger1(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentKirnberger1(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.kirnberger1),
     abbreviation = GetTextFromResId(R.string.kirnberger1_abbr),
     description = GetTextFromResId(R.string.kirnberger1_desc),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(),
-        /* GD */ FifthModification(),
-        /* DA */ FifthModification(syntonicComma = RationalNumber(-1, 1)),
-        /* AE */FifthModification(),
-        /* EB */ FifthModification(),
-        /* BF# */ FifthModification(),
-        /* F#C# */ FifthModification(schisma = RationalNumber(-1, 1)),
-        /* C#G# */ FifthModification(),
-        /* G#Eb */ FifthModification(),
-        /* EbBb */ FifthModification(),
-        /* BbF */FifthModification(),
-        //FC = FifthModification()
+        /* CG */
+        FifthModification(),
+        /* GD */
+        FifthModification(),
+        /* DA */
+        FifthModification(syntonicComma = RationalNumber(-1, 1)),
+        /* AE */
+        FifthModification(),
+        /* EB */
+        FifthModification(),
+        /* BF# */
+        FifthModification(),
+        /* F#C# */
+        FifthModification(schisma = RationalNumber(-1, 1)),
+        /* C#G# */
+        FifthModification(),
+        /* G#Eb */
+        FifthModification(),
+        /* EbBb */
+        FifthModification(),
+        /* BbF */
+        FifthModification()
+        // FC = FifthModification()
     ),
     rootIndex = 0,
     uniqueIdentifier = "kirnberger 1"
 )
 
-fun predefinedTemperamentKirnberger2(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentKirnberger2(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.kirnberger2),
     abbreviation = GetTextFromResId(R.string.kirnberger2_abbr),
     description = GetTextFromResId(R.string.kirnberger2_desc),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(),
-        /* GD */ FifthModification(),
-        /* DA */  FifthModification(syntonicComma = RationalNumber(-1, 2)),
-        /* AE */ FifthModification(syntonicComma = RationalNumber(-1, 2)),
-        /* EB */ FifthModification(),
-        /* BF# */ FifthModification(),
-        /* F#C# */ FifthModification(schisma = RationalNumber(-1, 1)),
-        /* C#G# */ FifthModification(),
-        /* G#Eb */ FifthModification(),
-        /* EbBb */ FifthModification(),
-        /* BbF */ FifthModification(),
+        /* CG */
+        FifthModification(),
+        /* GD */
+        FifthModification(),
+        /* DA */
+        FifthModification(syntonicComma = RationalNumber(-1, 2)),
+        /* AE */
+        FifthModification(syntonicComma = RationalNumber(-1, 2)),
+        /* EB */
+        FifthModification(),
+        /* BF# */
+        FifthModification(),
+        /* F#C# */
+        FifthModification(schisma = RationalNumber(-1, 1)),
+        /* C#G# */
+        FifthModification(),
+        /* G#Eb */
+        FifthModification(),
+        /* EbBb */
+        FifthModification(),
+        /* BbF */
+        FifthModification()
         // FC = FifthModification()
     ),
     rootIndex = 0,
     uniqueIdentifier = "kirnberger 2"
 )
 
-fun predefinedTemperamentKirnberger3(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentKirnberger3(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.kirnberger3),
     abbreviation = GetTextFromResId(R.string.kirnberger3_abbr),
     description = GetTextFromResId(R.string.kirnberger3_desc),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(syntonicComma = RationalNumber(-1, 4)),
-        /* GD */ FifthModification(syntonicComma = RationalNumber(-1, 4)),
-        /* DA */ FifthModification(syntonicComma = RationalNumber(-1, 4)),
-        /* AE */ FifthModification(syntonicComma = RationalNumber(-1, 4)),
-        /* EB */ FifthModification(),
-        /* BF# */ FifthModification(),
-        /* F#C# */ FifthModification(schisma = RationalNumber(-1, 1)),
-        /* C#G# */ FifthModification(),
-        /* G#Eb */ FifthModification(),
-        /* EbBb */ FifthModification(),
-        /* BbF */ FifthModification(),
+        /* CG */
+        FifthModification(syntonicComma = RationalNumber(-1, 4)),
+        /* GD */
+        FifthModification(syntonicComma = RationalNumber(-1, 4)),
+        /* DA */
+        FifthModification(syntonicComma = RationalNumber(-1, 4)),
+        /* AE */
+        FifthModification(syntonicComma = RationalNumber(-1, 4)),
+        /* EB */
+        FifthModification(),
+        /* BF# */
+        FifthModification(),
+        /* F#C# */
+        FifthModification(schisma = RationalNumber(-1, 1)),
+        /* C#G# */
+        FifthModification(),
+        /* G#Eb */
+        FifthModification(),
+        /* EbBb */
+        FifthModification(),
+        /* BbF */
+        FifthModification()
         // FC = FifthModification()
     ),
     rootIndex = 0,
@@ -382,24 +428,34 @@ fun predefinedTemperamentKirnberger3(stableId: Long)
 )
 
 // Neidhardt 1, für ein Dorf, 1732
-fun predefinedTemperamentNeidhardt1(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentNeidhardt1(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.neidhardt1),
     abbreviation = GetTextFromResId(R.string.neidhardt1_abbr),
     description = GetTextFromResId(R.string.neidhardt1_desc),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* GD */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* DA */ FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
-        /* AE */ FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
-        /* EB */ FifthModification(),
-        /* BF# */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* F#C# */ FifthModification(),
-        /* C#G# */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* G#Eb */ FifthModification(),
-        /* EbBb */ FifthModification(),
-        /* BbF */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* CG */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* GD */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* DA */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
+        /* AE */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 4)),
+        /* EB */
+        FifthModification(),
+        /* BF# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* F#C# */
+        FifthModification(),
+        /* C#G# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* G#Eb */
+        FifthModification(),
+        /* EbBb */
+        FifthModification(),
+        /* BbF */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12))
         // FC = FifthModification()
     ),
     rootIndex = 0,
@@ -407,24 +463,34 @@ fun predefinedTemperamentNeidhardt1(stableId: Long)
 )
 
 //  Neidhardt 2, für ein Dorf, 1724  / für eine kleine Stadt, 1732
-fun predefinedTemperamentNeidhardt2(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentNeidhardt2(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.neidhardt2),
     abbreviation = GetTextFromResId(R.string.neidhardt2_abbr),
     description = GetTextFromResId(R.string.neidhardt2_desc),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* GD */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* DA */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* AE */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* EB */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* BF# */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* F#C# */ FifthModification(),
-        /* C#G# */ FifthModification(),
-        /* G#Eb */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* EbBb */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* BbF */ FifthModification(),
+        /* CG */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* GD */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* DA */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* AE */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* EB */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* BF# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* F#C# */
+        FifthModification(),
+        /* C#G# */
+        FifthModification(),
+        /* G#Eb */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* EbBb */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* BbF */
+        FifthModification()
         // FC = FifthModification()
     ),
     rootIndex = 0,
@@ -432,24 +498,34 @@ fun predefinedTemperamentNeidhardt2(stableId: Long)
 )
 
 // Neidhardt 3, für eine kleine Stadt, 1724 / für eine große Stadt, 1732
-fun predefinedTemperamentNeidhardt3(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentNeidhardt3(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.neidhardt3),
     abbreviation = GetTextFromResId(R.string.neidhardt3_abbr),
     description = GetTextFromResId(R.string.neidhardt3_desc),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* GD */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* DA */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* AE */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* EB */ FifthModification(),
-        /* BF# */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* F#C# */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* C#G# */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
-        /* G#Eb */ FifthModification(),
-        /* EbBb */ FifthModification(),
-        /* BbF */ FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* CG */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* GD */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* DA */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* AE */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* EB */
+        FifthModification(),
+        /* BF# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* F#C# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* C#G# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12)),
+        /* G#Eb */
+        FifthModification(),
+        /* EbBb */
+        FifthModification(),
+        /* BbF */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 12))
         // FC = FifthModification(pythagoreanComma = RationalNumber(-1, 12))
     ),
     rootIndex = 0,
@@ -482,48 +558,68 @@ fun predefinedTemperamentNeidhardt3(stableId: Long)
 //        )
 
 // Valotti
-fun predefinedTemperamentValotti(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentValotti(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.valotti),
     abbreviation = GetTextFromResId(R.string.valotti_abbr),
     description = GetTextFromString(""),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* GD */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* DA */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* AE */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* EB */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* BFsharp */ FifthModification(),
-        /* FsharpCsharp */ FifthModification(),
-        /* CsharpGsharp */ FifthModification(),
-        /* GsharpEflat */ FifthModification(),
-        /* EFlatBflat */ FifthModification(),
-        /* BflatF */ FifthModification(),
-        //FC = FifthModification(pythagoreanComma = RationalNumber(-1, 6))
+        /* CG */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* GD */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* DA */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* AE */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* EB */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* BFsharp */
+        FifthModification(),
+        /* FsharpCsharp */
+        FifthModification(),
+        /* CsharpGsharp */
+        FifthModification(),
+        /* GsharpEflat */
+        FifthModification(),
+        /* EFlatBflat */
+        FifthModification(),
+        /* BflatF */
+        FifthModification()
+        // FC = FifthModification(pythagoreanComma = RationalNumber(-1, 6))
     ),
     rootIndex = 0,
     uniqueIdentifier = "valotti"
 )
 
-fun predefinedTemperamentYoung2(stableId: Long)
-        = Temperament3ChainOfFifthsEDONames(
+fun predefinedTemperamentYoung2(stableId: Long) = Temperament3ChainOfFifthsEDONames(
     name = GetTextFromResId(R.string.young2),
     abbreviation = GetTextFromResId(R.string.young2_abbr),
     description = GetTextFromString(""),
     stableId = stableId,
     fifths = arrayOf(
-        /* CG */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* GD */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* DA */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* AE */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* EB */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* BF# */ FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
-        /* F#C# */ FifthModification(),
-        /* C#G# */ FifthModification(),
-        /* G#Eb */ FifthModification(),
-        /* EbBb */ FifthModification(),
-        /* BbF */ FifthModification(),
+        /* CG */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* GD */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* DA */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* AE */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* EB */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* BF# */
+        FifthModification(pythagoreanComma = RationalNumber(-1, 6)),
+        /* F#C# */
+        FifthModification(),
+        /* C#G# */
+        FifthModification(),
+        /* G#Eb */
+        FifthModification(),
+        /* EbBb */
+        FifthModification(),
+        /* BbF */
+        FifthModification()
         // FC = FifthModification()
     ),
     rootIndex = 0,

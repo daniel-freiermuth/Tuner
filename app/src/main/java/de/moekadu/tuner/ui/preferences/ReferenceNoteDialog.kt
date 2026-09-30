@@ -65,8 +65,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import de.moekadu.tuner.R
-import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.ui.misc.rememberNumberFormatter
 import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NoteSelector
@@ -79,26 +79,27 @@ import java.text.ParsePosition
  * @param string String to be parsed.
  * @return String as float of null if failed.
  */
-private fun DecimalFormat.toFloatOrNull(string: String): Float? {
-    return try {
-        val trimmed = string.trim()
-        val position = ParsePosition(0)
-        val result = this.parse(trimmed, position)?.toFloat()
-        if (position.index == trimmed.length)
-            result
-        else
-            null
-    } catch (ex: Exception) {
+private fun DecimalFormat.toFloatOrNull(string: String): Float? = try {
+    val trimmed = string.trim()
+    val position = ParsePosition(0)
+    val result = this.parse(trimmed, position)?.toFloat()
+    if (position.index == trimmed.length) {
+        result
+    } else {
         null
     }
+} catch (ex: Exception) {
+    null
 }
 
 /** Interface for frequency detector as used by the RereferenceNoteDialog. */
 interface ReferenceNoteDialogFrequencyDetector {
     /** The currently detected frequency or 0f if no frequency is detected yet. */
     val detectedFrequency: FloatState
+
     /** Start detecting frequencies. */
     fun startFrequencyDetection()
+
     /** Pause detecting frequencies. */
     fun stopFrequencyDetection()
 }
@@ -127,13 +128,16 @@ fun ReferenceNoteDialog(
     warning: String? = null,
     onDismiss: () -> Unit = {}
 ) {
-    var selectedNoteIndex by rememberSaveable { mutableIntStateOf(
-        initialState.getNoteIndex2(initialState.referenceNote) - initialState.noteIndexBegin
-    ) }
+    var selectedNoteIndex by rememberSaveable {
+        mutableIntStateOf(
+            initialState.getNoteIndex2(initialState.referenceNote) - initialState.noteIndexBegin
+        )
+    }
     val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         LocalConfiguration.current.locales[0]
     } else {
-        @Suppress("DEPRECATION") LocalConfiguration.current.locale
+        @Suppress("DEPRECATION")
+        LocalConfiguration.current.locale
     }
     val decimalFormat = rememberNumberFormatter()
     var frequencyAsString by rememberSaveable {
@@ -142,16 +146,19 @@ fun ReferenceNoteDialog(
     val numberFormat = remember(locale) {
         NumberFormat.getNumberInstance(locale) as DecimalFormat
     }
-    val validFrequency by remember { derivedStateOf {
-        numberFormat.toFloatOrNull(frequencyAsString) != null
-    }}
+    val validFrequency by remember {
+        derivedStateOf {
+            numberFormat.toFloatOrNull(frequencyAsString) != null
+        }
+    }
     var frequencyDetectorStarted by rememberSaveable { mutableStateOf(false) }
     val permission = rememberPermissionState(permission = Manifest.permission.RECORD_AUDIO)
-    val permissionGranted by remember { derivedStateOf { permission.status.isGranted }}
+    val permissionGranted by remember { derivedStateOf { permission.status.isGranted } }
 
     LifecycleResumeEffect(permissionGranted) {
-        if (frequencyDetectorStarted && permissionGranted)
-           frequencyDetector.startFrequencyDetection()
+        if (frequencyDetectorStarted && permissionGranted) {
+            frequencyDetector.startFrequencyDetection()
+        }
         onPauseOrDispose { frequencyDetector.stopFrequencyDetection() }
     }
 
@@ -216,8 +223,8 @@ fun ReferenceNoteDialog(
                 TextField(
                     value = frequencyAsString,
                     onValueChange = { frequencyAsString = it },
-                    label = { Text(stringResource(id = R.string.frequency))},
-                    suffix = { Text(stringResource(id = R.string.hertz_str, ""))},
+                    label = { Text(stringResource(id = R.string.frequency)) },
+                    suffix = { Text(stringResource(id = R.string.hertz_str, "")) },
                     isError = !validFrequency,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
@@ -228,14 +235,23 @@ fun ReferenceNoteDialog(
                         Row {
                             OutlinedButton(
                                 onClick = {
-                                    frequencyAsString = "%.2f".format(locale, frequencyDetector.detectedFrequency.floatValue)
+                                    frequencyAsString =
+                                        "%.2f".format(
+                                            locale,
+                                            frequencyDetector.detectedFrequency.floatValue
+                                        )
                                 },
                                 modifier = Modifier.weight(1f),
                                 enabled = frequencyDetector.detectedFrequency.floatValue != 0f
                             ) {
-                                Text(stringResource(
-                                    R.string.hertz_str,
-                                    "%.2f".format(locale, frequencyDetector.detectedFrequency.floatValue))
+                                Text(
+                                    stringResource(
+                                        R.string.hertz_str,
+                                        "%.2f".format(
+                                            locale,
+                                            frequencyDetector.detectedFrequency.floatValue
+                                        )
+                                    )
                                 )
                             }
                             IconButton(
@@ -244,7 +260,10 @@ fun ReferenceNoteDialog(
                                     frequencyDetector.stopFrequencyDetection()
                                 }
                             ) {
-                                Icon(Icons.Filled.Close, contentDescription = "stop frequency detection")
+                                Icon(
+                                    Icons.Filled.Close,
+                                    contentDescription = "stop frequency detection"
+                                )
                             }
                         }
                     } else {
@@ -264,12 +283,16 @@ fun ReferenceNoteDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedButton(
                     onClick = {
-                        val note = initialState.temperament.noteNames(initialState.rootNote).defaultReferenceNote
-                        selectedNoteIndex = initialState.getNoteIndex2(note) - initialState.noteIndexBegin
-                        frequencyAsString = decimalFormat.format(PreferenceResources.ReferenceFrequencyDefault)
+                        val note = initialState.temperament.noteNames(
+                            initialState.rootNote
+                        ).defaultReferenceNote
+                        selectedNoteIndex =
+                            initialState.getNoteIndex2(note) - initialState.noteIndexBegin
+                        frequencyAsString =
+                            decimalFormat.format(PreferenceResources.ReferenceFrequencyDefault)
                     },
                     modifier = Modifier.fillMaxWidth()
-                    ) {
+                ) {
                     Text(stringResource(id = R.string.set_default))
                 }
             }

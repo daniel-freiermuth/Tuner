@@ -27,20 +27,21 @@ import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.instruments.InstrumentIO
 import de.moekadu.tuner.instruments.InstrumentResources
-import de.moekadu.tuner.ui.common.EditableListPredefinedSectionImmutable
 import de.moekadu.tuner.ui.common.EditableListData
+import de.moekadu.tuner.ui.common.EditableListPredefinedSectionImmutable
 import de.moekadu.tuner.ui.instruments.InstrumentsData
+import javax.inject.Inject
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class InstrumentViewModel @Inject constructor(
     val instruments: InstrumentResources,
     @param:ApplicationScope val applicationScope: CoroutineScope
-): ViewModel(), InstrumentsData {
+) : ViewModel(),
+    InstrumentsData {
     override val listData = EditableListData(
         predefinedItemSections = persistentListOf(
             EditableListPredefinedSectionImmutable(
@@ -56,7 +57,7 @@ class InstrumentViewModel @Inject constructor(
         toggleEditableItemsExpanded = { instruments.writeCustomInstrumentsExpanded(it) },
         getStableId = { it.stableId },
         activeItem = instruments.currentInstrument,
-        setNewItems = { instruments.writeCustomInstruments(it) },
+        setNewItems = { instruments.writeCustomInstruments(it) }
     )
 
     fun setCurrentInstrument(instrument: Instrument) {

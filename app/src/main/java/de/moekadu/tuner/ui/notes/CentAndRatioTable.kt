@@ -50,7 +50,6 @@ import de.moekadu.tuner.temperaments.predefinedTemperamentWerckmeisterVI
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlin.math.roundToInt
 
-
 /** Table showing cents are ratios between musical scale notes.
  * @param temperament Temperament.
  * @param rootNote Root Note.
@@ -64,8 +63,7 @@ fun CentAndRatioTable(
     notePrintOptions: NotePrintOptions,
     modifier: Modifier = Modifier,
     horizontalContentPadding: Dp = 16.dp
-    ) {
-
+) {
     val centArray = remember(temperament) {
         temperament.cents()
     }
@@ -81,7 +79,7 @@ fun CentAndRatioTable(
         contentPadding = PaddingValues(horizontal = horizontalContentPadding)
     ) {
         items(temperament.size + 1) {
-            //val note = musicalScale.noteNameScale.getNoteOfIndex(rootNoteIndex + it)
+            // val note = musicalScale.noteNameScale.getNoteOfIndex(rootNoteIndex + it)
             val note = noteNames[it % noteNames.size]
 
             Column(
@@ -97,10 +95,12 @@ fun CentAndRatioTable(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(MaterialTheme.colorScheme.outline))
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(MaterialTheme.colorScheme.outline)
+                )
 
                 Text(
                     stringResource(id = R.string.cent_nosign, centArray[it].roundToInt()),
@@ -119,10 +119,12 @@ fun CentAndRatioTable(
                             .padding(bottom = 8.dp)
                     )
                 }
-                Spacer(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(MaterialTheme.colorScheme.outline))
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(MaterialTheme.colorScheme.outline)
+                )
             }
         }
     }
@@ -139,7 +141,7 @@ private fun CentTablePreview() {
             helmholtzNotation = false,
             notationType = NotationType.Standard
         )
-        val temperament = remember{ predefinedTemperamentWerckmeisterVI(0L) }
+        val temperament = remember { predefinedTemperamentWerckmeisterVI(0L) }
 
         CentAndRatioTable(
             temperament,

@@ -13,10 +13,7 @@ import kotlinx.serialization.Serializable
  * @param notesPerOctave Number of notes per octave.
  */
 @Serializable
-data class Temperament3EDO(
-    override val stableId: Long,
-    val notesPerOctave: Int,
-) : Temperament3 {
+data class Temperament3EDO(override val stableId: Long, val notesPerOctave: Int) : Temperament3 {
     override val name: GetText
         get() = GetTextFromResIdWithIntArg(R.string.equal_temperament_x, notesPerOctave)
     override val abbreviation: GetText
@@ -30,22 +27,20 @@ data class Temperament3EDO(
         it * 1200.0 / notesPerOctave.toDouble()
     }
 
-    override fun chainOfFifths(): ChainOfFifths? {
-        return if (notesPerOctave == 12) {
-            ChainOfFifths(
-                Array(notesPerOctave - 1) {
-                    FifthModification(pythagoreanComma = RationalNumber(-1, 12))
-                },
-                rootIndex = 0
-            )
-        } else {
-            null
-        }
+    override fun chainOfFifths(): ChainOfFifths? = if (notesPerOctave == 12) {
+        ChainOfFifths(
+            Array(notesPerOctave - 1) {
+                FifthModification(pythagoreanComma = RationalNumber(-1, 12))
+            },
+            rootIndex = 0
+        )
+    } else {
+        null
     }
     override fun equalOctaveDivision(): Int = notesPerOctave
     override fun rationalNumbers(): Array<RationalNumber>? = null
-    override fun possibleRootNotes(): Array<MusicalNote>
-            = NoteNamesEDOGenerator.possibleRootNotes(notesPerOctave)
-    override fun noteNames(rootNote: MusicalNote?): NoteNames2
-            = NoteNamesEDOGenerator.getNoteNames(notesPerOctave, rootNote)!!
+    override fun possibleRootNotes(): Array<MusicalNote> =
+        NoteNamesEDOGenerator.possibleRootNotes(notesPerOctave)
+    override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
+        NoteNamesEDOGenerator.getNoteNames(notesPerOctave, rootNote)!!
 }

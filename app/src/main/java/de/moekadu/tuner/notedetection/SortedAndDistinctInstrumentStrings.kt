@@ -19,8 +19,8 @@
 package de.moekadu.tuner.notedetection
 
 import de.moekadu.tuner.instruments.Instrument
-import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notenames.MusicalNote
 
 class SortedAndDistinctInstrumentStrings(
     private val instrument: Instrument,
@@ -40,7 +40,11 @@ class SortedAndDistinctInstrumentStrings(
      */
     val numDifferentNotes get() = when {
         sortedAndDistinctNoteIndices.isEmpty() -> 0
-        sortedAndDistinctNoteIndices.last() == Int.MAX_VALUE -> sortedAndDistinctNoteIndices.size - 1
+
+        sortedAndDistinctNoteIndices.last() == Int.MAX_VALUE ->
+            sortedAndDistinctNoteIndices.size -
+                1
+
         else -> sortedAndDistinctNoteIndices.size
     }
 
@@ -48,43 +52,52 @@ class SortedAndDistinctInstrumentStrings(
      * @param note Musical note to be checked.
      * @return True, if note is part of instrument, else false.
      */
-    fun isNotePartOfInstrument(note: MusicalNote?): Boolean {
-        return when {
-            note == null -> false
-            instrument.isChromatic -> musicalScale.hasMatchingNote(note)
-            numDifferentNotes == 0 -> false
-            else -> {
-                val noteIndices = musicalScale.getMatchingNoteIndices(note)
-                if (noteIndices.isEmpty()) {
-                    false
-                } else {
-                    noteIndices.firstOrNull { noteIndex ->
-                        val sortedStringListIndex = sortedAndDistinctNoteIndices.binarySearch(noteIndex)
-                        sortedStringListIndex >= 0
-                    } != null
-                }
+    fun isNotePartOfInstrument(note: MusicalNote?): Boolean = when {
+        note == null -> false
+
+        instrument.isChromatic -> musicalScale.hasMatchingNote(note)
+
+        numDifferentNotes == 0 -> false
+
+        else -> {
+            val noteIndices = musicalScale.getMatchingNoteIndices(note)
+            if (noteIndices.isEmpty()) {
+                false
+            } else {
+                noteIndices.firstOrNull { noteIndex ->
+                    val sortedStringListIndex = sortedAndDistinctNoteIndices.binarySearch(
+                        noteIndex
+                    )
+                    sortedStringListIndex >= 0
+                } != null
             }
         }
     }
 
-    private fun sortStringsAccordingToNoteIndex(instrument: Instrument, musicalScale: MusicalScale2): List<Int> {
-        if (instrument.isChromatic || instrument.strings.isEmpty())
+    private fun sortStringsAccordingToNoteIndex(
+        instrument: Instrument,
+        musicalScale: MusicalScale2
+    ): List<Int> {
+        if (instrument.isChromatic || instrument.strings.isEmpty()) {
             return ArrayList()
+        }
         val strings = instrument.strings
         val collectedIndices = ArrayList<Int>()
         strings.forEach {
             val indices = musicalScale.getMatchingNoteIndices(it)
-            if (indices.isEmpty())
+            if (indices.isEmpty()) {
                 collectedIndices.add(Int.MAX_VALUE)
-            else
+            } else {
                 collectedIndices.addAll(indices.asList())
+            }
         }
         collectedIndices.sort()
         val result = ArrayList<Int>()
         result.add(collectedIndices[0])
         for (i in 1 until collectedIndices.size) {
-            if (collectedIndices[i] != collectedIndices[i-1])
+            if (collectedIndices[i] != collectedIndices[i - 1]) {
                 result.add(collectedIndices[i])
+            }
         }
         return result
     }

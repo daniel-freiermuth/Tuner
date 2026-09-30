@@ -39,14 +39,15 @@ data class Temperament3ChainOfFifthsNoEnharmonics(
     override val size = fifths.size + 1
 
     override fun cents(): DoubleArray =
-        _chainOfFifths.getSortedRatios().map{ ratioToCents(it) }.toDoubleArray() + doubleArrayOf(1200.0)
+        _chainOfFifths.getSortedRatios().map { ratioToCents(it) }.toDoubleArray() +
+            doubleArrayOf(1200.0)
     override fun chainOfFifths(): ChainOfFifths = _chainOfFifths
     override fun equalOctaveDivision(): Int? = null
     override fun rationalNumbers(): Array<RationalNumber>? = null
-    override fun possibleRootNotes(): Array<MusicalNote>
-        = NoteNamesChainOfFifthsGenerator.possibleRootNotes()
-    override fun noteNames(rootNote: MusicalNote?): NoteNames2
-        = NoteNamesChainOfFifthsGenerator.getNoteNames(_chainOfFifths, rootNote)!!
+    override fun possibleRootNotes(): Array<MusicalNote> =
+        NoteNamesChainOfFifthsGenerator.possibleRootNotes()
+    override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
+        NoteNamesChainOfFifthsGenerator.getNoteNames(_chainOfFifths, rootNote)!!
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -106,15 +107,16 @@ data class Temperament3ChainOfFifthsEDONames(
     override val size = fifths.size + 1
 
     override fun cents(): DoubleArray =
-        _chainOfFifths.getSortedRatios().map{ ratioToCents(it) }.toDoubleArray() + doubleArrayOf(1200.0)
+        _chainOfFifths.getSortedRatios().map { ratioToCents(it) }.toDoubleArray() +
+            doubleArrayOf(1200.0)
 
     override fun chainOfFifths(): ChainOfFifths = _chainOfFifths
     override fun equalOctaveDivision(): Int? = null
     override fun rationalNumbers(): Array<RationalNumber>? = null
-    override fun possibleRootNotes(): Array<MusicalNote>
-            = NoteNamesEDOGenerator.possibleRootNotes(fifths.size + 1)
-    override fun noteNames(rootNote: MusicalNote?): NoteNames2
-            = NoteNamesEDOGenerator.getNoteNames( fifths.size + 1, rootNote)!!
+    override fun possibleRootNotes(): Array<MusicalNote> =
+        NoteNamesEDOGenerator.possibleRootNotes(fifths.size + 1)
+    override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
+        NoteNamesEDOGenerator.getNoteNames(fifths.size + 1, rootNote)!!
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -141,6 +143,4 @@ data class Temperament3ChainOfFifthsEDONames(
         result = 31 * result + fifths.contentHashCode()
         return result
     }
-
-
 }

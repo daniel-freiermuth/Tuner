@@ -5,7 +5,6 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.unit.IntRect
 import de.moekadu.tuner.ui.plot.Transformation
-
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -38,40 +38,42 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastAny
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMaxOfOrNull
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 private fun Rect.scale(
-    scaleX: Float = 1f, scaleY: Float = 1f,
-    centerX: Float = 0f, centerY: Float = 0f
-): Rect {
-    return Rect(
-        left = (this.left - centerX) * scaleX + centerX,
-        top = (this.top - centerY) * scaleY + centerY,
-        right = (this.right - centerX) * scaleX + centerX,
-        bottom = (this.bottom - centerY) * scaleY + centerY,
-    )
-}
+    scaleX: Float = 1f,
+    scaleY: Float = 1f,
+    centerX: Float = 0f,
+    centerY: Float = 0f
+): Rect = Rect(
+    left = (this.left - centerX) * scaleX + centerX,
+    top = (this.top - centerY) * scaleY + centerY,
+    right = (this.right - centerX) * scaleX + centerX,
+    bottom = (this.bottom - centerY) * scaleY + centerY
+)
 
 private fun Rect.fitInto(limits: Rect?): Rect {
-    if (limits == null)
+    if (limits == null) {
         return this
+    }
     return Rect(
         left = this.left.coerceIn(limits.left, limits.right),
         top = this.top.coerceIn(limits.top, limits.bottom),
         right = this.right.coerceIn(limits.left, limits.right),
-        bottom = this.bottom.coerceIn(limits.top, limits.bottom),
+        bottom = this.bottom.coerceIn(limits.top, limits.bottom)
     )
 }
 
 private fun Rect.translateWithinLimits(translateX: Float, translateY: Float, limits: Rect?): Rect {
-    if (limits == null)
+    if (limits == null) {
         return this.translate(translateX, translateY)
+    }
     val xLimited = if (translateX < 0f) {
         val left = min(this.left, this.right)
         max(limits.left - left, translateX)
@@ -134,21 +136,24 @@ fun PointerEvent.calculateZoomComponentWise(
     val xPrev = previousCentroidSize.width
     val yPrev = previousCentroidSize.height
 
-    val zoomX = if (x * xPrev > 0 && x > minimumCentroidSize && xPrev > minimumCentroidSize)
+    val zoomX = if (x * xPrev > 0 && x > minimumCentroidSize && xPrev > minimumCentroidSize) {
         x / xPrev
-    else
+    } else {
         1f
-    val zoomY = if (y * yPrev > 0 && y > minimumCentroidSize && yPrev > minimumCentroidSize)
+    }
+    val zoomY = if (y * yPrev > 0 && y > minimumCentroidSize && yPrev > minimumCentroidSize) {
         y / yPrev
-    else
+    } else {
         1f
+    }
 
-    return if (x > minimumAspectRatioForSingleDirectionZoom * y)
+    return if (x > minimumAspectRatioForSingleDirectionZoom * y) {
         Size(zoomX, 1f)
-    else if (y > minimumAspectRatioForSingleDirectionZoom * x)
+    } else if (y > minimumAspectRatioForSingleDirectionZoom * x) {
         Size(1f, zoomY)
-    else
+    } else {
         Size(zoomX, zoomY)
+    }
 }
 
 suspend fun PointerInputScope.detectPanZoomFlingGesture(
@@ -156,7 +161,7 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
     onGesture: suspend (centroid: Offset, pan: Offset, zoom: Size) -> Unit,
     onFling: suspend (velocity: Velocity) -> Unit,
     minimumCentroidSize: Dp = 5.dp,
-    maximumFlingVelocity: Dp = 4000.dp  // dp / sec
+    maximumFlingVelocity: Dp = 4000.dp // dp / sec
 ) = coroutineScope {
     awaitEachGesture {
         var zoomX = 1f
@@ -172,7 +177,7 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
         launch { onGestureStart() }
         do {
             val event = awaitPointerEvent()
-            val canceled = event.changes.fastAny { it.isConsumed } //&& !event.changes.fastAny { it.pressed }
+            val canceled = event.changes.fastAny { it.isConsumed } // && !event.changes.fastAny { it.pressed }
             if (!canceled) {
                 val zoomChange = event.calculateZoomComponentWise(minimumCentroidSize.roundToPx())
                 val centroid = event.calculateCentroid(useCurrent = true)
@@ -183,8 +188,13 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
                 // track velocity
                 if (centroid != Offset.Unspecified) {
                     if (numPointers == event.changes.size) { // is this the best way?
-                        velocityTracker.addPosition(event.changes.fastMaxOfOrNull { it.uptimeMillis }
-                            ?: 0L, centroid)
+                        velocityTracker.addPosition(
+                            event.changes.fastMaxOfOrNull {
+                                it.uptimeMillis
+                            }
+                                ?: 0L,
+                            centroid
+                        )
                     } else {
                         velocityTracker.resetTracking()
                         numPointers = event.changes.size
@@ -199,26 +209,30 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
                     val centroidSize = event.calculateCentroidSizeComponentWise(useCurrent = false)
 
                     val zoomMotion = sqrt(
-                        ((1 - zoomX) * centroidSize.width).pow(2)
-                                + ((1 - zoomY) * centroidSize.height).pow(2)
+                        ((1 - zoomX) * centroidSize.width).pow(2) +
+                            ((1 - zoomY) * centroidSize.height).pow(2)
                     )
 
                     val panMotion = pan.getDistance()
 
-                    if (zoomMotion > touchSlop || panMotion > touchSlop)
+                    if (zoomMotion > touchSlop || panMotion > touchSlop) {
                         pastTouchSlop = true
+                    }
                 }
 
                 if (pastTouchSlop) {
 //                    Log.v("Tuner", "Plot: centroid: $centroid, num pointers = ${event.changes.size}")
 
-                    if (zoomChange.width != 1f  || zoomChange.height != 1f|| panChange != Offset.Zero) {
+                    if (zoomChange.width != 1f || zoomChange.height != 1f ||
+                        panChange != Offset.Zero
+                    ) {
                         launch { onGesture(centroid, panChange, zoomChange) }
                     }
 
                     event.changes.fastForEach {
-                        if (it.positionChanged())
+                        if (it.positionChanged()) {
                             it.consume()
+                        }
                     }
                 }
             }
@@ -227,8 +241,9 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
         if (pastTouchSlop) {
             val velocity = velocityTracker.calculateVelocity()
 //            Log.v("Tuner", "Plot: velocity = ${velocity}, maximum=$maximumVelocity")
-            if (velocity.x.pow(2) + velocity.y.pow(2) < maximumVelocity.pow(2))
+            if (velocity.x.pow(2) + velocity.y.pow(2) < maximumVelocity.pow(2)) {
                 launch { onFling(velocity) }
+            }
         }
     }
 }
@@ -240,79 +255,77 @@ fun Modifier.dragZoom(
     transformation: () -> Transformation,
     lockX: Boolean = false,
     lockY: Boolean = false
-): Modifier {
-    return this then if (lockX && lockY) {
-        Modifier
-    } else if (lockX) {
-        Modifier.pointerInput(state) {
-            detectPanZoomFlingGesture(
-                onGestureStart = {
-                    state.setViewPort(transformation().viewPortRaw, null)
-                },
-                onGesture = { centroid, pan, zoom ->
-                    val t = transformation()
-                    val panRaw = t.toRaw(pan) - t.toRaw(Offset.Zero)
-                    val centroidRaw = t.toRaw(centroid)
-                    val transformed = state.viewPort
-                        .scale(scaleY = 1.0f / zoom.height, centerY = centroidRaw.y)
-                        .fitInto(limits())
-                        .translateWithinLimits(0f, translateY = -panRaw.y, limits())
-                    state.setViewPort(transformed, null)
-
-                },
-                onFling = { velocity ->
-                    val velocityRaw = transformation().toRaw(velocity)
-                    state.flingViewPort(velocityRaw.copy(x = 0f), limits())
-                }
-            )
-        }
-    } else if (lockY) {
-        Modifier.pointerInput(state) {
-            detectPanZoomFlingGesture(
-                onGestureStart = {
-                    state.setViewPort(transformation().viewPortRaw, null)
-                },
-                onGesture = { centroid, pan, zoom ->
-                    val t = transformation()
-                    val panRaw = t.toRaw(pan) - t.toRaw(Offset.Zero)
-                    val centroidRaw = t.toRaw(centroid)
-                    val transformed = state.viewPort
-                        .scale(scaleX = 1.0f / zoom.width, centerX = centroidRaw.x)
-                        .fitInto(limits())
-                        .translateWithinLimits(-panRaw.x, 0f, limits())
-                    state.setViewPort(transformed, null)
-                },
-                onFling = { velocity ->
-                    val velocityRaw = transformation().toRaw(velocity)
-                    state.flingViewPort(velocityRaw.copy(y = 0f), limits())
-                }
-            )
-        }
-    } else {
-        Modifier.pointerInput(state) {
-            detectPanZoomFlingGesture(
-                onGestureStart = {
-                    state.setViewPort(transformation().viewPortRaw, null)
-                },
-                onGesture = { centroid, pan, zoom ->
-                    val t = transformation()
-                    val panRaw = t.toRaw(pan) - t.toRaw(Offset.Zero)
-                    val centroidRaw = t.toRaw(centroid)
-                    val transformed = state.viewPort
-                        .scale(
-                            scaleX = 1.0f / zoom.width, scaleY = 1.0f / zoom.height,
-                            centerX = centroidRaw.x, centerY = centroidRaw.y
-                        )
-                        .fitInto(limits())
-                        .translateWithinLimits(-panRaw.x, -panRaw.y, limits())
-                    state.setViewPort(transformed, null)
-                },
-                onFling = { velocity ->
-                    val velocityRaw = transformation().toRaw(velocity)
-                    state.flingViewPort(velocityRaw, limits())
-                }
-            )
-        }
+): Modifier = this then if (lockX && lockY) {
+    Modifier
+} else if (lockX) {
+    Modifier.pointerInput(state) {
+        detectPanZoomFlingGesture(
+            onGestureStart = {
+                state.setViewPort(transformation().viewPortRaw, null)
+            },
+            onGesture = { centroid, pan, zoom ->
+                val t = transformation()
+                val panRaw = t.toRaw(pan) - t.toRaw(Offset.Zero)
+                val centroidRaw = t.toRaw(centroid)
+                val transformed = state.viewPort
+                    .scale(scaleY = 1.0f / zoom.height, centerY = centroidRaw.y)
+                    .fitInto(limits())
+                    .translateWithinLimits(0f, translateY = -panRaw.y, limits())
+                state.setViewPort(transformed, null)
+            },
+            onFling = { velocity ->
+                val velocityRaw = transformation().toRaw(velocity)
+                state.flingViewPort(velocityRaw.copy(x = 0f), limits())
+            }
+        )
+    }
+} else if (lockY) {
+    Modifier.pointerInput(state) {
+        detectPanZoomFlingGesture(
+            onGestureStart = {
+                state.setViewPort(transformation().viewPortRaw, null)
+            },
+            onGesture = { centroid, pan, zoom ->
+                val t = transformation()
+                val panRaw = t.toRaw(pan) - t.toRaw(Offset.Zero)
+                val centroidRaw = t.toRaw(centroid)
+                val transformed = state.viewPort
+                    .scale(scaleX = 1.0f / zoom.width, centerX = centroidRaw.x)
+                    .fitInto(limits())
+                    .translateWithinLimits(-panRaw.x, 0f, limits())
+                state.setViewPort(transformed, null)
+            },
+            onFling = { velocity ->
+                val velocityRaw = transformation().toRaw(velocity)
+                state.flingViewPort(velocityRaw.copy(y = 0f), limits())
+            }
+        )
+    }
+} else {
+    Modifier.pointerInput(state) {
+        detectPanZoomFlingGesture(
+            onGestureStart = {
+                state.setViewPort(transformation().viewPortRaw, null)
+            },
+            onGesture = { centroid, pan, zoom ->
+                val t = transformation()
+                val panRaw = t.toRaw(pan) - t.toRaw(Offset.Zero)
+                val centroidRaw = t.toRaw(centroid)
+                val transformed = state.viewPort
+                    .scale(
+                        scaleX = 1.0f / zoom.width,
+                        scaleY = 1.0f / zoom.height,
+                        centerX = centroidRaw.x,
+                        centerY = centroidRaw.y
+                    )
+                    .fitInto(limits())
+                    .translateWithinLimits(-panRaw.x, -panRaw.y, limits())
+                state.setViewPort(transformed, null)
+            },
+            onFling = { velocity ->
+                val velocityRaw = transformation().toRaw(velocity)
+                state.flingViewPort(velocityRaw, limits())
+            }
+        )
     }
 }
-

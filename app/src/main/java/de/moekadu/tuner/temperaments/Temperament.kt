@@ -22,34 +22,24 @@ import android.util.Log
 import androidx.compose.runtime.Immutable
 import de.moekadu.tuner.misc.StringOrResId
 import de.moekadu.tuner.notenames.NoteNames
-import kotlinx.serialization.Serializable
 import kotlin.math.absoluteValue
 import kotlin.math.log
 import kotlin.math.pow
+import kotlinx.serialization.Serializable
 
-fun ratioToCents(ratio: Float): Float {
-    return (1200.0 * log(ratio.toDouble(), 2.0)).toFloat()
-}
+fun ratioToCents(ratio: Float): Float = (1200.0 * log(ratio.toDouble(), 2.0)).toFloat()
 
-fun ratioToCents(ratio: Double): Double {
-    return (1200.0 * log(ratio, 2.0))
-}
+fun ratioToCents(ratio: Double): Double = (1200.0 * log(ratio, 2.0))
 
-fun centsToFrequency(cent: Double, referenceFrequency: Double): Double {
-    return referenceFrequency * centsToRatio(cent)
-}
+fun centsToFrequency(cent: Double, referenceFrequency: Double): Double =
+    referenceFrequency * centsToRatio(cent)
 
-fun frequencyToCents(frequency: Double, referenceFrequency: Double): Double {
-    return ratioToCents(frequency / referenceFrequency)
-}
+fun frequencyToCents(frequency: Double, referenceFrequency: Double): Double =
+    ratioToCents(frequency / referenceFrequency)
 
-fun centsToRatio(cents: Float): Float {
-    return (2.0.pow(cents / 1200.0)).toFloat()
-}
+fun centsToRatio(cents: Float): Float = (2.0.pow(cents / 1200.0)).toFloat()
 
-private fun centsToRatio(cents: Double): Double {
-    return (2.0.pow(cents / 1200.0))
-}
+private fun centsToRatio(cents: Double): Double = (2.0.pow(cents / 1200.0))
 
 /** Old temperament class. */
 @Serializable
@@ -64,46 +54,49 @@ data class Temperament(
     val equalOctaveDivision: Int?,
     val stableId: Long
 ) {
-    fun toNew(noteNames: NoteNames): Temperament3 {
-        return if (name.resId != null) {
-            // toNew is not unique so we either use edo, or we use the old one based on cents comparison
-            val p = predefinedTemperaments()
-            val minPredefinedKey = p.minOf { it.stableId }
-            if (equalOctaveDivision != null) {
+    fun toNew(noteNames: NoteNames): Temperament3 = if (name.resId != null) {
+        // toNew is not unique so we either use edo, or we use the old one based on cents comparison
+        val p = predefinedTemperaments()
+        val minPredefinedKey = p.minOf { it.stableId }
+        if (equalOctaveDivision != null) {
 //                Log.v("Tuner", "Temperament.toNew: creating EDO $equalOctaveDivision")
-                Temperament3EDO(minPredefinedKey - 1 + equalOctaveDivision + 5, equalOctaveDivision)
-            } else {
+            Temperament3EDO(minPredefinedKey - 1 + equalOctaveDivision + 5, equalOctaveDivision)
+        } else {
 //                Log.v("Tuner", "Temperament.toNew: searching temperament")
-                p.firstOrNull {
-                    centsEqual(cents, it.cents())
-                } ?: Temperament3EDO(minPredefinedKey - 1 + 12 + 5, 12)
+            p.firstOrNull {
+                centsEqual(cents, it.cents())
+            } ?: Temperament3EDO(minPredefinedKey - 1 + 12 + 5, 12)
+        }
+    } else {
+//            Log.v("Tuner", "Temperament.toNew: using temperament as custom, cents.size=${cents.size}")
+        val _cents = if (equalOctaveDivision != null) {
+            DoubleArray(equalOctaveDivision + 1) {
+                it * 1200.0 / equalOctaveDivision.toDouble()
             }
         } else {
-//            Log.v("Tuner", "Temperament.toNew: using temperament as custom, cents.size=${cents.size}")
-            val _cents = if (equalOctaveDivision != null)
-                DoubleArray(equalOctaveDivision + 1) { it * 1200.0 / equalOctaveDivision.toDouble() }
-            else
-                cents
-//            Log.v("Tuner", "Temperament.toNew: using temperament as custom, _cents.size=${_cents.size}, noteName.size=${noteNames.size}")
-            Temperament3Custom(
-                _name = name.value(null),
-                _abbreviation = abbreviation.value(null),
-                _description = description.value(null),
-                cents = _cents,
-                _rationalNumbers = arrayOf(),
-                _noteNames = noteNames.notes,
-                stableId = stableId
-            )
+            cents
         }
+//            Log.v("Tuner", "Temperament.toNew: using temperament as custom, _cents.size=${_cents.size}, noteName.size=${noteNames.size}")
+        Temperament3Custom(
+            _name = name.value(null),
+            _abbreviation = abbreviation.value(null),
+            _description = description.value(null),
+            cents = _cents,
+            _rationalNumbers = arrayOf(),
+            _noteNames = noteNames.notes,
+            stableId = stableId
+        )
     }
 }
 
 private fun centsEqual(c1: DoubleArray, c2: DoubleArray): Boolean {
-    if (c1.size != c2. size)
+    if (c1.size != c2.size) {
         return false
+    }
     for (i in c1.indices) {
-        if ((c1[i] - c2[i]).absoluteValue > 0.01)
+        if ((c1[i] - c2[i]).absoluteValue > 0.01) {
             return false
+        }
     }
     return true
 }

@@ -39,7 +39,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 
-
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
@@ -69,9 +68,8 @@ private val LightColorScheme = lightColorScheme(
     inversePrimary = md_theme_light_inversePrimary,
     surfaceTint = md_theme_light_surfaceTint,
     outlineVariant = md_theme_light_outlineVariant,
-    scrim = md_theme_light_scrim,
+    scrim = md_theme_light_scrim
 )
-
 
 private val DarkColorScheme = darkColorScheme(
     primary = md_theme_dark_primary,
@@ -102,7 +100,7 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = md_theme_dark_inversePrimary,
     surfaceTint = md_theme_dark_surfaceTint,
     outlineVariant = md_theme_dark_outlineVariant,
-    scrim = md_theme_dark_scrim,
+    scrim = md_theme_dark_scrim
 )
 
 @Immutable
@@ -120,7 +118,8 @@ val MaterialTheme.tunerColors: TunerColors
     @ReadOnlyComposable
     get() = LocalTunerColors.current
 
-val OnLightTunerColors = TunerColors(light_positive, light_onpositive, light_negative, light_onnegative)
+val OnLightTunerColors =
+    TunerColors(light_positive, light_onpositive, light_negative, light_onnegative)
 val OnDarkTunerColors = TunerColors(dark_positive, dark_onpositive, dark_negative, dark_onnegative)
 
 @Immutable
@@ -154,6 +153,7 @@ fun TunerTheme(
         }
 
         darkTheme -> DarkColorScheme
+
         else -> LightColorScheme
     }
     val colorScheme = if (darkTheme && blackNightMode) {
@@ -172,7 +172,8 @@ fun TunerTheme(
         SideEffect {
             val window = (view.context as Activity).window
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
-            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars =
+                !darkTheme
         }
     }
 

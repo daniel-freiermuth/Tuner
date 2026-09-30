@@ -68,23 +68,23 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.takeOrElse
+import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
-import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.rememberMaxNoteSize
 import de.moekadu.tuner.ui.plot.PlotWindowOutline
 import de.moekadu.tuner.ui.theme.TunerTheme
 import de.moekadu.tuner.ui.theme.tunerColors
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.random.Random
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** Compute line width of a string.
  *
@@ -97,9 +97,15 @@ import kotlin.random.Random
  * @return Line width of string.
  */
 private fun computeStringLineWidth(
-    index: Int, minLineWidth: Dp, maxLineWidth: Dp, minIndex: Int, maxIndex: Int): Dp {
-    if (maxIndex == minIndex || index == Int.MAX_VALUE)
+    index: Int,
+    minLineWidth: Dp,
+    maxLineWidth: Dp,
+    minIndex: Int,
+    maxIndex: Int
+): Dp {
+    if (maxIndex == minIndex || index == Int.MAX_VALUE) {
         return (minLineWidth + maxLineWidth) / 2
+    }
     val relativeWidth = (index - minIndex).toFloat() / (maxIndex - minIndex).toFloat()
     return (maxLineWidth - minLineWidth) * (1 - relativeWidth) + minLineWidth
 }
@@ -133,54 +139,59 @@ private fun findIndexOfClosestScrollableHighlightedString(
     highlightedStringNote: MusicalNote?,
     musicalScale: MusicalScale2,
     listState: LazyListState
-): Int {
-    return if (highlightedStringKey == null && highlightedStringNote == null) {
-        -1
-    } else if (strings == null) { // -> chromatic scale
-        if (highlightedStringKey != null) {
-            highlightedStringKey // in chromatic scale the index in the scale corresponds to the key
-        } else if (highlightedStringNote != null) {
-            val centerItemIndex = listState.centerIndex()
-            musicalScale
-                .getMatchingNoteIndices(highlightedStringNote)
-                .minByOrNull {
-                    val noteIndex = it - musicalScale.noteIndexBegin
-                    (noteIndex - centerItemIndex).absoluteValue
-                }?: -1
-        } else {
-            -1
-        }
+): Int = if (highlightedStringKey == null && highlightedStringNote == null) {
+    -1
+} else if (strings == null) { // -> chromatic scale
+    if (highlightedStringKey != null) {
+        highlightedStringKey // in chromatic scale the index in the scale corresponds to the key
+    } else if (highlightedStringNote != null) {
+        val centerItemIndex = listState.centerIndex()
+        musicalScale
+            .getMatchingNoteIndices(highlightedStringNote)
+            .minByOrNull {
+                val noteIndex = it - musicalScale.noteIndexBegin
+                (noteIndex - centerItemIndex).absoluteValue
+            } ?: -1
     } else {
-        val closestIndex = listState.layoutInfo.visibleItemsInfo
-            .filter {
-                val note = strings[it.index].note
-                val key = strings[it.index].key
-                note == highlightedStringNote || key == highlightedStringKey
-            }
-            .minByOrNull { listState.itemDistanceBelowCenter(it).absoluteValue }?.index ?: -1
-        if (closestIndex >= 0) {
-            closestIndex
+        -1
+    }
+} else {
+    val closestIndex = listState.layoutInfo.visibleItemsInfo
+        .filter {
+            val note = strings[it.index].note
+            val key = strings[it.index].key
+            note == highlightedStringNote || key == highlightedStringKey
+        }
+        .minByOrNull { listState.itemDistanceBelowCenter(it).absoluteValue }?.index ?: -1
+    if (closestIndex >= 0) {
+        closestIndex
+    } else {
+        val firstIndex = listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
+        val closestIndexBefore = strings.subList(0, firstIndex).indexOfLast {
+            it.note == highlightedStringNote || it.key == highlightedStringKey
+        }
+        val lastIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+        val closestIndexAfterLast = strings.subList(lastIndex, strings.size).indexOfFirst {
+            it.note == highlightedStringNote || it.key == highlightedStringKey
+        }
+        val closestIndexAfter = if (closestIndexAfterLast ==
+            -1
+        ) {
+            -1
         } else {
-            val firstIndex = listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
-            val closestIndexBefore = strings.subList(0, firstIndex).indexOfLast {
-                it.note == highlightedStringNote || it.key == highlightedStringKey
-            }
-            val lastIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
-            val closestIndexAfterLast = strings.subList(lastIndex, strings.size).indexOfFirst {
-                it.note == highlightedStringNote || it.key == highlightedStringKey
-            }
-            val closestIndexAfter = if (closestIndexAfterLast == -1) -1 else closestIndexAfterLast + lastIndex
+            closestIndexAfterLast + lastIndex
+        }
 
-            if (closestIndexBefore == -1 && closestIndexAfter == -1)
-                -1
-            else if (closestIndexBefore == -1)
-                closestIndexAfter
-            else if (closestIndexAfter == -1)
-                closestIndexBefore
-            else if (closestIndexBefore - firstIndex <= closestIndexAfter - lastIndex)
-                closestIndexBefore
-            else
-                closestIndexAfter
+        if (closestIndexBefore == -1 && closestIndexAfter == -1) {
+            -1
+        } else if (closestIndexBefore == -1) {
+            closestIndexAfter
+        } else if (closestIndexAfter == -1) {
+            closestIndexBefore
+        } else if (closestIndexBefore - firstIndex <= closestIndexAfter - lastIndex) {
+            closestIndexBefore
+        } else {
+            closestIndexAfter
         }
     }
 }
@@ -197,17 +208,21 @@ private fun findNextScrollableStringIndex(
     numHighlightedStrings: Int,
     listState: LazyListState
 ): Int {
-    if (note == null || strings == null)
+    if (note == null || strings == null) {
         return -1
-    if (numHighlightedStrings == 1)
+    }
+    if (numHighlightedStrings == 1) {
         return strings.indexOfFirst { it.note == note }
-    if (!listState.canScrollBackward && !listState.canScrollForward)
+    }
+    if (!listState.canScrollBackward && !listState.canScrollForward) {
         return -1
-    if (!listState.canScrollForward)
+    }
+    if (!listState.canScrollForward) {
         return strings.indexOfFirst { it.note == note }
+    }
 
     val firstIndexBelowCenter = listState.layoutInfo.visibleItemsInfo
-        .firstOrNull{ strings[it.index].note == note && listState.itemDistanceBelowCenter(it) > 0 }
+        .firstOrNull { strings[it.index].note == note && listState.itemDistanceBelowCenter(it) > 0 }
         ?.index ?: -1
     return if (firstIndexBelowCenter >= 0) {
         firstIndexBelowCenter
@@ -216,17 +231,19 @@ private fun findNextScrollableStringIndex(
         val j = strings.subList(lastIndex, strings.size).indexOfFirst {
             it.note == note
         }
-        if (j < 0)
+        if (j < 0) {
             strings.indexOfFirst { it.note == note }
-        else
+        } else {
             j + lastIndex
+        }
     }
 }
 
-
 /** Sidebar position (the base which shows the scroll buttons).*/
 enum class StringsSidebarPosition {
-    Start, /**< Sidebar is before the strings viewport. */
+    Start,
+
+    /**< Sidebar is before the strings viewport. */
     End /**< Sidebar is behind the strings viewport. */
 }
 
@@ -239,27 +256,31 @@ enum class StringsSidebarPosition {
 data class StringWithInfo(
     val note: MusicalNote,
     val key: Int
-    //val musicalScaleIndex: Int
+    // val musicalScaleIndex: Int
 ) {
     companion object {
         fun generateKey(existingList: List<StringWithInfo>): Int {
             while (true) {
                 val key = Random.nextInt(0, Int.MAX_VALUE - 1)
-                if (existingList.firstOrNull {it.key == key} == null)
+                if (existingList.firstOrNull { it.key == key } == null) {
                     return key
+                }
             }
         }
     }
 }
 
-enum class StringsScrollMode{
-    Manual, /**< Manually scrolling by user. */
+enum class StringsScrollMode {
+    Manual,
+
+    /**< Manually scrolling by user. */
     Automatic /**< Scroll automatically to highlighted note. */
 }
 
 class StringsState(firstVisibleIndex: Int) {
     /** The lazy list state. */
     val listState = LazyListState(firstVisibleIndex)
+
     /** Info the user scrolls manually or if we should center on highlighted note automatically. */
     var scrollMode by mutableStateOf(StringsScrollMode.Automatic)
 
@@ -268,8 +289,9 @@ class StringsState(firstVisibleIndex: Int) {
      * @param coroutineContext Coroutine context within we scroll. This must be a compose context.
      */
     suspend fun scrollTo(index: Int, coroutineContext: CoroutineContext) {
-        if ((!listState.canScrollForward && !listState.canScrollBackward) || index < 0)
+        if ((!listState.canScrollForward && !listState.canScrollBackward) || index < 0) {
             return
+        }
         withContext(coroutineContext) {
             val height = listState.layoutInfo.viewportSize.height
             val itemHeight = listState.layoutInfo.visibleItemsInfo.getOrNull(0)?.size ?: 2
@@ -294,7 +316,7 @@ private fun StringsSidebar(
     numHighlightedStrings: Int,
     modifier: Modifier = Modifier,
     onCenterClicked: () -> Unit = {},
-    onNextClicked: () -> Unit = {},
+    onNextClicked: () -> Unit = {}
 ) {
     Box(
         modifier = modifier,
@@ -313,7 +335,6 @@ private fun StringsSidebar(
         }
     }
 }
-
 
 @Composable
 fun Strings(
@@ -367,10 +388,11 @@ fun Strings(
     val numStrings = strings?.size ?: (maxNoteIndex - minNoteIndex)
 
     val numHighlightedStrings = remember(highlightedNoteKey, highlightedNote) {
-        if (highlightedNoteKey != null)
-            strings?.count { it.key == highlightedNoteKey }?: 1
-        else
+        if (highlightedNoteKey != null) {
+            strings?.count { it.key == highlightedNoteKey } ?: 1
+        } else {
             strings?.count { it.note == highlightedNote } ?: 1
+        }
     }
 
     val noteNames = remember(musicalScale.temperament) {
@@ -392,13 +414,14 @@ fun Strings(
         }
     }
 
-    val onTuningColor = remember(tuningState, onInTuneColor, onOutOfTuneColor, onUnknownTuningColor) {
-        when (tuningState) {
-            TuningState.InTune -> onInTuneColor
-            TuningState.TooLow, TuningState.TooHigh -> onOutOfTuneColor
-            else -> onUnknownTuningColor
+    val onTuningColor =
+        remember(tuningState, onInTuneColor, onOutOfTuneColor, onUnknownTuningColor) {
+            when (tuningState) {
+                TuningState.InTune -> onInTuneColor
+                TuningState.TooLow, TuningState.TooHigh -> onOutOfTuneColor
+                else -> onUnknownTuningColor
+            }
         }
-    }
 
     val minStringWidth = 1.dp
     val maxStringWidth = 4.dp
@@ -411,8 +434,9 @@ fun Strings(
                 available: Offset,
                 source: NestedScrollSource
             ): Offset {
-                if (consumed.y != 0.0f)
+                if (consumed.y != 0.0f) {
                     state.scrollMode = StringsScrollMode.Manual
+                }
                 return super.onPostScroll(consumed, available, source)
             }
         }
@@ -421,14 +445,19 @@ fun Strings(
     LaunchedEffect(key1 = highlightedNoteKey, key2 = highlightedNote) {
         if (state.scrollMode == StringsScrollMode.Automatic) {
             val i = findIndexOfClosestScrollableHighlightedString(
-                strings, highlightedNoteKey, highlightedNote, musicalScale, state.listState
+                strings,
+                highlightedNoteKey,
+                highlightedNote,
+                musicalScale,
+                state.listState
             )
             state.scrollTo(i, coroutineContext)
         }
     }
 
     val outlineColor = outline.color.takeOrElse {
-        LocalContentColor.current.takeOrElse { MaterialTheme.colorScheme.onSurface } }
+        LocalContentColor.current.takeOrElse { MaterialTheme.colorScheme.onSurface }
+    }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -439,10 +468,11 @@ fun Strings(
                     cornerRadius = CornerRadius(outline.cornerRadius.toPx()),
                     style = Stroke(outline.lineWidth.toPx()),
                     topLeft = Offset(
-                        x = if (sidebarPosition == StringsSidebarPosition.Start)
+                        x = if (sidebarPosition == StringsSidebarPosition.Start) {
                             sidebarWidth.toPx() + 0.5f * outline.lineWidth.toPx()
-                        else
-                            0.5f * outline.lineWidth.toPx(),
+                        } else {
+                            0.5f * outline.lineWidth.toPx()
+                        },
                         y = 0.5f * outline.lineWidth.toPx()
                     ),
                     size = Size(
@@ -465,7 +495,7 @@ fun Strings(
                 )
                 scope.launch { state.scrollTo(i, coroutineContext) }
             },
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         if (sidebarPosition == StringsSidebarPosition.Start) {
             StringsSidebar(
@@ -486,20 +516,24 @@ fun Strings(
                 },
                 onNextClicked = {
                     val i = findNextScrollableStringIndex(
-                        strings, highlightedNote, numHighlightedStrings, state.listState
+                        strings,
+                        highlightedNote,
+                        numHighlightedStrings,
+                        state.listState
                     )
                     scope.launch { state.scrollTo(i, coroutineContext) }
                 }
             )
         }
 
-        val outlineShape = remember(outline) { RoundedCornerShape(CornerSize(outline.cornerRadius)) }
-        //val outlineColor = outline.color.takeOrElse { MaterialTheme.colorScheme.onSurface }
+        val outlineShape =
+            remember(outline) { RoundedCornerShape(CornerSize(outline.cornerRadius)) }
+        // val outlineColor = outline.color.takeOrElse { MaterialTheme.colorScheme.onSurface }
 
         BoxWithConstraints(
             modifier = Modifier
                 .weight(1f)
-                //.border(outline.lineWidth, outlineColor, outlineShape)
+                // .border(outline.lineWidth, outlineColor, outlineShape)
                 .clip(outlineShape)
         ) {
             val numLabelsPerStair = (maxWidth.value / (labelSize.width + 16.dp).value).roundToInt()
@@ -518,12 +552,12 @@ fun Strings(
                             (musicalScale.noteIndexBegin + index)
                         } else {
                             val indices = musicalScale.getMatchingNoteIndices(noteInfo.note)
-                            when(indices.size) {
+                            when (indices.size) {
                                 0 -> (minNoteIndex + maxNoteIndex) / 2
                                 else -> indices.average().roundToInt()
                             }
                         }
-                        //noteInfo?.musicalScaleIndex ?: (musicalScale.noteIndexBegin + index)
+                        // noteInfo?.musicalScaleIndex ?: (musicalScale.noteIndexBegin + index)
                     }
 
                     val note = remember(noteInfo, musicalScale) {
@@ -539,7 +573,7 @@ fun Strings(
                     val onStringColor = if (highlightedNoteKey != null) {
                         if (key == highlightedNoteKey) onTuningColor else onDefaultColor
                     } else {
-                        if (note == highlightedNote)  onTuningColor else onDefaultColor
+                        if (note == highlightedNote) onTuningColor else onDefaultColor
                     }
 
                     SingleString(
@@ -583,7 +617,10 @@ fun Strings(
                 },
                 onNextClicked = {
                     val i = findNextScrollableStringIndex(
-                        strings, highlightedNote, numHighlightedStrings, state.listState
+                        strings,
+                        highlightedNote,
+                        numHighlightedStrings,
+                        state.listState
                     )
                     scope.launch { state.scrollTo(i, coroutineContext) }
                 }
@@ -619,9 +656,9 @@ private fun StringsPreview() {
                 noteNameScale.notes[3].copy(octave = 8),
                 noteNameScale.notes[4].copy(octave = 3),
                 noteNameScale.notes[4].copy(octave = 8),
-                noteNameScale.notes[10].copy(octave = 8),
+                noteNameScale.notes[10].copy(octave = 8)
             ).mapIndexed { index, note ->
-                StringWithInfo(note, index) //, musicalScale.getNoteIndex(note))
+                StringWithInfo(note, index) // , musicalScale.getNoteIndex(note))
             }.toPersistentList()
         }
         val notePrintOptions = NotePrintOptions()
@@ -668,9 +705,9 @@ private fun StringsPreview2() {
         val strings = remember(noteNameScale) {
             listOf(
                 noteNameScale.notes[0].copy(octave = 2),
-                noteNameScale.notes[0].copy(octave = 2),
+                noteNameScale.notes[0].copy(octave = 2)
             ).mapIndexed { index, note ->
-                StringWithInfo(note, index) //, musicalScale.getNoteIndex(note))
+                StringWithInfo(note, index) // , musicalScale.getNoteIndex(note))
             }.toPersistentList()
         }
         val notePrintOptions = NotePrintOptions()

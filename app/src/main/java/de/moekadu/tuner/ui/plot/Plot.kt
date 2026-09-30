@@ -50,34 +50,25 @@ import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.ui.theme.TunerTheme
+import kotlin.math.max
+import kotlin.math.min
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
-import kotlin.math.max
-import kotlin.math.min
 
-
-class PlotScope(
-    private val clipped: Boolean,
-    private val transformation: () -> Transformation
-) {
+class PlotScope(private val clipped: Boolean, private val transformation: () -> Transformation) {
     @Composable
-    fun Line(
-        data: LineCoordinates,
-        lineColor: Color = Color.Unspecified,
-        lineWidth: Dp = 1.dp
-    ) {
-        if (clipped)
+    fun Line(data: LineCoordinates, lineColor: Color = Color.Unspecified, lineWidth: Dp = 1.dp) {
+        if (clipped) {
             Line(data, lineColor, lineWidth, transformation)
+        }
     }
 
     @Composable
-    fun Point(
-        position: Offset,
-        shape: DrawScope.() -> Unit
-    ) {
-        if (clipped)
+    fun Point(position: Offset, shape: DrawScope.() -> Unit) {
+        if (clipped) {
             Point(position, shape, transformation)
+        }
     }
 
     @Composable
@@ -86,8 +77,9 @@ class PlotScope(
         color: Color = Color.Unspecified,
         lineWidth: Dp = 1.dp
     ) {
-        if (clipped)
+        if (clipped) {
             VerticalLines(positions, color, lineWidth, transformation)
+        }
     }
 
     @Composable
@@ -96,8 +88,9 @@ class PlotScope(
         color: Color = Color.Unspecified,
         lineWidth: Dp = 1.dp
     ) {
-        if (clipped)
+        if (clipped) {
             HorizontalLines(positions, color, lineWidth, transformation)
+        }
     }
 
     @Composable
@@ -105,7 +98,7 @@ class PlotScope(
         marks: ImmutableList<HorizontalMark>,
         sameSizeLabels: Boolean = true,
         clipLabelsToWindow: Boolean = true
-        ) {
+    ) {
         HorizontalMarks(
             marks = marks,
             clipLabelsToWindow = clipLabelsToWindow,
@@ -244,7 +237,7 @@ fun Plot(
                     min(viewPortGestureLimits.left, viewPortGestureLimits.right),
                     min(viewPortGestureLimits.top, viewPortGestureLimits.bottom),
                     max(viewPortGestureLimits.left, viewPortGestureLimits.right),
-                    max(viewPortGestureLimits.top, viewPortGestureLimits.bottom),
+                    max(viewPortGestureLimits.top, viewPortGestureLimits.bottom)
                 )
             }
         }
@@ -261,9 +254,11 @@ fun Plot(
         val plotScopeClipped = remember { PlotScope(clipped = true, { transformation }) }
         val plotScopeUnclipped = remember { PlotScope(clipped = false, { transformation }) }
         val clipShape = transformation.rememberClipShape()
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .clip(clipShape)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(clipShape)
+        ) {
             plotScopeClipped.content()
         }
         Box(
@@ -336,7 +331,7 @@ private fun PlotPreview() {
                 ) { modifier, level, index, y ->
                     Text(
                         "y=$y",
-                        modifier = modifier,//.background(MaterialTheme.colorScheme.secondary),
+                        modifier = modifier, // .background(MaterialTheme.colorScheme.secondary),
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -347,7 +342,7 @@ private fun PlotPreview() {
                             floatArrayOf(-3f, 0f, 3f)
                         )
                     ),
-                    maxLabelWidth = 20f,// TODO: compute this somehow
+                    maxLabelWidth = 20f, // TODO: compute this somehow
                     anchor = Anchor.South,
                     verticalLabelPosition = 0f,
                     maxNumLabels = 6,
@@ -355,7 +350,7 @@ private fun PlotPreview() {
                 ) { modifier, level, index, x ->
                     Text(
                         "x=$x",
-                        modifier = modifier,//.background(MaterialTheme.colorScheme.secondary),
+                        modifier = modifier, // .background(MaterialTheme.colorScheme.secondary),
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
@@ -387,7 +382,7 @@ private fun PlotPreview() {
                             Surface(m, color = MaterialTheme.colorScheme.secondary) {
                                 Text("ABC", modifier = Modifier.padding(horizontal = 2.dp))
                             }
-                        },
+                        }
                     ),
                     clipLabelsToWindow = true,
                     sameSizeLabels = true
@@ -407,7 +402,7 @@ private fun PlotPreview() {
                             Surface(m, color = MaterialTheme.colorScheme.secondary) {
                                 Text("ABC", modifier = Modifier.padding(horizontal = 2.dp))
                             }
-                        },
+                        }
                     ),
                     clipLabelsToWindow = true,
                     sameSizeLabels = true
@@ -427,7 +422,7 @@ private fun PlotPreview() {
                             Surface(m, color = MaterialTheme.colorScheme.secondary) {
                                 Text("ABC", modifier = Modifier.padding(horizontal = 2.dp))
                             }
-                        },
+                        }
                     ),
                     clipLabelsToWindow = true,
                     sameSizeLabels = true
@@ -438,13 +433,13 @@ private fun PlotPreview() {
                         PointMark(
                             position = Offset(-3f, -4f),
                             settings = PointMark.Settings(
-                                anchor = Anchor.Center,
+                                anchor = Anchor.Center
                             )
                         ) { m ->
                             Surface(m, color = MaterialTheme.colorScheme.secondary) {
                                 Text("ABC", modifier = Modifier.padding(horizontal = 2.dp))
                             }
-                        },
+                        }
                     ),
                     clipLabelsToWindow = true,
                     sameSizeLabels = true

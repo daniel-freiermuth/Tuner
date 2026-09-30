@@ -27,8 +27,8 @@ import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.tuner.SimpleFrequencyDetector
 import de.moekadu.tuner.ui.preferences.ReferenceNoteDialogFrequencyDetector
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
 
 /** We provide the frequency detector via a view model.
  * @note We provide this via a view model for simple injection of preferences.
@@ -37,11 +37,13 @@ import javax.inject.Inject
  * @param applicationScope Coroutine scope which is used for launching the frequency detector.
  */
 @HiltViewModel
-class ReferenceNoteDialogViewModel @Inject constructor (
+class ReferenceNoteDialogViewModel @Inject constructor(
     val pref: PreferenceResources,
     @param:ApplicationScope val applicationScope: CoroutineScope
-) : ReferenceNoteDialogFrequencyDetector, ViewModel() {
+) : ViewModel(),
+    ReferenceNoteDialogFrequencyDetector {
     private var _detectedFrequency = mutableFloatStateOf(0f)
+
     /** The currently detected frequency or 0f if no frequency is detected yet.
      * @note Call startFrequencyDetection to actually start setting this value.
      */
@@ -51,8 +53,9 @@ class ReferenceNoteDialogViewModel @Inject constructor (
     private val frequencyDetector = SimpleFrequencyDetector(
         viewModelScope,
         onFrequencyAvailable = {
-            if (it > 0f)
+            if (it > 0f) {
                 _detectedFrequency.floatValue = it
+            }
         },
         pref
     )
@@ -61,6 +64,7 @@ class ReferenceNoteDialogViewModel @Inject constructor (
     override fun startFrequencyDetection() {
         frequencyDetector.connect()
     }
+
     /** Pause frequency detection. */
     override fun stopFrequencyDetection() {
         frequencyDetector.disconnect()

@@ -53,7 +53,7 @@ class ChainOfFifthsTest {
         chain.getSortedRatios().zip(cents).forEach {
             val centChain = ratioToCents(it.first)
             println("$centChain, ${it.second}")
-            //assertEquals(centChain, it.second, 1e-12)
+            // assertEquals(centChain, it.second, 1e-12)
         }
     }
 
@@ -61,7 +61,7 @@ class ChainOfFifthsTest {
     fun testOther() {
         val chain = predefinedTemperamentYoung2(0L).chainOfFifths()
         val circle = circleOfFifthsYoung2
-        
+
         circle.getRatios().zip(chain.getSortedRatios()).forEach {
             println("${it.first}, ${it.second}")
             assertEquals(it.first, it.second, 1e-12)
@@ -69,6 +69,7 @@ class ChainOfFifthsTest {
         val lastFifth = chain.getClosingCircleCorrection()
         println(lastFifth)
     }
+
     @Test
     fun other() {
         val chain = predefinedTemperamentFifthCommaMeanTone(0L).chainOfFifths()
@@ -95,7 +96,13 @@ class ChainOfFifthsTest {
             val notes = temperament.noteNames(null)
             unsorted.mapIndexed { index, us ->
                 val i = sorted.indexOfFirst { us == it }
-                println ("$i: $us =? ${sorted[i]}, c=${ratioToCents(us)}, m?=${chain.fifths.getOrNull(index)==null}, name=${notes[i].base} ${notes[i].modifier}")
+                println(
+                    "$i: $us =? ${sorted[i]}, c=${ratioToCents(
+                        us
+                    )}, m?=${chain.fifths.getOrNull(
+                        index
+                    ) == null}, name=${notes[i].base} ${notes[i].modifier}"
+                )
                 Fifth(
                     startNote = notes[i],
                     modification = chain.fifths.getOrNull(index),

@@ -16,7 +16,6 @@ class InharmonicityTest {
         assertEquals(1f, computeInharmonicity(100f, 10, 25f, 5), 1e-6f)
         // harmonicity is -1 if the frequency ratio 0 (zero stretching)
         assertEquals(-1f, computeInharmonicity(50f, 10, 50f, 5), 1e-6f)
-
     }
 
     @Test

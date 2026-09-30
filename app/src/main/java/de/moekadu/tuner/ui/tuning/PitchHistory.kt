@@ -42,9 +42,9 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.DpRect
 import androidx.compose.ui.unit.dp
 import de.moekadu.tuner.R
+import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
-import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.common.Label
 import de.moekadu.tuner.ui.notes.Note
 import de.moekadu.tuner.ui.notes.NotePrintOptions
@@ -60,8 +60,6 @@ import de.moekadu.tuner.ui.plot.PointShape
 import de.moekadu.tuner.ui.plot.TickLevelExplicitRanges
 import de.moekadu.tuner.ui.theme.TunerTheme
 import de.moekadu.tuner.ui.theme.tunerColors
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.log2
@@ -69,22 +67,24 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
-private fun centsToRatio(cents: Float): Float {
-    return (2.0.pow(cents / 1200.0)).toFloat()
-}
+private fun centsToRatio(cents: Float): Float = (2.0.pow(cents / 1200.0)).toFloat()
 private fun ratioToCents(ratio: Float): Float {
     // ratio = 2**(cent/1200)
     // log2(ratio) * 1200
     return 1200 * log2(ratio)
 }
 
-private fun computeToleranceBounds(centerFrequency: Float, toleranceInCents: Int)
-        : ClosedFloatingPointRange<Float> {
+private fun computeToleranceBounds(
+    centerFrequency: Float,
+    toleranceInCents: Int
+): ClosedFloatingPointRange<Float> {
     val ratio = centsToRatio(toleranceInCents.toFloat())
     val lowerToleranceFreq = centerFrequency / ratio
     val upperToleranceFreq = centerFrequency * ratio
-    return lowerToleranceFreq .. upperToleranceFreq
+    return lowerToleranceFreq..upperToleranceFreq
 }
 
 private class ResizeableArray(private var maxNumValues: Int) {
@@ -94,27 +94,28 @@ private class ResizeableArray(private var maxNumValues: Int) {
     val size get() = values.size
     fun add(value: Float) {
         val c = values.coordinates
-        if (c.size == maxNumValues)
+        if (c.size == maxNumValues) {
             c.removeAt(0)
+        }
         c.add(Offset(c.size.toFloat(), value))
-        for (i in 0 until c.size)
+        for (i in 0 until c.size) {
             c[i] = c[i].copy(x = i.toFloat())
+        }
         values = LineCoordinates(c)
     }
 
     fun resize(newMaxNumValues: Int) {
         maxNumValues = newMaxNumValues
         val c = values.coordinates
-        //val resized = FloatArray(newMaxNumValues)
-        if (maxNumValues < c.size)
+        // val resized = FloatArray(newMaxNumValues)
+        if (maxNumValues < c.size) {
             c.subList(0, c.size - maxNumValues).clear()
+        }
         values = LineCoordinates(c)
     }
 }
 
-class PitchHistoryState(
-    capacity: Int
-) {
+class PitchHistoryState(capacity: Int) {
     private val history = ResizeableArray(capacity)
 
     var lineCoordinates by mutableStateOf(history.values)
@@ -148,8 +149,12 @@ class PitchHistoryState(
          *   the given duration.
          */
         fun computePitchHistorySize(
-            duration: Float, sampleRate: Int, windowSize: Int, overlap: Float
-        ) = (duration / (windowSize.toFloat() / sampleRate.toFloat() * (1.0f - overlap))).roundToInt()
+            duration: Float,
+            sampleRate: Int,
+            windowSize: Int,
+            overlap: Float
+        ) =
+            (duration / (windowSize.toFloat() / sampleRate.toFloat() * (1.0f - overlap))).roundToInt()
     }
 }
 
@@ -200,14 +205,15 @@ fun PitchHistory(
             listOf(
                 FloatArray(musicalScale.noteIndexEnd - musicalScale.noteIndexBegin) {
                     musicalScale.getNoteFrequency(musicalScale.noteIndexBegin + it)
-                }).toImmutableList()
+                }
+            ).toImmutableList()
         )
     }
 
     val limits = remember(musicalScale, state.capacity) {
         Rect(
             left = 0f,
-            right = (state.capacity-1) * 1.1f,
+            right = (state.capacity - 1) * 1.1f,
             top = musicalScale.getNoteFrequency(musicalScale.noteIndexBegin - 0.2f),
             bottom = musicalScale.getNoteFrequency(musicalScale.noteIndexEnd + 0.2f)
         )
@@ -231,25 +237,26 @@ fun PitchHistory(
         val currentFrequency = state.pointCoordinates?.y
 
         val noteIndexRange = if (targetNoteIndex == Int.MAX_VALUE && currentFrequency == null) {
-            (-visibleRangeInIndices) .. visibleRangeInIndices
-        } else if (currentFrequency == null){
-            (targetNoteIndex - visibleRangeInIndices) .. (targetNoteIndex + visibleRangeInIndices)
+            (-visibleRangeInIndices)..visibleRangeInIndices
+        } else if (currentFrequency == null) {
+            (targetNoteIndex - visibleRangeInIndices)..(targetNoteIndex + visibleRangeInIndices)
         } else if (targetNoteIndex == Int.MAX_VALUE) {
             val frequencyNoteIndex = musicalScale.getClosestNoteIndex(currentFrequency)
-            (frequencyNoteIndex - visibleRangeInIndices) .. (frequencyNoteIndex + visibleRangeInIndices)
+            (frequencyNoteIndex - visibleRangeInIndices)..(frequencyNoteIndex + visibleRangeInIndices)
         } else {
             val frequencyNoteIndex = musicalScale.getNoteIndex(currentFrequency)
             min(
                 targetNoteIndex - visibleRangeInIndices,
                 floor(frequencyNoteIndex) - visibleRangeInIndices2
-            ) .. max(
+            )..max(
                 targetNoteIndex + visibleRangeInIndices,
                 ceil(frequencyNoteIndex) + visibleRangeInIndices2
             )
         }
 
-        musicalScale.getNoteFrequency(noteIndexRange.start) .. musicalScale.getNoteFrequency(
-            noteIndexRange.endInclusive)
+        musicalScale.getNoteFrequency(
+            noteIndexRange.start
+        )..musicalScale.getNoteFrequency(noteIndexRange.endInclusive)
     }
 
     val viewPort = remember(visibleRange, limits) {
@@ -270,9 +277,10 @@ fun PitchHistory(
         notePrintOptions = notePrintOptions,
         fontSize = tickLabelStyle.fontSize,
         fontWeight = null,
-        octaveRange = musicalScale.getNote(musicalScale.noteIndexBegin).octave..musicalScale.getNote(
-            musicalScale.noteIndexEnd
-        ).octave,
+        octaveRange =
+            musicalScale.getNote(musicalScale.noteIndexBegin).octave..musicalScale.getNote(
+                musicalScale.noteIndexEnd
+            ).octave,
         textMeasurer = rememberTextMeasurer()
     ).height
     val maxNoteHeightPx = with(LocalDensity.current) { maxNoteHeight.toPx() }
@@ -329,8 +337,8 @@ fun PitchHistory(
                         labelPosition = 1f,
                         lineWidth = targetNoteLineWidth,
                         lineColor = tuningColor
-                    ),
-                ){ m ->
+                    )
+                ) { m ->
                     Label(
                         content = {
                             Note(
@@ -358,9 +366,18 @@ fun PitchHistory(
         state.pointCoordinates?.let { position ->
             val pointShape = when (tuningState) {
                 TuningState.Unknown -> PointShape.circle(pointSizeInactive, tuningColor)
+
                 TuningState.InTune -> PointShape.circle(pointSize, tuningColor)
-                TuningState.TooLow -> PointShape.circleWithUpwardTriangleShape(pointSize, tuningColor)
-                TuningState.TooHigh -> PointShape.circleWithDownwardTriangleShape(pointSize, tuningColor)
+
+                TuningState.TooLow -> PointShape.circleWithUpwardTriangleShape(
+                    pointSize,
+                    tuningColor
+                )
+
+                TuningState.TooHigh -> PointShape.circleWithDownwardTriangleShape(
+                    pointSize,
+                    tuningColor
+                )
             }
             Point(position, pointShape)
 
@@ -372,10 +389,22 @@ fun PitchHistory(
                     PointMark(
                         position,
                         PointMark.Settings(
-                            anchor = if (tuningState == TuningState.TooHigh) Anchor.South else Anchor.North,
+                            anchor = if (tuningState ==
+                                TuningState.TooHigh
+                            ) {
+                                Anchor.South
+                            } else {
+                                Anchor.North
+                            },
                             screenOffset = DpOffset(
                                 0.dp,
-                                if (tuningState == TuningState.TooHigh) -pointSize/2 else pointSize/2
+                                if (tuningState ==
+                                    TuningState.TooHigh
+                                ) {
+                                    -pointSize / 2
+                                } else {
+                                    pointSize / 2
+                                }
                             )
                         )
                     ) {
@@ -389,7 +418,6 @@ fun PitchHistory(
                 )
 
                 PointMarks(marks = pointMark)
-
             }
         }
 
@@ -403,15 +431,17 @@ fun PitchHistory(
                         labelPosition = 0f,
                         lineWidth = 1.dp,
                         lineColor = toleranceLineColor
-                    ),
-                ){ m ->
+                    )
+                ) { m ->
                     Label(
-                        content = { Text(
-                            stringResource(id = R.string.cent, -toleranceInCents),
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            textAlign = TextAlign.Center,
-                            style = toleranceLabelStyle
-                        ) },
+                        content = {
+                            Text(
+                                stringResource(id = R.string.cent, -toleranceInCents),
+                                modifier = Modifier.padding(horizontal = 4.dp),
+                                textAlign = TextAlign.Center,
+                                style = toleranceLabelStyle
+                            )
+                        },
                         modifier = m,
                         color = toleranceLabelColor
                     )
@@ -423,22 +453,24 @@ fun PitchHistory(
                         labelPosition = 0f,
                         lineWidth = 1.dp,
                         lineColor = toleranceLineColor
-                    ),
-                ){ m ->
+                    )
+                ) { m ->
                     Label(
-                        content = { Text(
-                            stringResource(id = R.string.cent, toleranceInCents),
-                            modifier = Modifier.padding(horizontal = 4.dp),
-                            textAlign = TextAlign.Center,
-                            style = toleranceLabelStyle
-                        ) },
+                        content = {
+                            Text(
+                                stringResource(id = R.string.cent, toleranceInCents),
+                                modifier = Modifier.padding(horizontal = 4.dp),
+                                textAlign = TextAlign.Center,
+                                style = toleranceLabelStyle
+                            )
+                        },
                         modifier = m,
                         color = toleranceLabelColor
                     )
                 }
             )
         }
-        HorizontalMarks(marks = toleranceMarks, sameSizeLabels = true , clipLabelsToWindow = true)
+        HorizontalMarks(marks = toleranceMarks, sameSizeLabels = true, clipLabelsToWindow = true)
     }
 }
 
@@ -470,7 +502,7 @@ fun PitchHistory2Preview() {
             state = state,
             musicalScale = musicalScale,
             notePrintOptions = notePrintOptions,
-            plotWindowPadding = DpRect(left = 4.dp, top = 0.dp, right=40.dp, bottom = 0.dp),
+            plotWindowPadding = DpRect(left = 4.dp, top = 0.dp, right = 40.dp, bottom = 0.dp),
             tuningState = TuningState.TooHigh
         )
     }

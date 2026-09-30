@@ -21,10 +21,10 @@ package de.moekadu.tuner.musicalscale
 import androidx.compose.runtime.Immutable
 import de.moekadu.tuner.stretchtuning.StretchTuning
 import de.moekadu.tuner.temperaments.centsToFrequency
-import kotlinx.serialization.Serializable
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
+import kotlinx.serialization.Serializable
 
 /** Store the frequencies of a musical scale over all octaves.
  * @param frequencies All frequencies of the musical scale over all octaves.
@@ -40,6 +40,7 @@ class MusicalScaleFrequencies(
 ) {
     /** First available frequency index (included). */
     val indexStart = -indexOfReferenceNote
+
     /** End index of available frequencies (excluded). */
     val indexEnd = indexStart + frequencies.size
 
@@ -48,9 +49,8 @@ class MusicalScaleFrequencies(
      * @return Frequency at given index. If index is out of bounds, we return the index of the
      *    the lower/upper bound.
      */
-    operator fun get(index: Int): Float {
-        return frequencies[(index + indexOfReferenceNote).coerceIn(0, frequencies.size-1)]
-    }
+    operator fun get(index: Int): Float =
+        frequencies[(index + indexOfReferenceNote).coerceIn(0, frequencies.size - 1)]
 
     /** Obtain frequency by float index.
      * If indices are not integer numbers, the values are interpolated logarithmically.
@@ -71,11 +71,13 @@ class MusicalScaleFrequencies(
             noteIndexLower < indexStart -> {
                 get(indexStart) * (get(indexStart + 1) / get(indexStart)).pow(index - indexStart)
             }
+
             noteIndexLower >= indexEnd - 1 -> {
-                get(indexEnd - 1) * (get(indexEnd - 1) / get(indexEnd -2)).pow(
+                get(indexEnd - 1) * (get(indexEnd - 1) / get(indexEnd - 2)).pow(
                     index - (indexEnd - 1)
                 )
             }
+
             else -> {
                 get(noteIndexLower) * (get(noteIndexLower + 1) / get(noteIndexLower)).pow(
                     index - noteIndexLower
@@ -91,47 +93,65 @@ class MusicalScaleFrequencies(
      * @return Index of the frequency, relative to the reference note.
      */
     fun getFrequencyIndex(frequency: Float): Float {
-        if (frequencies.isEmpty())
+        if (frequencies.isEmpty()) {
             return 0f
+        }
 
         val closestIndex = getClosestFrequencyIndex(frequency)
         val closestFrequency = get(closestIndex)
-        //val j = closestIndex - indexStart
-        return if (frequency == closestFrequency || frequencies.size == 1)
+        // val j = closestIndex - indexStart
+        return if (frequency == closestFrequency || frequencies.size == 1) {
             closestIndex.toFloat()
-        else if (closestIndex > indexStart && (frequency < closestFrequency || closestIndex == indexEnd -1))
-            closestIndex - log10(closestFrequency / frequency) / log10(closestFrequency / get(closestIndex - 1))
-        else if (closestIndex < indexEnd - 1 && (frequency > closestFrequency || closestIndex == indexStart))
-            closestIndex + log10(closestFrequency / frequency) / log10(closestFrequency / get(closestIndex + 1))
-        else
+        } else if (closestIndex > indexStart &&
+            (frequency < closestFrequency || closestIndex == indexEnd - 1)
+        ) {
+            closestIndex -
+                log10(closestFrequency / frequency) /
+                log10(closestFrequency / get(closestIndex - 1))
+        } else if (closestIndex < indexEnd - 1 &&
+            (frequency > closestFrequency || closestIndex == indexStart)
+        ) {
+            closestIndex +
+                log10(closestFrequency / frequency) /
+                log10(closestFrequency / get(closestIndex + 1))
+        } else {
             throw RuntimeException("cannot find tone index")
+        }
     }
+
     /** Get closest note index to a given frequency.
      * @param frequency Frequency.
      * @return Note index which corresponds to the closest available frequency.
      */
     fun getClosestFrequencyIndex(frequency: Float): Int {
-        if (frequencies.isEmpty())
+        if (frequencies.isEmpty()) {
             return 0
+        }
         val index = frequencies.binarySearch(frequency)
-        if (index >= 0)
+        if (index >= 0) {
             return index - indexOfReferenceNote
+        }
         val indexAfter = -index - 1
         val indexBefore = indexAfter - 1
 
         // Avoid accessing frequency array out of bounds
-        if (indexAfter <= 0)
+        if (indexAfter <= 0) {
             return -indexOfReferenceNote
-        if (indexAfter >= frequencies.size)
+        }
+        if (indexAfter >= frequencies.size) {
             return frequencies.size - 1 - indexOfReferenceNote
+        }
 
         // the sorting is as follows:
         // frequency at indexBefore < frequency < frequency at indexAfter
         // we want to check what is closest based on log scale
-        return if (log10(frequency / frequencies[indexBefore]) < log10(frequencies[indexAfter] / frequency))
+        return if (log10(frequency / frequencies[indexBefore]) <
+            log10(frequencies[indexAfter] / frequency)
+        ) {
             indexBefore - indexOfReferenceNote
-        else
+        } else {
             indexAfter - indexOfReferenceNote
+        }
     }
 
     companion object {
@@ -170,7 +190,9 @@ class MusicalScaleFrequencies(
             var indexWithinOfOctave = referenceIndexWithinOctave
             val higherFrequencies = ArrayList<Double>()
             var globalIndexOfReferenceHigh = 0
-            var currentFrequency = stretchTuning.getStretchedFrequency(referenceFrequency.toDouble())
+            var currentFrequency = stretchTuning.getStretchedFrequency(
+                referenceFrequency.toDouble()
+            )
             while (currentFrequency < frequencyMax) {
 //                Log.v("Tuner", "MusicalScaleFrequencies.create: current f=$currentFrequency, max freq=$frequencyMax")
                 // condition is needed when reference frequency is outside min/max
@@ -241,11 +263,11 @@ class MusicalScaleFrequencies(
             }
 
             if (scaleFrequencies.indexOfReferenceNote in scaleFrequencies.frequencies.indices) {
-                scaleFrequencies.frequencies[scaleFrequencies.indexOfReferenceNote] = referenceFrequency
+                scaleFrequencies.frequencies[scaleFrequencies.indexOfReferenceNote] =
+                    referenceFrequency
             }
 
             return scaleFrequencies
         }
     }
 }
-

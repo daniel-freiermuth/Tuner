@@ -50,8 +50,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.takeOrElse
 import androidx.compose.ui.unit.times
-import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
@@ -71,7 +71,6 @@ class NoteDetectorState {
         notes = if (index >= 0) {
             ++counter
             notesCopy.mutate { it[index] = it[index].copy(counter = counter) }
-
         } else {
             var indexMin = -1
             var counterMin = Long.MAX_VALUE
@@ -90,10 +89,11 @@ class NoteDetectorState {
         val notesCopy = notes
         notes = if (notesCopy.size < numNotes) {
             notesCopy.mutate {
-                for (i in notesCopy.size until numNotes)
+                for (i in notesCopy.size until numNotes) {
                     it.add(NoteWithCounter(null, -1))
+                }
             }
-        } else if (notesCopy.size > numNotes){
+        } else if (notesCopy.size > numNotes) {
             notesCopy.mutate {
                 // this could of course only delete the oldest note, but this makes the code much
                 // more difficult, while this scenario would normally not occur
@@ -103,7 +103,6 @@ class NoteDetectorState {
             notesCopy
         }
     }
-
 }
 
 @Composable
@@ -124,7 +123,9 @@ fun NoteDetector(
     }
     val fontWeightResolved = textStyle?.fontWeight
     val octaveRange = remember(musicalScale) {
-        musicalScale.getNote(musicalScale.noteIndexBegin).octave..musicalScale.getNote(musicalScale.noteIndexEnd - 1).octave
+        musicalScale.getNote(
+            musicalScale.noteIndexBegin
+        ).octave..musicalScale.getNote(musicalScale.noteIndexEnd - 1).octave
     }
 
     val noteNames = remember(musicalScale.temperament, musicalScale.rootNote) {
@@ -194,8 +195,6 @@ fun NoteDetector(
     }
 }
 
-
-
 @Preview(widthDp = 300, heightDp = 100, showBackground = true)
 @Composable
 private fun NoteDetectorPreview() {
@@ -204,7 +203,7 @@ private fun NoteDetectorPreview() {
         val musicalScale = remember { MusicalScale2.createTestEdo12() }
 
         val noteList = remember {
-            (20..30).map{ musicalScale.getNote(it) }
+            (20..30).map { musicalScale.getNote(it) }
         }
         Column {
             NoteDetector(

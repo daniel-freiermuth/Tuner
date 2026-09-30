@@ -21,7 +21,7 @@ package de.moekadu.tuner.notedetection
 
 import kotlin.math.*
 
-fun bitReverse(value : Int, num_bits : Int) : Int {
+fun bitReverse(value: Int, num_bits: Int): Int {
     var myValue = value
     var rev = 0
 
@@ -34,49 +34,47 @@ fun bitReverse(value : Int, num_bits : Int) : Int {
     return rev
 }
 
-/// Number of frequencies, for which we get a result from the RealFFT.
+// / Number of frequencies, for which we get a result from the RealFFT.
+
 /**
  * @param size Size as passed to the constructor of the RealFFT.
  * @return Number of frequencies for which we get a RealFFT result.
  */
-fun RealFFT.Companion.numFrequencies(size: Int) : Int {
-    return size / 2 + 1
-}
+fun RealFFT.Companion.numFrequencies(size: Int): Int = size / 2 + 1
 
-/// Frequency for a specific index computed by the RealFFT.
+// / Frequency for a specific index computed by the RealFFT.
+
 /**
  * @param idx Index for which the frequency should be computed.
  * @param size Size as passed to the constructor of the RealFFT.
  * @param dt Time step width between two input samples.
  * @return Frequency value for the given value.
  */
-fun RealFFT.Companion.getFrequency(idx : Int, size: Int, dt : Float) : Float {
-    return idx / (dt * size)
-}
+fun RealFFT.Companion.getFrequency(idx: Int, size: Int, dt: Float): Float = idx / (dt * size)
 
-/// Frequency index for a specific frequency value.
+// / Frequency index for a specific frequency value.
+
 /**
  * @param frequency Frequency for which the index is requested.
  * @param size Size as passed to the constructor of the RealFFT.
  * @param dt Time step width between two input samples.
  * @return Closest index which fits to the given frequency.
  */
-fun RealFFT.Companion.closestFrequencyIndex(frequency : Float, size: Int, dt : Float) : Int {
-    return (frequency * dt * size).roundToInt()
-}
+fun RealFFT.Companion.closestFrequencyIndex(frequency: Float, size: Int, dt: Float): Int =
+    (frequency * dt * size).roundToInt()
 
 /** Fast Fourier transform for pure real input data.
  * @param size Number of values of input.
  * @param windowType Window type used weighting the input before transforming.
  */
-class RealFFT(val size : Int, private val windowType : WindowingFunction = WindowingFunction.Tophat) {
+class RealFFT(val size: Int, private val windowType: WindowingFunction = WindowingFunction.Tophat) {
     companion object;
 
     private val cosTable = FloatArray(size)
     private val sinTable = FloatArray(size)
     private val cosTableH = FloatArray(size)
     private val sinTableH = FloatArray(size)
-    val bitReverseTable = IntArray(size/2)
+    val bitReverseTable = IntArray(size / 2)
     private val nBits = log2(size.toFloat()).roundToInt()
 
     private val window = FloatArray(size)
@@ -110,13 +108,13 @@ class RealFFT(val size : Int, private val windowType : WindowingFunction = Windo
      *    -> imaginary part at given index: output[2 * index + 1]
      * @param disableWindow Even if in constructor a window is specified we allow here to ignore it.
      */
-    fun fft(input: FloatArray, output: FloatArray, disableWindow : Boolean = false) {
-        require(input.size == size) {"FFT input is of invalid size"}
-        require(output.size == size + 2) {"FFT output is of invalid size"}
-      
+    fun fft(input: FloatArray, output: FloatArray, disableWindow: Boolean = false) {
+        require(input.size == size) { "FFT input is of invalid size" }
+        require(output.size == size + 2) { "FFT output is of invalid size" }
+
         val halfSize = size / 2
 
-        if(windowType == WindowingFunction.Tophat || disableWindow) {
+        if (windowType == WindowingFunction.Tophat || disableWindow) {
             for (i in 0 until halfSize) {
                 val ir2 = 2 * bitReverseTable[i]
                 val i2 = 2 * i
@@ -127,8 +125,7 @@ class RealFFT(val size : Int, private val windowType : WindowingFunction = Windo
                     output[ir2 + 1] = input[i2 + 1]
                 }
             }
-        }
-        else {
+        } else {
             for (i in 0 until halfSize) {
                 val ir2 = 2 * bitReverseTable[i]
                 val i2 = 2 * i
@@ -143,9 +140,9 @@ class RealFFT(val size : Int, private val windowType : WindowingFunction = Windo
         fftBitreversed(output)
     }
 
-    /// Transform already bitreversed data in-place
+    // / Transform already bitreversed data in-place
     fun fftBitreversed(output: FloatArray) {
-        require(size == output.size-2) {"size of output must be fftSize + 2"}
+        require(size == output.size - 2) { "size of output must be fftSize + 2" }
         val halfSize = size / 2
         var numInner = 1
         var wStep = halfSize / 2
@@ -214,7 +211,7 @@ class RealFFT(val size : Int, private val windowType : WindowingFunction = Windo
         output[size] = output[0] - output[1]
         output[0] = output[0] + output[1]
         output[1] = 0.0f
-        output[size+1] = 0.0f
+        output[size + 1] = 0.0f
     }
 
 //    fun getFreq(idx : Int, dt : Float) : Float {

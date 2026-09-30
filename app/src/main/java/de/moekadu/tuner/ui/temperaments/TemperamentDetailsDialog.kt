@@ -52,7 +52,7 @@ fun TemperamentDetailsDialog(
     temperament: Temperament3,
     notePrintOptions: NotePrintOptions,
     modifier: Modifier = Modifier,
-    onDismiss: () -> Unit = {},
+    onDismiss: () -> Unit = {}
 ) {
     val hasChainOfFifths = remember(temperament) {
         temperament.chainOfFifths() != null
@@ -109,7 +109,6 @@ fun TemperamentDetailsDialog(
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
-
             }
         }
     )

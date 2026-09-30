@@ -29,7 +29,7 @@ fun migrateFromV6(
     newPreferenceResources: PreferenceResources,
     newTemperamentResources: TemperamentResources,
     newInstrumentResources: InstrumentResources
-    ): Boolean {
+): Boolean {
 //    Log.v("Tuner", "PreferenceMigrations: complete = ${migrationsFromV6Complete.value}")
     if (newPreferenceResources.migrationsFromV6Complete.value) {
 //        Log.v("Tuner", "PreferenceMigrations: Do not migrate, since already done")

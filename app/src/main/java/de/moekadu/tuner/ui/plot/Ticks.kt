@@ -18,11 +18,11 @@
 */
 package de.moekadu.tuner.ui.plot
 
-import kotlinx.collections.immutable.ImmutableList
 import kotlin.math.absoluteValue
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.min
+import kotlinx.collections.immutable.ImmutableList
 
 interface TickLevel {
     fun getTicksRange(
@@ -35,20 +35,15 @@ interface TickLevel {
     fun getTickValue(level: Int, index: Int): Float
 }
 
-data class TicksRange(
-    val level: Int,
-    val indexBegin: Int,
-    val indexEnd: Int
-)
+data class TicksRange(val level: Int, val indexBegin: Int, val indexEnd: Int)
 
-/// Coarse ticks come first, then get finer
-class TickLevelExplicitRanges(
-    private val ticks: ImmutableList<FloatArray>
-) : TickLevel {
+// / Coarse ticks come first, then get finer
+class TickLevelExplicitRanges(private val ticks: ImmutableList<FloatArray>) : TickLevel {
     private val minimumDistance = ticks.map {
         var dMin = Float.MAX_VALUE
-        for (i in 1 until it.size)
-            dMin = min(dMin, (it[i] - it[i-1]).absoluteValue)
+        for (i in 1 until it.size) {
+            dMin = min(dMin, (it[i] - it[i - 1]).absoluteValue)
+        }
 //        Log.v("Tuner", "dmin=$dMin, size=${it.size}")
         dMin
     }
@@ -61,10 +56,11 @@ class TickLevelExplicitRanges(
         var level = 0
 
         val minimumAllowedDistance = (endValue - startValue).absoluteValue / (maxNumTicks + 1)
-        for (l in ticks.size-1 downTo 0) {
+        for (l in ticks.size - 1 downTo 0) {
             level = l
-            if (minimumDistance[l] > minimumAllowedDistance)
+            if (minimumDistance[l] > minimumAllowedDistance) {
                 break
+            }
         }
 
         val i0 = ticks[level].binarySearch(startValue - labelSizeRaw)
@@ -78,10 +74,8 @@ class TickLevelExplicitRanges(
     override fun getTickValue(level: Int, index: Int) = ticks[level][index]
 }
 
-/// smallest deltas come first
-class TickLevelDeltaBased(
-    private val deltas: ImmutableList<Float>
-) : TickLevel {
+// / smallest deltas come first
+class TickLevelDeltaBased(private val deltas: ImmutableList<Float>) : TickLevel {
 
     override fun getTicksRange(
         startValue: Float,

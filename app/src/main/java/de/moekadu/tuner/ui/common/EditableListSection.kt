@@ -72,13 +72,13 @@ fun EditableListSection(
 @Composable
 private fun InstrumentListSectionPreview() {
     TunerTheme {
-        var expanded by remember {mutableStateOf(true)}
+        var expanded by remember { mutableStateOf(true) }
         Column(modifier = Modifier.fillMaxSize()) {
             EditableListSection(
                 "My section",
                 expanded = expanded,
                 onExpandClicked = { expanded = it }
-                )
+            )
             HorizontalDivider()
         }
     }

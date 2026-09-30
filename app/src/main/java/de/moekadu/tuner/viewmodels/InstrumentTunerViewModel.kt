@@ -26,13 +26,13 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.instruments.InstrumentResources
+import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.FrequencyDetectionCollectedResults
 import de.moekadu.tuner.notedetection.FrequencyEvaluationResult
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notedetection.checkTuning
-import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.notenames.MusicalNote
-import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.tuner.Tuner
 import de.moekadu.tuner.ui.instruments.StringWithInfo
@@ -41,18 +41,19 @@ import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.screens.InstrumentTunerData
 import de.moekadu.tuner.ui.tuning.PitchHistoryState
+import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class InstrumentTunerViewModel @Inject constructor (
+class InstrumentTunerViewModel @Inject constructor(
     val pref: PreferenceResources,
     val instruments: InstrumentResources,
     val temperaments: TemperamentResources
-) : ViewModel(), InstrumentTunerData {
+) : ViewModel(),
+    InstrumentTunerData {
     override val musicalScale: StateFlow<MusicalScale2> get() = temperaments.musicalScale
     override val notePrintOptions: StateFlow<NotePrintOptions> get() = pref.notePrintOptions
     override val toleranceInCents: StateFlow<Int> get() = pref.toleranceInCents
@@ -65,8 +66,8 @@ class InstrumentTunerViewModel @Inject constructor (
     )
         private set
 
-    override val pitchHistoryGestureBasedViewPort: GestureBasedViewPort
-            = GestureBasedViewPort()
+    override val pitchHistoryGestureBasedViewPort: GestureBasedViewPort =
+        GestureBasedViewPort()
     override var tuningState by mutableStateOf(TuningState.Unknown)
         private set
 
@@ -82,7 +83,7 @@ class InstrumentTunerViewModel @Inject constructor (
 
     override var strings by mutableStateOf<ImmutableList<StringWithInfo>?>(
         instrument.value.strings.mapIndexed { index, note ->
-            StringWithInfo(note, index) //, musicalScale.value.getNoteIndex(note))
+            StringWithInfo(note, index) // , musicalScale.value.getNoteIndex(note))
         }.toImmutableList()
     )
         private set
@@ -120,12 +121,11 @@ class InstrumentTunerViewModel @Inject constructor (
                         handleTargetNoteOnAutodetectChange(tuningTarget.note)
                     }
                 }
-                //Log.v("Tuner", "ScientificTunerViewModel: dt = ${result.timeSinceThereIsNoFrequencyDetectionResult}")
+                // Log.v("Tuner", "ScientificTunerViewModel: dt = ${result.timeSinceThereIsNoFrequencyDetectionResult}")
                 resetTuningState(result.timeSinceThereIsNoFrequencyDetectionResult)
             }
         }
     )
-
 
     init {
         viewModelScope.launch {
@@ -147,7 +147,7 @@ class InstrumentTunerViewModel @Inject constructor (
         viewModelScope.launch {
             instruments.currentInstrument.collect {
                 strings = it.strings.mapIndexed { index, note ->
-                    StringWithInfo(note, index) //, musicalScale.value.getNoteIndex(note))
+                    StringWithInfo(note, index) // , musicalScale.value.getNoteIndex(note))
                 }.toImmutableList()
             }
         }
@@ -159,9 +159,7 @@ class InstrumentTunerViewModel @Inject constructor (
         tuner.disconnect()
     }
 
-    private fun handleTargetNoteOnSelectionChange(
-        selectedNoteKey: Int? = null,
-    ) {
+    private fun handleTargetNoteOnSelectionChange(selectedNoteKey: Int? = null) {
         this.selectedNoteKey = selectedNoteKey
         targetNote = if (selectedNoteKey == null) {
             autodetectedTargetNote
@@ -178,21 +176,23 @@ class InstrumentTunerViewModel @Inject constructor (
         }
     }
 
-    private fun handleTargetNoteOnAutodetectChange(
-        autodetectedTargetNote: MusicalNote
-    ) {
+    private fun handleTargetNoteOnAutodetectChange(autodetectedTargetNote: MusicalNote) {
         this.autodetectedTargetNote = autodetectedTargetNote
-        if (selectedNoteKey == null)
+        if (selectedNoteKey == null) {
             targetNote = autodetectedTargetNote
+        }
     }
 
     /** Only provide the timeWithoutFreqDetectionResult if available */
     private fun resetTuningState(timeSinceThereIsNoFrequencyDetectionResult: Float? = null) {
-        tuningState = if (timeSinceThereIsNoFrequencyDetectionResult == null
-            && tuningState == TuningState.Unknown) {
+        tuningState = if (timeSinceThereIsNoFrequencyDetectionResult == null &&
+            tuningState == TuningState.Unknown
+        ) {
             TuningState.Unknown
-        } else if (timeSinceThereIsNoFrequencyDetectionResult != null
-            && timeSinceThereIsNoFrequencyDetectionResult > DURATION_FOR_MARKING_NOTEDETECTION_AS_INACTIVE) {
+        } else if (timeSinceThereIsNoFrequencyDetectionResult != null &&
+            timeSinceThereIsNoFrequencyDetectionResult >
+            DURATION_FOR_MARKING_NOTEDETECTION_AS_INACTIVE
+        ) {
             TuningState.Unknown
         } else {
             val noteIndex = musicalScale.value.getNoteIndex2(targetNote)
@@ -207,12 +207,12 @@ class InstrumentTunerViewModel @Inject constructor (
     /** Compute number of samples to be stored in pitch history. */
     private fun computePitchHistorySize() = PitchHistoryState.computePitchHistorySize(
         pref.pitchHistoryDuration.value,
-        pref.sampleRate, pref.windowSize.value,
+        pref.sampleRate,
+        pref.windowSize.value,
         pref.overlap.value
     )
 
     companion object {
         const val DURATION_FOR_MARKING_NOTEDETECTION_AS_INACTIVE = 0.5f // in seconds
     }
-
 }

@@ -20,14 +20,14 @@ package de.moekadu.tuner.misc
 
 import android.content.Context
 import android.net.Uri
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.channels.Channels
 import kotlin.math.min
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 class WaveWriter {
 
@@ -51,7 +51,12 @@ class WaveWriter {
                 while (inputIndexBegin < numInputValues) {
                     val bufferIndexBegin = (insertPosition % maxSize).toInt()
                     val numCopy = min(maxSize - bufferIndexBegin, numInputValues - inputIndexBegin)
-                    input.copyInto(bufferLocal, bufferIndexBegin, inputIndexBegin, inputIndexBegin + numCopy)
+                    input.copyInto(
+                        bufferLocal,
+                        bufferIndexBegin,
+                        inputIndexBegin,
+                        inputIndexBegin + numCopy
+                    )
                     inputIndexBegin += numCopy
                     insertPosition += numCopy
                     numValues += numCopy
@@ -74,8 +79,9 @@ class WaveWriter {
                 while (inputIndexBegin < numInputValues) {
                     val bufferIndexBegin = (insertPosition % maxSize).toInt()
                     val numCopy = min(maxSize - bufferIndexBegin, numInputValues - inputIndexBegin)
-                    for (i in 0 until numCopy)
+                    for (i in 0 until numCopy) {
                         bufferLocal[bufferIndexBegin + i] = factor * input[inputIndexBegin + i]
+                    }
                     inputIndexBegin += numCopy
                     insertPosition += numCopy
                     numValues += numCopy
@@ -91,8 +97,9 @@ class WaveWriter {
     suspend fun setBufferSize(numValues: Int) {
         mutex.withLock {
             this.numValues = 0
-            if ((buffer?.size ?: 0) != numValues)
+            if ((buffer?.size ?: 0) != numValues) {
                 buffer = FloatArray(numValues)
+            }
         }
     }
 
@@ -134,15 +141,16 @@ class WaveWriter {
 }
 
 fun writeWave(context: Context?, uri: Uri?, sampleRate: Int, data: FloatArray) {
-    if (uri == null || context == null)
+    if (uri == null || context == null) {
         return
+    }
     val bitsPerSample: Short = 32
     val numChannels: Short = 1
     val byteRate = sampleRate * numChannels * bitsPerSample / 8
     val blockAlign = (numChannels * (bitsPerSample / 8)).toShort()
     val dataSize = data.size * bitsPerSample / 8
 
-    //val fileSizeInBytes = 44 + bitsPerSample / 8 * data.size
+    // val fileSizeInBytes = 44 + bitsPerSample / 8 * data.size
     context.contentResolver?.openOutputStream(uri, "wt")?.use { stream ->
         val channel = Channels.newChannel(stream)
 
@@ -151,16 +159,16 @@ fun writeWave(context: Context?, uri: Uri?, sampleRate: Int, data: FloatArray) {
 
         // general section
         buffer.order(ByteOrder.BIG_ENDIAN)
-        buffer.put("RIFF".toByteArray())  // chunk id (4 bytes)
+        buffer.put("RIFF".toByteArray()) // chunk id (4 bytes)
         buffer.order(ByteOrder.LITTLE_ENDIAN)
-        buffer.putInt(dataSize + 38)  // chunk size (36 for pcm, 38 for ieee_float) (4 bytes)
+        buffer.putInt(dataSize + 38) // chunk size (36 for pcm, 38 for ieee_float) (4 bytes)
         buffer.order(ByteOrder.BIG_ENDIAN)
-        buffer.put("WAVE".toByteArray())  // format (4 bytes)
+        buffer.put("WAVE".toByteArray()) // format (4 bytes)
 
         // format section (size 36 or 38 depending if extension is present or not
-        buffer.put("fmt ".toByteArray())  // subchunk id (4 bytes)
+        buffer.put("fmt ".toByteArray()) // subchunk id (4 bytes)
         buffer.order(ByteOrder.LITTLE_ENDIAN)
-        buffer.putInt(18)  // (Subchunk size) 16 is needed for PCM, i.e. "size of extension is not present", 18 for IEEE_FLOAT (4 bytes)
+        buffer.putInt(18) // (Subchunk size) 16 is needed for PCM, i.e. "size of extension is not present", 18 for IEEE_FLOAT (4 bytes)
         buffer.putShort(3) // audio format, 1-> PCM, 3 -> IEEE_FLOAT (2 bytes)
         buffer.putShort(numChannels) // number of channels, 1-> mono (2 bytes)
         buffer.putInt(sampleRate) // sample rate (4 bytes)
@@ -169,7 +177,7 @@ fun writeWave(context: Context?, uri: Uri?, sampleRate: Int, data: FloatArray) {
         buffer.putShort(bitsPerSample) // bits per samples (2 bytes)
         buffer.putShort(0) // size of extension for format region (only needed for non-pcm format) (2 bytes)
         buffer.order(ByteOrder.BIG_ENDIAN)
-        buffer.put("data".toByteArray())  // format (4 bytes)
+        buffer.put("data".toByteArray()) // format (4 bytes)
         buffer.order(ByteOrder.LITTLE_ENDIAN)
         buffer.putInt(dataSize) // size of data in bytes (4 bytes)
         buffer.flip()

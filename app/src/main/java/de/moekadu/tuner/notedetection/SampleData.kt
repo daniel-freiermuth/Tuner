@@ -34,13 +34,14 @@ class SampleData(val size: Int, val sampleRate: Int, var framePosition: Int) {
 
     /** Smallest index in data, where data was written. */
     private var minLevel = Int.MAX_VALUE
+
     /** Largest index in data, where data was written. */
     private var maxLevel = 0
 
     /** Flag telling if our data buffer is completely filled.
      *  @note We only check that some data was written to min and max position of our data object. */
     val isFull
-            get() = (maxLevel == size && minLevel == 0)
+        get() = (maxLevel == size && minLevel == 0)
 
     /** Empty object and set new frame position.
      * @param framePosition New frame position.
@@ -65,7 +66,7 @@ class SampleData(val size: Int, val sampleRate: Int, var framePosition: Int) {
             maxLevel = max(maxLevel, startIndexData + numCopy)
             minLevel = min(minLevel, startIndexData)
         }
-        //Log.v("TestRecordFlow", "SampleData.addData: inputFramePosition = $inputFramePosition, input.size=${input.size}, numCopy=$numCopy, startIndexData=$startIndexData, startIndexInput=$startIndexInput")
+        // Log.v("TestRecordFlow", "SampleData.addData: inputFramePosition = $inputFramePosition, input.size=${input.size}, numCopy=$numCopy, startIndexData=$startIndexData, startIndexInput=$startIndexInput")
         require(maxLevel <= size)
     }
 
@@ -79,12 +80,13 @@ class SampleData(val size: Int, val sampleRate: Int, var framePosition: Int) {
         val factor = 1f / Short.MAX_VALUE
         val numCopy = min(size - startIndexData, input.size - startIndexInput)
         if (numCopy > 0) {
-            for (i in 0 until numCopy)
+            for (i in 0 until numCopy) {
                 data[startIndexData + i] = factor * input[startIndexInput + i]
+            }
             maxLevel = max(maxLevel, startIndexData + numCopy)
             minLevel = min(minLevel, startIndexData)
         }
-        //Log.v("TestRecordFlow", "SampleData.addData: inputFramePosition = $inputFramePosition, input.size=${input.size}, numCopy=$numCopy, startIndexData=$startIndexData, startIndexInput=$startIndexInput")
+        // Log.v("TestRecordFlow", "SampleData.addData: inputFramePosition = $inputFramePosition, input.size=${input.size}, numCopy=$numCopy, startIndexData=$startIndexData, startIndexInput=$startIndexInput")
         require(maxLevel <= size)
     }
 }
@@ -97,4 +99,3 @@ class MemoryPoolSampleData(capacity: Int) {
         checker = { it.size == size && it.sampleRate == sampleRate }
     ).apply { memory.reset(framePosition) }
 }
-

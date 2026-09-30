@@ -48,10 +48,11 @@ data class MusicalScale(
             it.match(rootNote, ignoreOctave = true)
         }
         val _noteNames = newTemperament.noteNames(_rootNote)
-        val _referenceNote = if (_noteNames.hasNote(referenceNote))
+        val _referenceNote = if (_noteNames.hasNote(referenceNote)) {
             referenceNote
-        else
+        } else {
             _noteNames.defaultReferenceNote
+        }
         return MusicalScale2(
             temperament = temperament.toNew(noteNames),
             _rootNote = _rootNote,
@@ -79,8 +80,8 @@ data class MusicalScale2(
     val numberOfNotesPerOctave = temperament.size
 
     @Transient
-    private val noteNameScale
-            = MusicalScaleNoteNames2(temperament.noteNames(_rootNote), _referenceNote)
+    private val noteNameScale =
+        MusicalScaleNoteNames2(temperament.noteNames(_rootNote), _referenceNote)
 
     val rootNote get() = noteNameScale.noteNames[0]
 
@@ -102,6 +103,7 @@ data class MusicalScale2(
     /** Smallest note index (included). */
     @Transient
     val noteIndexBegin: Int = musicalScaleFrequencies.indexStart
+
     /** Last note index (excluded). */
     @Transient
     val noteIndexEnd: Int = musicalScaleFrequencies.indexEnd
@@ -110,18 +112,14 @@ data class MusicalScale2(
      * @param noteIndex Local index of note (noteIndexBegin <= noteIndex < noteIndexEnd).
      * @return Musical note representation.
      */
-    fun getNote(noteIndex: Int): MusicalNote {
-        return noteNameScale.getNoteOfIndex(noteIndex)
-    }
+    fun getNote(noteIndex: Int): MusicalNote = noteNameScale.getNoteOfIndex(noteIndex)
 
     /** Obtain note frequency of a given index relative to the reference note.
      * @param noteIndex Note index relative to reference note,
      *   (noteIndexBegin <= noteIndex < noteIndexEnd).
      * @return Note frequency.
      */
-    fun getNoteFrequency(noteIndex: Int): Float {
-        return musicalScaleFrequencies[noteIndex]
-    }
+    fun getNoteFrequency(noteIndex: Int): Float = musicalScaleFrequencies[noteIndex]
 
     /** Obtain note frequency based on class internal note index for noteIndex type Float.
      * This method allows using "odd" note indices.
@@ -129,9 +127,7 @@ data class MusicalScale2(
      *   (noteIndexBegin <= noteIndex < noteIndexEnd).
      * @return Note frequency.
      */
-    fun getNoteFrequency(noteIndex: Float): Float {
-        return musicalScaleFrequencies[noteIndex]
-    }
+    fun getNoteFrequency(noteIndex: Float): Float = musicalScaleFrequencies[noteIndex]
 
     /** Get index relative to reference note of a given frequency.
      * This method can return non-integer note indices, so if the frequency is between two notes
@@ -139,54 +135,43 @@ data class MusicalScale2(
      * @param frequency Frequency.
      * @return Note index as float.
      */
-    fun getNoteIndex(frequency: Float): Float {
-        return musicalScaleFrequencies.getFrequencyIndex(frequency)
-    }
+    fun getNoteIndex(frequency: Float): Float = musicalScaleFrequencies.getFrequencyIndex(frequency)
 
     /** Get index relative to reference note which is closest to a given frequency.
      * @param frequency Frequency.
      * @return Note index.
      */
-    fun getClosestNoteIndex(frequency: Float): Int {
-        return musicalScaleFrequencies.getClosestFrequencyIndex(frequency)
-    }
+    fun getClosestNoteIndex(frequency: Float): Int =
+        musicalScaleFrequencies.getClosestFrequencyIndex(frequency)
 
     /** Get note index of a given musical note representation.
      * @param note Musical note representation.
      * @return Local index of the note or Int.MAX_VALUE if not does not exist in scale.
      */
-    fun getNoteIndex2(note: MusicalNote): Int {
-        return noteNameScale.getNoteIndex(note)
-    }
+    fun getNoteIndex2(note: MusicalNote): Int = noteNameScale.getNoteIndex(note)
 
     /** Get indices of matching notes.
      * @note "Match means that any combination of enharmonic/non-enharmonic is the same.
      * @param note Note against we match possible notes.
      * @return Indices relative to reference note, which match the given note.
      */
-    fun getMatchingNoteIndices(note: MusicalNote): IntArray {
-        return noteNameScale.getMatchingNoteIndices(note)
-    }
+    fun getMatchingNoteIndices(note: MusicalNote): IntArray =
+        noteNameScale.getMatchingNoteIndices(note)
 
     /** Check if the scale has a matching note.
      * @note "Match means that any combination of enharmonic/non-enharmonic is the same.
      */
-    fun hasMatchingNote(note: MusicalNote?): Boolean {
-        return noteNameScale.hasMatchingNote(note)
-    }
+    fun hasMatchingNote(note: MusicalNote?): Boolean = noteNameScale.hasMatchingNote(note)
 
     companion object {
-        fun createTestEdo12(): MusicalScale2 {
-            return MusicalScale2(
-                predefinedTemperamentEDO(12, 1L),
-                _rootNote = null,
-                _referenceNote = null,
-                referenceFrequency = 440f,
-                frequencyMin = 30f,
-                frequencyMax = 18000f,
-                _stretchTuning = null
-            )
-        }
+        fun createTestEdo12(): MusicalScale2 = MusicalScale2(
+            predefinedTemperamentEDO(12, 1L),
+            _rootNote = null,
+            _referenceNote = null,
+            referenceFrequency = 440f,
+            frequencyMin = 30f,
+            frequencyMax = 18000f,
+            _stretchTuning = null
+        )
     }
 }
-

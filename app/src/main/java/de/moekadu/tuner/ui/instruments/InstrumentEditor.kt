@@ -67,22 +67,22 @@ import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NoteSelector
 import de.moekadu.tuner.ui.screens.TunerPlotStyle
 import de.moekadu.tuner.ui.theme.TunerTheme
+import kotlin.math.min
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.math.min
 
 interface InstrumentEditorData {
     val icon: StateFlow<InstrumentIcon>
     val name: StateFlow<String>
 
-    val strings: StateFlow<ImmutableList<StringWithInfo> >
+    val strings: StateFlow<ImmutableList<StringWithInfo>>
     val stringsState: StringsState
 
-    /// Index in strings-list of the selected string
+    // / Index in strings-list of the selected string
     val selectedStringIndex: StateFlow<Int>
 
     val noteDetectorState: NoteDetectorState
@@ -144,6 +144,7 @@ fun InstrumentEditor(
                     onIconButtonClicked = onIconButtonClicked
                 )
             }
+
             else -> {
                 InstrumentEditorPortrait(
                     state = state,
@@ -177,10 +178,11 @@ fun InstrumentEditorPortrait(
     val selectedNote = selectedNoteWithInfo?.note ?: initializerNote
     val noteSelectorPosition = remember(musicalScale, selectedNote) {
         val noteIndices = musicalScale.getMatchingNoteIndices(selectedNote)
-        if (noteIndices.isEmpty())
+        if (noteIndices.isEmpty()) {
             -musicalScale.noteIndexBegin
-        else
+        } else {
             noteIndices[0] - musicalScale.noteIndexBegin
+        }
     }
 
 //    Log.v("Tuner", "InstrumentEditor: strings: $strings")
@@ -199,7 +201,7 @@ fun InstrumentEditorPortrait(
                     Icon(
                         ImageVector.vectorResource(id = icon.resourceId),
                         contentDescription = null,
-                        modifier = Modifier.size(36.dp)// .background(Color.Green)
+                        modifier = Modifier.size(36.dp) // .background(Color.Green)
                     )
                 }
             },
@@ -234,10 +236,11 @@ fun InstrumentEditorPortrait(
             onInTuneColor = MaterialTheme.colorScheme.onPrimary,
             fontSize = tunerPlotStyle.stringFontStyle.fontSize,
             sidebarPosition = StringsSidebarPosition.End,
-            outline = if (state.stringsState.scrollMode == StringsScrollMode.Manual)
+            outline = if (state.stringsState.scrollMode == StringsScrollMode.Manual) {
                 tunerPlotStyle.plotWindowOutlineDuringGesture
-            else
-                tunerPlotStyle.plotWindowOutline,
+            } else {
+                tunerPlotStyle.plotWindowOutline
+            },
             state = state.stringsState,
             onStringClicked = { key, _ ->
                 state.selectString(key)
@@ -271,7 +274,9 @@ fun InstrumentEditorPortrait(
             notePrintOptions = notePrintOptions,
             modifier = Modifier.padding(top = tunerPlotStyle.margin - 4.dp),
             fontSize = tunerPlotStyle.noteSelectorStyle.fontSize,
-            onIndexChanged = { state.modifySelectedString(musicalScale.getNote(it + musicalScale.noteIndexBegin)) }
+            onIndexChanged = {
+                state.modifySelectedString(musicalScale.getNote(it + musicalScale.noteIndexBegin))
+            }
         )
         HorizontalDivider(
             modifier = Modifier.padding(tunerPlotStyle.margin)
@@ -293,7 +298,7 @@ fun InstrumentEditorPortrait(
                 .padding(
                     bottom = tunerPlotStyle.margin,
                     start = tunerPlotStyle.margin,
-                    end = tunerPlotStyle.margin,
+                    end = tunerPlotStyle.margin
                 ),
             onNoteClicked = { state.modifySelectedString(it) }
         )
@@ -319,10 +324,11 @@ fun InstrumentEditorLandscape(
     val selectedNote = selectedNoteWithInfo?.note ?: initializerNote
     val noteSelectorPosition = remember(musicalScale, selectedNote) {
         val noteIndices = musicalScale.getMatchingNoteIndices(selectedNote)
-        if (noteIndices.isEmpty())
+        if (noteIndices.isEmpty()) {
             -musicalScale.noteIndexBegin
-        else
+        } else {
             noteIndices[0] - musicalScale.noteIndexBegin
+        }
     }
 
     Row(modifier) {
@@ -347,7 +353,7 @@ fun InstrumentEditorLandscape(
                         Icon(
                             ImageVector.vectorResource(id = icon.resourceId),
                             contentDescription = null,
-                            modifier = Modifier.size(36.dp)// .background(Color.Green)
+                            modifier = Modifier.size(36.dp) // .background(Color.Green)
                         )
                     }
                 },
@@ -396,10 +402,14 @@ fun InstrumentEditorLandscape(
                 musicalScale = musicalScale,
                 notePrintOptions = notePrintOptions,
                 modifier = Modifier.padding(
-                    top = tunerPlotStyle.margin - 4.dp,
+                    top = tunerPlotStyle.margin - 4.dp
                 ),
                 fontSize = tunerPlotStyle.noteSelectorStyle.fontSize,
-                onIndexChanged = { state.modifySelectedString(musicalScale.getNote(it + musicalScale.noteIndexBegin)) }
+                onIndexChanged = {
+                    state.modifySelectedString(
+                        musicalScale.getNote(it + musicalScale.noteIndexBegin)
+                    )
+                }
             )
 
             Spacer(Modifier.weight(1f))
@@ -459,16 +469,16 @@ fun InstrumentEditorLandscape(
             onInTuneColor = MaterialTheme.colorScheme.onPrimary,
             fontSize = tunerPlotStyle.stringFontStyle.fontSize,
             sidebarPosition = StringsSidebarPosition.End,
-            outline = if (state.stringsState.scrollMode == StringsScrollMode.Manual)
+            outline = if (state.stringsState.scrollMode == StringsScrollMode.Manual) {
                 tunerPlotStyle.plotWindowOutlineDuringGesture
-            else
-                tunerPlotStyle.plotWindowOutline,
+            } else {
+                tunerPlotStyle.plotWindowOutline
+            },
             state = state.stringsState,
             onStringClicked = { key, _ ->
                 state.selectString(key)
             }
         )
-
     }
 }
 
@@ -523,7 +533,8 @@ private class InstrumentEditorDataTest : InstrumentEditorData {
             selectedStringIndex.value = 0
         } else {
             val newKey = StringWithInfo.generateKey(existingList = stringsValue)
-            val note = stringsValue.getOrNull(selectedStringIndex.value)?.note ?: initializerNote.value
+            val note =
+                stringsValue.getOrNull(selectedStringIndex.value)?.note ?: initializerNote.value
             val insertionPosition = min(selectedStringIndex.value + 1, stringsValue.size)
             strings.value = stringsValue.mutate {
                 it.add(insertionPosition, StringWithInfo(note, newKey))
@@ -539,13 +550,15 @@ private class InstrumentEditorDataTest : InstrumentEditorData {
             strings.value = stringsValue.mutate {
                 it.removeAt(index)
             }
-            selectedStringIndex.value = if (stringsValue.size <= 1)
+            selectedStringIndex.value = if (stringsValue.size <= 1) {
                 0
-            else
+            } else {
                 index.coerceIn(0, stringsValue.size - 2)
+            }
 
-            if (stringsValue.size == 1)
+            if (stringsValue.size == 1) {
                 initializerNote.value = stringsValue[0].note
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ fun NavGraphBuilder.preferenceGraph(
     temperaments: TemperamentResources
 ) {
     navigation<PreferencesGraphRoute>(
-        startDestination = PreferencesRoute,
+        startDestination = PreferencesRoute
     ) {
         composable<PreferencesRoute> {
             val viewModel: PreferencesViewModel = hiltViewModel()
@@ -81,7 +81,8 @@ fun NavGraphBuilder.preferenceGraph(
                 notePrintOptions = preferences.notePrintOptions.value,
                 onNotationChange = { notation, helmholtz ->
                     val newNotePrintOptions = preferences.notePrintOptions.value.copy(
-                        notationType = notation, helmholtzNotation = helmholtz
+                        notationType = notation,
+                        helmholtzNotation = helmholtz
                     )
                     preferences.writeNotePrintOptions(newNotePrintOptions)
                     controller.navigateUp()
@@ -95,7 +96,7 @@ fun NavGraphBuilder.preferenceGraph(
                 onWindowingFunctionChanged = {
                     preferences.writeWindowing(it)
                     controller.navigateUp()
-                } ,
+                },
                 onDismiss = { controller.navigateUp() }
             )
         }
@@ -119,15 +120,21 @@ fun NavGraphBuilder.preferenceGraph(
 
 @Serializable
 data object PreferencesGraphRoute
+
 @Serializable
 data object PreferencesRoute
+
 @Serializable
 data object AppearanceDialogRoute
+
 @Serializable
 data object NotationDialogRoute
+
 @Serializable
 data object WindowingFunctionDialogRoute
+
 @Serializable
 data object ResetDialogRoute
+
 @Serializable
 data object AboutDialogRoute
