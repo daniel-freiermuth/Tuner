@@ -10,8 +10,9 @@ when:
 
 steps:
   - name: build-and-test
-    # Android SDK platform 36 + build-tools 36.0.0 + JDK 21, licenses accepted.
-    # Keep the tag in sync with compileSdk in app/build.gradle.kts.
-    image: ghcr.io/cirruslabs/android-sdk:36
+    # Android SDK platform 36 + JDK 17 with SDK licenses accepted; small (~0.4 GB)
+    # and runs as root. Keep "android-36" in sync with compileSdk in
+    # app/build.gradle.kts. https://github.com/alvr/alpine-android
+    image: docker.io/alvrme/alpine-android:android-36-jdk17
     commands:
       - ./gradlew --no-daemon assembleDebug testDebugUnitTest
