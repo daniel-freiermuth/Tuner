@@ -1,0 +1,17 @@
+# Build the debug APK and run the JVM unit tests (app/src/test).
+# Runs on Codeberg's hosted Woodpecker (https://ci.codeberg.org), see
+# https://docs.codeberg.org/ci/ for how to enable it for this repository.
+# Instrumented tests (connectedAndroidTest) need an emulator and are not run.
+
+when:
+  - event: push
+    branch: ${CI_REPO_DEFAULT_BRANCH}
+  - event: [pull_request, manual]
+
+steps:
+  - name: build-and-test
+    # Android SDK platform 36 + build-tools 36.0.0 + JDK 21, licenses accepted.
+    # Keep the tag in sync with compileSdk in app/build.gradle.kts.
+    image: ghcr.io/cirruslabs/android-sdk:36
+    commands:
+      - ./gradlew --no-daemon assembleDebug testDebugUnitTest
