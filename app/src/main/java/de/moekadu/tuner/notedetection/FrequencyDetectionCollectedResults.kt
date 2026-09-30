@@ -109,7 +109,8 @@ class FrequencyDetectionResultCollector(
     private val maxGapBetweenHarmonics: Int, // = 10,
     private val maxNumHarmonicsForInharmonicity: Int, // = 8,
     private val windowType: WindowingFunction, //  = WindowingFunction.Tophat,
-    private val acousticWeighting: AcousticWeighting // = AcousticCWeighting()
+    // = AcousticCWeighting()
+    private val acousticWeighting: AcousticWeighting
 ) {
     private val collectedResultsMemory = MemoryPoolFrequencyDetectionCollectedResults()
     private val spectrumAndCorrelationMemory = MemoryPoolCorrelation()

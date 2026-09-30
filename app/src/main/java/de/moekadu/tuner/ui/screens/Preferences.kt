@@ -350,7 +350,8 @@ fun Preferences(
                 )
             }
             item {
-                val pitchHistoryNumFaultyValues by pref.pitchHistoryNumFaultyValues.collectAsStateWithLifecycle()
+                val pitchHistoryNumFaultyValues by pref.pitchHistoryNumFaultyValues
+                    .collectAsStateWithLifecycle()
                 val summary = remember(resources, pitchHistoryNumFaultyValues) {
                     resources.getQuantityString(
                         R.plurals.pitch_history_num_faulty_values_summary,

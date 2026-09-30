@@ -33,13 +33,13 @@ private data class PointsCache(
     private val pointSizeBoxScreen = Rect(Offset.Zero, Size(maxPointSizeScreen, maxPointSizeScreen))
 
     init {
-        _update(coordinates, transformation, init = true)
+        updatePoints(coordinates, transformation, init = true)
     }
 
     fun update(coordinates: LineCoordinates, transformation: Transformation): List<Offset> =
-        _update(coordinates, transformation, init = false)
+        updatePoints(coordinates, transformation, init = false)
 
-    private fun _update(
+    private fun updatePoints(
         coordinates: LineCoordinates,
         transformation: Transformation,
         init: Boolean

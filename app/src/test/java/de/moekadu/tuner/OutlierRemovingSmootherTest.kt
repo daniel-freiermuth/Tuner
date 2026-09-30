@@ -2,7 +2,9 @@ package de.moekadu.tuner
 
 import de.moekadu.tuner.notedetection.OutlierRemovingSmoother
 import de.moekadu.tuner.notedetection.OutlierRemovingSmoothingBuffer
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class OutlierRemovingSmootherTest {

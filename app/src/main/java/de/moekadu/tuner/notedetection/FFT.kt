@@ -19,8 +19,11 @@
 
 package de.moekadu.tuner.notedetection
 
-import kotlin.math.*
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.log2
 import kotlin.math.roundToInt
+import kotlin.math.sin
 import kotlin.ranges.until
 
 private fun bitReverse(value: Int, numBits: Int): Int {

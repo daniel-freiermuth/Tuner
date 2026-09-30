@@ -67,7 +67,8 @@ class AccurateSpectrumPeakFrequency(
             dPhase -= 2 * PI.toFloat()
         }
 
-        val numWaves = (timeShiftBetweenSpecs * freqLowAccuracy - dPhase / (2 * PI.toFloat())).roundToInt()
+        val numWaves =
+            (timeShiftBetweenSpecs * freqLowAccuracy - dPhase / (2 * PI.toFloat())).roundToInt()
 
         return (numWaves + dPhase / (2 * PI.toFloat())) / timeShiftBetweenSpecs
     }

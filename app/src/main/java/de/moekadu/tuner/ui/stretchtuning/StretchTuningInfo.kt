@@ -160,7 +160,8 @@ private fun StretchTuningInfoPortrait(
                     .weight(1f)
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(
-                    bottom = paddingValues.calculateBottomPadding() + 76.dp // additional padding to get above the fab button
+                    // additional padding to get above the fab button
+                    bottom = paddingValues.calculateBottomPadding() + 76.dp
                 ),
                 onLineClicked = { selectedKey = it },
                 lazyListState = lazyListState,
@@ -258,7 +259,8 @@ private fun StretchTuningInfoLandscape(
                         .fillMaxWidth()
                         .weight(1f),
                     contentPadding = PaddingValues(
-                        bottom = paddingValues.calculateBottomPadding() + 76.dp // additional padding to get above the fab button
+                        // additional padding to get above the fab button
+                        bottom = paddingValues.calculateBottomPadding() + 76.dp
                     ),
                     onLineClicked = { selectedKey = it },
                     lazyListState = lazyListState,

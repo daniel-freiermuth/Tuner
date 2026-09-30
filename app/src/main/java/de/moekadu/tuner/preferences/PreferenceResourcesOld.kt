@@ -172,9 +172,8 @@ class PreferenceResourcesOld @Inject constructor(
 
     val waveWriterDurationInSeconds get() = getInt(WAVE_WRITER_DURATION_IN_SECONDS_KEY)
 
-    private val temperamentAndReferenceNote get() = TemperamentAndReferenceNoteFromPreference.fromSharedPreferences(
-        sharedPreferences
-    )
+    private val temperamentAndReferenceNote get() =
+        TemperamentAndReferenceNoteFromPreference.fromSharedPreferences(sharedPreferences)
 
     val referenceNote get() = temperamentAndReferenceNote?.referenceNote
     val rootNote get() = temperamentAndReferenceNote?.rootNote
@@ -248,7 +247,8 @@ private data class TemperamentAndReferenceNoteFromPreference(
         "$temperamentType ${rootNote.asString()} ${referenceNote.asString()} $referenceFrequency"
 
     companion object {
-        const val TEMPERAMENT_AND_REFERENCE_NOTE_PREFERENCE_KEY = "temperament_and_reference_note.key"
+        const val TEMPERAMENT_AND_REFERENCE_NOTE_PREFERENCE_KEY =
+            "temperament_and_reference_note.key"
 
         fun fromSharedPreferences(
             pref: SharedPreferences

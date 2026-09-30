@@ -132,7 +132,8 @@ fun ModifyStretchTuningLineDialog(
                     onValueChange = { unstretchedFrequencyAsString = it },
                     label = { Text(stringResource(id = R.string.frequency)) },
                     suffix = { Text(stringResource(id = R.string.hertz_str, "")) },
-                    isError = !(validUnstretchedFrequencyString && validUnstretchedFrequencyPositive),
+                    isError =
+                        !(validUnstretchedFrequencyString && validUnstretchedFrequencyPositive),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                     maxLines = 1,

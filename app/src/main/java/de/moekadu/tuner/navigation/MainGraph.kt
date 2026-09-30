@@ -244,7 +244,8 @@ fun NavGraphBuilder.mainGraph(
                                 copy -> "$name (${resources.getString(R.string.copy_)})"
                                 else -> null // i.e. use name from temperament
                             },
-                            stableId = if (copy) Temperament3.NO_STABLE_ID else null // null means use stable from temperament
+                            // null means use stable from temperament
+                            stableId = if (copy) Temperament3.NO_STABLE_ID else null
                         )
                     )
                 )
@@ -336,7 +337,8 @@ fun NavGraphBuilder.mainGraph(
                                     else -> name
                                 }
                             ),
-                            stableId = if (copy) StretchTuning.NO_STABLE_ID else stretchTuning.stableId
+                            stableId =
+                                if (copy) StretchTuning.NO_STABLE_ID else stretchTuning.stableId
                         )
                     )
                 )

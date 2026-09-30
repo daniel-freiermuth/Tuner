@@ -79,7 +79,11 @@ class PreferenceResources @Inject constructor(
                 val old = Json.decodeFromString<NotePrintOptions>(it)
                 NotePrintOptions2(
                     enharmonicVariant = if (old.useEnharmonic) 1 else 0,
-                    octaveNotation = if (old.helmholtzNotation) OctaveNotation.Helmholtz else OctaveNotation.Scientific,
+                    octaveNotation = if (old.helmholtzNotation) {
+                        OctaveNotation.Helmholtz
+                    } else {
+                        OctaveNotation.Scientific
+                    },
                     notationType = old.notationType
                 )
             } catch (_: Exception) {
@@ -213,6 +217,6 @@ class PreferenceResources @Inject constructor(
     }
 
     companion object {
-        const val ReferenceFrequencyDefault = 440f
+        const val REFERENCE_FREQUENCY_DEFAULT = 440f
     }
 }

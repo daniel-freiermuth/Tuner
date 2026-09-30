@@ -271,8 +271,12 @@ private fun StretchTuningGraphPreview() {
                 StretchTuning(
                     GetTextFromString("Test"),
                     GetTextFromString("Test stretch description"),
-                    doubleArrayOf(100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1200.0),
-                    doubleArrayOf(97.0, 199.0, 297.0, 400.0, 502.0, 606.0, 708.0, 807.0, 913.0, 1220.0)
+                    doubleArrayOf(
+                        100.0, 200.0, 300.0, 400.0, 500.0, 600.0, 700.0, 800.0, 900.0, 1200.0
+                    ),
+                    doubleArrayOf(
+                        97.0, 199.0, 297.0, 400.0, 502.0, 606.0, 708.0, 807.0, 913.0, 1220.0
+                    )
                 )
             }
             StretchTuningGraph(

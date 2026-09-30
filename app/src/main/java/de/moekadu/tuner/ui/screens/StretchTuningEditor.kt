@@ -274,7 +274,8 @@ private fun StretchTuningPortrait(
                     .weight(1f)
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(
-                    bottom = paddingValues.calculateBottomPadding() + 76.dp // additional padding to get above the fab button
+                    // additional padding to get above the fab button
+                    bottom = paddingValues.calculateBottomPadding() + 76.dp
                 ),
                 onLineClicked = { state.select(it) },
                 onEditLineClicked = { onEditLineClicked(it) },
@@ -440,7 +441,8 @@ private fun StretchTuningLandscape(
                     selectedKey = selectedKey,
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(
-                        bottom = paddingValues.calculateBottomPadding() + 76.dp // additional padding to get above the fab button
+                        // additional padding to get above the fab button
+                        bottom = paddingValues.calculateBottomPadding() + 76.dp
                     ),
                     onLineClicked = { state.select(it) },
                     onEditLineClicked = { onEditLineClicked(it) },

@@ -49,18 +49,18 @@ open class ResourcesBase(
         private val onChanged: () -> Unit
     ) : ResourcePreference {
         val key = stringPreferencesKey(key)
-        private val _value = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
-        fun asStateFlow() = _value.asStateFlow()
+        private val state = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
+        fun asStateFlow() = state.asStateFlow()
 
         fun set(value: T) {
-            _value.value = value
+            state.value = value
             onChanged()
         }
 
         override fun storeIn(mutableDataStorePreferences: MutablePreferences) {
             mutableDataStorePreferences[key] = Json.encodeToString(
                 serializer,
-                makeSerializable(_value.value)
+                makeSerializable(state.value)
             )
         }
 
@@ -93,16 +93,16 @@ open class ResourcesBase(
 //        private val onChanged: () -> Unit
 //    ) : ResourcePreference {
 //        val key = stringPreferencesKey(key)
-//        private val _value = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
-//        fun asStateFlow() = _value.asStateFlow()
+//        private val state = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
+//        fun asStateFlow() = state.asStateFlow()
 //
 //        fun set(value: T) {
-//            _value.value = value
+//            state.value = value
 //            onChanged()
 //        }
 //
 //        override fun storeIn(mutableDataStorePreferences: MutablePreferences) {
-//            mutableDataStorePreferences[key] = Json.encodeToString(serializer, _value.value)
+//            mutableDataStorePreferences[key] = Json.encodeToString(serializer, state.value)
 //        }
 //
 //        override fun reset() {
@@ -129,19 +129,19 @@ open class ResourcesBase(
         private val onChanged: () -> Unit
     ) : ResourcePreference {
         val key = booleanPreferencesKey(key)
-        private val _value = MutableStateFlow(
+        private val state = MutableStateFlow(
             readFromPrefs(prefsForInitialization) ?: default
         )
 
-        fun asStateFlow() = _value.asStateFlow()
+        fun asStateFlow() = state.asStateFlow()
 
         fun set(value: Boolean) {
-            _value.value = value
+            state.value = value
             onChanged()
         }
 
         override fun storeIn(mutableDataStorePreferences: MutablePreferences) {
-            mutableDataStorePreferences[key] = _value.value
+            mutableDataStorePreferences[key] = state.value
         }
 
         override fun reset() {
@@ -162,16 +162,16 @@ open class ResourcesBase(
         val onChanged: () -> Unit
     ) : ResourcePreference {
         val key = intPreferencesKey(key)
-        private val _value = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
+        private val state = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
 
-        fun asStateFlow() = _value.asStateFlow()
+        fun asStateFlow() = state.asStateFlow()
 
         fun set(value: Int) {
-            _value.value = value
+            state.value = value
             onChanged()
         }
         override fun storeIn(mutableDataStorePreferences: MutablePreferences) {
-            mutableDataStorePreferences[key] = _value.value
+            mutableDataStorePreferences[key] = state.value
         }
 
         override fun reset() {
@@ -191,16 +191,16 @@ open class ResourcesBase(
         val onChanged: () -> Unit
     ) : ResourcePreference {
         val key = floatPreferencesKey(key)
-        private val _value = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
+        private val state = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
 
-        fun asStateFlow() = _value.asStateFlow()
+        fun asStateFlow() = state.asStateFlow()
 
         fun set(value: Float) {
-            _value.value = value
+            state.value = value
             onChanged()
         }
         override fun storeIn(mutableDataStorePreferences: MutablePreferences) {
-            mutableDataStorePreferences[key] = _value.value
+            mutableDataStorePreferences[key] = state.value
         }
 
         override fun reset() {
@@ -220,16 +220,16 @@ open class ResourcesBase(
         val onChanged: () -> Unit
     ) : ResourcePreference {
         val key = stringPreferencesKey(key)
-        private val _value = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
+        private val state = MutableStateFlow(readFromPrefs(prefsForInitialization) ?: default)
 
-        fun asStateFlow() = _value.asStateFlow()
+        fun asStateFlow() = state.asStateFlow()
         fun set(value: String) {
-            _value.value = value
+            state.value = value
             onChanged()
         }
 
         override fun storeIn(mutableDataStorePreferences: MutablePreferences) {
-            mutableDataStorePreferences[key] = _value.value
+            mutableDataStorePreferences[key] = state.value
         }
 
         override fun reset() {

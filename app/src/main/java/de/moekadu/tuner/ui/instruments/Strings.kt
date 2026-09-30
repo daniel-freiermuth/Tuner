@@ -243,10 +243,11 @@ private fun findNextScrollableStringIndex(
 
 /** Sidebar position (the base which shows the scroll buttons).*/
 enum class StringsSidebarPosition {
+    /** Sidebar is before the strings viewport. */
     Start,
 
-    /**< Sidebar is before the strings viewport. */
-    End /**< Sidebar is behind the strings viewport. */
+    /** Sidebar is behind the strings viewport. */
+    End
 }
 
 /** String with extra infos.
@@ -273,10 +274,11 @@ data class StringWithInfo(
 }
 
 enum class StringsScrollMode {
+    /** Manually scrolling by user. */
     Manual,
 
-    /**< Manually scrolling by user. */
-    Automatic /**< Scroll automatically to highlighted note. */
+    /** Scroll automatically to highlighted note. */
+    Automatic
 }
 
 class StringsState(firstVisibleIndex: Int) {
@@ -538,9 +540,9 @@ fun Strings(
                 // .border(outline.lineWidth, outlineColor, outlineShape)
                 .clip(outlineShape)
         ) {
-            val numLabelsPerStair = (maxWidth.value / (labelSize.width + 16.dp).value).roundToInt().coerceAtLeast(
-                1
-            )
+            val numLabelsPerStair = (maxWidth.value / (labelSize.width + 16.dp).value)
+                .roundToInt()
+                .coerceAtLeast(1)
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(space),
                 modifier = Modifier

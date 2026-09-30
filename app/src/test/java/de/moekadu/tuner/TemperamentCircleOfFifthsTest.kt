@@ -1,6 +1,20 @@
 package de.moekadu.tuner
 
-import de.moekadu.tuner.temperaments.*
+import de.moekadu.tuner.temperaments.circleOfFifthsEDO12
+import de.moekadu.tuner.temperaments.circleOfFifthsFifthCommaMeanTone
+import de.moekadu.tuner.temperaments.circleOfFifthsKirnberger1
+import de.moekadu.tuner.temperaments.circleOfFifthsKirnberger2
+import de.moekadu.tuner.temperaments.circleOfFifthsKirnberger3
+import de.moekadu.tuner.temperaments.circleOfFifthsNeidhardt1
+import de.moekadu.tuner.temperaments.circleOfFifthsNeidhardt2
+import de.moekadu.tuner.temperaments.circleOfFifthsNeidhardt3
+import de.moekadu.tuner.temperaments.circleOfFifthsQuarterCommaMeanTone
+import de.moekadu.tuner.temperaments.circleOfFifthsThirdCommaMeanTone
+import de.moekadu.tuner.temperaments.circleOfFifthsValotti
+import de.moekadu.tuner.temperaments.circleOfFifthsWerckmeisterIII
+import de.moekadu.tuner.temperaments.circleOfFifthsWerckmeisterIV
+import de.moekadu.tuner.temperaments.circleOfFifthsWerckmeisterV
+import de.moekadu.tuner.temperaments.circleOfFifthsYoung2
 import kotlin.math.log
 import kotlin.math.pow
 import org.junit.Test

@@ -56,7 +56,8 @@ fun LanguageDialog(modifier: Modifier = Modifier, onDismiss: () -> Unit = {}) {
         text = {
             val selectedLocale = remember {
                 LanguageSelections.entries.firstOrNull {
-                    it.tag == AppCompatDelegate.getApplicationLocales()[0]?.language // toLanguageTag()
+                    // toLanguageTag()
+                    it.tag == AppCompatDelegate.getApplicationLocales()[0]?.language
                 } ?: LanguageSelections.SystemDefault
             }
 

@@ -1,6 +1,14 @@
 package de.moekadu.tuner
 
-import de.moekadu.tuner.notedetection.*
+import de.moekadu.tuner.notedetection.AccurateSpectrumPeakFrequency
+import de.moekadu.tuner.notedetection.FrequencySpectrum
+import de.moekadu.tuner.notedetection.Harmonic
+import de.moekadu.tuner.notedetection.Harmonics
+import de.moekadu.tuner.notedetection.findGlobalMaximumIndex
+import de.moekadu.tuner.notedetection.findHarmonics
+import de.moekadu.tuner.notedetection.findHarmonicsFromSpectrum2
+import de.moekadu.tuner.notedetection.findLocalMaximumIndex
+import de.moekadu.tuner.notedetection.hasCommonDivisors
 import kotlin.math.floor
 import kotlin.math.roundToInt
 import org.junit.Assert.assertEquals
@@ -154,7 +162,8 @@ class HarmonicsTest {
         val frequencyMax = 90f
         val df = 0.1f
         val spectrum = FrequencySpectrum(size, df)
-        val spectrumFrequencies = AccurateSpectrumPeakFrequency(spectrum, null) // we omit the other spec, so the resulting values will be "index * df"
+        // we omit the other spec, so the resulting values will be "index * df"
+        val spectrumFrequencies = AccurateSpectrumPeakFrequency(spectrum, null)
 
         // define the third harmonic
         val thirdHarmonicFreq = 3 * frequency
@@ -243,13 +252,15 @@ class HarmonicsTest {
             spectrumFrequencies,
             maxNumFail = 1
         )
-        assertEquals(2, harmonics.size) // we find only second and third harmonic since due to the gap between 3rd and 5th
+        // we find only second and third harmonic since due to the gap between 3rd and 5th
+        assertEquals(2, harmonics.size)
 
         // set the 5th harmonic slightly off
         spectrum.amplitudeSpectrumSquared[fifthHarmonicIdx] = 0f
         val fifthHarmonicIdxSlightlyOff = fifthHarmonicIdx + floor(0.18f * frequency / df).toInt()
         spectrum.amplitudeSpectrumSquared[fifthHarmonicIdxSlightlyOff] = 60f
-        assertNotEquals(fifthHarmonicIdx, fifthHarmonicIdxSlightlyOff) // just make sure that they are different and we really test something slightly off
+        // just make sure that they are different and we really test something slightly off
+        assertNotEquals(fifthHarmonicIdx, fifthHarmonicIdxSlightlyOff)
 
         harmonics.findHarmonicsFromSpectrum2(
             initialHarmonic,
@@ -278,7 +289,8 @@ class HarmonicsTest {
         spectrum.amplitudeSpectrumSquared[fifthHarmonicIdxSlightlyOff] = 0f
         val fifthHarmonicIdxSlightlyOff2 = fifthHarmonicIdx - floor(0.18f * frequency / df).toInt()
         spectrum.amplitudeSpectrumSquared[fifthHarmonicIdxSlightlyOff2] = 60f
-        assertNotEquals(fifthHarmonicIdx, fifthHarmonicIdxSlightlyOff2) // just make sure that they are different and we really test something slightly off
+        // just make sure that they are different and we really test something slightly off
+        assertNotEquals(fifthHarmonicIdx, fifthHarmonicIdxSlightlyOff2)
 
         harmonics.findHarmonicsFromSpectrum2(
             initialHarmonic,

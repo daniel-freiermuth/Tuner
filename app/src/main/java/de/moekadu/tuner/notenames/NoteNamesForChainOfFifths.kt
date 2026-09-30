@@ -83,7 +83,7 @@ fun generateNoteNamesForChainOfFifths(chain: ChainOfFifths, rootNote: MusicalNot
             if (measure >= 0) {
                 measure
             } else {
-                measure + 10000 * baseNoteIndexForOctave
+                measure + 10000 * BASE_NOTE_INDEX_FOR_OCTAVE
             }
         }
     val octaveSwitchIndex = sortedNames.indexOf(octaveSwitchAt)
@@ -153,7 +153,7 @@ private fun BaseNote.toIndex() = when (this) {
         "BaseNote.toIndex: Note allowed to call for BaseNote.None"
     )
 }
-private const val baseNoteIndexForOctave = 12
+private const val BASE_NOTE_INDEX_FOR_OCTAVE = 12
 
 private data class NoteWithSharpness(val note: BaseNote, val sharpness: Int) {
     constructor(baseNote: BaseNote, modifier: NoteModifier) : this(baseNote, modifier.toSharpness())

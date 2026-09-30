@@ -55,7 +55,11 @@ fun migrateFromV6(
         newPreferenceResources.writeNotePrintOptions(
             NotePrintOptions2(
                 enharmonicVariant = if (it.useEnharmonic) 1 else 0,
-                octaveNotation = if (it.helmholtzNotation) OctaveNotation.Helmholtz else OctaveNotation.Scientific,
+                octaveNotation = if (it.helmholtzNotation) {
+                    OctaveNotation.Helmholtz
+                } else {
+                    OctaveNotation.Scientific
+                },
                 notationType = it.notationType
             )
         )

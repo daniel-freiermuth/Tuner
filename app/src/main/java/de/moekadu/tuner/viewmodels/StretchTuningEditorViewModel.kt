@@ -22,8 +22,10 @@ import kotlinx.coroutines.flow.asStateFlow
 @HiltViewModel(assistedFactory = StretchTuningEditorViewModel.Factory::class)
 class StretchTuningEditorViewModel @AssistedInject constructor(
     @Assisted initialStretchTuning: StretchTuning,
-    @Assisted("initialName") initialName: String, // we cannot read this directly from stretchTuning, since we need a context to resolve the string
-    @Assisted("initialDescription") initialDescription: String, // we cannot read this directly from stretchTuning, since we need a context to resolve the string
+    // initialName and initialDescription cannot be read directly from stretchTuning, since we
+    // need a context to resolve the strings
+    @Assisted("initialName") initialName: String,
+    @Assisted("initialDescription") initialDescription: String,
     val pref: TemperamentResources
 ) : ViewModel(),
     StretchTuningEditorState {

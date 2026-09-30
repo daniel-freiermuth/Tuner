@@ -29,10 +29,14 @@ import de.moekadu.tuner.misc.WaveWriter
 import kotlin.math.max
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class SoundSourceJob(val channel: ReceiveChannel<MemoryPool<SampleData>.RefCountedMemory>)
 
@@ -63,7 +67,9 @@ fun CoroutineScope.launchSoundSourceJob(
         BufferOverflow.SUSPEND
     )
     val memoryPool =
-        MemoryPoolSampleData(2 * channelCapacity) // trial shows that single channel capacity does not very well recycle data in extreme cases, double channel capacity seems to work fine
+        // trial shows that single channel capacity does not very well recycle data in extreme
+        // cases, double channel capacity seems to work fine
+        MemoryPoolSampleData(2 * channelCapacity)
 
     launch(Dispatchers.IO) {
         val record =
