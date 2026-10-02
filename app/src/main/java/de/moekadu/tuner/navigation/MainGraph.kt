@@ -18,14 +18,12 @@
 */
 package de.moekadu.tuner.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -58,6 +56,7 @@ import de.moekadu.tuner.viewmodels.TemperamentDialog2ViewModel
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import androidx.compose.ui.platform.LocalResources
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.stretchtuning.StretchTuning
 import de.moekadu.tuner.ui.screens.StretchTuningOverview
@@ -141,7 +140,8 @@ fun NavGraphBuilder.mainGraph(
         val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
         val musicalScale by temperamentResources.musicalScale.collectAsStateWithLifecycle()
         val viewModel: InstrumentViewModel = hiltViewModel()
-        val context = LocalContext.current
+        val resources = LocalResources.current
+
         Instruments(
             state = viewModel,
             modifier = Modifier.fillMaxSize(),
@@ -156,13 +156,13 @@ fun NavGraphBuilder.mainGraph(
                 val newInstrument = if (copy) {
                     instrument.copy(
                         nameResource = null,
-                        name = context.getString(R.string.copy_extension, instrument.getNameString(context)),
+                        name = resources.getString(R.string.copy_extension, instrument.getNameString(resources)),
                         stableId = Instrument.NO_STABLE_ID
                     )
                 } else {
                     instrument.copy(
                         nameResource = null,
-                        name = instrument.getNameString(context)
+                        name = instrument.getNameString(resources)
                     )
                 }
                 controller.navigate(InstrumentEditorGraphRoute.create(newInstrument))
@@ -215,7 +215,6 @@ fun NavGraphBuilder.mainGraph(
             controller = controller,
             backStackEntry = route
         )!!
-        val context = LocalContext.current
 
         TemperamentsDialog2(
             state = viewModel,
@@ -229,11 +228,11 @@ fun NavGraphBuilder.mainGraph(
                 }
             },
             onEditTemperamentClicked = { temperament, copy ->
-                val name = temperament.name.value(context)
+                val name = temperament.name.value(resources)
                 controller.navigate(
                     TemperamentEditorGraphRoute(
                         temperament.toEditableTemperament(
-                            context = context,
+                            resources = resources,
                             name = when {
                                 copy && name == "" -> ""
                                 copy -> "$name (${resources.getString(R.string.copy_)})"
@@ -309,7 +308,6 @@ fun NavGraphBuilder.mainGraph(
 
     composable<StretchTuningOverviewRoute> {
         val viewModel: StretchTuningOverviewViewModel = hiltViewModel()
-        val context = LocalContext.current
         val resources = LocalResources.current
 
         StretchTuningOverview(
@@ -319,11 +317,11 @@ fun NavGraphBuilder.mainGraph(
                 controller.navigateUp()
             },
             onEditStretchTuningClicked = { stretchTuning, copy ->
-                val name = stretchTuning.name.value(context)
+                val name = stretchTuning.name.value(resources)
                 controller.navigate(
                     StretchTuningEditorGraphRoute(
                         stretchTuning.copy(
-                            GetTextFromString(when {
+                            name = GetTextFromString(when {
                                 copy && name == "" -> ""
                                 copy -> "$name (${resources.getString(R.string.copy_)})"
                                 else -> name

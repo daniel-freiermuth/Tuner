@@ -22,7 +22,6 @@ import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.instruments.InstrumentIcon
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
-import de.moekadu.tuner.temperaments.centsToRatio
 import de.moekadu.tuner.temperaments.ratioToCents
 import kotlin.math.absoluteValue
 import kotlin.math.min

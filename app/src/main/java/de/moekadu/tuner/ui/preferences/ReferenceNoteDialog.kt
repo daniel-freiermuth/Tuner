@@ -19,7 +19,6 @@
 package de.moekadu.tuner.ui.preferences
 
 import android.Manifest
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -64,7 +63,6 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.misc.rememberNumberFormatter
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.NoteSelector
 import de.moekadu.tuner.ui.theme.TunerTheme
@@ -127,11 +125,8 @@ fun ReferenceNoteDialog(
     var selectedNoteIndex by rememberSaveable { mutableIntStateOf(
         initialState.getNoteIndex2(initialState.referenceNote) - initialState.noteIndexBegin
     ) }
-    val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        LocalConfiguration.current.locales[0]
-    } else {
-        LocalConfiguration.current.locale
-    }
+    val locale = LocalConfiguration.current.locales[0]
+
     val decimalFormat = rememberNumberFormatter()
     var frequencyAsString by rememberSaveable {
         mutableStateOf(decimalFormat.format(initialState.referenceFrequency))

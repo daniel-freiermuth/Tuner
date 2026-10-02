@@ -57,7 +57,7 @@ class StretchTuningOverviewViewModel @Inject constructor(
        applicationScope.launch(Dispatchers.IO) {
           context.contentResolver?.openOutputStream(uri, "wt")?.use { stream ->
              stream.bufferedWriter().use { writer ->
-                 StretchTuningIO.writeStretchTunings(stretchTunings, writer, context)
+                 StretchTuningIO.writeStretchTunings(stretchTunings, writer, context.resources)
              }
           }
        }

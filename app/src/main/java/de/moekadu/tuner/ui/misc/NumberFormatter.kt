@@ -54,10 +54,7 @@ class NumberFormatter(
 
 @Composable
 fun rememberNumberFormatter(precision: Int = 4): NumberFormatter {
-    val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        LocalConfiguration.current.locales[0]
-    } else {
-        LocalConfiguration.current.locale
-    }
+    val locale = LocalConfiguration.current.locales[0]
+
     return remember(locale, precision) { NumberFormatter(locale, precision)}
 }

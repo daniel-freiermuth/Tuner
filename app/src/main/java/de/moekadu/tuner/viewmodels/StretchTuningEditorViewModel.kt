@@ -1,6 +1,5 @@
 package de.moekadu.tuner.viewmodels
 
-import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -13,7 +12,6 @@ import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.stretchtuning.StretchTuning
 import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.temperaments.centsToFrequency
-import de.moekadu.tuner.temperaments.centsToRatio
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.screens.StretchTuningEditorState
 import kotlinx.coroutines.flow.MutableStateFlow

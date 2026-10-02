@@ -3,7 +3,6 @@ package de.moekadu.tuner
 import de.moekadu.tuner.notedetection.Correlation
 import org.junit.Test
 import org.junit.Assert.assertEquals
-import kotlin.random.Random
 
 class CorrelationTest {
 

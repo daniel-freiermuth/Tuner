@@ -3,7 +3,8 @@ package de.moekadu.tuner.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalResources
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -28,15 +29,15 @@ private fun createStretchTuningEditorViewModel(
     val parentEntry = remember(backStackEntry) {
         controller.getBackStackEntry<StretchTuningEditorGraphRoute>()
     }
-    val context = LocalContext.current
+    val resources = LocalResources.current
     val stretchTuning = parentEntry.toRoute<StretchTuningEditorGraphRoute>().stretchTuning
     return hiltViewModel<StretchTuningEditorViewModel, StretchTuningEditorViewModel.Factory>(
         parentEntry
     ) { factory ->
         factory.create(
             initialStretchTuning = stretchTuning,
-            initialName = stretchTuning.name.value(context),
-            initialDescription = stretchTuning.description.value(context)
+            initialName = stretchTuning.name.value(resources),
+            initialDescription = stretchTuning.description.value(resources)
         )
     }
 }

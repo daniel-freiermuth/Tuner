@@ -100,7 +100,7 @@ class InstrumentEditorViewModel @AssistedInject constructor(
 
     override fun addNote() {
         val stringsValue = strings.value
-        if (stringsValue.size == 0) {
+        if (stringsValue.isEmpty()) {
             strings.value = persistentListOf(StringWithInfo(initializerNote.value, 1))
             selectedStringIndex.value = 0
         } else {

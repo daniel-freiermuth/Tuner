@@ -1,8 +1,8 @@
 package de.moekadu.tuner.stretchtuning
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
-import android.util.Log
 import de.moekadu.tuner.BuildConfig
 import de.moekadu.tuner.misc.DefaultValues
 import de.moekadu.tuner.misc.FileCheck
@@ -25,26 +25,26 @@ object StretchTuningIO {
         val stretchTunings: List<StretchTuning>
     )
 
-    fun stretchTuningsToString(context: Context, stretchTunings: List<StretchTuning>)
+    fun stretchTuningsToString(resources: Resources, stretchTunings: List<StretchTuning>)
             : String {
         val writer = StringWriter()
-        writeStretchTunings(stretchTunings, writer.buffered(), context)
+        writeStretchTunings(stretchTunings, writer.buffered(), resources)
         return writer.toString()
     }
 
-    fun writeStretchTunings(stretchTunings: List<StretchTuning>, writer: BufferedWriter, context: Context) {
+    fun writeStretchTunings(stretchTunings: List<StretchTuning>, writer: BufferedWriter, resources: Resources) {
         writeVersion(writer)
         stretchTunings.forEach { stretchTuning ->
             writer.writeLine("")
-            writeStretchTuning(stretchTuning, writer, context)
+            writeStretchTuning(stretchTuning, writer, resources)
         }
     }
 
     fun writeStretchTuning(
-        stretchTuning: StretchTuning, writer: BufferedWriter, context: Context
+        stretchTuning: StretchTuning, writer: BufferedWriter, resources: Resources
     ) {
-        writer.writeLine("# ${stretchTuning.name.value(context)}")
-        val descriptionString = stretchTuning.description.value(context)
+        writer.writeLine("# ${stretchTuning.name.value(resources)}")
+        val descriptionString = stretchTuning.description.value(resources)
             .replace("\n", " ")
         writer.writeLine("# $descriptionString")
         stretchTuning.unstretchedFrequencies

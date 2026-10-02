@@ -69,7 +69,6 @@ import de.moekadu.tuner.temperaments.ratioToCents
 import de.moekadu.tuner.ui.notes.NotationType
 import de.moekadu.tuner.ui.notes.Note
 import de.moekadu.tuner.ui.notes.NoteEditorSimple
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlin.math.roundToInt

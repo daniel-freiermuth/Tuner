@@ -1,6 +1,5 @@
 package de.moekadu.tuner.ui.stretchtuning
 
-import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,7 +23,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import de.moekadu.tuner.R
-import de.moekadu.tuner.ui.misc.rememberNumberFormatter
 import de.moekadu.tuner.ui.theme.TunerTheme
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -57,11 +55,7 @@ fun ModifyStretchTuningLineDialog(
     onConfirmedClicked: (
         unstretchedFrequency: Double, stretchInCents: Double, key: Int) -> Unit = {_, _, _ ->}
 ) {
-    val locale = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        LocalConfiguration.current.locales[0]
-    } else {
-        LocalConfiguration.current.locale
-    }
+    val locale = LocalConfiguration.current.locales[0]
 
     var unstretchedFrequencyAsString by rememberSaveable {
         mutableStateOf("%.2f".format(initialUnstretchedFrequency))

@@ -26,6 +26,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import kotlin.collections.forEach
 import kotlin.let
+import kotlin.time.Duration.Companion.milliseconds
 
 open class ResourcesBase(
     private val filename: String,
@@ -264,7 +265,7 @@ open class ResourcesBase(
         applicationScope.launch(Dispatchers.IO) {
             for (value in newPreferencesAvailableChannel) {
                 storeCurrentPrefs()
-                delay(minimumStoreIntervalInMillis)
+                delay(minimumStoreIntervalInMillis.milliseconds)
             }
         }
     }

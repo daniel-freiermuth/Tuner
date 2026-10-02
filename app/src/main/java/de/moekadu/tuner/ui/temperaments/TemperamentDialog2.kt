@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -89,6 +90,7 @@ private fun rememberImportExportCallbacks(
     onLoadTemperaments: (temperaments: List<EditableTemperament>) -> Unit
 ): OverflowMenuCallbacks {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val stateUpdated by rememberUpdatedState(newValue = state)
     val onLoadTemperamentsUpdated by rememberUpdatedState(newValue = onLoadTemperaments)
 
@@ -104,7 +106,7 @@ private fun rememberImportExportCallbacks(
             val filename = getFilenameFromUri(context, uri)
             Toast.makeText(
                 context,
-                context.resources.getQuantityString(
+                resources.getQuantityString(
                     R.plurals.database_num_saved,
                     temperaments.size,
                     temperaments.size,
@@ -138,7 +140,7 @@ private fun rememberImportExportCallbacks(
             }
         }
     }
-    return remember(context) {
+    return remember(context, resources) {
         object: OverflowMenuCallbacks {
             override fun onDeleteClicked() {
                 if (stateUpdated.listData.selectedItems.value.isNotEmpty())
@@ -154,7 +156,7 @@ private fun rememberImportExportCallbacks(
                     val intent = ShareData.createShareDataIntent(
                         context,
                         "tuner-temperaments.txt",
-                        TemperamentIO.temperamentsListToString(context, temperaments),
+                        TemperamentIO.temperamentsListToString(resources, temperaments),
                         temperaments.size
                     )
                     //val intent = ShareInstruments.createShareInstrumentsIntent(context, instruments)
@@ -189,6 +191,7 @@ fun TemperamentsDialog2(
     onNavigateUp: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val resources = LocalResources.current
     val selectedTemperaments by state.listData.selectedItems.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
@@ -312,12 +315,12 @@ fun TemperamentsDialog2(
         ) { item, itemInfo, itemModifier ->
             EditableListItem(
                 title = { Text(
-                    item.name.value(context),
+                    item.name.value(resources),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 ) },
                 description = { Text(
-                    item.description.value(context),
+                    item.description.value(resources),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 ) },
@@ -333,7 +336,7 @@ fun TemperamentsDialog2(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "${item.name.value(context).getOrNull(0) ?: ""}",
+                                text = "${item.name.value(resources).getOrNull(0) ?: ""}",
                                 fontSize = iconTextSize
                             )
                         }

@@ -44,7 +44,6 @@ import de.moekadu.tuner.temperaments.Temperament3
 import de.moekadu.tuner.temperaments.predefinedTemperamentWerckmeisterVI
 import de.moekadu.tuner.ui.notes.CentAndRatioTable
 import de.moekadu.tuner.ui.notes.CircleOfFifthTable
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 

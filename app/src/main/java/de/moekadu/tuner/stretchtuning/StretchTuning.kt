@@ -1,13 +1,10 @@
 package de.moekadu.tuner.stretchtuning
 
-import android.util.Log
 import androidx.compose.runtime.Immutable
 import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.GetText
 import de.moekadu.tuner.misc.GetTextFromResId
 import de.moekadu.tuner.temperaments.centsToFrequency
-import de.moekadu.tuner.temperaments.ratioToCents
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlin.math.log10

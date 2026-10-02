@@ -169,7 +169,7 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
         var numPointers = 0
 
         awaitFirstDown(requireUnconsumed = false)
-        launch { onGestureStart() }
+        this@coroutineScope.launch { onGestureStart() }
         do {
             val event = awaitPointerEvent()
             val canceled = event.changes.fastAny { it.isConsumed } //&& !event.changes.fastAny { it.pressed }
@@ -213,7 +213,7 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
 //                    Log.v("Tuner", "Plot: centroid: $centroid, num pointers = ${event.changes.size}")
 
                     if (zoomChange.width != 1f  || zoomChange.height != 1f|| panChange != Offset.Zero) {
-                        launch { onGesture(centroid, panChange, zoomChange) }
+                        this@coroutineScope.launch { onGesture(centroid, panChange, zoomChange) }
                     }
 
                     event.changes.fastForEach {
@@ -228,7 +228,7 @@ suspend fun PointerInputScope.detectPanZoomFlingGesture(
             val velocity = velocityTracker.calculateVelocity()
 //            Log.v("Tuner", "Plot: velocity = ${velocity}, maximum=$maximumVelocity")
             if (velocity.x.pow(2) + velocity.y.pow(2) < maximumVelocity.pow(2))
-                launch { onFling(velocity) }
+                this@coroutineScope.launch { onFling(velocity) }
         }
     }
 }

@@ -18,7 +18,7 @@
 */
 package de.moekadu.tuner.ui.screens
 
-import android.content.Context
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -31,11 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.moekadu.tuner.R
 import de.moekadu.tuner.preferences.NightMode
@@ -51,12 +49,13 @@ import de.moekadu.tuner.viewmodels.PreferencesViewModel
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import androidx.compose.ui.platform.LocalResources
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import de.moekadu.tuner.ui.preferences.LanguageSelections
 
-private fun appearanceSummary(mode: NightMode, context: Context) = when (mode) {
-    NightMode.Auto -> context.getString(R.string.system_appearance)
-    NightMode.Off -> context.getString(R.string.light_appearance)
-    NightMode.On -> context.getString(R.string.dark_appearance)
+private fun appearanceSummary(mode: NightMode, resources: Resources) = when (mode) {
+    NightMode.Auto -> resources.getString(R.string.system_appearance)
+    NightMode.Off -> resources.getString(R.string.light_appearance)
+    NightMode.On -> resources.getString(R.string.dark_appearance)
 }
 
 @Composable
@@ -75,7 +74,7 @@ fun Preferences(
     onAboutClicked: () -> Unit = {}
 ) {
     val pref = viewModel.pref
-    val context = LocalContext.current
+    val resources = LocalResources.current
 
     val notePrintOptions by pref.notePrintOptions.collectAsStateWithLifecycle()
     val musicalScale by viewModel.musicalScale.collectAsStateWithLifecycle()
@@ -116,7 +115,7 @@ fun Preferences(
                 val appearance by pref.appearance.collectAsStateWithLifecycle()
                 SimplePreference(
                     name = stringResource(id = R.string.appearance),
-                    supporting = appearanceSummary(appearance.mode, context),
+                    supporting = appearanceSummary(appearance.mode, resources),
                     iconId = R.drawable.ic_appearance,
                     modifier = Modifier.clickable { onAppearanceClicked() }
                 )
@@ -176,7 +175,7 @@ fun Preferences(
                         val summary = remember(musicalScale, resources, textStyle, notePrintOptions) {
                             buildAnnotatedString {
                                 //append(resources.getString(getTuningNameResourceId(musicalScale.temperamentType)))
-                                append(musicalScale.temperament.name.value(context))
+                                append(musicalScale.temperament.name.value(resources))
                                 append(resources.getString(R.string.comma_separator))
                                 append(
                                     musicalScale.rootNote.asAnnotatedString(
@@ -225,8 +224,8 @@ fun Preferences(
                 SimplePreference(
                     name = stringResource(id = R.string.notation),
                     supporting = {
-                        val summary = remember(notePrintOptions, context) {
-                            "${context.getString(notePrintOptions.notationType.stringResourceId)}, ${context.getString(notePrintOptions.octaveNotation.stringResourceId)}"
+                        val summary = remember(notePrintOptions, resources) {
+                            "${resources.getString(notePrintOptions.notationType.stringResourceId)}, ${resources.getString(notePrintOptions.octaveNotation.stringResourceId)}"
                         }
                         Text(summary)
                     },
@@ -265,7 +264,7 @@ fun Preferences(
                 val numMovingAverage by pref.numMovingAverage.collectAsStateWithLifecycle()
                 SliderPreference(
                     name = stringResource(id = R.string.num_moving_average),
-                    supporting = LocalContext.current.resources.getQuantityString(
+                    supporting = resources.getQuantityString(
                         R.plurals.num_moving_average_summary,
                         numMovingAverage,
                         numMovingAverage
@@ -282,7 +281,7 @@ fun Preferences(
                     name = stringResource(id = R.string.stretch_tuning),
                     iconId = R.drawable.ic_stretch,
                     supporting = {
-                        Text(musicalScale.stretchTuning.name.value(context))
+                        Text(musicalScale.stretchTuning.name.value(resources))
                     },
                     modifier = Modifier.clickable { onStretchTuningClicked() }
                 )
@@ -340,14 +339,13 @@ fun Preferences(
                     value = pitchHistoryDuration,
                     supporting = stringResource(id = R.string.seconds, pitchHistoryDuration),
                     valueRange = 0.25f..10f,
-                    steps = 38, // maybe better have progressive stps?
+                    steps = 38, // maybe better have progressive steps?
                     onValueChange = { pref.writePitchHistoryDuration(it) },
                     iconId = R.drawable.ic_duration
                 )
             }
             item {
                 val pitchHistoryNumFaultyValues by pref.pitchHistoryNumFaultyValues.collectAsStateWithLifecycle()
-                val resources = LocalContext.current.resources
                 val summary = remember(resources, pitchHistoryNumFaultyValues) {
                     resources.getQuantityString(
                         R.plurals.pitch_history_num_faulty_values_summary,

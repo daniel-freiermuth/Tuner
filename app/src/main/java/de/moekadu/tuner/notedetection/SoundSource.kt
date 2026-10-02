@@ -32,6 +32,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlin.math.max
 import kotlin.math.roundToInt
+import kotlin.time.Duration.Companion.milliseconds
 
 class SoundSourceJob(
     val channel: ReceiveChannel<MemoryPool<SampleData>.RefCountedMemory>
@@ -105,7 +106,7 @@ fun CoroutineScope.launchSoundSourceJob(
                             currentFrame + i, 1f / sampleRate
                         )).toInt().toShort()
                     }
-                    delay((1000 * recordData.size.toFloat() / sampleRate).toLong())
+                    delay((1000 * recordData.size.toFloat() / sampleRate).toLong().milliseconds)
                     recordData.size
                 } else if (record != null) {
                     record.read(recordData, 0, recordData.size, AudioRecord.READ_BLOCKING)

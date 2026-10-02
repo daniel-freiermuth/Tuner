@@ -1,7 +1,5 @@
 package de.moekadu.tuner
 
-import de.moekadu.tuner.misc.GetTextFromString
-import de.moekadu.tuner.stretchtuning.StretchTuningIO
 import org.junit.Test
 
 class StretchTuningIOTest {

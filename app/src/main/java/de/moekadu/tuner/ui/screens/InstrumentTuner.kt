@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpRect
@@ -68,7 +69,6 @@ import de.moekadu.tuner.ui.instruments.StringsState
 import de.moekadu.tuner.ui.misc.TunerScaffold
 import de.moekadu.tuner.ui.misc.rememberTunerAudioPermission
 import de.moekadu.tuner.ui.notes.NoteLockedButton
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.rememberMaxNoteSize
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
@@ -228,7 +228,7 @@ fun InstrumentTunerPortrait(
             //Log.v("Tuner", "InstrumentTuner: instrument as state: $instrumentAsState")
             InstrumentButton(
                 iconResourceId = instrumentAsState.icon.resourceId,
-                name = instrumentAsState.getNameString(LocalContext.current),
+                name = instrumentAsState.getNameString(LocalResources.current),
 //                name = data.instrumentResourceId?.let { stringResource(id = it) }
 //                    ?: data.instrumentName ?: "Unknown",
                 modifier = Modifier
@@ -387,7 +387,7 @@ fun InstrumentTunerLandscape(
         Column(modifier = Modifier.weight(0.5f)) {
             InstrumentButton(
                 iconResourceId = instrumentAsState.icon.resourceId,
-                name = instrumentAsState.getNameString(LocalContext.current),
+                name = instrumentAsState.getNameString(LocalResources.current),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(

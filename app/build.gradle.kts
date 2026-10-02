@@ -9,14 +9,14 @@ plugins {
 
 android {
     namespace = "de.moekadu.tuner"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "de.moekadu.tuner"
-        minSdk = 23
-        targetSdk = 36
-        versionCode = 49
-        versionName = "9.1.1"
+        minSdk = 24
+        targetSdk = 37
+        versionCode = 50
+        versionName = "9.2.0"
         testInstrumentationRunner =  "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

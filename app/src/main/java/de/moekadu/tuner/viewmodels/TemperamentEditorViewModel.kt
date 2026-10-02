@@ -17,7 +17,6 @@ import de.moekadu.tuner.temperaments.TemperamentValidityChecks
 import de.moekadu.tuner.ui.temperaments.TemperamentEditorState
 import de.moekadu.tuner.ui.temperaments.TemperamentTableLineState
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 
 /** Create the table of temperament values and note names, based on a temperament.

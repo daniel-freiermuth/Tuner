@@ -61,7 +61,6 @@ import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.ui.notes.NoteDetector
 import de.moekadu.tuner.ui.notes.NoteDetectorState
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.NoteSelector
 import de.moekadu.tuner.ui.screens.TunerPlotStyle
@@ -73,6 +72,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
 interface InstrumentEditorData {
     val icon: StateFlow<InstrumentIcon>
@@ -526,7 +526,7 @@ private class InstrumentEditorDataTest : InstrumentEditorData {
 
     override fun addNote() {
         val stringsValue = strings.value
-        if (stringsValue.size == 0) {
+        if (stringsValue.isEmpty()) {
             strings.value = persistentListOf(StringWithInfo(initializerNote.value, 1))
             selectedStringIndex.value = 0
         } else {
@@ -569,7 +569,7 @@ private fun InstrumentEditorPreview() {
             while (true) {
                 val note = state.musicalScale.getNote((0..8).random())
                 state.noteDetectorState.hitNote(note)
-                delay(1000)
+                delay(1000.milliseconds)
             }
         }
 
@@ -591,7 +591,7 @@ private fun InstrumentEditorLandscapePreview() {
             while (true) {
                 val note = state.musicalScale.getNote((0..8).random())
                 state.noteDetectorState.hitNote(note)
-                delay(1000)
+                delay(1000.milliseconds)
             }
         }
 

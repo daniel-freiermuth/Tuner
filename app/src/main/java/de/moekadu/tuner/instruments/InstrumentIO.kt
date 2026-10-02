@@ -19,6 +19,7 @@
 package de.moekadu.tuner.instruments
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
 import de.moekadu.tuner.BuildConfig
 import de.moekadu.tuner.misc.FileCheck
@@ -32,10 +33,10 @@ object InstrumentIO {
      * @param instruments List with instruments.
      * @return String representation of instruments list.
      */
-    fun instrumentsListToString(context: Context?, instruments: List<Instrument>): String {
+    fun instrumentsListToString(resources: Resources?, instruments: List<Instrument>): String {
         return "Version=${BuildConfig.VERSION_NAME}\n\n" + instruments.joinToString(separator = "\n\n") {
             getSingleInstrumentString(
-                context,
+                resources,
                 it
             )
         }
@@ -157,8 +158,8 @@ object InstrumentIO {
      * @param context Context is only needed, if the instrument name is a string resource.
      * @return Instrument string representation.
      */
-    private fun getSingleInstrumentString(context: Context?, instrument: Instrument): String {
-        val name = instrument.getNameString(context)
+    private fun getSingleInstrumentString(resources: Resources?, instrument: Instrument): String {
+        val name = instrument.getNameString(resources)
         return "Instrument ${instrument.stableId}\n" +
                 "Length of name=${name.length}\n" +
                 "Name=$name\n" +

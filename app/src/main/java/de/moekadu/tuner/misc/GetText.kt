@@ -19,13 +19,14 @@
 package de.moekadu.tuner.misc
 
 import android.content.Context
+import android.content.res.Resources
 import androidx.annotation.StringRes
 import kotlinx.serialization.Serializable
 
 /** Class to obtain a string value, e.g. by storing a string or from a resource id. */
 @Serializable
 sealed interface GetText {
-    fun value(context: Context?): String
+    fun value(resources: Resources?): String
 }
 
 /** Class to get string value from explicit string.
@@ -35,7 +36,7 @@ sealed interface GetText {
 data class GetTextFromString(
     val string: String
 ) : GetText {
-    override fun value(context: Context?) = string
+    override fun value(resources: Resources?) = string
 }
 
 /** Class to get string value from a string resource.
@@ -49,7 +50,7 @@ data class GetTextFromString(
 data class GetTextFromResId(
     @StringRes val id: Int
 ) : GetText {
-    override fun value(context: Context?) = context?.getString(id) ?: ""
+    override fun value(resources: Resources?) = resources?.getString(id) ?: ""
 }
 
 /** Class to get string value from a string resource, with an int argument.
@@ -65,7 +66,7 @@ data class GetTextFromResIdWithIntArg(
     @StringRes val id: Int,
     val arg: Int
 ) : GetText {
-    override fun value(context: Context?) = context?.getString(id, arg) ?: ""
+    override fun value(resources: Resources?) = resources?.getString(id, arg) ?: ""
 }
 
 ///** String based on string or resource id.
@@ -85,7 +86,7 @@ data class GetTextFromResIdWithIntArg(
 //     * @param string String as underlying value.
 //     */
 //    constructor(string: String) : this(string, null)
-//    /** Create a new value based on an string resource id.
+//    /** Create a new value based on a string resource id.
 //     * @param resId Resource id as underlying value.
 //     */
 //    constructor(@StringRes resId: Int) : this(null, resId)

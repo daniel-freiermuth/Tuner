@@ -18,7 +18,6 @@
 */
 package de.moekadu.tuner.temperaments
 
-import android.util.Log
 import androidx.compose.runtime.Immutable
 import de.moekadu.tuner.misc.StringOrResId
 import de.moekadu.tuner.notenames.NoteNames

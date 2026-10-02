@@ -18,7 +18,7 @@
 */
 package de.moekadu.tuner.temperaments
 
-import android.content.Context
+import android.content.res.Resources
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteNamesEDOGenerator
 import kotlinx.serialization.Serializable
@@ -52,13 +52,13 @@ class EditableTemperament(
 }
 
 /** Convert temperament with note names to editable temperament.
- * @param context Context required to resolve potential string resource ids.
+ * @param resources Resources required to resolve potential string resource ids.
  * @param name New temperament or null to use the name from the input.
  * @param stableId New stable or null to use the name from the input.
  * @return Editable temperament.
  */
 fun Temperament3.toEditableTemperament(
-    context: Context,
+    resources: Resources,
     name: String? = null,
     stableId: Long? = null
     ): EditableTemperament {
@@ -81,9 +81,9 @@ fun Temperament3.toEditableTemperament(
         )
     }
     return EditableTemperament(
-        name = name ?: this.name.value(context),
-        abbreviation = this.abbreviation.value(context),
-        description = this.description.value(context),
+        name = name ?: this.name.value(resources),
+        abbreviation = this.abbreviation.value(resources),
+        description = this.description.value(resources),
         noteLines = noteLines,
         stableId = stableId ?: this.stableId
     )

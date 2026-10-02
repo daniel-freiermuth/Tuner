@@ -19,7 +19,6 @@
 package de.moekadu.tuner.musicalscale
 
 import androidx.compose.runtime.Immutable
-import de.moekadu.tuner.misc.GetTextFromResId
 import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteNames

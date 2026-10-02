@@ -25,7 +25,7 @@ import kotlin.math.roundToInt
 /** Class for computing the accurate frequency at a peak of a spectrum index.
  * @param spec1 First spectrum. Can be null if spec2 is not null.
  * @param spec2 Second spectrum. Can be null if spec1 is not null.
- *   Note that the second spectrum must have thee same size as spec1, but it must be based on a
+ *   Note that the second spectrum must have the same size as spec1, but it must be based on a
  *   time signal which is slightly later.
  * @param timeShiftBetweenSpecs: Time shift between spec1 and spec 2,
  *   "start time spec2" - "start time spec1",

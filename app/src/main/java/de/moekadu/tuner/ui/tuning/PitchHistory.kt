@@ -47,7 +47,6 @@ import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.ui.common.Label
 import de.moekadu.tuner.ui.notes.Note
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.rememberMaxNoteSize
 import de.moekadu.tuner.ui.plot.Anchor

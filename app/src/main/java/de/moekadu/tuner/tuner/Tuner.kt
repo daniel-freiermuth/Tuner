@@ -53,6 +53,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.time.Duration.Companion.milliseconds
 
 /** Tuner.
  * @note Tuner starts after calling `connect()` and pauses when calling `disconnect()`.
@@ -146,7 +147,7 @@ class Tuner(
         scope.launch {
 //            var job: Job? = null
             // reconnect is outside the following merge, so it will keep track if there is
-            // a disconnect ore a connect
+            // a disconnect or a connect
             var reconnect = false
             merge(channel.consumeAsFlow(), restartChannel.consumeAsFlow())
                 .map { v ->
@@ -173,9 +174,9 @@ class Tuner(
                     // sometimes, several settings are changed at the same time,
                     // which would lead to many tuner restarts in a very short time.
                     // the small delay avoid these restarts.
-                    delay(50)
+                    delay(50.milliseconds)
                     // Log.v("Tuner", "Tuner: buffer after delay $v, $reconnect, $isActive")
-                    if (isActive && r)
+                    if (this@launch.isActive && r)
                         run()
                     // Log.v("Tuner", "Tuner: after 'if run'")
                 }

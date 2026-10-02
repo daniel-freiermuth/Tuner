@@ -1,7 +1,6 @@
 package de.moekadu.tuner.ui.screens
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -41,7 +40,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.stretchtuning.StretchTuning
-import de.moekadu.tuner.temperaments.centsToRatio
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.stretchtuning.StretchTuningGraph
 import de.moekadu.tuner.ui.stretchtuning.StretchTuningTable

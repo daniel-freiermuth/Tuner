@@ -29,8 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -112,9 +112,9 @@ private fun StretchTuningInfoPortrait(
             ,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val context = LocalContext.current
+            val resources = LocalResources.current
             Text(
-                stretchTuning.name.value(context),
+                stretchTuning.name.value(resources),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
@@ -122,7 +122,7 @@ private fun StretchTuningInfoPortrait(
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
-                stretchTuning.description.value(context),
+                stretchTuning.description.value(resources),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = tunerPlotStyle.margin, start = 8.dp, end = 8.dp)
@@ -205,14 +205,14 @@ private fun StretchTuningInfoLandscape(
                 modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                 verticalAlignment = Alignment.Bottom
             ) {
-                val context = LocalContext.current
+                val resources = LocalResources.current
                 Text(
-                    stretchTuning.name.value(context),
+                    stretchTuning.name.value(resources),
                     modifier = Modifier.padding(start = 8.dp, end = 20.dp),
                     style = MaterialTheme.typography.titleLarge
                 )
                 Text(
-                    stretchTuning.description.value(context)
+                    stretchTuning.description.value(resources)
                 )
             }
             Row {

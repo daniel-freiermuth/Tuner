@@ -36,19 +36,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import de.moekadu.tuner.R
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.stretchtuning.predefinedStretchTunings
 import de.moekadu.tuner.ui.notes.Note
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 
@@ -62,7 +60,7 @@ fun QuickSettingsBar(
     onReferenceNoteClicked: () -> Unit = {},
     onStretchTuningClicked: () -> Unit = {}
 ) {
-    val context = LocalContext.current
+    val resources = LocalResources.current
     val decimalFormat = rememberNumberFormatter()
 
     BottomAppBar(
@@ -100,9 +98,9 @@ fun QuickSettingsBar(
             contentAlignment = Alignment.Center
         ) {
             val abbreviation =
-                musicalScale.temperament.abbreviation.value(context).let { abbr ->
+                musicalScale.temperament.abbreviation.value(resources).let { abbr ->
                     if (abbr == "")
-                        musicalScale.temperament.name.value(context).let { nme ->
+                        musicalScale.temperament.name.value(resources).let { nme ->
                             if (nme == "") "-" else nme
                         }
                     else
@@ -147,7 +145,7 @@ fun QuickSettingsBar(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    musicalScale.stretchTuning.name.value(context),
+                    musicalScale.stretchTuning.name.value(resources),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

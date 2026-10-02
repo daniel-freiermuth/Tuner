@@ -38,7 +38,6 @@ import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.tuner.Tuner
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.plot.LineCoordinates

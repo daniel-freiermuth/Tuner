@@ -41,7 +41,6 @@ import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.ui.common.Label
 import de.moekadu.tuner.ui.notes.Note
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.theme.TunerTheme
 import kotlin.math.roundToInt

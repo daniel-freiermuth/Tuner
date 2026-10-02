@@ -67,7 +67,7 @@ class InstrumentViewModel @Inject constructor(
         applicationScope.launch(Dispatchers.IO) {
             context.contentResolver?.openOutputStream(uri, "wt")?.use { stream ->
                 stream.write(
-                    InstrumentIO.instrumentsListToString(context, instruments).toByteArray()
+                    InstrumentIO.instrumentsListToString(context.resources, instruments).toByteArray()
                 )
             }
         }

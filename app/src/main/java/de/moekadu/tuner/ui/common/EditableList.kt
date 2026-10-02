@@ -52,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,6 +75,7 @@ import kotlinx.coroutines.launch
 import kotlinx.parcelize.Parcelize
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 
 interface EditableListPredefinedSection<T> {
     val sectionStringResourceId: Int
@@ -133,18 +135,18 @@ class EditableListData<T>(
     val predefinedSectionsExpanded = combine(predefinedItemSections.map { it.isExpanded }) { it }
 
     fun selectItem(id: Long) {
-        _selectedItems.value = selectedItems.value.add(id)
+        _selectedItems.value = selectedItems.value.adding(id)
     }
 
     fun deselectItem(id: Long) {
-        _selectedItems.value = selectedItems.value.remove(id)
+        _selectedItems.value = selectedItems.value.removing(id)
     }
 
     fun toggleSelection(id: Long) {
         if (selectedItems.value.contains(id))
-            _selectedItems.value = selectedItems.value.remove(id)
+            _selectedItems.value = selectedItems.value.removing(id)
         else
-            _selectedItems.value = selectedItems.value.add(id)
+            _selectedItems.value = selectedItems.value.adding(id)
     }
 
     fun clearSelectedItems() {
@@ -232,10 +234,10 @@ class EditableListData<T>(
 
     fun deleteItems(keys: ImmutableSet<Long>) {
         val backup = editableItems.value
-        val modified = editableItems.value.removeAll { keys.contains(getStableId(it)) }
+        val modified = editableItems.value.removingAll { keys.contains(getStableId(it)) }
         setNewItems(modified)
 
-        _selectedItems.value = selectedItems.value.clear()
+        _selectedItems.value = selectedItems.value.cleared()
         if (modified.isEmpty() && predefinedItemSections.size == 1)
             predefinedItemSections[0].toggleExpanded(true)
 
@@ -252,11 +254,11 @@ class EditableListData<T>(
     fun deleteAllItems() {
         val backup = editableItems.value
         setNewItems(persistentListOf())
-        _selectedItems.value = selectedItems.value.clear()
+        _selectedItems.value = selectedItems.value.cleared()
         if (predefinedItemSections.size == 1)
             predefinedItemSections[0].toggleExpanded(true)
 
-        if (backup.size > 0) {
+        if (backup.isNotEmpty()) {
             editableItemsBackup.trySend(ItemsDeletedInfo(backup = backup, numDeleted = backup.size))
         }
     }
@@ -398,7 +400,7 @@ fun <T>EditableList(
     val editableItemsExpanded by state.editableItemsExpanded.collectAsStateWithLifecycle()
     val activeItem by state.activeItem.collectAsStateWithLifecycle()
     val activeItemId = activeItem?.let { state.getStableId(it) }
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val snackbarHostStateUpdated by rememberUpdatedState(newValue = snackbarHostState)
     val overScrollPx = with(LocalDensity.current) { 4.dp.roundToPx() }
     val predefinedExpanded by state.predefinedSectionsExpanded.collectAsStateWithLifecycle(
@@ -407,10 +409,10 @@ fun <T>EditableList(
 
     LaunchedEffect(state.initiateScrollChannel) {
 //        Log.v("Tuner", "EditableList: Launching effect for initiate scroll channel")
-        for (index in state.initiateScrollChannel) {
+        for ((first, second) in state.initiateScrollChannel) {
 //            Log.v("Tuner", "EditableList: initiating scroll to index = $index")
             state.lazyListState.niceAnimatedScroll(
-                index.first, index.second, overScrollPx
+                first, second, overScrollPx
             )
         }
     }
@@ -418,11 +420,11 @@ fun <T>EditableList(
     // handle recovering deleted items
     LaunchedEffect(resources, state) {
 //        Log.v("Tuner", "EditableList: Launching effect for recovering items")
-        for (delete in state.editableItemsBackup) {
+        for ((backupItems, numDeleted) in state.editableItemsBackup) {
             launch {
                 val result = snackbarHostStateUpdated?.showSnackbar(
                     resources.getQuantityString(
-                        R.plurals.items_deleted, delete.numDeleted, delete.numDeleted
+                        R.plurals.items_deleted, numDeleted, numDeleted
                     ),
                     actionLabel = resources.getString(R.string.undo),
                     duration = SnackbarDuration.Long
@@ -432,16 +434,15 @@ fun <T>EditableList(
                     SnackbarResult.ActionPerformed -> {
 
                         val currentItems = state.editableItems.value
-                        val backupItems = delete.backup
                         val firstChangedIndex = backupItems.zip(currentItems).indexOfFirst {
                             it.first != it.second
                         }.coerceAtLeast(0)
 
-                        state.setNewItems(delete.backup)
+                        state.setNewItems(backupItems)
                         // delay a bit, since setNewItems runs internally on another coroutine, and
                         // we must let this finish. 100ms is of course not really save, but on the
                         // other hand, if the scroll to 0 fails, it is not really a big problem.
-                        delay(100)
+                        delay(100.milliseconds)
                         state.lazyListState.niceAnimatedScroll(
                             firstChangedIndex,
                             firstChangedIndex + state.editableListStartIndex,
@@ -479,7 +480,7 @@ fun <T>EditableList(
             }
         }
 
-        if (editableItems.size > 0) {
+        if (editableItems.isNotEmpty()) {
             if (showSections) {
                 item(contentType = CONTENT_TYPE_SECTION, key = SectionKey(1)) {
                     EditableListSection(
@@ -516,7 +517,7 @@ fun <T>EditableList(
                                 detectTapGestures(
                                     onLongPress = { state.toggleSelection(state.getStableId(listItem)) },
                                     onTap = {
-                                        if (selectedItems.size >= 1)
+                                        if (selectedItems.isNotEmpty())
                                             state.toggleSelection(state.getStableId(listItem))
                                         else
                                             onActivateItemClicked(listItem)

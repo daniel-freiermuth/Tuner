@@ -51,7 +51,7 @@
     <string name="b_solfege">Si</string>
     <string name="notation">Notație</string>
     <string name="notation_regional">Regională</string>
-    <string name="notation_regional_description">do-re-mi-...-si</string>
+    <string name="notation_regional_description">do-re-mi-…-si</string>
     <string name="notation_solfege">Solfège</string>
     <string name="notation_solfege_description">Do-Re-Mi-…-Si</string>
     <string name="notation_international">Internațională</string>

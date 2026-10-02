@@ -63,7 +63,7 @@ class TemperamentDialog2ViewModel @Inject constructor(
         applicationScope.launch(Dispatchers.IO) {
             context.contentResolver?.openOutputStream(uri, "wt")?.use { stream ->
                 stream.bufferedWriter().use { writer ->
-                    TemperamentIO.writeTemperaments(temperaments, writer, context)
+                    TemperamentIO.writeTemperaments(temperaments, writer, context.resources)
                 }
             }
         }

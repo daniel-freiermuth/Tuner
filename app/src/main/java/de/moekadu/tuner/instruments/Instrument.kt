@@ -19,6 +19,7 @@
 package de.moekadu.tuner.instruments
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
@@ -30,7 +31,6 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
-import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.asAnnotatedString
 import kotlinx.parcelize.Parcelize
@@ -66,12 +66,12 @@ data class Instrument(
     fun isPredefined() = nameResource != null
 
     /** Get instrument name as string.
-     * @param context Context is only needed, if the instrument name is a string resource.
+     * @param resources App resources only needed, if the instrument name is a string resource.
      * @return Name of instrument.
      */
-    fun getNameString(context: Context?): String {
+    fun getNameString(resources: Resources?): String {
         return when {
-            nameResource != null && context != null -> context.getString(nameResource)
+            nameResource != null && resources != null -> resources.getString(nameResource)
             else -> name
         }
     }

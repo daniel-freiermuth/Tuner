@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,7 +81,7 @@ fun ImportInstrumentsDialog(
         },
         title = {
             Text(
-                context.resources.getQuantityString(
+                LocalResources.current.getQuantityString(
                     R.plurals.load_instruments, instruments.size, instruments.size
                 )
             )

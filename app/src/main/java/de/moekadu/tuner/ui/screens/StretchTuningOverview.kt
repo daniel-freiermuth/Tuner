@@ -2,7 +2,6 @@ package de.moekadu.tuner.ui.screens
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -131,7 +130,7 @@ private fun rememberImportExportCallbacks(
             }
         }
     }
-    return remember(context) {
+    return remember(context, resources) {
         object: OverflowMenuCallbacks {
             override fun onDeleteClicked() {
                 if (stateUpdated.listData.selectedItems.value.isNotEmpty())
@@ -147,7 +146,7 @@ private fun rememberImportExportCallbacks(
                     val intent = ShareData.createShareDataIntent(
                         context,
                         "tuner-stretch-tunings.txt",
-                        StretchTuningIO.stretchTuningsToString(context, stretchTunings),
+                        StretchTuningIO.stretchTuningsToString(resources, stretchTunings),
                         stretchTunings.size
                     )
                     shareStretchTuningsLauncher.launch(intent)
@@ -181,7 +180,7 @@ fun StretchTuningOverview(
     onStretchTuningInfoClicked: (StretchTuning) -> Unit = {},
     onLoadStretchTunings: (List<StretchTuning>) -> Unit = {}
 ) {
-    val context = LocalContext.current
+    val resources = LocalResources.current
     val selectedStretchTunings by state.listData.selectedItems.collectAsStateWithLifecycle()
 
     val scope = rememberCoroutineScope()
@@ -305,12 +304,12 @@ fun StretchTuningOverview(
        ) { item, itemInfo, itemModifier ->
             EditableListItem(
                 title = { Text(
-                    item.name.value(context),
+                    item.name.value(resources),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 ) },
                 description = { Text(
-                    item.description.value(context),
+                    item.description.value(resources),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 ) },
@@ -327,7 +326,7 @@ fun StretchTuningOverview(
                         ) {
                             // Log.v("Tuner", "StretchTuningOverview: name=${item.name.value(context)}, 0=${item.name.value(context).getOrNull(0)?.code}")
                             Text(
-                                text = "${item.name.value(context).getOrNull(0) ?: ""}",
+                                text = "${item.name.value(resources).getOrNull(0) ?: ""}",
                                 fontSize = iconTextSize
                             )
                         }

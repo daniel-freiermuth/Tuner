@@ -19,6 +19,7 @@
 package de.moekadu.tuner.temperaments
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.Uri
 import de.moekadu.tuner.BuildConfig
 import de.moekadu.tuner.misc.FileCheck
@@ -40,21 +41,21 @@ object TemperamentIO {
         val temperaments: List<EditableTemperament>
     )
 
-    fun temperamentsListToString(context: Context, temperaments: List<Temperament3>)
+    fun temperamentsListToString(resources: Resources, temperaments: List<Temperament3>)
     : String {
         val writer = StringWriter()
-        writeTemperaments(temperaments, writer.buffered(), context)
+        writeTemperaments(temperaments, writer.buffered(), resources)
         return writer.toString()
     }
 
     fun writeTemperaments(
         temperaments: List<Temperament3>,
         writer: BufferedWriter,
-        context: Context) {
+        resources: Resources) {
         writeVersion(writer)
         temperaments.forEach {
             writer.writeLine("!")
-            writeTemperament(it, writer, context)
+            writeTemperament(it, writer, resources)
         }
     }
     fun writeVersion(writer: BufferedWriter) {
@@ -64,13 +65,13 @@ object TemperamentIO {
     fun writeTemperament(
         temperament: Temperament3,
         writer: BufferedWriter,
-        context: Context
+        resources: Resources
     ) {
-        val name = temperament.name.value(context)
+        val name = temperament.name.value(resources)
             .replace("\n", " ")
-        val abbreviation = temperament.abbreviation.value(context)
+        val abbreviation = temperament.abbreviation.value(resources)
             .replace("\n", " ")
-        val description = temperament.description.value(context)
+        val description = temperament.description.value(resources)
             .replace("\n", " ")
 
         writer.writeLine("! ${name.replace(" ","_")}.scl")

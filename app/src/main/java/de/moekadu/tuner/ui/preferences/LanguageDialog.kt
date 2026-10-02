@@ -1,6 +1,5 @@
 package de.moekadu.tuner.ui.preferences
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Column
