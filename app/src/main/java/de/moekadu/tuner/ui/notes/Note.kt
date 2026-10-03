@@ -607,7 +607,7 @@ fun NoteWithEnharmonic(
  * @param measurer Instance to measure text. This is normally created via
  *   rememberTextMeasurer()
  * @param resources Resources which we need to obtain text resources (use e.g.
- *   LocalContext.current.resources)
+ *   LocalResources.current)
  * @return Size of largest note.
  */
 fun computeMaxNoteSize(
