@@ -77,8 +77,9 @@ fun NavGraphBuilder.preferenceGraph(
             )
         }
         dialog<NotationDialogRoute> {
+            val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
             NotationDialog(
-                notePrintOptions = preferences.notePrintOptions.value,
+                notePrintOptions = notePrintOptions,
                 onNotationChange = { notation, helmholtz ->
                     val newNotePrintOptions = preferences.notePrintOptions.value.copy(
                         notationType = notation,
@@ -91,8 +92,9 @@ fun NavGraphBuilder.preferenceGraph(
             )
         }
         dialog<WindowingFunctionDialogRoute> {
+            val windowing by preferences.windowing.collectAsStateWithLifecycle()
             WindowingFunctionDialog(
-                initialWindowingFunction = preferences.windowing.value,
+                initialWindowingFunction = windowing,
                 onWindowingFunctionChanged = {
                     preferences.writeWindowing(it)
                     controller.navigateUp()

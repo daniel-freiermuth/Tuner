@@ -38,8 +38,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -129,7 +129,7 @@ fun FifthJumpOverArrow(
     style: TextStyle = LocalTextStyle.current,
     arrowHeight: TextUnit = 12.sp
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val colorResolved = color.takeOrElse {
         LocalContentColor.current.takeOrElse { Color.Black }
     }

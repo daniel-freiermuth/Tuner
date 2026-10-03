@@ -26,7 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -132,7 +132,7 @@ fun CorrelationPlot(
 //            TickLevelExplicitRanges(levelList)
             TickLevelDeltaBased(resolutions)
         }
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
         val longestTick = remember(resources) {
             resources.getString(R.string.hertz_1f, 1.0f / resolutions[1])
         }
