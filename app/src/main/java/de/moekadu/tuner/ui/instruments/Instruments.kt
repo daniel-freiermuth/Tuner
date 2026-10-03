@@ -48,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -99,6 +100,7 @@ fun Instruments(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    val resources = LocalResources.current
     val maxExpectedHeightForFab = 72.dp
     val listState = rememberLazyListState()
 
@@ -112,7 +114,7 @@ fun Instruments(
             val filename = getFilenameFromUri(context, uri)
             Toast.makeText(
                 context,
-                context.resources.getQuantityString(
+                resources.getQuantityString(
                     R.plurals.database_num_saved,
                     instruments.size,
                     instruments.size,

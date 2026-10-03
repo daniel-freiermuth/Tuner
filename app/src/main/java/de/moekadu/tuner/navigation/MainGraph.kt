@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
@@ -115,6 +116,7 @@ fun NavGraphBuilder.mainGraph(
         val musicalScale by temperamentResources.musicalScale.collectAsStateWithLifecycle()
         val viewModel: InstrumentViewModel = hiltViewModel()
         val context = LocalContext.current
+        val resources = LocalResources.current
         Instruments(
             state = viewModel,
             modifier = Modifier.fillMaxSize(),
@@ -129,7 +131,7 @@ fun NavGraphBuilder.mainGraph(
                 val newInstrument = if (copy) {
                     instrument.copy(
                         nameResource = null,
-                        name = context.getString(
+                        name = resources.getString(
                             R.string.copy_extension,
                             instrument.getNameString(context)
                         ),
@@ -186,7 +188,7 @@ fun NavGraphBuilder.mainGraph(
     }
 
     composable<TemperamentDialogRoute> { route ->
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
         val viewModel: TemperamentDialog2ViewModel = hiltViewModel(route)
         val context = LocalContext.current
 
@@ -238,7 +240,7 @@ fun NavGraphBuilder.mainGraph(
     dialog<RootNoteDialogRoute> {
         val data = it.toRoute<RootNoteDialogRoute>()
         val notePrintOptions by preferences.notePrintOptions.collectAsStateWithLifecycle()
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
 
         RootNoteDialog(
             data.rootNote,
