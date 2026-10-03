@@ -21,9 +21,11 @@ package de.moekadu.tuner.instruments
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import de.moekadu.tuner.BuildConfig
 import de.moekadu.tuner.misc.FileCheck
 import de.moekadu.tuner.notenames.MusicalNote
+import java.io.IOException
 import kotlin.math.min
 
 object InstrumentIO {
@@ -52,10 +54,18 @@ object InstrumentIO {
     fun readInstrumentsFromFile(context: Context, uri: Uri): InstrumentsAndFileCheckResult {
 //        val filename = getFilenameFromUri(context, uri)
 //            Log.v("Tuner", "InstrumentArchiving.loadInstruments: $filename")
-        val instrumentsStringRaw = context.contentResolver?.openInputStream(uri)?.use { stream ->
-            stream.reader().use {
-                it.readText()
+        val instrumentsStringRaw = try {
+            context.contentResolver?.openInputStream(uri)?.use { stream ->
+                stream.reader().use {
+                    it.readText()
+                }
             }
+        } catch (e: IOException) {
+            Log.w("Tuner", "Cannot read instruments file $uri", e)
+            null
+        } catch (e: SecurityException) {
+            Log.w("Tuner", "No permission to read instruments file $uri", e)
+            null
         }
         // skip byte order mark if necessary
         val instrumentsString = if (instrumentsStringRaw?.getOrNull(0) == '\ufeff') {
@@ -263,7 +273,7 @@ object InstrumentIO {
             while (pos < string.length && string[pos] != '\n' && string[pos] != ']') {
                 ++pos
             }
-            if (string[pos] != ']') {
+            if (string.getOrNull(pos) != ']') {
                 return null
             }
             ++pos
@@ -295,7 +305,7 @@ object InstrumentIO {
             while (pos < string.length && string[pos] != '\n' && string[pos] != ']') {
                 ++pos
             }
-            if (string[pos] != ']') {
+            if (string.getOrNull(pos) != ']') {
                 return null
             }
             ++pos
