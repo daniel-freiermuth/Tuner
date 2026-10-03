@@ -33,8 +33,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextMeasurer
@@ -501,7 +501,7 @@ fun Note(
     color: Color = Color.Unspecified,
     style: TextStyle? = null
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val fontSizeResolved = fontSize.takeOrElse {
         (style?.fontSize ?: TextUnit.Unspecified).takeOrElse {
             LocalTextStyle.current.fontSize.takeOrElse { 12.sp }
@@ -552,7 +552,7 @@ fun NoteWithEnharmonic(
     color: Color = Color.Unspecified,
     style: TextStyle? = null
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val fontSizeResolved = fontSize.takeOrElse {
         (style?.fontSize ?: TextUnit.Unspecified).takeOrElse {
             LocalTextStyle.current.fontSize.takeOrElse { 12.sp }
@@ -654,7 +654,7 @@ fun NoteWithEnharmonic(
  * @param measurer Instance to measure text. This is normally created via
  *   rememberTextMeasurer()
  * @param resources Resources which we need to obtain text resources (use e.g.
- *   LocalContext.current.resources)
+ *   LocalResources.current)
  * @return Size of largest note.
  */
 fun computeMaxNoteSize(
@@ -738,7 +738,7 @@ fun rememberMaxNoteSize(
     fontWeight: FontWeight? = null,
     textMeasurer: TextMeasurer = rememberTextMeasurer()
 ): DpSize {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val density = LocalDensity.current
     return remember(
         notes,
