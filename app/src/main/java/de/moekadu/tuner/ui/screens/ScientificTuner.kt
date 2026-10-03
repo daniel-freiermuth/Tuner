@@ -54,6 +54,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -145,6 +146,7 @@ fun ScientificTuner(
     val soundSourceError by data.soundSourceError.collectAsStateWithLifecycle()
     SoundSourceErrorSnackbar(soundSourceError, snackbarHostState)
     val context = LocalContext.current
+    val resources = LocalResources.current
 
     val writeWaveLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("audio/wav")
@@ -154,13 +156,13 @@ fun ScientificTuner(
             val filename = getFilenameFromUri(context, uri)
             Toast.makeText(
                 context,
-                context.getString(R.string.writing_wave_file, filename),
+                resources.getString(R.string.writing_wave_file, filename),
                 Toast.LENGTH_LONG
             ).show()
         } else {
             Toast.makeText(
                 context,
-                context.getString(R.string.failed_writing_wave_file),
+                resources.getString(R.string.failed_writing_wave_file),
                 Toast.LENGTH_LONG
             ).show()
         }

@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +29,6 @@ import de.moekadu.tuner.R
 import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
-import java.util.Locale
 
 @Composable
 fun NoteEditorSimple(
@@ -118,7 +118,8 @@ fun NoteEditorSimple(
                         count = options.size
                     )
                 ) {
-                    val text = if (offset == 0) "0" else "%+d".format(Locale.getDefault(), offset)
+                    val locale = LocalLocale.current.platformLocale
+                    val text = if (offset == 0) "0" else "%+d".format(locale, offset)
                     Text(text)
                 }
             }
