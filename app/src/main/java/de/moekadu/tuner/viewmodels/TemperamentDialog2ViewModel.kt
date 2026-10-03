@@ -69,14 +69,21 @@ class TemperamentDialog2ViewModel @Inject constructor(
         }
     }
 
-    override fun proposeRootNote(temperament: Temperament3): MusicalNote {
-        val rootNote = pref.musicalScale.value.rootNote
-        val rootNoteInTemperament =
-            temperament.possibleRootNotes().firstOrNull { it.equalsIgnoreOctave(rootNote) } == null
-        return if (rootNoteInTemperament) {
-            rootNote
-        } else {
-            temperament.possibleRootNotes()[0]
-        }
-    }
+    override fun proposeRootNote(temperament: Temperament3): MusicalNote =
+        proposeRootNoteFor(temperament, pref.musicalScale.value.rootNote)
+}
+
+/** Propose a root note when switching to a new temperament.
+ * @param temperament Newly chosen temperament.
+ * @param currentRootNote Root note currently in use.
+ * @return [currentRootNote] if it is a possible root note of [temperament] (ignoring the
+ *   octave), else the first possible root note of [temperament].
+ */
+internal fun proposeRootNoteFor(
+    temperament: Temperament3,
+    currentRootNote: MusicalNote
+): MusicalNote {
+    val possibleRootNotes = temperament.possibleRootNotes()
+    val rootNoteInTemperament = possibleRootNotes.any { it.equalsIgnoreOctave(currentRootNote) }
+    return if (rootNoteInTemperament) currentRootNote else possibleRootNotes[0]
 }
