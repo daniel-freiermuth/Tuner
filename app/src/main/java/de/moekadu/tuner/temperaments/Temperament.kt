@@ -60,12 +60,12 @@ data class Temperament(
         val minPredefinedKey = p.minOf { it.stableId }
         if (equalOctaveDivision != null) {
 //                Log.v("Tuner", "Temperament.toNew: creating EDO $equalOctaveDivision")
-            Temperament3EDO(minPredefinedKey - 1 + equalOctaveDivision + 5, equalOctaveDivision)
+            Temperament3EDO(minPredefinedKey - 1 - (equalOctaveDivision - 5), equalOctaveDivision)
         } else {
 //                Log.v("Tuner", "Temperament.toNew: searching temperament")
             p.firstOrNull {
                 centsEqual(cents, it.cents())
-            } ?: Temperament3EDO(minPredefinedKey - 1 + 12 + 5, 12)
+            } ?: Temperament3EDO(minPredefinedKey - 1 - (12 - 5), 12)
         }
     } else {
 //            Log.v("Tuner", "Temperament.toNew: using temperament as custom, cents.size=${cents.size}")
