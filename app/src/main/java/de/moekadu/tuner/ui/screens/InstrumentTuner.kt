@@ -58,6 +58,7 @@ import de.moekadu.tuner.instruments.Instrument
 import de.moekadu.tuner.instruments.InstrumentIcon
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.SortedAndDistinctInstrumentStrings
+import de.moekadu.tuner.notedetection.SoundSourceError
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.ui.instruments.InstrumentButton
@@ -66,6 +67,7 @@ import de.moekadu.tuner.ui.instruments.Strings
 import de.moekadu.tuner.ui.instruments.StringsScrollMode
 import de.moekadu.tuner.ui.instruments.StringsSidebarPosition
 import de.moekadu.tuner.ui.instruments.StringsState
+import de.moekadu.tuner.ui.misc.SoundSourceErrorSnackbar
 import de.moekadu.tuner.ui.misc.TunerScaffold
 import de.moekadu.tuner.ui.misc.rememberTunerAudioPermission
 import de.moekadu.tuner.ui.notes.NoteLockedButton
@@ -110,6 +112,9 @@ interface InstrumentTunerData {
     // others
     fun onClearFixedTargetClicked()
 
+    /** Error which stopped the sound source, or null. */
+    val soundSourceError: StateFlow<SoundSourceError?>
+
     fun startTuner()
     fun stopTuner()
 }
@@ -150,6 +155,8 @@ fun InstrumentTuner(
     val notePrintOptions by data.notePrintOptions.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val permissionGranted = rememberTunerAudioPermission(snackbarHostState)
+    val soundSourceError by data.soundSourceError.collectAsStateWithLifecycle()
+    SoundSourceErrorSnackbar(soundSourceError, snackbarHostState)
 
     LifecycleResumeEffect(permissionGranted) {
         if (permissionGranted) {
@@ -601,6 +608,8 @@ class TestInstrumentTunerData : InstrumentTunerData {
     override fun onClearFixedTargetClicked() {
         selectedNoteKey = null
     }
+
+    override val soundSourceError = MutableStateFlow<SoundSourceError?>(null)
 
     override fun startTuner() {}
     override fun stopTuner() {}

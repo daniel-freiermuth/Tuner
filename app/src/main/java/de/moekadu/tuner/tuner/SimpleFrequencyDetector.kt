@@ -6,6 +6,8 @@ import de.moekadu.tuner.notedetection.AcousticZeroWeighting
 import de.moekadu.tuner.notedetection.FrequencyDetectionCollectedResults
 import de.moekadu.tuner.notedetection.FrequencyDetectionResultCollector
 import de.moekadu.tuner.notedetection.FrequencyEvaluatorSimple
+import de.moekadu.tuner.notedetection.SoundSourceError
+import de.moekadu.tuner.notedetection.SoundSourceException
 import de.moekadu.tuner.notedetection.launchSoundSourceJob
 import de.moekadu.tuner.notedetection.testFunction
 import de.moekadu.tuner.preferences.PreferenceResources
@@ -14,6 +16,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flowOn
@@ -36,6 +40,11 @@ class SimpleFrequencyDetector(
 ) {
     private enum class Command { Reconnect, Disconnect }
     private val channel = Channel<Command>(Channel.CONFLATED)
+
+    private val _soundSourceError = MutableStateFlow<SoundSourceError?>(null)
+
+    /** Error which stopped the sound source, or null. Reset when the detection (re)starts. */
+    val soundSourceError = _soundSourceError.asStateFlow()
 
     init {
         scope.launch {
@@ -61,6 +70,7 @@ class SimpleFrequencyDetector(
 
     private suspend fun run() = coroutineScope {
 //        Log.v("Tuner", "Tuner: start running again ...")
+        _soundSourceError.value = null
 
         val frequencyDetectionResultsChannel =
             Channel<MemoryPool<FrequencyDetectionCollectedResults>.RefCountedMemory>(
@@ -91,13 +101,17 @@ class SimpleFrequencyDetector(
                 acousticWeighting = AcousticZeroWeighting()
             )
 
-            for (sampleData in soundSourceJobAndChannel.channel) {
-                val result = frequencyDetectionResultCollector.collectResults(sampleData)
-                result.incRef()
-                frequencyDetectionResultsChannel.trySend(result)
-                // sampleData is not needed anymore, so we can decrement ref to allow recycling
-                sampleData.decRef()
-                result.decRef()
+            try {
+                for (sampleData in soundSourceJobAndChannel.channel) {
+                    val result = frequencyDetectionResultCollector.collectResults(sampleData)
+                    result.incRef()
+                    frequencyDetectionResultsChannel.trySend(result)
+                    // sampleData is not needed anymore, so we can decrement ref to allow recycling
+                    sampleData.decRef()
+                    result.decRef()
+                }
+            } catch (e: SoundSourceException) {
+                _soundSourceError.value = e.error
             }
         }
 
