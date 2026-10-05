@@ -90,7 +90,10 @@ class InstrumentResources @Inject constructor(
     ) {
         readPersistedOrElse(
             read = { Json.decodeFromString<Array<Instrument>>(it).toList().toPersistentList() },
-            fallback = { CustomInstrumentsDefault }
+            fallback = {
+                store.preserveUnreadableValue(CUSTOM_INSTRUMENTS_KEY, it)
+                CustomInstrumentsDefault
+            }
         )
     }
 

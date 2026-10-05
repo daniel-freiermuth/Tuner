@@ -19,12 +19,15 @@
 package de.moekadu.tuner.misc
 
 import android.content.Context
+import android.util.Log
+import androidx.datastore.core.DataStore
 import androidx.datastore.core.IOException
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
@@ -37,6 +40,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -103,10 +107,48 @@ class ResourcesDataStoreBase(@ApplicationContext context: Context, filename: Str
         }
     }
 
+    /** Keep a stored value which could not be decoded.
+     *
+     * Readers fall back to a default if decoding fails, and writers derive new values from what
+     * was read. Without a backup, the next write would therefore replace the undecodable user
+     * data for good. The raw value is kept under [unreadableBackupKey].
+     *
+     * @param key Key of the value which could not be decoded.
+     * @param raw The stored, undecodable value.
+     */
+    fun preserveUnreadableValue(key: Preferences.Key<String>, raw: String) {
+        Log.e(
+            "Tuner",
+            "Cannot decode persisted value \"${key.name}\", " +
+                "keeping it as \"${unreadableBackupKey(key).name}\""
+        )
+        scope.launch { dataStore.preserveUnreadableValue(key, raw) }
+    }
+
     init {
         // block everything until, all data is read to avoid incorrect startup behaviour
         runBlocking {
             dataStore.data.first()
         }
     }
+}
+
+/** Key under which an undecodable value of [key] is kept. */
+fun unreadableBackupKey(key: Preferences.Key<String>) =
+    stringPreferencesKey("${key.name} unreadable backup")
+
+/** Store [raw] under [unreadableBackupKey] of [key], unless a backup already exists.
+ *
+ * An existing backup is kept, since values written after the first decoding failure are derived
+ * from the fallback and not from the original user data.
+ *
+ * @param key Key of the value which could not be decoded.
+ * @param raw The stored, undecodable value.
+ */
+suspend fun DataStore<Preferences>.preserveUnreadableValue(
+    key: Preferences.Key<String>,
+    raw: String
+) {
+    val backupKey = unreadableBackupKey(key)
+    edit { if (it[backupKey] == null) it[backupKey] = raw }
 }

@@ -92,7 +92,10 @@ class TemperamentResources @Inject constructor(
                         Json.decodeFromString<Array<TemperamentWithNoteNames>>(it)
                             .map { old -> old.toNew() }.toPersistentList()
                     },
-                    fallback = { CustomTemperamentsDefault }
+                    fallback = {
+                        store.preserveUnreadableValue(CUSTOM_TEMPERAMENTS_KEY, it)
+                        CustomTemperamentsDefault
+                    }
                 )
             }
         )
