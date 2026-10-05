@@ -24,11 +24,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.moekadu.tuner.hilt.ApplicationScope
+import de.moekadu.tuner.notedetection.SoundSourceError
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.tuner.SimpleFrequencyDetector
 import de.moekadu.tuner.ui.preferences.ReferenceNoteDialogFrequencyDetector
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 
 /** We provide the frequency detector via a view model.
  * @note We provide this via a view model for simple injection of preferences.
@@ -59,6 +61,9 @@ class ReferenceNoteDialogViewModel @Inject constructor(
         },
         pref
     )
+
+    override val soundSourceError: StateFlow<SoundSourceError?>
+        get() = frequencyDetector.soundSourceError
 
     /** Start frequency detection. */
     override fun startFrequencyDetection() {

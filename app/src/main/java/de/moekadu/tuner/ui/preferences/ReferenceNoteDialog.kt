@@ -61,19 +61,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import de.moekadu.tuner.R
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notedetection.SoundSourceError
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.ui.misc.rememberNumberFormatter
+import de.moekadu.tuner.ui.misc.soundSourceErrorMessage
 import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NoteSelector
 import de.moekadu.tuner.ui.theme.TunerTheme
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.text.ParsePosition
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /** Parse a string, which is allowed to have white spaces.
  * @param string String to be parsed.
@@ -95,6 +100,9 @@ private fun DecimalFormat.toFloatOrNull(string: String): Float? {
 interface ReferenceNoteDialogFrequencyDetector {
     /** The currently detected frequency or 0f if no frequency is detected yet. */
     val detectedFrequency: FloatState
+
+    /** Error which stopped the frequency detection, or null. */
+    val soundSourceError: StateFlow<SoundSourceError?>
 
     /** Start detecting frequencies. */
     fun startFrequencyDetection()
@@ -153,6 +161,7 @@ fun ReferenceNoteDialog(
     var frequencyDetectorStarted by rememberSaveable { mutableStateOf(false) }
     val permission = rememberPermissionState(permission = Manifest.permission.RECORD_AUDIO)
     val permissionGranted by remember { derivedStateOf { permission.status.isGranted } }
+    val soundSourceError by frequencyDetector.soundSourceError.collectAsStateWithLifecycle()
 
     LifecycleResumeEffect(permissionGranted) {
         if (frequencyDetectorStarted && permissionGranted) {
@@ -265,6 +274,16 @@ fun ReferenceNoteDialog(
                                 )
                             }
                         }
+                        soundSourceError?.let {
+                            Text(
+                                soundSourceErrorMessage(it),
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            )
+                        }
                     } else {
                         OutlinedButton(
                             onClick = {
@@ -302,6 +321,7 @@ fun ReferenceNoteDialog(
 private class TestReferenceNoteDialogFrequencyDetector : ReferenceNoteDialogFrequencyDetector {
     private val _detectedFrequency = mutableFloatStateOf(443.0f)
     override val detectedFrequency: FloatState get() = _detectedFrequency
+    override val soundSourceError = MutableStateFlow<SoundSourceError?>(null)
     override fun startFrequencyDetection() {}
     override fun stopFrequencyDetection() {}
 }

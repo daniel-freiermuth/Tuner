@@ -65,8 +65,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.getFilenameFromUri
 import de.moekadu.tuner.musicalscale.MusicalScale2
+import de.moekadu.tuner.notedetection.SoundSourceError
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notenames.MusicalNote
+import de.moekadu.tuner.ui.misc.SoundSourceErrorSnackbar
 import de.moekadu.tuner.ui.misc.TunerScaffold
 import de.moekadu.tuner.ui.misc.rememberTunerAudioPermission
 import de.moekadu.tuner.ui.notes.NotePrintOptions
@@ -113,6 +115,9 @@ interface ScientificTunerData {
     // Others
     val waveWriterDuration: StateFlow<Int>
 
+    /** Error which stopped the sound source, or null. */
+    val soundSourceError: StateFlow<SoundSourceError?>
+
     fun startTuner()
     fun stopTuner()
 
@@ -137,6 +142,8 @@ fun ScientificTuner(
     val waveWriterDuration by data.waveWriterDuration.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val permissionGranted = rememberTunerAudioPermission(snackbarHostState)
+    val soundSourceError by data.soundSourceError.collectAsStateWithLifecycle()
+    SoundSourceErrorSnackbar(soundSourceError, snackbarHostState)
     val context = LocalContext.current
 
     val writeWaveLauncher = rememberLauncherForActivityResult(
@@ -653,6 +660,8 @@ class TestScientificTunerData : ScientificTunerData {
         by mutableStateOf(musicalScale.value.referenceNote)
 
     override val waveWriterDuration = MutableStateFlow(1)
+
+    override val soundSourceError = MutableStateFlow<SoundSourceError?>(null)
 
     override fun startTuner() {}
     override fun stopTuner() {}

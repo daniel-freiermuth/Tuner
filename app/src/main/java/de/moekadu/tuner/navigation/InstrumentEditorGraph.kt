@@ -38,6 +38,7 @@ import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.temperaments.TemperamentResources
 import de.moekadu.tuner.ui.instruments.InstrumentEditor
 import de.moekadu.tuner.ui.instruments.InstrumentIconPicker
+import de.moekadu.tuner.ui.misc.SoundSourceErrorSnackbar
 import de.moekadu.tuner.ui.misc.rememberTunerAudioPermission
 import de.moekadu.tuner.viewmodels.InstrumentEditorViewModel
 import kotlinx.serialization.Serializable
@@ -77,6 +78,8 @@ fun NavGraphBuilder.instrumentEditorGraph(
 
             val snackbarHostState = remember { SnackbarHostState() }
             val permissionGranted = rememberTunerAudioPermission(snackbarHostState)
+            val soundSourceError by viewModel.soundSourceError.collectAsStateWithLifecycle()
+            SoundSourceErrorSnackbar(soundSourceError, snackbarHostState)
 
             LifecycleResumeEffect(permissionGranted) {
                 if (permissionGranted) {

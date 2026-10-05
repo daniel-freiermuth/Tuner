@@ -29,6 +29,7 @@ import de.moekadu.tuner.instruments.InstrumentIcon
 import de.moekadu.tuner.instruments.instrumentChromatic
 import de.moekadu.tuner.notedetection.FrequencyDetectionCollectedResults
 import de.moekadu.tuner.notedetection.FrequencyEvaluationResult
+import de.moekadu.tuner.notedetection.SoundSourceError
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.preferences.PreferenceResources
 import de.moekadu.tuner.temperaments.TemperamentResources
@@ -42,6 +43,7 @@ import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel(assistedFactory = InstrumentEditorViewModel.Factory::class)
 class InstrumentEditorViewModel @AssistedInject constructor(
@@ -170,6 +172,9 @@ class InstrumentEditorViewModel @AssistedInject constructor(
         stableId = stableId,
         isChromatic = false
     )
+
+    /** Error which stopped the sound source, or null. */
+    val soundSourceError: StateFlow<SoundSourceError?> get() = tuner.soundSourceError
 
     fun startTuner() {
         tuner.connect()

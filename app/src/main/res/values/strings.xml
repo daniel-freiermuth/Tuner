@@ -291,6 +291,9 @@
     <string name="delete_items">Delete items</string>
     <string name="database_empty_share">There are no items to share.</string>
     <string name="audio_record_permission_rationale">Grant microphone access to start tuning.</string>
+    <string name="sound_source_invalid_buffer_size">Recording audio is not supported with the current settings (error %d).</string>
+    <string name="sound_source_microphone_unavailable">Cannot access the microphone. Another app might be using it.</string>
+    <string name="sound_source_read_failed">Recording from the microphone failed (error %d). Another app might be using it.</string>
     <string name="writing_wave_file">Writing wave file: %s</string>
     <string name="failed_writing_wave_file">Did not write wave file.</string>
     <string name="instruments">Instruments</string>
