@@ -34,8 +34,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
@@ -57,7 +57,7 @@ fun NoteLockedButton(
     val iconSize = with(LocalDensity.current) {
         0.8f * fontSize.toDp()
     }
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val buttonText = remember(note, fontSize, resources, notePrintOptions) {
         note.asAnnotatedString(
             notePrintOptions = notePrintOptions,

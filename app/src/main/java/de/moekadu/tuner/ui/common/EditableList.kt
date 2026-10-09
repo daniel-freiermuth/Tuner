@@ -49,8 +49,8 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -398,7 +398,7 @@ fun <T> EditableList(
     val editableItemsExpanded by state.editableItemsExpanded.collectAsStateWithLifecycle()
     val activeItem by state.activeItem.collectAsStateWithLifecycle()
     val activeItemId = activeItem?.let { state.getStableId(it) }
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val snackbarHostStateUpdated by rememberUpdatedState(newValue = snackbarHostState)
     val overScrollPx = with(LocalDensity.current) { 4.dp.roundToPx() }
     val predefinedExpanded by state.predefinedSectionsExpanded.collectAsStateWithLifecycle(

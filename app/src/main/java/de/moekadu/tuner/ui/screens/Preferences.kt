@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
@@ -116,7 +117,7 @@ fun Preferences(
                     name = stringResource(id = R.string.reference_frequency),
                     supporting = {
                         val textStyle = LocalTextStyle.current
-                        val resources = LocalContext.current.resources
+                        val resources = LocalResources.current
                         val frequencyAsString =
                             decimalFormat.format(musicalScale.referenceFrequency)
                         val summary =
@@ -150,7 +151,7 @@ fun Preferences(
                 SimplePreference(
                     name = stringResource(id = R.string.temperament),
                     supporting = {
-                        val resources = LocalContext.current.resources
+                        val resources = LocalResources.current
                         val textStyle = LocalTextStyle.current
                         val summary = remember(musicalScale, resources, textStyle) {
                             buildAnnotatedString {
@@ -239,7 +240,7 @@ fun Preferences(
                 val numMovingAverage by pref.numMovingAverage.collectAsStateWithLifecycle()
                 SliderPreference(
                     name = stringResource(id = R.string.num_moving_average),
-                    supporting = LocalContext.current.resources.getQuantityString(
+                    supporting = LocalResources.current.getQuantityString(
                         R.plurals.num_moving_average_summary,
                         numMovingAverage,
                         numMovingAverage
@@ -254,7 +255,7 @@ fun Preferences(
             item {
                 val windowSizeExponent by pref.windowSizeExponent.collectAsStateWithLifecycle()
                 val windowSize = 2f.pow(windowSizeExponent).roundToInt()
-                val resources = LocalContext.current.resources
+                val resources = LocalResources.current
                 val summary = remember(windowSize, resources) {
                     "$windowSize " + resources.getString(R.string.samples) +
                         " (" + resources.getString(R.string.minimum_frequency) +
@@ -312,7 +313,7 @@ fun Preferences(
             item {
                 val pitchHistoryNumFaultyValues by
                     pref.pitchHistoryNumFaultyValues.collectAsStateWithLifecycle()
-                val resources = LocalContext.current.resources
+                val resources = LocalResources.current
                 val summary = remember(resources, pitchHistoryNumFaultyValues) {
                     resources.getQuantityString(
                         R.plurals.pitch_history_num_faulty_values_summary,
