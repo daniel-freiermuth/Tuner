@@ -33,16 +33,40 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
+/** Sound source job.
+ * @param channel Channel delivering sample windows. If the sound source fails, the channel is
+ *   closed with a [SoundSourceException], which is rethrown when receiving from the channel.
+ */
 class SoundSourceJob(val channel: ReceiveChannel<MemoryPool<SampleData>.RefCountedMemory>)
 
-/** Generator of sound samples.
+/** Reason why the sound source cannot deliver samples. */
+sealed class SoundSourceError {
+    /** AudioRecord.getMinBufferSize returned the error [code] instead of a buffer size. */
+    data class InvalidBufferSize(val code: Int) : SoundSourceError()
 
+    /** The microphone could not be acquired, e.g. because another app is using it. */
+    data object MicrophoneUnavailable : SoundSourceError()
+
+    /** AudioRecord.read returned the error [code], e.g. AudioRecord.ERROR_DEAD_OBJECT. */
+    data class ReadFailed(val code: Int) : SoundSourceError()
+}
+
+/** Close cause of [SoundSourceJob.channel] if the sound source fails. */
+class SoundSourceException(val error: SoundSourceError, cause: Throwable? = null) :
+    Exception("Sound source failed: $error", cause)
+
+private const val LOG_TAG = "Tuner"
+
+/** Generator of sound samples.
+ * Fails loudly: if the microphone cannot be acquired or reading from it fails, the returned
+ * channel is closed with a [SoundSourceException].
  */
-@SuppressLint("MissingPermission")
 fun CoroutineScope.launchSoundSourceJob(
     overlap: Float = 0.25f,
     windowSize: Int = 4096,
@@ -55,6 +79,14 @@ fun CoroutineScope.launchSoundSourceJob(
         AudioFormat.CHANNEL_IN_MONO,
         AudioFormat.ENCODING_PCM_16BIT
     )
+    if (minBufferSize <= 0) {
+        val exception = SoundSourceException(SoundSourceError.InvalidBufferSize(minBufferSize))
+        Log.e(LOG_TAG, "SoundSource: invalid buffer size for sample rate $sampleRate", exception)
+        val failedChannel = Channel<MemoryPool<SampleData>.RefCountedMemory>()
+        failedChannel.close(exception)
+        return SoundSourceJob(failedChannel)
+    }
+
     val channelCapacity = computeRequiredChannelCapacity(
         audioRecordBufferSizeInFrames = minBufferSize / Short.SIZE_BYTES,
         windowSize = windowSize,
@@ -71,102 +103,144 @@ fun CoroutineScope.launchSoundSourceJob(
         MemoryPoolSampleData(2 * channelCapacity)
 
     launch(Dispatchers.IO) {
-        val record =
+        var record: AudioRecord? = null
+        try {
+            val recordData: ShortArray
+            val readFrames: suspend (ShortArray) -> Int
             if (testFunction == null) {
-                AudioRecord(
-                    MediaRecorder.AudioSource.MIC,
-                    sampleRate,
-                    AudioFormat.CHANNEL_IN_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT,
-                    minBufferSize
-                )
+                val audioRecord = acquireAudioRecord(sampleRate, minBufferSize)
+                record = audioRecord
+                audioRecord.startRecording()
+                recordData = ShortArray(audioRecord.bufferSizeInFrames / 2)
+                readFrames = { buffer ->
+                    audioRecord.read(buffer, 0, buffer.size, AudioRecord.READ_BLOCKING)
+                }
             } else {
-                null
-            }
-
-        if (record?.state == AudioRecord.STATE_UNINITIALIZED) {
-            Log.v(
-                "Tuner",
-                "SoundSource.createAudioRecordJob: Not able to acquire audio resource"
-            )
-        } else {
-            record?.startRecording()
-            val recordData =
-                if (record != null) {
-                    ShortArray(record.bufferSizeInFrames / 2)
-                } else {
-                    ShortArray(minBufferSize / Short.SIZE_BYTES / 2)
-                }
-
-            val sampleDataList = ArrayList<MemoryPool<SampleData>.RefCountedMemory>()
-            var nextStartingDataFrame = 0
-            var currentFrame = 0
-            while (true) {
-                if (!isActive) {
-                    break
-                }
-
-                val numRead = if (testFunction != null) {
-                    for (i in recordData.indices) {
-                        recordData[i] = (
-                            Short.MAX_VALUE * testFunction(
-                                currentFrame + i,
-                                1f / sampleRate
-                            )
+                recordData = ShortArray(minBufferSize / Short.SIZE_BYTES / 2)
+                var testFrame = 0
+                readFrames = { buffer ->
+                    for (i in buffer.indices) {
+                        buffer[i] = (
+                            Short.MAX_VALUE * testFunction(testFrame + i, 1f / sampleRate)
                             ).toInt().toShort()
                     }
-                    delay((1000 * recordData.size.toFloat() / sampleRate).toLong())
-                    recordData.size
-                } else if (record != null) {
-                    record.read(recordData, 0, recordData.size, AudioRecord.READ_BLOCKING)
-                } else {
-                    0
-                }
-
-                // Log.v("TestRecordFlow", "SoundSource: numRead=$numRead, currentFrame=$currentFrame, windowSize=$windowSize")
-                if (numRead > 0) {
-                    // add empty sampleData objects to the data queue
-                    while (nextStartingDataFrame <= currentFrame + numRead) {
-                        // sampleDataList.add(SampleData(windowSize, sampleRate, nextStartingDataFrame))
-                        sampleDataList.add(
-                            memoryPool.get(
-                                windowSize,
-                                sampleRate,
-                                nextStartingDataFrame
-                            )
-                        )
-                        nextStartingDataFrame += max(
-                            1,
-                            ((1.0 - overlap) * windowSize).roundToInt()
-                        )
-                    }
-                    // Log.v("TestRecordFlow", "SoundSource: sampleDataList.size = ${sampleDataList.size}, nextStartingDataFrame=$nextStartingDataFrame")
-                    sampleDataList
-                        .map { it.apply { memory.addData(currentFrame, recordData) } }
-                        .filter { it.memory.isFull }
-                        .map {
-//                                Log.v("Tuner", "SoundSource: sending sample data at frame: ${it.memory.framePosition}")
-                            // outputChannel.send(it)
-                            val sendStatus = outputChannel.trySend(it)
-                            if (!sendStatus.isSuccess) {
-                                it.decRef()
-                            }
-                        }
-                    sampleDataList.removeAll { it.memory.isFull }
-
-                    // for(s in sampleDataList)
-                    //    Log.v("TestRecordFlow", "is full: ${s.isFull}")
-
-                    currentFrame += numRead
-
-                    waveWriter?.appendData(recordData, numRead)
+                    delay((1000 * buffer.size.toFloat() / sampleRate).toLong())
+                    testFrame += buffer.size
+                    buffer.size
                 }
             }
+            produceSampleData(
+                readFrames = readFrames,
+                recordData = recordData,
+                outputChannel = outputChannel,
+                memoryPool = memoryPool,
+                windowSize = windowSize,
+                sampleRate = sampleRate,
+                overlap = overlap,
+                waveWriter = waveWriter
+            )
+        } catch (e: SoundSourceException) {
+            Log.e(LOG_TAG, "SoundSource: stopped recording", e)
+            outputChannel.close(e)
+        } finally {
             record?.stop()
             record?.release()
+            // no-op if already closed with an error
+            outputChannel.close()
         }
     }
     return SoundSourceJob(outputChannel)
+}
+
+/** Create an initialized AudioRecord for the microphone.
+ * @throws SoundSourceException with [SoundSourceError.MicrophoneUnavailable] if the
+ *   microphone cannot be acquired.
+ */
+@SuppressLint("MissingPermission")
+private fun acquireAudioRecord(sampleRate: Int, bufferSizeInBytes: Int): AudioRecord {
+    val record = try {
+        AudioRecord(
+            MediaRecorder.AudioSource.MIC,
+            sampleRate,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT,
+            bufferSizeInBytes
+        )
+    } catch (e: IllegalArgumentException) {
+        throw SoundSourceException(SoundSourceError.MicrophoneUnavailable, e)
+    }
+    if (record.state != AudioRecord.STATE_INITIALIZED) {
+        record.release()
+        throw SoundSourceException(SoundSourceError.MicrophoneUnavailable)
+    }
+    return record
+}
+
+/** Read frames until the coroutine is cancelled and send full sample windows to [outputChannel].
+ * @param readFrames Fills the given buffer and returns the number of frames read, or a negative
+ *   AudioRecord error code.
+ * @throws SoundSourceException with [SoundSourceError.ReadFailed] if [readFrames] returns an
+ *   error code. Such errors are terminal, e.g. ERROR_DEAD_OBJECT returns immediately on every
+ *   further read.
+ */
+internal suspend fun produceSampleData(
+    readFrames: suspend (ShortArray) -> Int,
+    recordData: ShortArray,
+    outputChannel: SendChannel<MemoryPool<SampleData>.RefCountedMemory>,
+    memoryPool: MemoryPoolSampleData,
+    windowSize: Int,
+    sampleRate: Int,
+    overlap: Float,
+    waveWriter: WaveWriter?
+) {
+    val sampleDataList = ArrayList<MemoryPool<SampleData>.RefCountedMemory>()
+    var nextStartingDataFrame = 0
+    var currentFrame = 0
+    while (currentCoroutineContext().isActive) {
+        val numRead = readFrames(recordData)
+        if (numRead < 0) {
+            throw SoundSourceException(SoundSourceError.ReadFailed(numRead))
+        }
+
+        // Log.v("TestRecordFlow", "SoundSource: numRead=$numRead, currentFrame=$currentFrame, windowSize=$windowSize")
+        if (numRead > 0) {
+            // add empty sampleData objects to the data queue
+            while (nextStartingDataFrame <= currentFrame + numRead) {
+                // sampleDataList.add(SampleData(windowSize, sampleRate, nextStartingDataFrame))
+                sampleDataList.add(
+                    memoryPool.get(
+                        windowSize,
+                        sampleRate,
+                        nextStartingDataFrame
+                    )
+                )
+                nextStartingDataFrame += max(
+                    1,
+                    ((1.0 - overlap) * windowSize).roundToInt()
+                )
+            }
+            // Log.v("TestRecordFlow", "SoundSource: sampleDataList.size = ${sampleDataList.size}, nextStartingDataFrame=$nextStartingDataFrame")
+            sampleDataList
+                .map { it.apply { memory.addData(currentFrame, recordData) } }
+                .filter { it.memory.isFull }
+                .map {
+//                                Log.v("Tuner", "SoundSource: sending sample data at frame: ${it.memory.framePosition}")
+                    // outputChannel.send(it)
+                    val sendStatus = outputChannel.trySend(it)
+                    if (!sendStatus.isSuccess) {
+                        it.decRef()
+                    }
+                }
+            sampleDataList.removeAll { it.memory.isFull }
+
+            // for(s in sampleDataList)
+            //    Log.v("TestRecordFlow", "is full: ${s.isFull}")
+
+            currentFrame += numRead
+
+            waveWriter?.appendData(recordData, numRead)
+        }
+    }
 }
 
 private fun computeRequiredChannelCapacity(

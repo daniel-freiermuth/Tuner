@@ -32,6 +32,7 @@ import de.moekadu.tuner.instruments.instrumentChromatic
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.FrequencyDetectionCollectedResults
 import de.moekadu.tuner.notedetection.FrequencyEvaluationResult
+import de.moekadu.tuner.notedetection.SoundSourceError
 import de.moekadu.tuner.notedetection.TuningState
 import de.moekadu.tuner.notedetection.checkTuning
 import de.moekadu.tuner.notenames.MusicalNote
@@ -153,6 +154,8 @@ class ScientificTunerViewModel @Inject constructor(
     }
 
     override val waveWriterDuration: StateFlow<Int> get() = pref.waveWriterDurationInSeconds
+
+    override val soundSourceError: StateFlow<SoundSourceError?> get() = tuner.soundSourceError
 
     override fun startTuner() {
         tuner.connect()
