@@ -21,6 +21,7 @@ package de.moekadu.tuner.temperaments
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import de.moekadu.tuner.BuildConfig
 import de.moekadu.tuner.misc.FileCheck
 import de.moekadu.tuner.notenames.BaseNote
@@ -28,6 +29,7 @@ import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.IOException
 import java.io.StringWriter
 
 private fun BufferedWriter.writeLine(line: String) {
@@ -104,10 +106,17 @@ object TemperamentIO {
         }
     }
 
-    fun readTemperamentsFromFile(context: Context, uri: Uri): TemperamentsAndFileCheckResult =
+    fun readTemperamentsFromFile(context: Context, uri: Uri): TemperamentsAndFileCheckResult = try {
         context.contentResolver?.openInputStream(uri)?.use { reader ->
             parseTemperaments(reader.bufferedReader())
-        } ?: TemperamentsAndFileCheckResult(FileCheck.Invalid, listOf())
+        }
+    } catch (e: IOException) {
+        Log.w("Tuner", "Cannot read temperaments file $uri", e)
+        null
+    } catch (e: SecurityException) {
+        Log.w("Tuner", "No permission to read temperaments file $uri", e)
+        null
+    } ?: TemperamentsAndFileCheckResult(FileCheck.Invalid, listOf())
 
     fun parseTemperaments(reader: BufferedReader): TemperamentsAndFileCheckResult {
         val collectedTemperaments = ArrayList<EditableTemperament>()
