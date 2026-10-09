@@ -66,13 +66,22 @@ object InstrumentIO {
             Log.w("Tuner", "No permission to read instruments file $uri", e)
             null
         }
-        return if (instrumentsString == null) {
+        if (instrumentsString == null) {
+            return InstrumentsAndFileCheckResult(FileCheck.Invalid, listOf())
+        }
+        val result = stringToInstruments(instrumentsString)
+        // refuse the whole file instead of importing whatever was parsed before the error
+        return if (result.fileCheck == FileCheck.Invalid) {
             InstrumentsAndFileCheckResult(FileCheck.Invalid, listOf())
         } else {
-            stringToInstruments(instrumentsString)
+            result
         }
     }
 
+    /** Parse instruments.
+     * @return [FileCheck.Invalid] if the string has no version and no instruments, or if any
+     *   "Strings=" entry cannot be parsed; the instruments parsed so far are still returned.
+     */
     fun stringToInstruments(instrumentsString: String): InstrumentsAndFileCheckResult {
         val instruments = mutableListOf<Instrument>()
 
@@ -89,6 +98,7 @@ object InstrumentIO {
         var strings: Array<MusicalNote>? = null
         var icon = InstrumentIcon.entries[0]
         var stableId = Instrument.NO_STABLE_ID
+        var hasMalformedStrings = false
 
         while (!stream.isEos()) {
             stream.advance()
@@ -119,6 +129,9 @@ object InstrumentIO {
 
                 Keyword.Strings -> {
                     strings = stream.readMusicalNoteArray()
+                    if (strings == null) {
+                        hasMalformedStrings = true
+                    }
 //                        Log.v("Tuner", "InstrumentDatabase.stringToInstruments: reading strings: ${strings?.joinToString(separator=";", prefix="[", postfix="]"){it.asString()}}")
                 }
 
@@ -149,7 +162,7 @@ object InstrumentIO {
             numInstrumentsRead += 1
         }
 
-        if (version == null && numInstrumentsRead == 0) {
+        if (hasMalformedStrings || (version == null && numInstrumentsRead == 0)) {
             return InstrumentsAndFileCheckResult(FileCheck.Invalid, instruments)
         }
         return InstrumentsAndFileCheckResult(FileCheck.Ok, instruments)
