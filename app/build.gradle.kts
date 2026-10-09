@@ -52,7 +52,13 @@ android {
         abortOnError = true
         warningsAsErrors = true
         // Depend on what upstream publishes, so they would fail unchanged code over time.
-        disable += setOf("GradleDependency", "NewerVersionAvailable", "AndroidGradlePluginVersion")
+        disable +=
+            setOf(
+                "GradleDependency",
+                "NewerVersionAvailable",
+                "AndroidGradlePluginVersion",
+                "OldTargetApi"
+            )
         // Translations are contributed asynchronously via translate.codeberg.org.
         informational += "MissingTranslation"
     }
