@@ -35,6 +35,7 @@ import de.moekadu.tuner.hilt.ApplicationScope
 import de.moekadu.tuner.misc.readPersistedOrElse
 import de.moekadu.tuner.notedetection.WindowingFunction
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.StaffClef
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.pow
@@ -126,6 +127,14 @@ class PreferenceResources @Inject constructor(
     val keySignature = getPreferenceFlow(KEY_SIGNATURE_KEY, KEY_SIGNATURE_DEFAULT)
     fun writeKeySignature(keySignature: Int) {
         writePreference(KEY_SIGNATURE_KEY, keySignature)
+    }
+
+    // clef setup of the note staff
+    val staffClef = getTransformablePreferenceFlow(STAFF_CLEF_KEY, StaffClefDefault) { name ->
+        StaffClef.entries.firstOrNull { it.name == name } ?: StaffClefDefault
+    }
+    fun writeStaffClef(staffClef: StaffClef) {
+        writePreference(STAFF_CLEF_KEY, staffClef.name)
     }
 
     // show the chromatic instrument as note staff instead of a list of all notes
@@ -242,6 +251,7 @@ class PreferenceResources @Inject constructor(
                 it[SENSITIVITY_KEY] = SensitivityDefault
                 it[SCIENTIFIC_MODE_KEY] = SCIENTIFIC_MODE_DEFAULT
                 it[KEY_SIGNATURE_KEY] = KEY_SIGNATURE_DEFAULT
+                it[STAFF_CLEF_KEY] = StaffClefDefault.name
                 it[CHROMATIC_AS_STAFF_KEY] = CHROMATIC_AS_STAFF_DEFAULT
                 it[NUM_MOVING_AVERAGE_KEY] = NumMovingAverageDefault
                 it[WINDOW_SIZE_KEY] = WindowSizeExponentDefault
@@ -329,6 +339,7 @@ class PreferenceResources @Inject constructor(
         private val NotePrintOptionsDefault = NotePrintOptions()
         private const val SCIENTIFIC_MODE_DEFAULT = false
         private const val KEY_SIGNATURE_DEFAULT = 0
+        private val StaffClefDefault = StaffClef.Grand
         private const val CHROMATIC_AS_STAFF_DEFAULT = false
 
 //        private val MusicalScaleDefault = MusicalScaleFactory.create(TemperamentType.EDO12)
@@ -354,6 +365,7 @@ class PreferenceResources @Inject constructor(
 //        const val SOLFEGE_KEY = "solfege"
         private val SCIENTIFIC_MODE_KEY = booleanPreferencesKey("scientific_mode")
         private val KEY_SIGNATURE_KEY = intPreferencesKey("key_signature")
+        private val STAFF_CLEF_KEY = stringPreferencesKey("staff_clef")
         private val CHROMATIC_AS_STAFF_KEY = booleanPreferencesKey("chromatic_as_staff")
 
 //        private val NOTATION_KEY = stringPreferencesKey("notation")
