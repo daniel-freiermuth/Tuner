@@ -219,4 +219,20 @@ class InstrumentIOTest {
             result.instruments.map { it.getNameString(null) }
         )
     }
+
+    @Test
+    fun nameLengthBeyondEndOfInputIsClampedInsteadOfOverflowing() {
+        val input = "Version=6.0\n" +
+            "Instrument 1\n" +
+            stringsLine(e2) + "\n" +
+            "Length of name=${Int.MAX_VALUE}\n" +
+            "Name=x\n"
+
+        val result = InstrumentIO.stringToInstruments(input)
+
+        assertEquals(FileCheck.Ok, result.fileCheck)
+        assertEquals(1, result.instruments.size)
+        assertEquals("", result.instruments[0].getNameString(null))
+        assertEquals(1L, result.instruments[0].stableId)
+    }
 }
