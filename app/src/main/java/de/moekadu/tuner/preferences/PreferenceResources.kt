@@ -8,6 +8,7 @@ import de.moekadu.tuner.resources.ResourcesBase
 import de.moekadu.tuner.ui.notes.NotePrintOptions
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.OctaveNotation
+import de.moekadu.tuner.ui.notes.StaffClef
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.pow
@@ -111,6 +112,20 @@ class PreferenceResources @Inject constructor(
     val keySignature = keySignaturePref.asStateFlow()
     fun writeKeySignature(keySignature: Int) {
         keySignaturePref.set(keySignature)
+    }
+
+    // clef setup of the note staff
+    private val staffClefPref = createTransformablePreference(
+        "staff_clef",
+        default = StaffClef.Grand,
+        makeSerializable = { it.name },
+        fromSerializable = { name ->
+            StaffClef.entries.firstOrNull { it.name == name } ?: StaffClef.Grand
+        }
+    )
+    val staffClef = staffClefPref.asStateFlow()
+    fun writeStaffClef(staffClef: StaffClef) {
+        staffClefPref.set(staffClef)
     }
 
     // show the chromatic instrument as note staff instead of a list of all notes

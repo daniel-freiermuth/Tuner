@@ -73,6 +73,7 @@ import de.moekadu.tuner.ui.misc.rememberTunerAudioPermission
 import de.moekadu.tuner.ui.notes.NoteLockedButton
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.NoteStaff
+import de.moekadu.tuner.ui.notes.StaffClef
 import de.moekadu.tuner.ui.notes.rememberMaxNoteSize
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.theme.TunerTheme
@@ -92,6 +93,10 @@ interface InstrumentTunerData {
     /** Key signature of the note staff: > 0 number of sharps, < 0 number of flats. */
     val keySignature: StateFlow<Int>
     fun onKeySignatureChanged(keySignature: Int)
+
+    /** Clef setup of the note staff. */
+    val staffClef: StateFlow<StaffClef>
+    fun onStaffClefChanged(staffClef: StaffClef)
 
     /** True to show the chromatic instrument as note staff instead of the list of all notes. */
     val chromaticAsStaff: StateFlow<Boolean>
@@ -235,6 +240,7 @@ fun InstrumentTunerPortrait(
             val notePrintOptionsAsState by data.notePrintOptions.collectAsStateWithLifecycle()
             val toleranceInCentsAsState by data.toleranceInCents.collectAsStateWithLifecycle()
             val keySignatureAsState by data.keySignature.collectAsStateWithLifecycle()
+            val staffClefAsState by data.staffClef.collectAsStateWithLifecycle()
             val chromaticAsStaffAsState by data.chromaticAsStaff.collectAsStateWithLifecycle()
             val instrumentAsState by data.instrument.collectAsStateWithLifecycle()
             val noteNames by remember {
@@ -306,6 +312,8 @@ fun InstrumentTunerPortrait(
                         null
                     },
                     onKeySignatureChange = { data.onKeySignatureChanged(it) },
+                    staffClef = staffClefAsState,
+                    onStaffClefChange = { data.onStaffClefChanged(it) },
                     onClick = { data.toggleChromaticTargetLock(musicalScaleAsState) }
                 )
             } else if (instrumentAsState.strings.isNotEmpty() || instrumentAsState.isChromatic) {
@@ -427,6 +435,7 @@ fun InstrumentTunerLandscape(
         val musicalScaleAsState by data.musicalScale.collectAsStateWithLifecycle()
         val toleranceInCentsAsState by data.toleranceInCents.collectAsStateWithLifecycle()
         val keySignatureAsState by data.keySignature.collectAsStateWithLifecycle()
+        val staffClefAsState by data.staffClef.collectAsStateWithLifecycle()
         val chromaticAsStaffAsState by data.chromaticAsStaff.collectAsStateWithLifecycle()
         val instrumentAsState by data.instrument.collectAsStateWithLifecycle()
         val noteNames by remember {
@@ -494,6 +503,8 @@ fun InstrumentTunerLandscape(
                         null
                     },
                     onKeySignatureChange = { data.onKeySignatureChanged(it) },
+                    staffClef = staffClefAsState,
+                    onStaffClefChange = { data.onStaffClefChanged(it) },
                     onClick = { data.toggleChromaticTargetLock(musicalScaleAsState) }
                 )
             } else {
@@ -614,6 +625,10 @@ class TestInstrumentTunerData : InstrumentTunerData {
     override val keySignature = MutableStateFlow(0)
     override fun onKeySignatureChanged(keySignature: Int) {
         this.keySignature.value = keySignature
+    }
+    override val staffClef = MutableStateFlow(StaffClef.Grand)
+    override fun onStaffClefChanged(staffClef: StaffClef) {
+        this.staffClef.value = staffClef
     }
     override val chromaticAsStaff = MutableStateFlow(false)
 
