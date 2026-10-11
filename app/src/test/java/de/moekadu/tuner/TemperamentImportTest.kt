@@ -6,10 +6,10 @@ import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.temperaments.Temperament3Custom
 import de.moekadu.tuner.temperaments.TemperamentIO
 import de.moekadu.tuner.temperaments.toTemperament3Custom
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import java.io.BufferedReader
 import java.io.StringReader
+import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class TemperamentImportTest {
     private fun import(scl: String): Temperament3Custom {
