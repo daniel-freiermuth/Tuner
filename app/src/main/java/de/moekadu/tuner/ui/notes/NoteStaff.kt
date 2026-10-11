@@ -57,7 +57,7 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.vector.PathParser
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -358,7 +358,7 @@ fun NoteStaff(
     onStaffClefChange: ((StaffClef) -> Unit)? = null,
     onClick: () -> Unit = {}
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val textMeasurer = rememberTextMeasurer()
     val trebleClef = remember { parseClefPath(TREBLE_CLEF_PATH) }
     val bassClef = remember { parseClefPath(BASS_CLEF_PATH) }
