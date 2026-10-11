@@ -273,7 +273,7 @@ object TemperamentIO {
     private fun parseRatio(string: String): RationalNumber? {
         // int numbers without slash are also a ratio with denominator 1
         val possibleNumerator = string.trim().toIntOrNull()
-        if (possibleNumerator != null) {
+        if (possibleNumerator != null && possibleNumerator != Int.MIN_VALUE) {
             return RationalNumber(possibleNumerator, 1)
         }
 
@@ -284,7 +284,11 @@ object TemperamentIO {
         }
         val numerator = values[0].toIntOrNull()
         val denominator = values[1].toIntOrNull()
-        return if (numerator != null && denominator != null) {
+        // RationalNumber cannot reduce a zero denominator or Int.MIN_VALUE (its absolute
+        // value overflows), so such values are rejected as invalid.
+        return if (numerator != null && denominator != null && denominator != 0 &&
+            numerator != Int.MIN_VALUE && denominator != Int.MIN_VALUE
+        ) {
             RationalNumber(numerator, denominator)
         } else {
             null
