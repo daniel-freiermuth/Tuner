@@ -27,11 +27,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -78,25 +85,69 @@ import kotlin.math.min
 // Positions on the staff are counted in diatonic steps: C0 = 0, D0 = 1, ..., C4 = 28.
 // One diatonic step is half a staff space.
 private const val TREBLE_BOTTOM_LINE = 30 // E4
-private const val TREBLE_TOP_LINE = 38 // F5
 private const val BASS_BOTTOM_LINE = 18 // G2
-private const val BASS_TOP_LINE = 26 // A3
+private const val STAFF_HEIGHT = 8 // positions from bottom to top line
 private const val MIDDLE_C = 28
-private const val TREBLE_CLEF_LINE = 32 // G4, the line enclosed by the treble clef spiral
-private const val BASS_CLEF_LINE = 24 // F3, the line between the bass clef dots
 
-/** Highest/lowest position drawn with ledger lines; notes beyond are drawn octaves shifted
+/** Number of ledger lines drawn above/below the staff; notes beyond are drawn octaves shifted
  * and the clef gets an octave mark (8, 15, ...).
  */
-private const val HIGHEST_POSITION = 44 // E6, three ledger lines above the treble staff
-private const val LOWEST_POSITION = 12 // A1, three ledger lines below the bass staff
-private const val STAFF_SPACES_VISIBLE = (HIGHEST_POSITION - LOWEST_POSITION) / 2 + 2
+private const val MAX_LEDGER_LINES = 3
+
+/** Clef setup of the note staff. */
+enum class StaffClef {
+    /** Treble and bass staff, as for piano. */
+    Grand,
+    Treble,
+
+    /** Treble clef with an 8 below, notes are written one octave above the sung pitch. */
+    Tenor,
+    Bass
+}
+
+private enum class ClefGlyph { Treble, Bass }
+
+/** Five-line staff with a clef.
+ * @param bottomLine Staff position of the lowest line.
+ */
+private data class SingleStaff(val glyph: ClefGlyph, val bottomLine: Int) {
+    val topLine get() = bottomLine + STAFF_HEIGHT
+
+    /** Line which the clef refers to: G line for treble, F line for bass. */
+    val clefLine get() = if (glyph == ClefGlyph.Treble) bottomLine + 2 else bottomLine + 6
+
+    /** Offset of key signature positions relative to the treble staff positions. */
+    val keySignatureOffset get() = bottomLine - TREBLE_BOTTOM_LINE
+}
+
+/** Staves of a staff setup.
+ * @param staves Staves from top to bottom.
+ * @param writtenOctaves Octaves by which the notes are written above their sounding pitch.
+ */
+private class StaffLayout(val staves: List<SingleStaff>, val writtenOctaves: Int) {
+    val highestPosition = staves.first().topLine + 2 * MAX_LEDGER_LINES
+    val lowestPosition = staves.last().bottomLine - 2 * MAX_LEDGER_LINES
+    val centerPosition = (highestPosition + lowestPosition) / 2
+    val staffSpacesVisible = (highestPosition - lowestPosition) / 2 + 2
+}
+
+private val trebleStaff = SingleStaff(ClefGlyph.Treble, TREBLE_BOTTOM_LINE)
+private val bassStaff = SingleStaff(ClefGlyph.Bass, BASS_BOTTOM_LINE)
+
+private fun StaffClef.layout() = when (this) {
+    StaffClef.Grand -> StaffLayout(listOf(trebleStaff, bassStaff), 0)
+    StaffClef.Treble -> StaffLayout(listOf(trebleStaff), 0)
+    StaffClef.Tenor -> StaffLayout(listOf(trebleStaff), 1)
+    StaffClef.Bass -> StaffLayout(listOf(bassStaff), 0)
+}
 
 // Gonville clef outlines, traced with gonville/clef_paths.py. Units are staff spaces,
 // x starts at the left edge of the glyph, y = 0 is the clef line and y points downwards.
 private const val TREBLE_CLEF_WIDTH = 2.642f
 private const val TREBLE_CLEF_TOP = -4.571f
+private const val TREBLE_CLEF_BOTTOM = 2.673f
 private const val BASS_CLEF_WIDTH = 2.791f
+private const val BASS_CLEF_TOP = -1.077f
 private const val BASS_CLEF_BOTTOM = 2.3f
 
 // Generated path data, kept on single lines so it can be replaced as a whole.
@@ -194,34 +245,47 @@ fun MusicalNote.staffPosition(): Int? {
     return 7 * (octave + octaveOffset) + base.ordinal
 }
 
-/** Placement of a note within the displayed grand staff.
+/** Placement of a note on the staff.
  * @param position Staff position, where the note head is drawn.
- * @param octaveShift Number of octaves the note sounds above (> 0) or below (< 0) the
- *   drawn position; this is marked at the clef (treble clef for > 0, bass clef for < 0).
+ * @param octaveMark Number of octaves the note is written above (> 0) or below (< 0) its
+ *   sounding pitch. This is marked at the clef: below the (lowest) clef for > 0, above the
+ *   (highest) clef for < 0.
  */
-data class GrandStaffPlacement(val position: Int, val octaveShift: Int)
+data class StaffPlacement(val position: Int, val octaveMark: Int)
 
-/** Fit a staff position into the displayed range, by shifting it by octaves if required. */
-fun grandStaffPlacement(staffPosition: Int): GrandStaffPlacement {
-    var position = staffPosition
-    var octaveShift = 0
-    while (position > HIGHEST_POSITION) {
+/** Place a note on the staff, shifting it by octaves if it is out of the drawn range.
+ * @param soundingPosition Staff position of the sounding pitch.
+ */
+fun staffPlacement(soundingPosition: Int, clef: StaffClef): StaffPlacement {
+    val layout = clef.layout()
+    var position = soundingPosition + 7 * layout.writtenOctaves
+    var octaveMark = layout.writtenOctaves
+    while (position > layout.highestPosition) {
         position -= 7
-        ++octaveShift
+        --octaveMark
     }
-    while (position < LOWEST_POSITION) {
+    while (position < layout.lowestPosition) {
         position += 7
-        --octaveShift
+        ++octaveMark
     }
-    return GrandStaffPlacement(position, octaveShift)
+    return StaffPlacement(position, octaveMark)
 }
 
 /** Positions of the ledger lines which are needed for a note at the given position. */
-fun ledgerLinePositions(position: Int): IntProgression = when {
-    position >= TREBLE_TOP_LINE + 2 -> (TREBLE_TOP_LINE + 2)..position step 2
-    position <= BASS_BOTTOM_LINE - 2 -> (BASS_BOTTOM_LINE - 2) downTo position step 2
-    position == MIDDLE_C -> MIDDLE_C..MIDDLE_C
-    else -> IntRange.EMPTY
+fun ledgerLinePositions(position: Int, clef: StaffClef): IntProgression {
+    val staves = clef.layout().staves
+    val top = staves.first().topLine
+    val bottom = staves.last().bottomLine
+    return when {
+        position >= top + 2 -> (top + 2)..position step 2
+
+        position <= bottom - 2 -> (bottom - 2) downTo position step 2
+
+        // middle C between treble and bass staff
+        staves.size > 1 && position == MIDDLE_C -> MIDDLE_C..MIDDLE_C
+
+        else -> IntRange.EMPTY
+    }
 }
 
 private fun parseClefPath(pathData: String): Path =
@@ -235,7 +299,7 @@ private fun createNoteHeadPath() = Path().apply {
     transform(Matrix().apply { this[1, 0] = -NOTE_HEAD_SKEW })
 }
 
-/** Grand staff (treble and bass clef) showing a single note.
+/** Staff (grand staff or single staff, see [StaffClef]) showing a single note.
  * @param note Note to be shown or null to show an empty staff.
  * @param modifier Modifier.
  * @param tuningState Tuning state, which defines the color of the note.
@@ -251,6 +315,9 @@ private fun createNoteHeadPath() = Path().apply {
  *   for a staff without key signature.
  * @param onKeySignatureChange If not null (and keySignature is not null), buttons for adding
  *   sharps/flats are shown, which call this with the new key signature.
+ * @param staffClef Clef setup of the staff.
+ * @param onStaffClefChange If not null, a button for choosing the clef setup is shown, which
+ *   calls this with the chosen setup.
  * @param onClick Callback when the staff is clicked.
  */
 @Composable
@@ -267,6 +334,8 @@ fun NoteStaff(
     outline: PlotWindowOutline = PlotWindowOutline(),
     keySignature: Int? = null,
     onKeySignatureChange: ((Int) -> Unit)? = null,
+    staffClef: StaffClef = StaffClef.Grand,
+    onStaffClefChange: ((StaffClef) -> Unit)? = null,
     onClick: () -> Unit = {}
 ) {
     val resources = LocalContext.current.resources
@@ -283,8 +352,8 @@ fun NoteStaff(
     val spelledNote = remember(note, notePrintOptions, keySignature) {
         note?.let { spellNote(it, notePrintOptions.useEnharmonic, keySignature) }
     }
-    val placement = remember(spelledNote) {
-        spelledNote?.note?.staffPosition()?.let { grandStaffPlacement(it) }
+    val placement = remember(spelledNote, staffClef) {
+        spelledNote?.note?.staffPosition()?.let { staffPlacement(it, staffClef) }
     }
     val noteName = remember(spelledNote, notePrintOptions, fontSize, resources) {
         spelledNote?.note?.asAnnotatedString(
@@ -311,34 +380,39 @@ fun NoteStaff(
                 addRoundRect(RoundRect(Rect(Offset.Zero, size), cornerRadius))
             }
             clipPath(clip) {
+                val staffLayout = staffClef.layout()
                 val staffSpace = min(
-                    size.height / STAFF_SPACES_VISIBLE,
+                    size.height / staffLayout.staffSpacesVisible,
                     size.width / (9f + numKeyAccidentals * KEY_SIGNATURE_SPACING)
                 )
                 val lineWidth = 0.1f * staffSpace
                 val left = 0.5f * staffSpace
                 val right = size.width - 0.5f * staffSpace
+                val centerY = 0.5f * size.height
                 fun y(position: Int) =
-                    0.5f * size.height - 0.5f * staffSpace * (position - MIDDLE_C)
+                    centerY - 0.5f * staffSpace * (position - staffLayout.centerPosition)
 
-                for (position in (BASS_BOTTOM_LINE..BASS_TOP_LINE step 2) +
-                    (TREBLE_BOTTOM_LINE..TREBLE_TOP_LINE step 2)) {
-                    drawLine(
-                        staffColor,
-                        Offset(left, y(position)),
-                        Offset(right, y(position)),
-                        lineWidth
-                    )
+                for (staff in staffLayout.staves) {
+                    for (position in staff.bottomLine..staff.topLine step 2) {
+                        drawLine(
+                            staffColor,
+                            Offset(left, y(position)),
+                            Offset(right, y(position)),
+                            lineWidth
+                        )
+                    }
                 }
                 drawLine(
                     staffColor,
-                    Offset(left, y(TREBLE_TOP_LINE) - 0.5f * lineWidth),
-                    Offset(left, y(BASS_BOTTOM_LINE) + 0.5f * lineWidth),
+                    Offset(left, y(staffLayout.staves.first().topLine) - 0.5f * lineWidth),
+                    Offset(left, y(staffLayout.staves.last().bottomLine) + 0.5f * lineWidth),
                     lineWidth
                 )
                 val clefX = left + 0.5f * staffSpace
-                drawClef(trebleClef, clefX, y(TREBLE_CLEF_LINE), staffSpace, staffColor)
-                drawClef(bassClef, clefX, y(BASS_CLEF_LINE), staffSpace, staffColor)
+                for (staff in staffLayout.staves) {
+                    val clefPath = if (staff.glyph == ClefGlyph.Treble) trebleClef else bassClef
+                    drawClef(clefPath, clefX, y(staff.clefLine), staffSpace, staffColor)
+                }
 
                 val keySignatureX = clefX + (BASS_CLEF_WIDTH + 0.6f) * staffSpace
                 if (keySignature != null && keySignature != 0) {
@@ -347,21 +421,19 @@ fun NoteStaff(
                     } else {
                         NoteModifier.Flat.accidentalSymbols()
                     }
-                    val treblePositions = if (keySignature >
-                        0
-                    ) {
+                    val treblePositions = if (keySignature > 0) {
                         TREBLE_SHARP_POSITIONS
                     } else {
                         TREBLE_FLAT_POSITIONS
                     }
                     for (i in 0 until numKeyAccidentals) {
                         val rightX = keySignatureX + (i + 1) * KEY_SIGNATURE_SPACING * staffSpace
-                        for (position in listOf(treblePositions[i], treblePositions[i] - 14)) {
+                        for (staff in staffLayout.staves) {
                             drawAccidental(
                                 textMeasurer,
                                 symbol,
                                 rightX,
-                                y(position),
+                                y(treblePositions[i] + staff.keySignatureOffset),
                                 staffSpace,
                                 staffColor
                             )
@@ -375,7 +447,7 @@ fun NoteStaff(
                 )
                 if (placement != null) {
                     val noteY = y(placement.position)
-                    for (position in ledgerLinePositions(placement.position)) {
+                    for (position in ledgerLinePositions(placement.position, staffClef)) {
                         drawLine(
                             staffColor,
                             Offset(noteX - 1.1f * staffSpace, y(position)),
@@ -403,25 +475,28 @@ fun NoteStaff(
                             noteColor
                         )
                     }
-                    if (placement.octaveShift > 0) {
-                        drawOctaveClefMark(
-                            textMeasurer,
-                            placement.octaveShift,
-                            centerX = clefX + 0.5f * TREBLE_CLEF_WIDTH * staffSpace,
-                            clefEdgeY = y(TREBLE_CLEF_LINE) + TREBLE_CLEF_TOP * staffSpace,
-                            staffSpace = staffSpace,
-                            color = noteColor
-                        )
-                    } else if (placement.octaveShift < 0) {
-                        drawOctaveClefMark(
-                            textMeasurer,
-                            placement.octaveShift,
-                            centerX = clefX + 0.5f * BASS_CLEF_WIDTH * staffSpace,
-                            clefEdgeY = y(BASS_CLEF_LINE) + BASS_CLEF_BOTTOM * staffSpace,
-                            staffSpace = staffSpace,
-                            color = noteColor
-                        )
+                }
+
+                // Octave mark of the clef: the clef's own transposition (tenor), or the shift of
+                // a note out of range, which is highlighted in the note color.
+                val octaveMark = placement?.octaveMark ?: staffLayout.writtenOctaves
+                if (octaveMark != 0) {
+                    val staff = if (octaveMark > 0) {
+                        staffLayout.staves.last()
+                    } else {
+                        staffLayout.staves.first()
                     }
+                    val clefEdge = if (octaveMark > 0) staff.glyph.bottom else staff.glyph.top
+                    val isClefOwnMark = octaveMark == staffLayout.writtenOctaves
+                    drawOctaveClefMark(
+                        textMeasurer,
+                        octaves = abs(octaveMark),
+                        above = octaveMark < 0,
+                        centerX = clefX + 0.5f * staff.glyph.width * staffSpace,
+                        clefEdgeY = y(staff.clefLine) + clefEdge * staffSpace,
+                        staffSpace = staffSpace,
+                        color = if (isClefOwnMark) staffColor else noteColor
+                    )
                 }
                 if (noteName != null) {
                     val layout = textMeasurer.measure(noteName, TextStyle(color = noteColor))
@@ -430,7 +505,7 @@ fun NoteStaff(
                     ) {
                         y(placement.position)
                     } else {
-                        0.5f * size.height
+                        centerY
                     }
                     drawText(
                         layout,
@@ -452,11 +527,16 @@ fun NoteStaff(
                 style = Stroke(outlineWidth)
             )
         }
-        if (keySignature != null && onKeySignatureChange != null) {
-            Row(
-                modifier = Modifier.align(Alignment.TopEnd).padding(4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
+        if (onStaffClefChange != null) {
+            Box(modifier = Modifier.align(Alignment.BottomEnd).padding(4.dp)) {
+                StaffClefButton(staffClef, onStaffClefChange)
+            }
+        }
+        Row(
+            modifier = Modifier.align(Alignment.TopEnd).padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            if (keySignature != null && onKeySignatureChange != null) {
                 KeySignatureButton(
                     symbol = NoteModifier.Flat.accidentalSymbols(),
                     contentDescription = stringResource(R.string.key_signature_flat),
@@ -468,6 +548,123 @@ fun NoteStaff(
                     contentDescription = stringResource(R.string.key_signature_sharp),
                     enabled = keySignature < MAX_KEY_SIGNATURE,
                     onClick = { onKeySignatureChange(keySignature + 1) }
+                )
+            }
+        }
+    }
+}
+
+private val ClefGlyph.width get() = if (this ==
+    ClefGlyph.Treble
+) {
+    TREBLE_CLEF_WIDTH
+} else {
+    BASS_CLEF_WIDTH
+}
+private val ClefGlyph.top get() = if (this == ClefGlyph.Treble) TREBLE_CLEF_TOP else BASS_CLEF_TOP
+private val ClefGlyph.bottom get() =
+    if (this == ClefGlyph.Treble) TREBLE_CLEF_BOTTOM else BASS_CLEF_BOTTOM
+
+private fun StaffClef.labelResource() = when (this) {
+    StaffClef.Grand -> R.string.staff_clef_grand
+    StaffClef.Treble -> R.string.staff_clef_treble
+    StaffClef.Tenor -> R.string.staff_clef_tenor
+    StaffClef.Bass -> R.string.staff_clef_bass
+}
+
+@Composable
+private fun StaffClefButton(staffClef: StaffClef, onStaffClefChange: (StaffClef) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    val description = stringResource(R.string.staff_clef)
+    Box {
+        FilledTonalIconButton(
+            onClick = { expanded = true },
+            modifier = Modifier.size(36.dp).semantics { contentDescription = description }
+        ) {
+            ClefIcon(staffClef, LocalContentColor.current, Modifier.size(26.dp))
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            StaffClef.entries.forEach { clef ->
+                DropdownMenuItem(
+                    text = { Text(stringResource(clef.labelResource())) },
+                    leadingIcon = {
+                        ClefIcon(clef, LocalContentColor.current, Modifier.size(32.dp))
+                    },
+                    trailingIcon = { RadioButton(selected = clef == staffClef, onClick = null) },
+                    onClick = {
+                        expanded = false
+                        onStaffClefChange(clef)
+                    }
+                )
+            }
+        }
+    }
+}
+
+/** Small picture of the clef(s) of a staff setup. */
+@Composable
+private fun ClefIcon(clef: StaffClef, color: Color, modifier: Modifier = Modifier) {
+    val trebleClef = remember { parseClefPath(TREBLE_CLEF_PATH) }
+    val bassClef = remember { parseClefPath(BASS_CLEF_PATH) }
+    val textMeasurer = rememberTextMeasurer()
+    val trebleHeight = TREBLE_CLEF_BOTTOM - TREBLE_CLEF_TOP
+    val bassHeight = BASS_CLEF_BOTTOM - BASS_CLEF_TOP
+    Canvas(modifier) {
+        when (clef) {
+            StaffClef.Treble, StaffClef.Tenor -> {
+                // leave room for the octave mark below the tenor clef
+                val markHeight = if (clef == StaffClef.Tenor) 1.8f else 0f
+                val staffSpace = size.height / (trebleHeight + markHeight)
+                val lineY = -TREBLE_CLEF_TOP * staffSpace
+                drawClef(
+                    trebleClef,
+                    0.5f * (size.width - TREBLE_CLEF_WIDTH * staffSpace),
+                    lineY,
+                    staffSpace,
+                    color
+                )
+                if (clef == StaffClef.Tenor) {
+                    drawOctaveClefMark(
+                        textMeasurer,
+                        octaves = 1,
+                        above = false,
+                        centerX = 0.5f * size.width,
+                        clefEdgeY = lineY + TREBLE_CLEF_BOTTOM * staffSpace,
+                        staffSpace = staffSpace,
+                        color = color
+                    )
+                }
+            }
+
+            StaffClef.Bass -> {
+                val staffSpace = min(size.height / bassHeight, size.width / BASS_CLEF_WIDTH)
+                drawClef(
+                    bassClef,
+                    0.5f * (size.width - BASS_CLEF_WIDTH * staffSpace),
+                    0.5f * size.height - 0.5f * (BASS_CLEF_TOP + BASS_CLEF_BOTTOM) * staffSpace,
+                    staffSpace,
+                    color
+                )
+            }
+
+            StaffClef.Grand -> {
+                val gap = 0.3f
+                val totalWidth = TREBLE_CLEF_WIDTH + gap + BASS_CLEF_WIDTH
+                val staffSpace = min(size.height / trebleHeight, size.width / totalWidth)
+                val x = 0.5f * (size.width - totalWidth * staffSpace)
+                drawClef(
+                    trebleClef,
+                    x,
+                    0.5f * size.height - 0.5f * (TREBLE_CLEF_TOP + TREBLE_CLEF_BOTTOM) * staffSpace,
+                    staffSpace,
+                    color
+                )
+                drawClef(
+                    bassClef,
+                    x + (TREBLE_CLEF_WIDTH + gap) * staffSpace,
+                    0.5f * size.height - 0.5f * (BASS_CLEF_TOP + BASS_CLEF_BOTTOM) * staffSpace,
+                    staffSpace,
+                    color
                 )
             }
         }
@@ -522,20 +719,23 @@ private fun DrawScope.drawAccidental(
     drawText(layout, topLeft = Offset(rightX - layout.size.width, baselineY - layout.firstBaseline))
 }
 
-/** Draw the octave mark of an octave clef (8, 15, ...), above the clef for notes sounding
- * higher, below the clef for notes sounding lower.
- * @param clefEdgeY Top edge of the clef if octaveShift > 0, else bottom edge.
+/** Draw the octave mark of an octave clef (8, 15, ...).
+ * @param octaves Number of octaves (1 -> 8, 2 -> 15, ...).
+ * @param above True to draw the mark above the clef (notes sound higher than written), false
+ *   to draw it below (notes sound lower than written).
+ * @param clefEdgeY Top edge of the clef if [above], else bottom edge.
  */
 private fun DrawScope.drawOctaveClefMark(
     textMeasurer: TextMeasurer,
-    octaveShift: Int,
+    octaves: Int,
+    above: Boolean,
     centerX: Float,
     clefEdgeY: Float,
     staffSpace: Float,
     color: Color
 ) {
     val layout = textMeasurer.measure(
-        (7 * abs(octaveShift) + 1).toString(),
+        (7 * octaves + 1).toString(),
         TextStyle(
             color = color,
             fontSize = (1.4f * staffSpace).toSp(),
@@ -543,7 +743,7 @@ private fun DrawScope.drawOctaveClefMark(
             fontWeight = FontWeight.Bold
         )
     )
-    val top = if (octaveShift > 0) clefEdgeY - layout.size.height else clefEdgeY
+    val top = if (above) clefEdgeY - layout.size.height else clefEdgeY
     drawText(layout, topLeft = Offset(centerX - 0.5f * layout.size.width, top))
 }
 

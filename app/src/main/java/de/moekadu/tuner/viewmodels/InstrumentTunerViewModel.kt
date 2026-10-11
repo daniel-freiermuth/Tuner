@@ -39,6 +39,7 @@ import de.moekadu.tuner.tuner.Tuner
 import de.moekadu.tuner.ui.instruments.StringWithInfo
 import de.moekadu.tuner.ui.instruments.StringsState
 import de.moekadu.tuner.ui.notes.NotePrintOptions
+import de.moekadu.tuner.ui.notes.StaffClef
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.screens.InstrumentTunerData
 import de.moekadu.tuner.ui.tuning.PitchHistoryState
@@ -61,6 +62,10 @@ class InstrumentTunerViewModel @Inject constructor(
     override val keySignature: StateFlow<Int> get() = pref.keySignature
     override fun onKeySignatureChanged(keySignature: Int) {
         pref.writeKeySignature(keySignature)
+    }
+    override val staffClef: StateFlow<StaffClef> get() = pref.staffClef
+    override fun onStaffClefChanged(staffClef: StaffClef) {
+        pref.writeStaffClef(staffClef)
     }
     override val chromaticAsStaff: StateFlow<Boolean> get() = pref.chromaticAsStaff
 
