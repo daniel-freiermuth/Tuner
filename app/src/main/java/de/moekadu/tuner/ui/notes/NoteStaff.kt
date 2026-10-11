@@ -201,6 +201,26 @@ data class SpelledNote(val note: MusicalNote, val showAccidental: Boolean)
 private fun NoteModifier.isSharp() = this == NoteModifier.Sharp || this == NoteModifier.SharpSharp
 private fun NoteModifier.isFlat() = this == NoteModifier.Flat || this == NoteModifier.FlatFlat
 
+/** Enharmonic preference ([NotePrintOptions.useEnharmonic]) which matches the accidentals of a
+ * key signature: sharp names for sharp keys, flat names for flat keys.
+ * @param keySignature Number of sharps (> 0) or flats (< 0).
+ * @param noteNames Note names of the musical scale, used to find out whether the primary or
+ *   the enharmonic spelling is the sharp one.
+ * @return Preference or null for keySignature 0 or if the note names have no pair of sharp and
+ *   flat spellings.
+ */
+fun useEnharmonicForKey(keySignature: Int, noteNames: Iterable<MusicalNote>): Boolean? {
+    if (keySignature == 0) {
+        return null
+    }
+    val sharpFlatPair = noteNames.firstOrNull {
+        (it.modifier.isSharp() && it.enharmonicModifier.isFlat()) ||
+            (it.modifier.isFlat() && it.enharmonicModifier.isSharp())
+    } ?: return null
+    val primaryIsSharp = sharpFlatPair.modifier.isSharp()
+    return primaryIsSharp != (keySignature > 0)
+}
+
 /** Choose the spelling of a note for the staff.
  * @param useEnharmonic Enharmonic preference, used if there is no key signature and when the
  *   key signature does not decide between two spellings.

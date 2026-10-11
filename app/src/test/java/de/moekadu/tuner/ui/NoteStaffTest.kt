@@ -10,6 +10,7 @@ import de.moekadu.tuner.ui.notes.ledgerLinePositions
 import de.moekadu.tuner.ui.notes.spellNote
 import de.moekadu.tuner.ui.notes.staffPlacement
 import de.moekadu.tuner.ui.notes.staffPosition
+import de.moekadu.tuner.ui.notes.useEnharmonicForKey
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -144,5 +145,20 @@ class NoteStaffTest {
         assertEquals(emptyList<Int>(), ledgerLinePositions(27, StaffClef.Bass).toList())
         assertEquals(listOf(28, 26, 24), ledgerLinePositions(24, StaffClef.Tenor).toList())
         assertEquals(listOf(28, 30, 32), ledgerLinePositions(32, StaffClef.Bass).toList())
+    }
+
+    @Test
+    fun noteNamingFollowsKeyDirection() {
+        // usual note names: sharp spelling first, flat spelling as enharmonic
+        val sharpFirst = listOf(c4, cSharp4, f4)
+        assertEquals(false, useEnharmonicForKey(2, sharpFirst))
+        assertEquals(true, useEnharmonicForKey(-1, sharpFirst))
+        // note names with flat spelling first
+        val flatFirst = listOf(c4, dFlat4, f4)
+        assertEquals(true, useEnharmonicForKey(3, flatFirst))
+        assertEquals(false, useEnharmonicForKey(-2, flatFirst))
+        // C major does not decide, neither do note names without sharp/flat pairs
+        assertNull(useEnharmonicForKey(0, sharpFirst))
+        assertNull(useEnharmonicForKey(1, listOf(c4, f4)))
     }
 }
