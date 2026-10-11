@@ -40,6 +40,7 @@ import de.moekadu.tuner.ui.instruments.StringWithInfo
 import de.moekadu.tuner.ui.instruments.StringsState
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
 import de.moekadu.tuner.ui.notes.StaffClef
+import de.moekadu.tuner.ui.notes.useEnharmonicForKey
 import de.moekadu.tuner.ui.plot.GestureBasedViewPort
 import de.moekadu.tuner.ui.screens.InstrumentTunerData
 import de.moekadu.tuner.ui.tuning.PitchHistoryState
@@ -61,7 +62,21 @@ class InstrumentTunerViewModel @Inject constructor(
     override val toleranceInCents: StateFlow<Int> get() = pref.toleranceInCents
     override val keySignature: StateFlow<Int> get() = pref.keySignature
     override fun onKeySignatureChanged(keySignature: Int) {
+        val previousKeySignature = pref.keySignature.value
         pref.writeKeySignature(keySignature)
+        // When leaving the neutral key, adapt the sharp/flat naming to the new key. Later key
+        // changes keep the naming, such that a manual choice is not overwritten.
+        if (previousKeySignature == 0) {
+            val scale = musicalScale.value
+            val noteNames = scale.temperament.noteNames(scale.rootNote).notes.asList()
+            val useEnharmonic = useEnharmonicForKey(keySignature, noteNames)
+            val printOptions = notePrintOptions.value
+            if (useEnharmonic != null && useEnharmonic != (printOptions.enharmonicVariant == 1)) {
+                pref.writeNotePrintOptions(
+                    printOptions.copy(enharmonicVariant = if (useEnharmonic) 1 else 0)
+                )
+            }
+        }
     }
     override val staffClef: StateFlow<StaffClef> get() = pref.staffClef
     override fun onStaffClefChanged(staffClef: StaffClef) {
