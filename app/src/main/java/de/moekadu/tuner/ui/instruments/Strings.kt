@@ -146,12 +146,11 @@ private fun findIndexOfClosestScrollableHighlightedString(
         highlightedStringKey // in chromatic scale the index in the scale corresponds to the key
     } else if (highlightedStringNote != null) {
         val centerItemIndex = listState.centerIndex()
+        // matching notes as list indices (the list starts with noteIndexBegin)
         musicalScale
             .getMatchingNoteIndices(highlightedStringNote)
-            .minByOrNull {
-                val noteIndex = it - musicalScale.noteIndexBegin
-                (noteIndex - centerItemIndex).absoluteValue
-            } ?: -1
+            .map { it - musicalScale.noteIndexBegin }
+            .minByOrNull { (it - centerItemIndex).absoluteValue } ?: -1
     } else {
         -1
     }
