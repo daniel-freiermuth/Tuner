@@ -242,8 +242,8 @@ object InstrumentIO {
         fun readString(numCharacters: Int): String {
             val posStart = pos
             val res = if (numCharacters >= 0) {
-                pos += numCharacters
-                pos = min(pos, string.length)
+                // compare against the remaining length, since pos + numCharacters can overflow
+                pos += min(numCharacters, string.length - pos)
                 if (pos < string.length) {
                     string.substring(posStart, pos)
                 } else {
