@@ -183,7 +183,8 @@ fun EditableTemperament.toTemperament3Custom(): Temperament3Custom? {
         _description = description,
         cents = cents.toDoubleArray(),
         _rationalNumbers = ratios.toTypedArray(),
-        _noteNames = resolvedNotes?.toTypedArray()?.requireNoNulls(),
+        // note lines include the octave, but the note names must only cover one octave
+        _noteNames = resolvedNotes?.take(numberOfNotesPerOctave)?.toTypedArray()?.requireNoNulls(),
         stableId = Temperament3.NO_STABLE_ID
     )
 //    // construct the temperament
