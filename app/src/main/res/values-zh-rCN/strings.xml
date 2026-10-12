@@ -103,7 +103,6 @@
     <string name="overlap">窗重叠</string>
     <string name="window_size">窗大小</string>
     <string name="new_temperament_requires_adapting_reference_note">新的音调需要调整基准音符！</string>
-    <string name="helmholtz_notation">Helmholtz 记谱法（C, … c’）</string>
     <string name="stretch_tuning">拉伸调音</string>
     <string name="no_stretch_tuning">不使用拉伸调音</string>
     <string name="stretch_tuning_off">拉伸调音已关闭。</string>

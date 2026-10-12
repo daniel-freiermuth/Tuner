@@ -139,7 +139,11 @@
     <string name="cello_cgda">Violoncel</string>
     <string name="double_bass_eadg">Contrabas</string>
     <string name="equal_temperament_x">Temperament egal %d</string>
-    <string name="equal_temperament_x_desc">%d note per octavă</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d notă per octavă</item>
+        <item quantity="few">%d note per octavă</item>
+        <item quantity="other">%d de note per octavă</item>
+    </plurals>
     <string name="equal_temperament_x_abbr">EDO %d</string>
     <string name="pythagorean_tuning">Acordaj pitagorean</string>
     <string name="pythagorean_tuning_abbr">Pitagorean</string>
@@ -218,7 +222,6 @@
     <string name="notation_hindustani_description">Sa-Re₁-Re₂-…-Ni₂</string>
     <string name="notation_byzantine">Bizantină</string>
     <string name="notation_byzantine_description">Νη-Πα-Βου-…-Ζω</string>
-    <string name="helmholtz_notation">Notație Helmholtz (C, … c\')</string>
     <string name="extended_quarter_comma_mean_tone">Ton mediu extins de ¼ comă</string>
     <string name="extended_quarter_comma_mean_tone_desc">Terțe majore pure, 15 note</string>
     <string name="extended_quarter_comma_mean_tone_abbr">Ton mediu extins de ¼ comă</string>

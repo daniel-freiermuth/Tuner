@@ -227,7 +227,6 @@
     <string name="notation_carnatic">Karnatisch</string>
     <string name="notation_hindustani">Hindustanisch</string>
     <string name="notation_byzantine">Byzantinisch</string>
-    <string name="helmholtz_notation">Helmholtz-Schreibweise (C, … c\')</string>
     <string name="sensitivity">Empfindlichkeit</string>
     <string name="instruments">Instrumente</string>
     <string name="edit">Bearbeiten</string>
@@ -250,7 +249,10 @@
     <string name="invalid_value">Ungültiger Wert.</string>
     <string name="maximum_value_exceeded">Maximaler Wert von %d überschritten.</string>
     <string name="equal_temperament_x">Gleichstufige Stimmung %d</string>
-    <string name="equal_temperament_x_desc">%d Noten pro Oktave</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d Note pro Oktave</item>
+        <item quantity="other">%d Noten pro Oktave</item>
+    </plurals>
     <string name="edo_temperaments">Gleichstufige Stimmungen</string>
     <string name="other_temperaments">Weitere Stimmungen</string>
     <string name="custom_temperaments">Benutzerdefinierte Stimmungen</string>

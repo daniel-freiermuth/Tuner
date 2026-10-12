@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -117,7 +118,9 @@ fun NoteEditorSimple(
                         count = options.size
                     )
                 ) {
-                    Text(if (offset == 0) "0" else String.format("%+d", offset))
+                    val locale = LocalLocale.current.platformLocale
+                    val text = if (offset == 0) "0" else "%+d".format(locale, offset)
+                    Text(text)
                 }
             }
         }

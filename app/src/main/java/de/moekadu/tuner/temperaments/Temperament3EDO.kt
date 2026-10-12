@@ -2,6 +2,7 @@ package de.moekadu.tuner.temperaments
 
 import de.moekadu.tuner.R
 import de.moekadu.tuner.misc.GetText
+import de.moekadu.tuner.misc.GetTextFromPluralsResIdWithIntArg
 import de.moekadu.tuner.misc.GetTextFromResIdWithIntArg
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteNames2
@@ -19,7 +20,10 @@ data class Temperament3EDO(override val stableId: Long, val notesPerOctave: Int)
     override val abbreviation: GetText
         get() = GetTextFromResIdWithIntArg(R.string.equal_temperament_x_abbr, notesPerOctave)
     override val description: GetText
-        get() = GetTextFromResIdWithIntArg(R.string.equal_temperament_x_desc, notesPerOctave)
+        get() = GetTextFromPluralsResIdWithIntArg(
+            R.plurals.equal_temperament_x_desc,
+            notesPerOctave
+        )
     override val size: Int
         get() = notesPerOctave
 

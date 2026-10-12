@@ -131,7 +131,11 @@
     <string name="cello_cgda">Violonchelo</string>
     <string name="double_bass_eadg">Contrabajo</string>
     <string name="equal_temperament_x">Temperamento igual %d</string>
-    <string name="equal_temperament_x_desc">%d notas por octava</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d nota por octava</item>
+        <item quantity="many">%d notas por octava</item>
+        <item quantity="other">%d notas por octava</item>
+    </plurals>
     <string name="equal_temperament_x_abbr">EDO %d</string>
     <string name="pythagorean_tuning">Afinación pitagórica</string>
     <string name="pythagorean_tuning_abbr">Pitagórico</string>
@@ -209,7 +213,6 @@
     <string name="notation_hindustani_description">Sa-Re₁-Re₂-…-Ni₂</string>
     <string name="notation_byzantine">Bizantina</string>
     <string name="notation_byzantine_description">Νη-Πα-Βου-…-Ζω</string>
-    <string name="helmholtz_notation">Notación de Helmholtz (C, … c\')</string>
     <string name="extended_quarter_comma_mean_tone">Mesotónico extendido ¼ coma</string>
     <string name="extended_quarter_comma_mean_tone_desc">Terceras mayores puras, 15 notas</string>
     <string name="extended_quarter_comma_mean_tone_abbr">Mesotónico extendido de ¼ de coma</string>

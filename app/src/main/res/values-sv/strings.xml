@@ -123,7 +123,10 @@
     <string name="cello_cgda">Cello</string>
     <string name="double_bass_eadg">Kontrabas</string>
     <string name="equal_temperament_x">Liksvävande temperatur %d</string>
-    <string name="equal_temperament_x_desc">%d toner per oktav</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d ton per oktav</item>
+        <item quantity="other">%d toner per oktav</item>
+    </plurals>
     <string name="equal_temperament_x_abbr">EDO %d</string>
     <string name="pythagorean_tuning">Pythagoreisk stämning</string>
     <string name="pythagorean_tuning_abbr">Pythagoreisk</string>
@@ -202,7 +205,6 @@
     <string name="notation_hindustani_description">Sa-Re₁-Re₂-…-Ni₂</string>
     <string name="notation_byzantine">Bysantinsk</string>
     <string name="notation_byzantine_description">Νη-Πα-Βου-…-Ζω</string>
-    <string name="helmholtz_notation">Helmholtz-notering (C, … c\')</string>
     <string name="extended_quarter_comma_mean_tone">Utökad ¼-komma medelton</string>
     <string name="extended_quarter_comma_mean_tone_desc">Rena stora terser, 15 toner</string>
     <string name="extended_quarter_comma_mean_tone_abbr">Utökad ¼-komma medelton</string>

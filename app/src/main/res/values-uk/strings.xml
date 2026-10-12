@@ -111,7 +111,12 @@
     <string name="pythagorean_tuning">Піфагорійський стрій</string>
     <string name="prefer_flat">Використовувати ♭ замість ♯</string>
     <string name="equal_temperament_x_abbr">EDO %d</string>
-    <string name="equal_temperament_x_desc">%d нот на октаву</string>
+    <plurals name="equal_temperament_x_desc">
+        <item quantity="one">%d нота на октаву</item>
+        <item quantity="few">%d ноти на октаву</item>
+        <item quantity="many">%d нот на октаву</item>
+        <item quantity="other">%d ноти на октаву</item>
+    </plurals>
     <string name="system_color_accents">Акцентні кольори з налаштувань системи</string>
     <string name="ok">ОК</string>
     <string name="comma_separator">,</string>
@@ -167,7 +172,6 @@
     <string name="failed_writing_wave_file">Не записано файл WAV.</string>
     <string name="failed_to_archive_items">Не вдалося записати елементи у файл</string>
     <string name="load_from_disk">Завантажити елементи з файлу</string>
-    <string name="helmholtz_notation">Нотація Гельмгольца (C, … c\')</string>
     <string name="database_empty_share">Немає елементів, якими можна поділитися.</string>
     <plurals name="items_deleted">
         <item quantity="one">%d елемент видалено</item>
