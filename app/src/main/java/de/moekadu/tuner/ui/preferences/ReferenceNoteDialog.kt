@@ -76,6 +76,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /** Parse a string, which is allowed to have white spaces.
+ * Values without a finite float representation (infinity, NaN, numbers too large for Float)
+ * are treated as unparseable, since no musical scale can be built from them.
  * @param string String to be parsed.
  * @return String as float of null if failed.
  */
@@ -83,7 +85,7 @@ internal fun DecimalFormat.toFloatOrNull(string: String): Float? {
     val trimmed = string.trim()
     val position = ParsePosition(0)
     // parse(String, ParsePosition) does not throw; it returns null if parsing fails.
-    val result = this.parse(trimmed, position)?.toFloat()
+    val result = this.parse(trimmed, position)?.toFloat()?.takeIf { it.isFinite() }
     return if (position.index == trimmed.length) {
         result
     } else {
