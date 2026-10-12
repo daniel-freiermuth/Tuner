@@ -5,7 +5,10 @@ import de.moekadu.tuner.notenames.BaseNote
 import de.moekadu.tuner.notenames.MusicalNote
 import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.notenames.NoteNames2
+import de.moekadu.tuner.notenames.NoteNamesEDOGenerator
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MusicalScaleNoteNamesTest {
@@ -47,5 +50,21 @@ class MusicalScaleNoteNamesTest {
             println(someNote)
             assertEquals(someIndex, recoveredIndex)
         }
+    }
+
+    @Test
+    fun testHasMatchingNoteAcceptsEnharmonicMatches() {
+        val notes = NoteNamesEDOGenerator.getNoteNames(12, null)!!
+        val scale = MusicalScaleNoteNames2(notes, MusicalNote(BaseNote.A, NoteModifier.None, 4))
+
+        // scale note is C#/Db, query notes only define one of the two spellings
+        val cSharp = MusicalNote(BaseNote.C, NoteModifier.Sharp, 4)
+        val dFlat = MusicalNote(BaseNote.D, NoteModifier.Flat, 4)
+        for (note in listOf(cSharp, dFlat)) {
+            assertEquals(1, scale.getMatchingNoteIndices(note).size)
+            assertTrue(scale.hasMatchingNote(note))
+        }
+        assertFalse(scale.hasMatchingNote(MusicalNote(BaseNote.C, NoteModifier.FlatFlat, 4)))
+        assertFalse(scale.hasMatchingNote(null))
     }
 }
