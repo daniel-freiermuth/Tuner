@@ -22,18 +22,26 @@ import org.junit.runner.RunWith
 class UnreadableUriTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-    /** Document uri, for which the app holds no grant, querying or opening it throws a SecurityException. */
-    private val ungrantedUri =
-        Uri.parse("content://com.android.externalstorage.documents/document/primary%3ADownload%2Fx.txt")
+    /** Document uri without grant: opening or querying it throws a SecurityException. */
+    private val ungrantedUri = Uri.parse(
+        "content://com.android.externalstorage.documents/document/primary%3ADownload%2Fx.txt"
+    )
 
-    /** MediaStore uri without a row: opening throws FileNotFoundException, query gives an empty cursor. */
+    /** MediaStore uri without row: opening throws FileNotFoundException, query is empty. */
     private val missingRowUri = Uri.parse("content://media/external/file/2147483646")
+
+    private fun assertAllReadersReportInvalid(uri: Uri) {
+        val instruments = InstrumentIO.readInstrumentsFromFile(context, uri)
+        assertEquals(FileCheck.Invalid, instruments.fileCheck)
+        val temperaments = TemperamentIO.readTemperamentsFromFile(context, uri)
+        assertEquals(FileCheck.Invalid, temperaments.fileCheck)
+        val stretchTunings = StretchTuningIO.readStretchTuningsFromFile(context, uri)
+        assertEquals(FileCheck.Invalid, stretchTunings.fileCheck)
+    }
 
     @Test
     fun ungrantedUriIsReportedAsInvalid() {
-        assertEquals(FileCheck.Invalid, InstrumentIO.readInstrumentsFromFile(context, ungrantedUri).fileCheck)
-        assertEquals(FileCheck.Invalid, TemperamentIO.readTemperamentsFromFile(context, ungrantedUri).fileCheck)
-        assertEquals(FileCheck.Invalid, StretchTuningIO.readStretchTuningsFromFile(context, ungrantedUri).fileCheck)
+        assertAllReadersReportInvalid(ungrantedUri)
     }
 
     @Test
@@ -43,9 +51,7 @@ class UnreadableUriTest {
 
     @Test
     fun missingFileIsReportedAsInvalid() {
-        assertEquals(FileCheck.Invalid, InstrumentIO.readInstrumentsFromFile(context, missingRowUri).fileCheck)
-        assertEquals(FileCheck.Invalid, TemperamentIO.readTemperamentsFromFile(context, missingRowUri).fileCheck)
-        assertEquals(FileCheck.Invalid, StretchTuningIO.readStretchTuningsFromFile(context, missingRowUri).fileCheck)
+        assertAllReadersReportInvalid(missingRowUri)
     }
 
     @Test

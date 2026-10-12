@@ -60,17 +60,18 @@ object StretchTuningIO {
             }
     }
 
-    fun readStretchTuningsFromFile(context: Context, uri: Uri): StretchTuningsAndFileCheckResult = try {
-        context.contentResolver?.openInputStream(uri)?.use { reader ->
-            parseStretchTunings(reader.bufferedReader())
-        }
-    } catch (e: IOException) {
-        Log.w("Tuner", "Cannot read stretch tunings file $uri", e)
-        null
-    } catch (e: SecurityException) {
-        Log.w("Tuner", "No permission to read stretch tunings file $uri", e)
-        null
-    } ?: StretchTuningsAndFileCheckResult(FileCheck.Invalid, listOf())
+    fun readStretchTuningsFromFile(context: Context, uri: Uri): StretchTuningsAndFileCheckResult =
+        try {
+            context.contentResolver?.openInputStream(uri)?.use { reader ->
+                parseStretchTunings(reader.bufferedReader())
+            }
+        } catch (e: IOException) {
+            Log.w("Tuner", "Cannot read stretch tunings file $uri", e)
+            null
+        } catch (e: SecurityException) {
+            Log.w("Tuner", "No permission to read stretch tunings file $uri", e)
+            null
+        } ?: StretchTuningsAndFileCheckResult(FileCheck.Invalid, listOf())
 
     fun parseStretchTunings(reader: BufferedReader): StretchTuningsAndFileCheckResult =
         parseStretchTuningsImpl(reader)
