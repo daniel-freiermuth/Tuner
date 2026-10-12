@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
@@ -57,7 +58,13 @@ android {
         abortOnError = true
         warningsAsErrors = true
         // Depend on what upstream publishes, so they would fail unchanged code over time.
-        disable += setOf("GradleDependency", "NewerVersionAvailable", "AndroidGradlePluginVersion")
+        disable +=
+            setOf(
+                "GradleDependency",
+                "NewerVersionAvailable",
+                "AndroidGradlePluginVersion",
+                "OldTargetApi"
+            )
         // Translations are contributed asynchronously via translate.codeberg.org.
         informational += "MissingTranslation"
     }
