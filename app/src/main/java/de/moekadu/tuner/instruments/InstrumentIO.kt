@@ -271,37 +271,6 @@ object InstrumentIO {
             return longAsString.toLongOrNull()
         }
 
-        /** Read an array of integers.
-         * The array is expected to be enclosed in "[" and "]" and the int numbers should be
-         * separated by ",".
-         * * @return Int array of numbers or null if no array available.
-         */
-        fun readIntArray(): IntArray? {
-            advance()
-            if (pos >= string.length || string[pos] != '[') {
-                return null
-            }
-//                Log.v("Tuner", "InstrumentDatabase.readIntArray. string[pos]=${string[pos]}")
-            val posStart = pos
-            while (pos < string.length && string[pos] != '\n' && string[pos] != ']') {
-                ++pos
-            }
-            if (string.getOrNull(pos) != ']') {
-                return null
-            }
-            ++pos
-            if (pos - 1 <= posStart + 1) {
-                // allow empty int lists
-                return intArrayOf()
-            }
-            val intArrayAsString = string.substring(posStart + 1, pos - 1)
-            return try {
-                intArrayAsString.split(",").map { it.trim().toInt() }.toIntArray()
-            } catch (e: NumberFormatException) {
-                null
-            }
-        }
-
         /** Read an array of musical notes.
          * The array is expected to be enclosed in "[" and "]", the string representation
          * of the notes must be created with MusicalNote.asString(), and the different
