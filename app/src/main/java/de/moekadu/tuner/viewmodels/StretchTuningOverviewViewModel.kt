@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class StretchTuningOverviewViewModel @Inject constructor(
     val pref: TemperamentResources,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ) : ViewModel(),
     StretchTuningOverviewState {
 

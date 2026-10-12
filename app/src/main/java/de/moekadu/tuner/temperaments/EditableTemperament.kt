@@ -105,7 +105,7 @@ fun EditableTemperament.hasErrors(): Boolean {
         {
             byteArrayOf()
             val ratio = noteLines[it]?.ratio?.toDouble()
-            if (ratio != null) ratioToCents(ratio.toDouble()) else noteLines[it]?.cent
+            if (ratio != null) ratioToCents(ratio) else noteLines[it]?.cent
         },
         null
     )

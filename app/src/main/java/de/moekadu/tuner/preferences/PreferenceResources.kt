@@ -22,7 +22,7 @@ import kotlinx.serialization.json.Json
 @Singleton
 class PreferenceResources @Inject constructor(
     @ApplicationContext context: Context,
-    @ApplicationScope val applicationScope: CoroutineScope
+    @param:ApplicationScope val applicationScope: CoroutineScope
 ) : ResourcesBase("settings", context, applicationScope) {
     @Serializable
     data class Appearance(

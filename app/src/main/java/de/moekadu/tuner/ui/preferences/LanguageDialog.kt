@@ -20,7 +20,7 @@ import androidx.core.os.LocaleListCompat
 import de.moekadu.tuner.R
 import de.moekadu.tuner.ui.theme.TunerTheme
 
-enum class LanguageSelections(val tag: String?, @StringRes val resId: Int) {
+enum class LanguageSelections(val tag: String?, @param:StringRes val resId: Int) {
     SystemDefault(null, R.string.system_default),
     English("en", R.string.english),
     French("fr", R.string.french),

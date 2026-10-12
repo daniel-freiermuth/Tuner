@@ -7,8 +7,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
 enum class OctaveNotation(
-    @StringRes val stringResourceId: Int,
-    @StringRes val descriptionResId: Int
+    @param:StringRes val stringResourceId: Int,
+    @param:StringRes val descriptionResId: Int
 ) {
     /** Just numbers. */
     Scientific(
