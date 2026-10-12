@@ -42,6 +42,9 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
 
+private const val CUSTOM_TEMPERAMENTS_KEY = "custom temperaments"
+private const val CUSTOM_STRETCH_TUNINGS_KEY = "custom stretch tunings"
+
 @Singleton
 class TemperamentResources @Inject constructor(
     @ApplicationContext context: Context,
@@ -97,17 +100,21 @@ class TemperamentResources @Inject constructor(
     // preference: custom temperaments
 
     private val customTemperamentsPref = createTransformablePreference(
-        "custom temperaments",
+        CUSTOM_TEMPERAMENTS_KEY,
         persistentListOf(),
         { it.toTypedArray() },
         { it.toList().toPersistentList() },
         onDeserializationFailure = { serialized ->
-            try {
-                Json.decodeFromString<Array<TemperamentWithNoteNames>>(serialized)
-                    .map { old -> old.toNew() }.toPersistentList()
-            } catch (_: Exception) {
-                persistentListOf()
-            }
+            readPersistedOrElse(
+                read = {
+                    Json.decodeFromString<Array<TemperamentWithNoteNames>>(serialized)
+                        .map { old -> old.toNew() }.toPersistentList()
+                },
+                fallback = {
+                    preserveUnreadableValue(CUSTOM_TEMPERAMENTS_KEY, serialized)
+                    persistentListOf()
+                }
+            )
         }
     )
     val customTemperaments = customTemperamentsPref.asStateFlow()
@@ -244,10 +251,14 @@ class TemperamentResources @Inject constructor(
 
     // preference: custom stretch tunings
     private val customStretchTuningsPref = createTransformablePreference(
-        "custom stretch tunings",
+        CUSTOM_STRETCH_TUNINGS_KEY,
         persistentListOf<StretchTuning>(),
         makeSerializable = { it.toTypedArray() },
-        fromSerializable = { it.toList().toPersistentList() }
+        fromSerializable = { it.toList().toPersistentList() },
+        onDeserializationFailure = { serialized ->
+            preserveUnreadableValue(CUSTOM_STRETCH_TUNINGS_KEY, serialized)
+            persistentListOf()
+        }
     )
     val customStretchTunings = customStretchTuningsPref.asStateFlow()
     fun writeCustomStretchTunings(newStretchTunings: PersistentList<StretchTuning>) {

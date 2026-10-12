@@ -1,6 +1,7 @@
 package de.moekadu.tuner.resources
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -12,6 +13,9 @@ import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
+import de.moekadu.tuner.misc.preserveUnreadableValue
+import de.moekadu.tuner.misc.readPersistedOrElse
+import de.moekadu.tuner.misc.unreadableBackupKey
 import kotlin.collections.forEach
 import kotlin.let
 import kotlin.time.Duration.Companion.milliseconds
@@ -70,15 +74,13 @@ open class ResourcesBase(
 
         private fun readFromPrefs(prefs: Preferences): T? = try {
             prefs[key]?.let { serialized ->
-                try {
-                    val deserialized = Json.decodeFromString(serializer, serialized)
-                    val r = fromSerializable(deserialized)
-                    verifyAfterReading(r)
-                } catch (_: IllegalArgumentException) {
-                    onDeserializationFailure(serialized)
-                } catch (_: Exception) {
-                    null
-                }
+                readPersistedOrElse(
+                    read = {
+                        val deserialized = Json.decodeFromString(serializer, serialized)
+                        verifyAfterReading(fromSerializable(deserialized))
+                    },
+                    fallback = { onDeserializationFailure(serialized) }
+                )
             }
         } catch (_: ClassCastException) {
             null
@@ -287,6 +289,27 @@ open class ResourcesBase(
 
     fun resetAllPreferences() {
         collectedPreferences.forEach { it.reset() }
+    }
+
+    /** Keep a stored value which could not be decoded.
+     *
+     * Readers fall back to a default if decoding fails, and every store writes all preferences
+     * of this file. Without a backup, the next store would therefore replace the undecodable user
+     * data for good. The raw value is kept under [unreadableBackupKey].
+     *
+     * @param key Key of the value which could not be decoded.
+     * @param raw The stored, undecodable value.
+     */
+    protected fun preserveUnreadableValue(key: String, raw: String) {
+        val preferenceKey = stringPreferencesKey(key)
+        Log.e(
+            "Tuner",
+            "Cannot decode persisted value \"$key\", " +
+                "keeping it as \"${unreadableBackupKey(preferenceKey).name}\""
+        )
+        applicationScope.launch(Dispatchers.IO) {
+            dataStore.preserveUnreadableValue(preferenceKey, raw)
+        }
     }
 
     protected inline fun <reified T : Any?> createSerializablePreference(

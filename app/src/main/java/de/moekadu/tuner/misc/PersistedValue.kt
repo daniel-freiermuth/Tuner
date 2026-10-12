@@ -19,6 +19,10 @@
 package de.moekadu.tuner.misc
 
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 
 /** Read a persisted value, falling back if it cannot be read.
  *
@@ -37,4 +41,24 @@ inline fun <T> readPersistedOrElse(read: () -> T, fallback: () -> T): T = try {
 } catch (ex: Exception) {
     Log.w("Tuner", "Cannot read persisted value, using fallback", ex)
     fallback()
+}
+
+/** Key under which an undecodable value of [key] is kept. */
+fun unreadableBackupKey(key: Preferences.Key<String>) =
+    stringPreferencesKey("${key.name} unreadable backup")
+
+/** Store [raw] under [unreadableBackupKey] of [key], unless a backup already exists.
+ *
+ * An existing backup is kept, since values written after the first decoding failure are derived
+ * from the fallback and not from the original user data.
+ *
+ * @param key Key of the value which could not be decoded.
+ * @param raw The stored, undecodable value.
+ */
+suspend fun DataStore<Preferences>.preserveUnreadableValue(
+    key: Preferences.Key<String>,
+    raw: String
+) {
+    val backupKey = unreadableBackupKey(key)
+    edit { if (it[backupKey] == null) it[backupKey] = raw }
 }

@@ -16,6 +16,8 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
 
+private const val CUSTOM_INSTRUMENTS_KEY = "custom instruments"
+
 @Singleton
 class InstrumentResources @Inject constructor(
     @ApplicationContext context: Context,
@@ -44,10 +46,14 @@ class InstrumentResources @Inject constructor(
     }
 
     private val customInstrumentsPref = createTransformablePreference(
-        "custom instruments",
+        CUSTOM_INSTRUMENTS_KEY,
         persistentListOf<Instrument>(),
         { it.toTypedArray() },
-        { it.toPersistentList() }
+        { it.toPersistentList() },
+        onDeserializationFailure = { serialized ->
+            preserveUnreadableValue(CUSTOM_INSTRUMENTS_KEY, serialized)
+            persistentListOf()
+        }
     )
 
     val customInstruments = customInstrumentsPref.asStateFlow()
