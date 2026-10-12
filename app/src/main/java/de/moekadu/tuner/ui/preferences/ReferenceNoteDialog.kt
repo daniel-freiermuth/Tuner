@@ -79,7 +79,7 @@ import kotlinx.coroutines.flow.StateFlow
  * @param string String to be parsed.
  * @return String as float of null if failed.
  */
-private fun DecimalFormat.toFloatOrNull(string: String): Float? {
+internal fun DecimalFormat.toFloatOrNull(string: String): Float? {
     val trimmed = string.trim()
     val position = ParsePosition(0)
     // parse(String, ParsePosition) does not throw; it returns null if parsing fails.
