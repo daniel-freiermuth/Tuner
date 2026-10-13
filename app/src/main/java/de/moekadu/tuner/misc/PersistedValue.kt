@@ -62,3 +62,22 @@ suspend fun DataStore<Preferences>.preserveUnreadableValue(
     val backupKey = unreadableBackupKey(key)
     edit { if (it[backupKey] == null) it[backupKey] = raw }
 }
+
+/** Read a float value, which older app versions might have stored as an int under the same name.
+ *
+ * Keys of the preferences data store are compared by name only, so reading an int with a float
+ * key would fail with a ClassCastException.
+ *
+ * @param key Key of the value.
+ * @param fromLegacyInt Conversion of a stored int to the float value, or null if ints are not
+ *   expected for this key.
+ * @return Stored float, converted stored int, or null if there is no usable value.
+ */
+fun Preferences.readFloatOrLegacyInt(
+    key: Preferences.Key<Float>,
+    fromLegacyInt: ((Int) -> Float)?
+): Float? = when (val value = asMap()[key]) {
+    is Float -> value
+    is Int -> fromLegacyInt?.invoke(value)
+    else -> null
+}
