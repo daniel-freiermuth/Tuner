@@ -1,5 +1,12 @@
 package de.moekadu.tuner
 
+import android.content.res.Resources
+import de.moekadu.tuner.misc.FileCheck
+import de.moekadu.tuner.misc.GetTextFromString
+import de.moekadu.tuner.stretchtuning.StretchTuning
+import de.moekadu.tuner.stretchtuning.StretchTuningIO
+import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class StretchTuningIOTest {
@@ -23,5 +30,38 @@ Stretch L: A0  -8,67 -8 -7,33 -6,67 -4 -3,33 0 0 0 0 0 0,5 1  8 8,5 9 9,5 13,5  
 //            for (i in 0 until t.size)
 //                println("${t.unstretchedFrequencies[i]} ${t.stretchInCents[i]}")
 //        }
+    }
+
+    /** Resources instance without running the (stubbed) android constructor. Only used for
+     * GetTextFromString, which never touches the resources.
+     */
+    private fun unusedResources(): Resources {
+        val unsafeClass = Class.forName("sun.misc.Unsafe")
+        val unsafeField = unsafeClass.getDeclaredField("theUnsafe")
+        unsafeField.isAccessible = true
+        val unsafe = unsafeField.get(null)
+        val allocateInstance = unsafeClass.getMethod("allocateInstance", Class::class.java)
+        return allocateInstance.invoke(unsafe, Resources::class.java) as Resources
+    }
+
+    @Test
+    fun stretchTuningsToStringRoundTrip() {
+        val tuning = StretchTuning(
+            name = GetTextFromString("Test tuning"),
+            description = GetTextFromString("Test description"),
+            unstretchedFrequencies = doubleArrayOf(110.0, 220.0, 440.0, 880.0),
+            stretchInCents = doubleArrayOf(-5.0, -2.0, 0.0, 3.0)
+        )
+
+        val string = StretchTuningIO.stretchTuningsToString(unusedResources(), listOf(tuning))
+        val result = StretchTuningIO.parseStretchTunings(string.reader().buffered())
+
+        assertEquals(FileCheck.Ok, result.fileCheck)
+        assertEquals(1, result.stretchTunings.size)
+        val parsed = result.stretchTunings[0]
+        assertEquals("Test tuning", parsed.name.value(null))
+        assertEquals("Test description", parsed.description.value(null))
+        assertArrayEquals(tuning.unstretchedFrequencies, parsed.unstretchedFrequencies, 1e-4)
+        assertArrayEquals(tuning.stretchInCents, parsed.stretchInCents, 1e-4)
     }
 }
