@@ -162,8 +162,12 @@ class PreferenceResources @Inject constructor(
         windowingPref.set(windowing)
     }
 
-    // overlap
-    private val overlapPref = createPreference("overlap", default = 75f / 100f)
+    // overlap (stored as int percent up to v8.1)
+    private val overlapPref = createPreference(
+        "overlap",
+        default = 75f / 100f,
+        fromLegacyInt = { it.toFloat() / 100f }
+    )
     val overlap = overlapPref.asStateFlow()
     fun writeOverlap(overlapPercent: Int) {
         overlapPref.set(overlapPercent.toFloat() / 100f)
@@ -205,7 +209,12 @@ class PreferenceResources @Inject constructor(
         numMovingAveragePref.set(numMovingAverage)
     }
 
-    private val maxNoisePref = createPreference("max_noise", 0.1f)
+    // max noise and min harmonic energy content were stored as int percent up to v8.1
+    private val maxNoisePref = createPreference(
+        "max_noise",
+        0.1f,
+        fromLegacyInt = { it.toFloat() / 100f }
+    )
     val maxNoise = maxNoisePref.asStateFlow()
     fun writeMaxNoise(maxNoisePercent: Int) {
         maxNoisePref.set(maxNoisePercent.toFloat() / 100f)
@@ -213,7 +222,8 @@ class PreferenceResources @Inject constructor(
 
     private val minHarmonicEnergyContentPref = createPreference(
         "min_harmonic_energy_content",
-        0.1f
+        0.1f,
+        fromLegacyInt = { it.toFloat() / 100f }
     )
     val minHarmonicEnergyContent = minHarmonicEnergyContentPref.asStateFlow()
     fun writeMinHarmonicEnergyContent(minHarmonicEnergyContentPercent: Int) {
