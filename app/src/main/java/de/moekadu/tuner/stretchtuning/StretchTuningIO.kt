@@ -172,7 +172,11 @@ fun parseStretchTuningsImpl(
         }
 
         // one section ends with a black line (or with the file end)
-        if (!lineConsumed && unstretchedFrequencies.isNotEmpty() && line.isBlank()) {
+        // a section in state SearchData without data is a stretch tuning with no values (only
+        //   name and description), as written by writeStretchTuning for empty stretch tunings
+        if (!lineConsumed && line.isBlank() &&
+            (unstretchedFrequencies.isNotEmpty() || readerState == ReaderState.SearchData)
+        ) {
             collectedStretchTunings.add(
                 StretchTuning(
                     name = GetTextFromString(name ?: ""),
@@ -250,7 +254,9 @@ fun parseStretchTuningsImpl(
         }
     }
 
-    if (fileCheckResult == FileCheck.Ok && unstretchedFrequencies.isNotEmpty()) {
+    if (fileCheckResult == FileCheck.Ok &&
+        (unstretchedFrequencies.isNotEmpty() || readerState == ReaderState.SearchData)
+    ) {
         collectedStretchTunings.add(
             StretchTuning(
                 name = GetTextFromString(name ?: ""),
