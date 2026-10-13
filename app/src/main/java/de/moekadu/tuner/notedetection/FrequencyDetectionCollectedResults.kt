@@ -150,8 +150,9 @@ class FrequencyDetectionResultCollector(
         val previousStandardDeviationTimeSeries =
             previousResults?.memory?.timeSeriesStandardDeviation ?: 0f
 
-        val previousCorrelationBasedFrequency =
-            previousResults?.memory?.correlationBasedFrequency?.frequency ?: 0f
+        // use the harmonic-corrected base frequency, not the raw autocorrelation frequency, which
+        // can be a higher harmonic; the shortcut below has no subharmonic correction
+        val previousFrequency = previousResults?.memory?.frequency ?: 0f
 
         previousResults?.decRef() // don't need this anymore in the following
 
@@ -191,7 +192,7 @@ class FrequencyDetectionResultCollector(
                 collectedResults.memory.autoCorrelation,
                 frequencyMin,
                 frequencyMax,
-                previousCorrelationBasedFrequency
+                previousFrequency
             )
 
             if (collectedResults.memory.correlationBasedFrequency.frequency != 0f) {
