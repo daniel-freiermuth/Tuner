@@ -6,6 +6,7 @@ import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.ui.notes.SpelledNote
 import de.moekadu.tuner.ui.notes.StaffClef
 import de.moekadu.tuner.ui.notes.StaffPlacement
+import de.moekadu.tuner.ui.notes.keySignaturePositions
 import de.moekadu.tuner.ui.notes.ledgerLinePositions
 import de.moekadu.tuner.ui.notes.spellNote
 import de.moekadu.tuner.ui.notes.staffPlacement
@@ -145,6 +146,21 @@ class NoteStaffTest {
         assertEquals(emptyList<Int>(), ledgerLinePositions(27, StaffClef.Bass).toList())
         assertEquals(listOf(28, 26, 24), ledgerLinePositions(24, StaffClef.Tenor).toList())
         assertEquals(listOf(28, 30, 32), ledgerLinePositions(32, StaffClef.Bass).toList())
+    }
+
+    @Test
+    fun keySignaturePositionsOfTrebleAndBassStaff() {
+        // treble: F5 C5 G5 D5 A4 E5 B4, bass two octaves lower: F3 C3 G3 D3 A2 E3 B2
+        val trebleSharps = listOf(38, 35, 39, 36, 33, 37, 34)
+        val bassSharps = listOf(24, 21, 25, 22, 19, 23, 20)
+        // treble: B4 E5 A4 D5 G4 C5 F4, bass two octaves lower: B2 E3 A2 D3 G2 C3 F2
+        val trebleFlats = listOf(34, 37, 33, 36, 32, 35, 31)
+        val bassFlats = listOf(20, 23, 19, 22, 18, 21, 17)
+        assertEquals(listOf(trebleSharps, bassSharps), keySignaturePositions(7, StaffClef.Grand))
+        assertEquals(listOf(trebleFlats, bassFlats), keySignaturePositions(-7, StaffClef.Grand))
+        assertEquals(listOf(trebleSharps.take(2)), keySignaturePositions(2, StaffClef.Treble))
+        assertEquals(listOf(bassSharps.take(1)), keySignaturePositions(1, StaffClef.Bass))
+        assertEquals(listOf(bassFlats.take(3)), keySignaturePositions(-3, StaffClef.Bass))
     }
 
     @Test

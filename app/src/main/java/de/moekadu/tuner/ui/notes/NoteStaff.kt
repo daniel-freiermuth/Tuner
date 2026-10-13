@@ -308,6 +308,16 @@ fun ledgerLinePositions(position: Int, clef: StaffClef): IntProgression {
     }
 }
 
+/** Staff positions of the key signature accidentals, one list per staff from top to bottom.
+ * @param keySignature Number of sharps (> 0) or flats (< 0).
+ */
+fun keySignaturePositions(keySignature: Int, clef: StaffClef): List<List<Int>> {
+    val treblePositions = if (keySignature > 0) TREBLE_SHARP_POSITIONS else TREBLE_FLAT_POSITIONS
+    return clef.layout().staves.map { staff ->
+        treblePositions.take(abs(keySignature)).map { it + staff.keySignatureOffset }
+    }
+}
+
 private fun parseClefPath(pathData: String): Path =
     PathParser().parsePathString(pathData).toPath().apply {
         fillType = PathFillType.EvenOdd
@@ -441,19 +451,15 @@ fun NoteStaff(
                     } else {
                         NoteModifier.Flat.accidentalSymbols()
                     }
-                    val treblePositions = if (keySignature > 0) {
-                        TREBLE_SHARP_POSITIONS
-                    } else {
-                        TREBLE_FLAT_POSITIONS
-                    }
+                    val positions = keySignaturePositions(keySignature, staffClef)
                     for (i in 0 until numKeyAccidentals) {
                         val rightX = keySignatureX + (i + 1) * KEY_SIGNATURE_SPACING * staffSpace
-                        for (staff in staffLayout.staves) {
+                        for (staffPositions in positions) {
                             drawAccidental(
                                 textMeasurer,
                                 symbol,
                                 rightX,
-                                y(treblePositions[i] + staff.keySignatureOffset),
+                                y(staffPositions[i]),
                                 staffSpace,
                                 staffColor
                             )
