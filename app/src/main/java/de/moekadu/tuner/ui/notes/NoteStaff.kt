@@ -116,8 +116,10 @@ private data class SingleStaff(val glyph: ClefGlyph, val bottomLine: Int) {
     /** Line which the clef refers to: G line for treble, F line for bass. */
     val clefLine get() = if (glyph == ClefGlyph.Treble) bottomLine + 2 else bottomLine + 6
 
-    /** Offset of key signature positions relative to the treble staff positions. */
-    val keySignatureOffset get() = bottomLine - TREBLE_BOTTOM_LINE
+    /** Offset of key signature positions relative to the treble staff positions: the bass
+     * staff uses the same pattern two octaves lower.
+     */
+    val keySignatureOffset get() = if (glyph == ClefGlyph.Treble) 0 else -14
 }
 
 /** Staves of a staff setup.
