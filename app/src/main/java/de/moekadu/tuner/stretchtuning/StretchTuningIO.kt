@@ -27,7 +27,7 @@ object StretchTuningIO {
 
     fun stretchTuningsToString(resources: Resources, stretchTunings: List<StretchTuning>): String {
         val writer = StringWriter()
-        writeStretchTunings(stretchTunings, writer.buffered(), resources)
+        writer.buffered().use { writeStretchTunings(stretchTunings, it, resources) }
         return writer.toString()
     }
 
