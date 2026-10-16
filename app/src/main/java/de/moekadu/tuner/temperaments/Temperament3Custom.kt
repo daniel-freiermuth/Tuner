@@ -18,7 +18,9 @@ import kotlinx.serialization.Transient
  * @param _rationalNumbers List of rational numbers, which can be used instead of the cents array.
  *   Values can be null, if they are note defined. Length of array (if used) must be
  *   number of notes per octave + 1, since the octave value must be included.
- * @param _noteNames Note names. If null, we will use the EDO name generator.
+ * @param _noteNames Note names, one per note of the octave. If null, we will use the EDO name
+ *   generator. Additional trailing entries (e.g. the octave line, stored by older versions) are
+ *   ignored.
  * @param stableId Unique id.
  */
 @Serializable
@@ -43,6 +45,11 @@ data class Temperament3Custom(
     @Transient
     override val size = max(_rationalNumbers.size, cents.size) - 1
 
+    /** Explicit note names, one per note, or null if the EDO name generator must be used. */
+    @Transient
+    private val noteNamesPerOctave: Array<MusicalNote>? =
+        _noteNames?.takeIf { size > 0 && it.size >= size }?.sliceArray(0 until size)
+
     override fun cents(): DoubleArray = DoubleArray(size + 1) {
         val ratio = _rationalNumbers.getOrNull(it)
         if (ratio != null) {
@@ -63,27 +70,26 @@ data class Temperament3Custom(
         }
 
     override fun possibleRootNotes(): Array<MusicalNote> =
-        _noteNames ?: NoteNamesEDOGenerator.possibleRootNotes(size)
+        noteNamesPerOctave ?: NoteNamesEDOGenerator.possibleRootNotes(size)
 
-    override fun noteNames(rootNote: MusicalNote?): NoteNames2 =
-        if (_noteNames.isNullOrEmpty() || _noteNames.size != size) {
-            checkNotNull(NoteNamesEDOGenerator.getNoteNames(size, rootNote)) {
-                "Cannot generate note names for $size notes per octave"
-            }
-        } else {
-            val referenceNote = NoteNameHelpers.findDefaultReferenceNote(_noteNames)
-            val octaveSwitchAt = _noteNames[0]
-            val shiftLeft = _noteNames
-                .indexOfFirst { it.equalsIgnoreOctave(rootNote) }
-                .coerceAtLeast(0) // don't reorder if root note is not found, should not happen
-            // this rotates the array, such that element at shiftLeft is at position 0
-            val names = (
-                _noteNames.sliceArray(shiftLeft until _noteNames.size) +
-                    _noteNames.sliceArray(0 until shiftLeft)
-                )
-
-            NoteNames2(names, referenceNote, octaveSwitchAt)
+    override fun noteNames(rootNote: MusicalNote?): NoteNames2 = if (noteNamesPerOctave == null) {
+        checkNotNull(NoteNamesEDOGenerator.getNoteNames(size, rootNote)) {
+            "Cannot generate note names for $size notes per octave"
         }
+    } else {
+        val referenceNote = NoteNameHelpers.findDefaultReferenceNote(noteNamesPerOctave)
+        val octaveSwitchAt = noteNamesPerOctave[0]
+        val shiftLeft = noteNamesPerOctave
+            .indexOfFirst { it.equalsIgnoreOctave(rootNote) }
+            .coerceAtLeast(0) // don't reorder if root note is not found, should not happen
+        // this rotates the array, such that element at shiftLeft is at position 0
+        val names = (
+            noteNamesPerOctave.sliceArray(shiftLeft until noteNamesPerOctave.size) +
+                noteNamesPerOctave.sliceArray(0 until shiftLeft)
+            )
+
+        NoteNames2(names, referenceNote, octaveSwitchAt)
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
