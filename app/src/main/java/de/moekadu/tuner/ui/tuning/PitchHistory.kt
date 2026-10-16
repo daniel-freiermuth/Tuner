@@ -146,7 +146,7 @@ class PitchHistoryState(capacity: Int) {
          * @param overlap Overlap between to succeeding data chunks, where 0 is no overlap and 1 is
          *   100% overlap (1.0 is of course not allowed).
          * @return Number of samples, which must be stored in the pitch history, so that the we match
-         *   the given duration.
+         *   the given duration. This is at least 1.
          */
         fun computePitchHistorySize(
             duration: Float,
@@ -154,7 +154,7 @@ class PitchHistoryState(capacity: Int) {
             windowSize: Int,
             overlap: Float
         ) = (duration / (windowSize.toFloat() / sampleRate.toFloat() * (1.0f - overlap)))
-            .roundToInt()
+            .roundToInt().coerceAtLeast(1)
     }
 }
 
