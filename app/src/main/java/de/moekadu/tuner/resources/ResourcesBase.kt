@@ -14,6 +14,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStoreFile
 import de.moekadu.tuner.misc.preserveUnreadableValue
+import de.moekadu.tuner.misc.readFloatOrLegacyInt
 import de.moekadu.tuner.misc.readPersistedOrElse
 import de.moekadu.tuner.misc.unreadableBackupKey
 import kotlin.collections.forEach
@@ -190,6 +191,7 @@ open class ResourcesBase(
         key: String,
         val default: Float,
         prefsForInitialization: Preferences,
+        private val fromLegacyInt: ((Int) -> Float)?,
         val onChanged: () -> Unit
     ) : ResourcePreference {
         val key = floatPreferencesKey(key)
@@ -208,11 +210,8 @@ open class ResourcesBase(
         override fun reset() {
             set(default)
         }
-        private fun readFromPrefs(prefs: Preferences): Float? = try {
-            prefs[key]
-        } catch (_: ClassCastException) {
-            null
-        }
+        private fun readFromPrefs(prefs: Preferences): Float? =
+            prefs.readFloatOrLegacyInt(key, fromLegacyInt)
     }
 
     protected class StringResourcePreference(
@@ -379,9 +378,18 @@ open class ResourcesBase(
         return pref
     }
 
-    protected fun createPreference(key: String, default: Float): FloatResourcePreference {
+    /** Create a float preference.
+     *
+     * @param fromLegacyInt Conversion for values which older app versions stored as int under
+     *   the same key.
+     */
+    protected fun createPreference(
+        key: String,
+        default: Float,
+        fromLegacyInt: ((Int) -> Float)? = null
+    ): FloatResourcePreference {
         val availablePrefs = runBlocking { dataStore.data.first() }
-        val pref = FloatResourcePreference(key, default, availablePrefs) {
+        val pref = FloatResourcePreference(key, default, availablePrefs, fromLegacyInt) {
             newPreferencesAvailableChannel.trySend(true)
         }
         collectedPreferences.add(pref)
