@@ -1,5 +1,4 @@
 [versions]
-accompanistPermissions = "0.37.3"
 agp = "9.4.1"
 hiltNavigationCompose = "1.4.0"
 kotlin = "2.4.20"
@@ -27,7 +26,6 @@ preferenceKtx = "1.2.1"
 runtimeTracing = "1.12.1"
 
 [libraries]
-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
