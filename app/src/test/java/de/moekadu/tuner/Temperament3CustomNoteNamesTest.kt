@@ -12,7 +12,13 @@ import org.junit.Test
 
 class Temperament3CustomNoteNamesTest {
     private val bases = arrayOf(
-        BaseNote.C, BaseNote.D, BaseNote.E, BaseNote.F, BaseNote.G, BaseNote.A, BaseNote.B
+        BaseNote.C,
+        BaseNote.D,
+        BaseNote.E,
+        BaseNote.F,
+        BaseNote.G,
+        BaseNote.A,
+        BaseNote.B
     )
 
     /** Distinct, octave-less user note names for a scale with [notesPerOctave] notes. */
@@ -20,7 +26,7 @@ class Temperament3CustomNoteNamesTest {
         MusicalNote(bases[it % bases.size], NoteModifier.None, octaveOffset = it / bases.size)
     }
 
-    /** Editable temperament as produced by the file import: one line per note plus the octave line. */
+    /** Editable temperament as created by the file import: note lines plus the octave line. */
     private fun editableTemperament(notes: Array<MusicalNote>): EditableTemperament {
         val notesPerOctave = notes.size
         return EditableTemperament(
@@ -38,7 +44,8 @@ class Temperament3CustomNoteNamesTest {
         )
     }
 
-    private fun Array<MusicalNote>.withoutOctave() = map { it.copy(octave = Int.MAX_VALUE) }
+    private fun Array<MusicalNote>.withoutOctave() =
+        map { it.copy(octave = Int.MAX_VALUE) }.toTypedArray()
 
     @Test
     fun importedTemperamentAboveGeneratorLimitUsesStoredNoteNames() {
@@ -47,7 +54,7 @@ class Temperament3CustomNoteNamesTest {
 
         val noteNames = temperament.noteNames(null)
 
-        assertArrayEquals(notes.withoutOctave().toTypedArray(), noteNames.notes.withoutOctave().toTypedArray())
+        assertArrayEquals(notes.withoutOctave(), noteNames.notes.withoutOctave())
     }
 
     @Test
@@ -58,7 +65,7 @@ class Temperament3CustomNoteNamesTest {
 
         val noteNames = temperament.noteNames(null)
 
-        assertArrayEquals(notes.withoutOctave().toTypedArray(), noteNames.notes.withoutOctave().toTypedArray())
+        assertArrayEquals(notes.withoutOctave(), noteNames.notes.withoutOctave())
     }
 
     @Test
