@@ -165,7 +165,7 @@ fun EditableTemperament.toTemperament3Custom(): Temperament3Custom? {
     val resolvedNotes = if (notes.contains(null)) {
         null // this branch uses the predefined notes, which happens by specifying null
     } else if (predefinedNotes == null) {
-        notes
+        notes.subList(0, numberOfNotesPerOctave) // one name per note, the octave line is implied
     } else {
         var usePredefined = true
         for (i in 0 until numberOfNotesPerOctave) {
@@ -174,7 +174,7 @@ fun EditableTemperament.toTemperament3Custom(): Temperament3Custom? {
                 break
             }
         }
-        if (usePredefined) null else notes
+        if (usePredefined) null else notes.subList(0, numberOfNotesPerOctave)
     }
 
     return Temperament3Custom(
