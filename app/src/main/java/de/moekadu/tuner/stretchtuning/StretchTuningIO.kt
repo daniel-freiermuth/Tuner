@@ -118,13 +118,16 @@ private fun parseDataLine(string: String): Pair<Double, Double>? {
         .replace(",", ".")
         .toDoubleOrNull() ?: return null
 
-    if (unstretchedFrequency <= 0.0) {
+    if (!unstretchedFrequency.isFinite() || unstretchedFrequency <= 0.0) {
         return null
     }
     val stretchInCents = values[1]
         .trim()
         .replace(",", ".")
         .toDoubleOrNull() ?: return null
+    if (!stretchInCents.isFinite()) {
+        return null
+    }
     return Pair(unstretchedFrequency, stretchInCents)
 }
 
@@ -357,7 +360,7 @@ private fun parseSingleLineSimpleFormat(line: String): StretchTuning? {
             edo12Scale.getNoteFrequency(index0 + index).toDouble()
         val cent = string.replace(",", ".").toDoubleOrNull()
         // Log.v("Tuner", "StretchTuningIO.parseSingleLineSimpleFormat: cent=$cent")
-        if (cent == null) {
+        if (cent == null || !cent.isFinite()) {
             return null
         } else {
             cents[index] = cent
