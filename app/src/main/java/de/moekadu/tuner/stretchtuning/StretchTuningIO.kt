@@ -14,6 +14,7 @@ import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.temperaments.predefinedTemperamentEDO
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.InputStream
 import java.io.StringWriter
 import java.util.Locale
 
@@ -59,7 +60,13 @@ object StretchTuningIO {
     }
 
     fun readStretchTuningsFromFile(context: Context, uri: Uri): StretchTuningsAndFileCheckResult =
-        context.contentResolver?.openInputStream(uri)?.use { reader ->
+        readStretchTunings { context.contentResolver?.openInputStream(uri) }
+
+    /** Read stretch tunings from the stream returned by openInputStream.
+     * @param openInputStream Opens the stream to read, which is closed afterwards.
+     */
+    fun readStretchTunings(openInputStream: () -> InputStream?): StretchTuningsAndFileCheckResult =
+        openInputStream()?.use { reader ->
             parseStretchTunings(reader.bufferedReader())
         } ?: StretchTuningsAndFileCheckResult(FileCheck.Invalid, listOf())
 
