@@ -130,6 +130,25 @@ private fun LazyListState.centerIndex(): Int {
     return firstItem.index - relativeDistanceBelowCenter
 }
 
+/** Check if a string is highlighted.
+ * The highlighted key is preferred over the highlighted note.
+ * @param stringKey Key of the string.
+ * @param stringNote Note of the string.
+ * @param highlightedNoteKey Key of highlighted string or null.
+ * @param highlightedNote Highlighted note or null.
+ * @return True if the string is highlighted.
+ */
+internal fun isStringHighlighted(
+    stringKey: Int,
+    stringNote: MusicalNote,
+    highlightedNoteKey: Int?,
+    highlightedNote: MusicalNote?
+): Boolean = if (highlightedNoteKey != null) {
+    stringKey == highlightedNoteKey
+} else {
+    stringNote == highlightedNote
+}
+
 /** Find closest highlighted string to view port center.
  * @return Index within strings or -1 if there is no string is found.
  */
@@ -392,11 +411,9 @@ fun Strings(
     val numStrings = strings?.size ?: (maxNoteIndex - minNoteIndex)
 
     val numHighlightedStrings = remember(highlightedNoteKey, highlightedNote) {
-        if (highlightedNoteKey != null) {
-            strings?.count { it.key == highlightedNoteKey } ?: 1
-        } else {
-            strings?.count { it.note == highlightedNote } ?: 1
-        }
+        strings?.count {
+            isStringHighlighted(it.key, it.note, highlightedNoteKey, highlightedNote)
+        } ?: 1
     }
 
     val noteNames = remember(musicalScale.temperament) {
@@ -571,16 +588,10 @@ fun Strings(
                     }
 
                     // we prefer key over highlighted note
-                    val stringColor = if (highlightedNoteKey != null) {
-                        if (key == highlightedNoteKey) tuningColor else defaultColor
-                    } else {
-                        if (note == highlightedNote) tuningColor else defaultColor
-                    }
-                    val onStringColor = if (highlightedNoteKey != null) {
-                        if (key == highlightedNoteKey) onTuningColor else onDefaultColor
-                    } else {
-                        if (note == highlightedNote) onTuningColor else onDefaultColor
-                    }
+                    val isHighlighted =
+                        isStringHighlighted(key, note, highlightedNoteKey, highlightedNote)
+                    val stringColor = if (isHighlighted) tuningColor else defaultColor
+                    val onStringColor = if (isHighlighted) onTuningColor else onDefaultColor
 
                     SingleString(
                         note = note,
