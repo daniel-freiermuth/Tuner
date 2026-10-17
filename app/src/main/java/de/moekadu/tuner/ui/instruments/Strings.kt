@@ -131,7 +131,9 @@ private fun LazyListState.centerIndex(): Int {
 }
 
 /** Check if a string is highlighted.
- * The highlighted key is preferred over the highlighted note.
+ * The highlighted key is preferred over the highlighted note. Notes are compared with
+ * MusicalNote.match, since the highlighted note normally is a note of the musical scale, which
+ * can differ from the string note in the enharmonic representation.
  * @param stringKey Key of the string.
  * @param stringNote Note of the string.
  * @param highlightedNoteKey Key of highlighted string or null.
@@ -146,7 +148,7 @@ internal fun isStringHighlighted(
 ): Boolean = if (highlightedNoteKey != null) {
     stringKey == highlightedNoteKey
 } else {
-    stringNote == highlightedNote
+    stringNote.match(highlightedNote)
 }
 
 /** Find closest highlighted string to view port center.
@@ -181,7 +183,7 @@ private fun findIndexOfClosestScrollableHighlightedString(
         .filter {
             val note = strings[it.index].note
             val key = strings[it.index].key
-            note == highlightedStringNote || key == highlightedStringKey
+            note.match(highlightedStringNote) || key == highlightedStringKey
         }
         .minByOrNull { listState.itemDistanceBelowCenter(it).absoluteValue }?.index ?: -1
     if (closestIndex >= 0) {
@@ -189,11 +191,11 @@ private fun findIndexOfClosestScrollableHighlightedString(
     } else {
         val firstIndex = listState.layoutInfo.visibleItemsInfo.firstOrNull()?.index ?: 0
         val closestIndexBefore = strings.subList(0, firstIndex).indexOfLast {
-            it.note == highlightedStringNote || it.key == highlightedStringKey
+            it.note.match(highlightedStringNote) || it.key == highlightedStringKey
         }
         val lastIndex = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
         val closestIndexAfterLast = strings.subList(lastIndex, strings.size).indexOfFirst {
-            it.note == highlightedStringNote || it.key == highlightedStringKey
+            it.note.match(highlightedStringNote) || it.key == highlightedStringKey
         }
         val closestIndexAfter = if (closestIndexAfterLast ==
             -1
@@ -233,27 +235,29 @@ private fun findNextScrollableStringIndex(
         return -1
     }
     if (numHighlightedStrings == 1) {
-        return strings.indexOfFirst { it.note == note }
+        return strings.indexOfFirst { it.note.match(note) }
     }
     if (!listState.canScrollBackward && !listState.canScrollForward) {
         return -1
     }
     if (!listState.canScrollForward) {
-        return strings.indexOfFirst { it.note == note }
+        return strings.indexOfFirst { it.note.match(note) }
     }
 
     val firstIndexBelowCenter = listState.layoutInfo.visibleItemsInfo
-        .firstOrNull { strings[it.index].note == note && listState.itemDistanceBelowCenter(it) > 0 }
+        .firstOrNull {
+            strings[it.index].note.match(note) && listState.itemDistanceBelowCenter(it) > 0
+        }
         ?.index ?: -1
     return if (firstIndexBelowCenter >= 0) {
         firstIndexBelowCenter
     } else {
         val lastIndex = listState.layoutInfo.visibleItemsInfo.last().index
         val j = strings.subList(lastIndex, strings.size).indexOfFirst {
-            it.note == note
+            it.note.match(note)
         }
         if (j < 0) {
-            strings.indexOfFirst { it.note == note }
+            strings.indexOfFirst { it.note.match(note) }
         } else {
             j + lastIndex
         }
