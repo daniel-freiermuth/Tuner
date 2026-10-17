@@ -266,6 +266,20 @@ class EditableListData<T>(
         }
     }
 
+    /** Undo a deletion of items.
+     * @param info Deletion info as received from editableItemsBackup.
+     * @return Index of first changed item.
+     */
+    fun undoDeletion(info: ItemsDeletedInfo<T>): Int {
+        val currentItems = editableItems.value
+        val firstChangedIndex = info.backup.zip(currentItems).indexOfFirst {
+            it.first != it.second
+        }.coerceAtLeast(0)
+
+        setNewItems(info.backup)
+        return firstChangedIndex
+    }
+
     fun extractSelectedItems(): List<T> {
         val allItems = this.editableItems.value
         val selectedKeys = this.selectedItems.value
@@ -427,13 +441,13 @@ fun <T> EditableList(
     // handle recovering deleted items
     LaunchedEffect(resources, state) {
 //        Log.v("Tuner", "EditableList: Launching effect for recovering items")
-        for ((backupItems, numDeleted) in state.editableItemsBackup) {
+        for (deletedInfo in state.editableItemsBackup) {
             launch {
                 val result = snackbarHostStateUpdated?.showSnackbar(
                     resources.getQuantityString(
                         R.plurals.items_deleted,
-                        numDeleted,
-                        numDeleted
+                        deletedInfo.numDeleted,
+                        deletedInfo.numDeleted
                     ),
                     actionLabel = resources.getString(R.string.undo),
                     duration = SnackbarDuration.Long
@@ -442,12 +456,7 @@ fun <T> EditableList(
                     SnackbarResult.Dismissed -> {}
 
                     SnackbarResult.ActionPerformed -> {
-                        val currentItems = state.editableItems.value
-                        val firstChangedIndex = backupItems.zip(currentItems).indexOfFirst {
-                            it.first != it.second
-                        }.coerceAtLeast(0)
-
-                        state.setNewItems(backupItems)
+                        val firstChangedIndex = state.undoDeletion(deletedInfo)
                         // delay a bit, since setNewItems runs internally on another coroutine, and
                         // we must let this finish. 100ms is of course not really save, but on the
                         // other hand, if the scroll to 0 fails, it is not really a big problem.
