@@ -109,8 +109,13 @@ class EditableListData<T>(
     private val _selectedItems = MutableStateFlow(persistentSetOf<Long>())
     val selectedItems get() = _selectedItems.asStateFlow()
 
-    /** Backup info when items are deleted. */
-    data class ItemsDeletedInfo<T>(val backup: PersistentList<T>, val numDeleted: Int = 0)
+    /** Backup info when items are deleted.
+     * @param backup Items before the deletion.
+     * @param deletedKeys Stable ids of the deleted items.
+     */
+    data class ItemsDeletedInfo<T>(val backup: PersistentList<T>, val deletedKeys: Set<Long>) {
+        val numDeleted get() = deletedKeys.size
+    }
     val editableItemsBackup = Channel<ItemsDeletedInfo<T>>(
         Channel.CONFLATED
     )
@@ -244,9 +249,10 @@ class EditableListData<T>(
         }
 
         if (backup.size != modified.size) {
-            editableItemsBackup.trySend(
-                ItemsDeletedInfo(backup = backup, numDeleted = backup.size - modified.size)
-            )
+            val deletedKeys = backup.map { getStableId(it) }.filterTo(HashSet()) {
+                keys.contains(it)
+            }
+            editableItemsBackup.trySend(ItemsDeletedInfo(backup, deletedKeys))
         }
     }
     fun deleteSelectedItems() {
@@ -262,8 +268,55 @@ class EditableListData<T>(
         }
 
         if (backup.isNotEmpty()) {
-            editableItemsBackup.trySend(ItemsDeletedInfo(backup = backup, numDeleted = backup.size))
+            val deletedKeys = backup.mapTo(HashSet()) { getStableId(it) }
+            editableItemsBackup.trySend(ItemsDeletedInfo(backup, deletedKeys))
         }
+    }
+
+    /** Undo a deletion of items.
+     * Only the deleted items are re-inserted into the current list, such that changes, which
+     * were done after the deletion, are kept. A re-inserted item is placed behind the closest
+     * item, which preceded it before the deletion and is still in the list, or, if there is none,
+     * before the closest such item, which followed it.
+     * @param info Deletion info as received from editableItemsBackup.
+     * @return Index of first changed item.
+     */
+    fun undoDeletion(info: ItemsDeletedInfo<T>): Int {
+        val currentItems = editableItems.value
+        val presentKeys = currentItems.mapTo(HashSet()) { getStableId(it) }
+        val backupKeys = info.backup.map { getStableId(it) }
+
+        val restored = currentItems.mutate { items ->
+            info.backup.forEachIndexed { backupIndex, item ->
+                val key = backupKeys[backupIndex]
+                if (!info.deletedKeys.contains(key) || presentKeys.contains(key)) {
+                    return@forEachIndexed
+                }
+                val predecessorKey = backupKeys.subList(0, backupIndex).lastOrNull {
+                    presentKeys.contains(it)
+                }
+                val insertIndex = if (predecessorKey != null) {
+                    items.indexOfFirst { getStableId(it) == predecessorKey } + 1
+                } else {
+                    val successorKey = backupKeys.subList(backupIndex + 1, backupKeys.size)
+                        .firstOrNull { presentKeys.contains(it) }
+                    if (successorKey != null) {
+                        items.indexOfFirst { getStableId(it) == successorKey }
+                    } else {
+                        items.size
+                    }
+                }
+                items.add(insertIndex, item)
+                presentKeys.add(key)
+            }
+        }
+
+        val firstChangedIndex = restored.zip(currentItems).indexOfFirst {
+            it.first != it.second
+        }.coerceAtLeast(0)
+
+        setNewItems(restored)
+        return firstChangedIndex
     }
 
     fun extractSelectedItems(): List<T> {
@@ -427,13 +480,13 @@ fun <T> EditableList(
     // handle recovering deleted items
     LaunchedEffect(resources, state) {
 //        Log.v("Tuner", "EditableList: Launching effect for recovering items")
-        for ((backupItems, numDeleted) in state.editableItemsBackup) {
+        for (deletedInfo in state.editableItemsBackup) {
             launch {
                 val result = snackbarHostStateUpdated?.showSnackbar(
                     resources.getQuantityString(
                         R.plurals.items_deleted,
-                        numDeleted,
-                        numDeleted
+                        deletedInfo.numDeleted,
+                        deletedInfo.numDeleted
                     ),
                     actionLabel = resources.getString(R.string.undo),
                     duration = SnackbarDuration.Long
@@ -442,12 +495,7 @@ fun <T> EditableList(
                     SnackbarResult.Dismissed -> {}
 
                     SnackbarResult.ActionPerformed -> {
-                        val currentItems = state.editableItems.value
-                        val firstChangedIndex = backupItems.zip(currentItems).indexOfFirst {
-                            it.first != it.second
-                        }.coerceAtLeast(0)
-
-                        state.setNewItems(backupItems)
+                        val firstChangedIndex = state.undoDeletion(deletedInfo)
                         // delay a bit, since setNewItems runs internally on another coroutine, and
                         // we must let this finish. 100ms is of course not really save, but on the
                         // other hand, if the scroll to 0 fails, it is not really a big problem.
