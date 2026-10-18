@@ -45,7 +45,7 @@ object TemperamentIO {
 
     fun temperamentsListToString(resources: Resources, temperaments: List<Temperament3>): String {
         val writer = StringWriter()
-        writeTemperaments(temperaments, writer.buffered(), resources)
+        writer.buffered().use { writeTemperaments(temperaments, it, resources) }
         return writer.toString()
     }
 
