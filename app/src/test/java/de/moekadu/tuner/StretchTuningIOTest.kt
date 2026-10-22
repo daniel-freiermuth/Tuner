@@ -64,4 +64,25 @@ Stretch L: A0  -8,67 -8 -7,33 -6,67 -4 -3,33 0 0 0 0 0 0,5 1  8 8,5 9 9,5 13,5  
         assertArrayEquals(tuning.unstretchedFrequencies, parsed.unstretchedFrequencies, 1e-4)
         assertArrayEquals(tuning.stretchInCents, parsed.stretchInCents, 1e-4)
     }
+
+    @Test
+    fun nonFiniteValuesInDataLinesAreInvalid() {
+        val lines = listOf("440 NaN", "NaN 0", "Infinity 0", "440 Infinity", "440 -Infinity")
+        for (line in lines) {
+            val string = "# name\n# description\n$line\n880 0\n"
+            val result = StretchTuningIO.parseStretchTunings(string.reader().buffered())
+            assertEquals("line: $line", FileCheck.Invalid, result.fileCheck)
+            assertEquals("line: $line", 0, result.stretchTunings.size)
+        }
+    }
+
+    @Test
+    fun nonFiniteValuesInSingleLineFormatAreInvalid() {
+        for (value in listOf("NaN", "Infinity", "-Infinity")) {
+            val string = "Name: A4 0 $value 1\n"
+            val result = StretchTuningIO.parseStretchTunings(string.reader().buffered())
+            assertEquals("value: $value", FileCheck.Invalid, result.fileCheck)
+            assertEquals("value: $value", 0, result.stretchTunings.size)
+        }
+    }
 }
