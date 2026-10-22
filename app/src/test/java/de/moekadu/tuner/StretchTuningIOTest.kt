@@ -5,6 +5,9 @@ import de.moekadu.tuner.misc.FileCheck
 import de.moekadu.tuner.misc.GetTextFromString
 import de.moekadu.tuner.stretchtuning.StretchTuning
 import de.moekadu.tuner.stretchtuning.StretchTuningIO
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStream
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -63,5 +66,33 @@ Stretch L: A0  -8,67 -8 -7,33 -6,67 -4 -3,33 0 0 0 0 0 0,5 1  8 8,5 9 9,5 13,5  
         assertEquals("Test description", parsed.description.value(null))
         assertArrayEquals(tuning.unstretchedFrequencies, parsed.unstretchedFrequencies, 1e-4)
         assertArrayEquals(tuning.stretchInCents, parsed.stretchInCents, 1e-4)
+    }
+
+    @Test
+    fun readStretchTuningsReturnsInvalidIfStreamCannotBeOpened() {
+        val result = StretchTuningIO.readStretchTunings {
+            throw FileNotFoundException("missing file")
+        }
+        assertEquals(FileCheck.Invalid, result.fileCheck)
+        assertEquals(0, result.stretchTunings.size)
+    }
+
+    @Test
+    fun readStretchTuningsReturnsInvalidIfPermissionIsMissing() {
+        val result = StretchTuningIO.readStretchTunings {
+            throw SecurityException("permission revoked")
+        }
+        assertEquals(FileCheck.Invalid, result.fileCheck)
+        assertEquals(0, result.stretchTunings.size)
+    }
+
+    @Test
+    fun readStretchTuningsReturnsInvalidIfReadingFails() {
+        val failingStream = object : InputStream() {
+            override fun read(): Int = throw IOException("EIO")
+        }
+        val result = StretchTuningIO.readStretchTunings { failingStream }
+        assertEquals(FileCheck.Invalid, result.fileCheck)
+        assertEquals(0, result.stretchTunings.size)
     }
 }

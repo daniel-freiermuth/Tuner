@@ -3,6 +3,7 @@ package de.moekadu.tuner.stretchtuning
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import de.moekadu.tuner.BuildConfig
 import de.moekadu.tuner.misc.DefaultValues
 import de.moekadu.tuner.misc.FileCheck
@@ -14,6 +15,8 @@ import de.moekadu.tuner.notenames.NoteModifier
 import de.moekadu.tuner.temperaments.predefinedTemperamentEDO
 import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.IOException
+import java.io.InputStream
 import java.io.StringWriter
 import java.util.Locale
 
@@ -59,9 +62,31 @@ object StretchTuningIO {
     }
 
     fun readStretchTuningsFromFile(context: Context, uri: Uri): StretchTuningsAndFileCheckResult =
-        context.contentResolver?.openInputStream(uri)?.use { reader ->
+        readStretchTunings(
+            onReadError = { Log.w("Tuner", "Cannot read stretch tunings file $uri", it) },
+            openInputStream = { context.contentResolver?.openInputStream(uri) }
+        )
+
+    /** Read stretch tunings from the stream returned by openInputStream.
+     * Failing to open or read the stream (missing file, revoked permission, ...) gives
+     * FileCheck.Invalid.
+     * @param onReadError Called with the exception if opening or reading the stream fails.
+     * @param openInputStream Opens the stream to read, which is closed afterwards.
+     */
+    fun readStretchTunings(
+        onReadError: (Exception) -> Unit = {},
+        openInputStream: () -> InputStream?
+    ): StretchTuningsAndFileCheckResult = try {
+        openInputStream()?.use { reader ->
             parseStretchTunings(reader.bufferedReader())
-        } ?: StretchTuningsAndFileCheckResult(FileCheck.Invalid, listOf())
+        }
+    } catch (e: IOException) {
+        onReadError(e)
+        null
+    } catch (e: SecurityException) {
+        onReadError(e)
+        null
+    } ?: StretchTuningsAndFileCheckResult(FileCheck.Invalid, listOf())
 
     fun parseStretchTunings(reader: BufferedReader): StretchTuningsAndFileCheckResult =
         parseStretchTuningsImpl(reader)
