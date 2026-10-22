@@ -118,6 +118,6 @@ class MusicalScaleNoteNames2(val noteNames: NoteNames2, referenceNote: MusicalNo
     fun hasMatchingNote(musicalNote: MusicalNote?): Boolean = if (musicalNote == null) {
         false
     } else {
-        noteNames.hasNote(musicalNote)
+        noteNames.hasMatch(musicalNote)
     }
 }
