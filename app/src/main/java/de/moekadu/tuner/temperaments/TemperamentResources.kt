@@ -262,6 +262,15 @@ class TemperamentResources @Inject constructor(
     )
     val customStretchTunings = customStretchTuningsPref.asStateFlow()
     fun writeCustomStretchTunings(newStretchTunings: PersistentList<StretchTuning>) {
+        // if currently active stretch tuning did change, update this also
+        val modifiedMusicalScale = updateActiveCustomStretchTuning(
+            musicalScale.value,
+            newStretchTunings
+        )
+        if (modifiedMusicalScale != null) {
+            writeMusicalScale(modifiedMusicalScale)
+        }
+
         customStretchTuningsPref.set(newStretchTunings)
     }
 
@@ -496,4 +505,21 @@ private fun reloadPredefinedStretchTuningIfNecessary(
     }
 
     return musicalScale.copy(_stretchTuning = stretchTuning)
+}
+
+/** In case the musical scale uses one of the given custom stretch tunings, replace it by the
+ *  version from the list, such that modifications of the active stretch tuning take effect.
+ * @param musicalScale Current musical scale.
+ * @param customStretchTunings New list of custom stretch tunings.
+ * @return Musical scale with the updated stretch tuning or null if the active stretch tuning
+ *   is not part of the list.
+ */
+internal fun updateActiveCustomStretchTuning(
+    musicalScale: MusicalScale2,
+    customStretchTunings: List<StretchTuning>
+): MusicalScale2? {
+    val stableId = musicalScale.stretchTuning.stableId
+    val modifiedStretchTuning = customStretchTunings.firstOrNull { it.stableId == stableId }
+        ?: return null
+    return musicalScale.copy(_stretchTuning = modifiedStretchTuning)
 }
