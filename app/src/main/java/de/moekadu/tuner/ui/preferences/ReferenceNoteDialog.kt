@@ -18,7 +18,6 @@
 */
 package de.moekadu.tuner.ui.preferences
 
-import android.Manifest
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -57,13 +56,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import de.moekadu.tuner.R
 import de.moekadu.tuner.musicalscale.MusicalScale2
 import de.moekadu.tuner.notedetection.SoundSourceError
 import de.moekadu.tuner.preferences.PreferenceResources
+import de.moekadu.tuner.ui.misc.rememberAudioPermissionGranted
 import de.moekadu.tuner.ui.misc.rememberNumberFormatter
 import de.moekadu.tuner.ui.misc.soundSourceErrorMessage
 import de.moekadu.tuner.ui.notes.NotePrintOptions2
@@ -121,7 +118,6 @@ interface ReferenceNoteDialogFrequencyDetector {
  *   reference note with a valid note, here we can show a message, that we need to reset the note.
  * @param onDismiss Callback when "dismiss" is clicked.
  */
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ReferenceNoteDialog(
     initialState: MusicalScale2,
@@ -157,8 +153,7 @@ fun ReferenceNoteDialog(
         }
     }
     var frequencyDetectorStarted by rememberSaveable { mutableStateOf(false) }
-    val permission = rememberPermissionState(permission = Manifest.permission.RECORD_AUDIO)
-    val permissionGranted by remember { derivedStateOf { permission.status.isGranted } }
+    val permissionGranted = rememberAudioPermissionGranted()
     val soundSourceError by frequencyDetector.soundSourceError.collectAsStateWithLifecycle()
 
     LifecycleResumeEffect(permissionGranted) {
